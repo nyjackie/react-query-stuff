@@ -1,3 +1,56 @@
+# Good Deeds Data - Admin Web Portal
+
+Let's all be on the same page and use [yarn](https://yarnpkg.com/)
+
+## Development
+
+`yarn start` - start app in development mode, start dev server, listens and reload on change
+
+## Environment Variables
+
+:warning: :rotating_light: :bangbang:
+The end product of this repo is static html/css/js/images, **DO NOT** put any secrets into any `.env` file
+
+Read more about how create-react-app handles env variables [here](https://create-react-app.dev/docs/adding-custom-environment-variables/)
+
+use `.env.development.local` or `.env.local` to override what's in `.env`. ([more info](https://create-react-app.dev/docs/adding-custom-environment-variables/#what-other-env-files-can-be-used))
+
+| variable                 | desc                                       |
+| ------------------------ | ------------------------------------------ |
+| `REACT_APP_API_BASE_URL` | set the base API url for all GDD api calls |
+
+## CSS
+
+When necessary, global styles go in `src/styles/global.scss`
+
+Use CSS Modules in your components using the same component name:  
+Component: `SomeThing.js`  
+CSS Module: `SomeThing.module.css`
+
+We're using React-Bootstrap & Bootstrap 4.5  
+https://react-bootstrap.github.io/  
+https://getbootstrap.com/
+
+## JS
+
+The project has [absolute imports](https://create-react-app.dev/docs/importing-a-component#absolute-imports) set up to `./src` so you can import files easier and it makes import statements easier to copy and paste between files
+
+```js
+// bad
+import './components/Header';
+import '../../utils/my-utils';
+import './Header.module.scss';
+```
+
+```js
+// good
+import 'components/Header';
+import 'utils/my-utils';
+import 'components/Header.module.scss';
+```
+
+---
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

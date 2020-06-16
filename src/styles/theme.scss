@@ -7,15 +7,9 @@
  * https://github.com/twbs/bootstrap/blob/master/scss/_variables.scss
  */
 
-$theme-colors: (
-  'primary': #2bc2bd,
-  'secondary': #fc5e6b,
-  'light': #fff,
-  'dark': #424242,
-  // "success" : green,
-    // "info": tomato,
-    // "danger": red,
-    // "warning": yellow,,,
-);
+$primary: #2bc2bd;
+$secondary: #fc5e6b;
+$light: #fff;
+$dark: #424242;
 
 @import '~bootstrap/scss/bootstrap';

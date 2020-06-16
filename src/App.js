@@ -8,13 +8,15 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 // views or route components
-import Landing from './views/Landing';
-import Register from './components/auth/Register';
-import Login from './components/auth/Login';
+import Landing from 'views/Landing';
+import Register from 'views/Register';
+import Login from 'views/Login';
+import Claims from 'views/Claims';
 
 // components/other
-import Navbar from './components/Navbar';
-import store from './store';
+import Navbar from 'components/Navbar';
+import PrivateRoutes from 'components/PrivateRoutes';
+import store from 'store';
 
 const App = () => {
   return (
@@ -22,7 +24,7 @@ const App = () => {
       <Router>
         <Fragment>
           <Helmet>
-            <title>Good Deeds Data | Nonprofit Portal</title>
+            <title>Good Deeds Data | Admin Portal</title>
           </Helmet>
           <Container fluid className="d-flex flex-column h-100">
             <Row className="flex-fill">
@@ -32,10 +34,13 @@ const App = () => {
               <Col>
                 <main>
                   <Switch>
-                    {/* we should make an router page later for all the views */}
                     <Route exact path="/" component={Landing} />
                     <Route exact path="/register" component={Register} />
                     <Route exact path="/login" component={Login} />
+                    <PrivateRoutes>
+                      {/* place routes that require auth in here */}
+                      <Route exact path="/claims" component={Claims} />
+                    </PrivateRoutes>
                   </Switch>
                 </main>
               </Col>

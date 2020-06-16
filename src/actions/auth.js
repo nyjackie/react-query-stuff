@@ -1,15 +1,11 @@
 import api from '../api';
 import { REGISTER_SUCCESS, REGISTER_FAIL, LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT } from './types';
+import { wait, fakeJWT } from 'utils'; // TODO: for dev only, remove later
 
 export const register = ({ email, password, first_name, last_name }) => async dispatch => {
-  const config = {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  };
   const body = JSON.stringify({ email, password, first_name, last_name });
   try {
-    let res = await api.users(body, config);
+    let res = await api.users(body);
     dispatch({
       type: REGISTER_SUCCESS,
       payload: res.data,
@@ -29,18 +25,25 @@ export const register = ({ email, password, first_name, last_name }) => async di
 export const login = (email, password) => async dispatch => {
   const config = {
     headers: {
-      'Content-Type': 'application/json',
       Authorization: 'Basic ' + window.btoa(email + ':' + password),
     },
   };
   try {
-    const res = await api.login(config);
+    // const res = await api.login(config);
+
+    // TEMP for testing ***********************
+    await wait(1000); // wait 1s to simulate round trip
+    const res = {
+      data: fakeJWT(),
+    };
+    // TEMP for testing ***********************
+
     dispatch({
       type: LOGIN_SUCCESS,
       payload: res.data,
     });
   } catch (err) {
-    const errors = err.response.data.errors;
+    const errors = err?.response?.data?.errors;
     if (errors) {
       console.error(errors);
     }

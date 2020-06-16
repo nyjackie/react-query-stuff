@@ -1,9 +1,9 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { logout } from '../actions/auth';
+import { logout } from 'actions/auth';
 import { Container, Row } from 'react-bootstrap';
-import PageHeader from '../components/PageHeader';
+import PageHeader from 'components/PageHeader';
 
 const Landing = ({ auth: { isAuthenticated, loading }, logout }) => {
   const guestLinks = <h2>Please Login or Sign Up</h2>;

@@ -2,9 +2,9 @@ import React, { Fragment, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { login } from '../../actions/auth';
+import { login } from 'actions/auth';
 import { Container, Form, Button, Row, Col } from 'react-bootstrap';
-import PageHeader from '../PageHeader';
+import PageHeader from 'components/PageHeader';
 
 /// Currently, submit btn does not call api method.
 
@@ -19,12 +19,7 @@ const Login = ({ login, isAuthenticated }) => {
     e.preventDefault();
     //replace consolelog with action creater
     console.log('Email and Password', email, password);
-
-    // ACTION CALLED HERE
-    // login(email, password).then(response => {
-    //   sessionStorage.setItem('token', response);
-    //   console.log('returned response', response);
-    // });
+    login(email, password);
   };
   if (isAuthenticated) {
     //REDIRECTS USER TO DASHBOARD AFTER LOGIN
@@ -35,7 +30,7 @@ const Login = ({ login, isAuthenticated }) => {
       <PageHeader pageTitle="Login Page" />
       <Container>
         <Row>
-          <Col md={4}>
+          <Col md={6}>
             <Form onSubmit={e => onSubmit(e)}>
               <Form.Group controlId="loginEmail">
                 <Form.Label className="email">

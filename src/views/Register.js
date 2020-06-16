@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import { Container, Form, Button } from 'react-bootstrap';
-import { register } from '../../actions/auth';
-import PageHeader from '../PageHeader';
+import { register } from 'actions/auth';
+import PageHeader from 'components/PageHeader';
 
 /// Currently, submit btn does not call api method.
 

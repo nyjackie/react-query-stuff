@@ -1,6 +1,6 @@
 # Good Deeds Data - Admin Web Portal
 
-Let's all be on the same page and use [yarn](https://yarnpkg.com/)
+Use [yarn](https://yarnpkg.com/) please! :smile:
 
 ## Development
 

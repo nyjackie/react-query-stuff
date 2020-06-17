@@ -20,7 +20,7 @@ import PrivateRoute from 'components/PrivateRoute';
 import store from 'store';
 import { loadUser } from './actions/auth';
 
-const App = () => {
+const App = props => {
   useEffect(() => {
     store.dispatch(loadUser());
   }, []);

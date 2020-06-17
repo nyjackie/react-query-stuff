@@ -15,6 +15,7 @@ const api = {
   // Users
   users: (body, config = {}) => instance.post('/users', body, config),
   login: (config = {}) => instance.post('/users/login', {}, config),
+  load: (config = {}) => instance.get('users/', config),
 };
 
 export default api;

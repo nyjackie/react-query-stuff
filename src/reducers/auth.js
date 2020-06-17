@@ -1,5 +1,12 @@
 import jwt_decode from 'jwt-decode';
-import { REGISTER_SUCCESS, LOGIN_SUCCESS, LOGOUT, AUTH_ERROR, LOGIN_FAIL } from '../actions/types';
+import {
+  REGISTER_SUCCESS,
+  LOGIN_SUCCESS,
+  LOGOUT,
+  AUTH_ERROR,
+  LOGIN_FAIL,
+  USER_LOADED,
+} from '../actions/types';
 
 const initialState = {
   token: localStorage.getItem('token'),
@@ -11,6 +18,13 @@ const initialState = {
 export default function (state = initialState, action) {
   const { type, payload } = action;
   switch (type) {
+    case USER_LOADED:
+      return {
+        ...state,
+        isAuthenticated: true,
+        loading: false,
+        user: payload,
+      };
     case LOGIN_SUCCESS:
       console.log('Reudcer: LOGIN_SUCCESS');
       debugger;
@@ -31,7 +45,7 @@ export default function (state = initialState, action) {
       };
     case LOGIN_FAIL:
       console.log('Reudcer: LOGIN_FAIL');
-    case AUTH_ERROR: //will do same as logout??? or maybe include payload with message?
+    case AUTH_ERROR: //will do the same as logout??? or maybe include payload with message?
     case LOGOUT:
       return {
         ...state,

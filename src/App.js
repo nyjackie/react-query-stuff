@@ -1,5 +1,5 @@
 // npm libs
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
@@ -13,13 +13,19 @@ import Register from 'views/Register';
 import Login from 'views/Login';
 import Claims from 'views/Claims';
 import Dashboard from 'views/Dashboard';
+import setAuthToken from './utils/setAuthToken';
 
 // components/other
 import Navbar from 'components/Navbar';
 import PrivateRoutes from 'components/PrivateRoutes';
 import store from 'store';
+import { loadUser } from './actions/auth';
 
 const App = () => {
+  useEffect(() => {
+    setAuthToken(localStorage.token);
+    store.dispatch(loadUser());
+  }, []);
   return (
     <Provider store={store}>
       <Router>

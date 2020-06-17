@@ -6,7 +6,8 @@ import {
   AUTH_ERROR,
   LOGIN_FAIL,
   USER_LOADED,
-} from '../actions/types';
+  LOGIN_REQUESTED,
+} from 'actions/types';
 
 const initialState = {
   token: null,
@@ -20,9 +21,14 @@ export default function (state = initialState, action) {
 
   let user = payload ? jwt_decode(payload) : null;
 
-  console.log('Reudcer: ', type);
-
   switch (type) {
+    case LOGIN_REQUESTED:
+      return {
+        ...state,
+        isAuthenticated: false,
+        loading: true,
+        user: null,
+      };
     case USER_LOADED:
       return {
         ...state,

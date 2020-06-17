@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Spinner from './Spinner';
 
-// src from react-router docs
+// help from react-router docs
 // https://reacttraining.com/react-router/web/example/auth-workflow
 
 // A wrapper for <Route> that redirects to the login
@@ -17,7 +17,7 @@ function PrivateRoute({ component: Component, auth: { isAuthenticated, loading }
         loading ? (
           <Spinner />
         ) : isAuthenticated ? (
-          <Component {...props}/>
+          <Component {...props} />
         ) : (
           <Redirect
             to={{
@@ -33,6 +33,7 @@ function PrivateRoute({ component: Component, auth: { isAuthenticated, loading }
 
 PrivateRoute.propTypes = {
   auth: PropTypes.object.isRequired,
+  component: PropTypes.elementType.isRequired,
 };
 
 const mapStateToProps = state => ({

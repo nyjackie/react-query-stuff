@@ -5,10 +5,11 @@ import PropTypes from 'prop-types';
 import { login } from 'actions/auth';
 import { Container, Form, Button, Row, Col } from 'react-bootstrap';
 import PageHeader from 'components/PageHeader';
+import Spinner from 'components/Spinner';
 
 /// Currently, submit btn does not call api method.
 
-const Login = ({ login, isAuthenticated }) => {
+const Login = ({ login, isAuthenticated, loading }) => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -17,14 +18,19 @@ const Login = ({ login, isAuthenticated }) => {
   const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
   const onSubmit = e => {
     e.preventDefault();
-    //replace consolelog with action creater
     console.log('Email and Password', email, password);
     login(email, password);
   };
+
+  if (loading) {
+    return <Spinner />;
+  }
+
   if (isAuthenticated) {
     //REDIRECTS USER TO DASHBOARD AFTER LOGIN
     return <Redirect to="/claims" />;
   }
+
   return (
     <Fragment>
       <PageHeader pageTitle="Login Page" />
@@ -76,6 +82,7 @@ Login.propTypes = {
 
 const mapStateToProps = state => ({
   isAuthenticated: state.auth.isAuthenticated,
+  loading: state.auth.loading,
 });
 
 export default connect(mapStateToProps, { login })(Login);

@@ -72,9 +72,7 @@ export const loadUser = () => async dispatch => {
         payload: token,
       });
     } else {
-      dispatch({
-        type: AUTH_ERROR,
-      });
+      throw 'AUTH_ERROR';
     }
   } catch (err) {
     dispatch({

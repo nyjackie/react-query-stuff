@@ -65,6 +65,7 @@ export const loadUser = () => async dispatch => {
   try {
     const token = userService.loadUser();
     console.log('what token', token);
+
     /// GET RID OF IF STATEMENT LATER.
     if (token) {
       dispatch({

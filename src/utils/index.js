@@ -10,11 +10,13 @@ export const wait = ms => {
   });
 };
 
-export const fakeJWT = () => {
+export const fakeJWT = email => {
   const header = { typ: 'JWT', alg: 'HS256' };
   const segments = [];
   segments.push(btoa(JSON.stringify(header)));
-  segments.push(btoa(JSON.stringify({ username: 'fakeUser', email: 'noone@gooddeedsdata.com' })));
+  segments.push(
+    btoa(JSON.stringify({ username: 'mockUser', email: email || 'noone@gooddeedsdata.com' }))
+  );
   segments.push('long-encoded-string-signature');
 
   return segments.join('.');

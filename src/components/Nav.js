@@ -7,21 +7,23 @@ import { closeDrawer } from 'actions/ui';
 
 const SideNav = ({ isAuthenticated, logout, closeDrawer }) => {
   function onNavClick(e) {
-    console.log(e);
+    if (e.target.classList.contains('js-closeDrawer')) {
+      closeDrawer();
+    }
   }
 
   return (
-    <Nav className="flex-column" onClick={onNavClick}>
-      <NavLink to="/" exact={true}>
+    <Nav className="flex-column h-100" onClick={onNavClick}>
+      <NavLink className="js-closeDrawer" to="/" exact={true}>
         Home
       </NavLink>
       {isAuthenticated && (
-        <button onClick={logout} href="#!" className="btn btn-primary">
+        <button onClick={logout} className="js-closeDrawer btn btn-link">
           Logout
         </button>
       )}
       {!isAuthenticated && (
-        <NavLink to="/login" className="btn btn-primary">
+        <NavLink to="/login" className="js-closeDrawer">
           Login
         </NavLink>
       )}

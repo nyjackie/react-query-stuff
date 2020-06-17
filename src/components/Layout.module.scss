@@ -1,0 +1,40 @@
+@import '../styles/mixins';
+
+.closed {
+}
+
+.push {
+}
+
+.drawer {
+  width: 250px;
+  max-width: 250px;
+  height: 100%;
+}
+
+@include to-bp('md') {
+  .drawer {
+    position: absolute;
+    z-index: 5;
+    top: 0;
+    left: 0;
+    transform: translateX(0);
+  }
+
+  .closed {
+    transform: translateX(-250px);
+  }
+
+  // the main content
+  .push {
+    transform: translateX(250px);
+  }
+}
+
+.transition {
+  transition: transform;
+  will-change: transform;
+  transform-style: preserve-3d;
+  transition-duration: 0.2s;
+  transition-timing-function: ease-in-out;
+}

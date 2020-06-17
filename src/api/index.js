@@ -10,10 +10,9 @@ const instance = axios.create({
 // always use JSON for all API calls
 instance.defaults.headers.common['Content-Type'] = 'application/json';
 
-let mock;
 if (process.env.NODE_ENV === 'development') {
   // dont want this accidentally ending up on production
-  mock = mockApi(instance);
+  mockApi(instance);
 }
 
 // Accounts
@@ -69,5 +68,3 @@ export default {
   transactions,
   spending,
 };
-
-// export default api;

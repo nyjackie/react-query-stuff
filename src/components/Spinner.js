@@ -3,7 +3,7 @@ import React, { Fragment } from 'react';
 
 export default () => (
   <Fragment>
-    There should spinnner img here....
+    There should be a spinnner img here....
     {/* <img
       src={spinner}
     /> */}

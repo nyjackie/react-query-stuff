@@ -1,11 +1,11 @@
-import api from '../api';
+import userService from 'services/user.service';
 import { REGISTER_SUCCESS, REGISTER_FAIL, LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT } from './types';
-import { wait, fakeJWT } from 'utils'; // TODO: for dev only, remove later
 
 export const register = ({ email, password, first_name, last_name }) => async dispatch => {
   const body = JSON.stringify({ email, password, first_name, last_name });
   try {
-    let res = await api.users(body);
+    // let res = await api.users(body);
+    const res = { data: {} };
     dispatch({
       type: REGISTER_SUCCESS,
       payload: res.data,
@@ -23,26 +23,16 @@ export const register = ({ email, password, first_name, last_name }) => async di
 };
 
 export const login = (email, password) => async dispatch => {
-  const config = {
-    headers: {
-      Authorization: 'Basic ' + window.btoa(email + ':' + password),
-    },
-  };
-  try {
-    // const res = await api.login(config);
-
-    // TEMP for testing ***********************
-    await wait(1000); // wait 1s to simulate round trip
-    const res = {
-      data: fakeJWT(),
-    };
-    // TEMP for testing ***********************
-
+  const [err, data] = userService.login(email, password);
+  if (data) {
     dispatch({
       type: LOGIN_SUCCESS,
-      payload: res.data,
+      payload: data,
     });
-  } catch (err) {
+  }
+
+  if (err) {
+    console.error(err);
     const errors = err.response?.data?.errors;
     if (errors) {
       console.error(errors);
@@ -50,10 +40,12 @@ export const login = (email, password) => async dispatch => {
     dispatch({
       type: LOGIN_FAIL,
     });
+    return;
   }
 };
 
 // Logout / Clear Profile
 export const logout = () => dispatch => {
+  userService.logout();
   dispatch({ type: LOGOUT });
 };

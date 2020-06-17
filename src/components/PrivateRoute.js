@@ -6,34 +6,26 @@ import PropTypes from 'prop-types';
 // src from react-router docs
 // https://reacttraining.com/react-router/web/example/auth-workflow
 
-// A wrapper for <Route> that redirects to the login
-// screen if you're not yet authenticated.
-function PrivateRoutes({ children, isAuthenticated, ...rest }) {
-  return (
-    <Route
-      {...rest}
-      render={({ location }) =>
-        isAuthenticated ? (
-          children
-        ) : (
-          <Redirect
-            to={{
-              pathname: '/login',
-              state: { from: location },
-            }}
-          />
-        )
-      }
-    />
-  );
-}
+const PrivateRoute = ({ isAuthenticated, component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={props =>
+      isAuthenticated ? (
+        <Component {...props} />
+      ) : (
+        <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
+      )
+    }
+  />
+);
 
-PrivateRoutes.propTypes = {
-  isAuthenticated: PropTypes.bool,
+PrivateRoute.propTypes = {
+  isAuthenticated: PropTypes.bool.isRequired,
+  component: PropTypes.elementType.isRequired,
 };
 
 const mapStateToProps = state => ({
   isAuthenticated: state.auth.isAuthenticated,
 });
 
-export default connect(mapStateToProps)(PrivateRoutes);
+export default connect(mapStateToProps)(PrivateRoute);

@@ -9,7 +9,7 @@ import Spinner from './Spinner';
 
 // A wrapper for <Route> that redirects to the login
 // screen if you're not yet authenticated.
-function PrivateRoutes({ children, auth: { isAuthenticated, loading }, ...rest }) {
+function PrivateRoute({ component: Component, auth: { isAuthenticated, loading }, ...rest }) {
   return (
     <Route
       {...rest}
@@ -17,7 +17,7 @@ function PrivateRoutes({ children, auth: { isAuthenticated, loading }, ...rest }
         loading ? (
           <Spinner />
         ) : isAuthenticated ? (
-          children
+          <Component />
         ) : (
           <Redirect
             to={{
@@ -31,11 +31,11 @@ function PrivateRoutes({ children, auth: { isAuthenticated, loading }, ...rest }
   );
 }
 
-PrivateRoutes.propTypes = {
+PrivateRoute.propTypes = {
   auth: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
   auth: state.auth,
 });
-export default connect(mapStateToProps)(PrivateRoutes);
+export default connect(mapStateToProps)(PrivateRoute);

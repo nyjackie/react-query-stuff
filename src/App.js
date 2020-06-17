@@ -44,12 +44,8 @@ const App = () => {
                     <Route exact path="/" component={Landing} />
                     <Route exact path="/register" component={Register} />
                     <Route exact path="/login" component={Login} />
-                    <PrivateRoute exact path="/claims">
-                      <Claims />
-                    </PrivateRoute>
-                    <PrivateRoute exact path="/dashboard">
-                      <Dashboard />
-                    </PrivateRoute>
+                    <PrivateRoute exact path="/claims" component={Claims} />
+                    <PrivateRoute exact path="/dashboard" component={Dashboard} />
                   </Switch>
                 </main>
               </Col>

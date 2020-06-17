@@ -9,6 +9,7 @@ import {
   USER_LOADED,
 } from './types';
 import { wait, fakeJWT } from 'utils'; // TODO: for dev only, remove later
+import api from 'api';
 
 export const register = ({ email, password, first_name, last_name }) => async dispatch => {
   const body = JSON.stringify({ email, password, first_name, last_name });
@@ -63,10 +64,18 @@ export const logout = () => dispatch => {
 export const loadUser = () => async dispatch => {
   try {
     const token = userService.loadUser();
-    dispatch({
-      type: USER_LOADED,
-      payload: token,
-    });
+    console.log('what token', token);
+    /// GET RID OF IF STATEMENT LATER.
+    if (token) {
+      dispatch({
+        type: USER_LOADED,
+        payload: token,
+      });
+    } else {
+      dispatch({
+        type: AUTH_ERROR,
+      });
+    }
   } catch (err) {
     dispatch({
       type: AUTH_ERROR,

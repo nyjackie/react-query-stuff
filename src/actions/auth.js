@@ -69,7 +69,11 @@ export const logout = () => dispatch => {
 // Load User
 export const loadUser = () => async dispatch => {
   try {
-    const res = await api.get();
+    // const res = await api.get();
+    await wait(1000); // wait 1s to simulate round trip
+    const res = {
+      data: fakeJWT(),
+    };
 
     dispatch({
       type: USER_LOADED,

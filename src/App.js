@@ -15,7 +15,7 @@ import Claims from 'views/Claims';
 
 // components/other
 import Navbar from 'components/Navbar';
-import PrivateRoutes from 'components/PrivateRoutes';
+import PrivateRoute from 'components/PrivateRoute';
 import store from 'store';
 
 const App = () => {
@@ -37,10 +37,9 @@ const App = () => {
                     <Route exact path="/" component={Landing} />
                     <Route exact path="/register" component={Register} />
                     <Route exact path="/login" component={Login} />
-                    <PrivateRoutes>
-                      {/* place routes that require auth in here */}
-                      <Route exact path="/claims" component={Claims} />
-                    </PrivateRoutes>
+                    <PrivateRoute exact path="/claims">
+                      <Claims />
+                    </PrivateRoute>
                   </Switch>
                 </main>
               </Col>

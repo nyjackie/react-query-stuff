@@ -23,7 +23,7 @@ const Login = ({ login, isAuthenticated }) => {
   };
   if (isAuthenticated) {
     //REDIRECTS USER TO DASHBOARD AFTER LOGIN
-    return <Redirect to="/dashboard" />;
+    return <Redirect to="/claims" />;
   }
   return (
     <Fragment>

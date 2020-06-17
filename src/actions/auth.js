@@ -43,7 +43,7 @@ export const login = (email, password) => async dispatch => {
       payload: res.data,
     });
   } catch (err) {
-    const errors = err?.response?.data?.errors;
+    const errors = err.response?.data?.errors;
     if (errors) {
       console.error(errors);
     }

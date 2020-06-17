@@ -1,7 +1,5 @@
 import userService from 'services/user.service';
 import {
-  REGISTER_SUCCESS,
-  REGISTER_FAIL,
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
@@ -9,27 +7,6 @@ import {
   USER_LOADED,
   LOGIN_REQUESTED,
 } from './types';
-
-export const register = ({ email, password, first_name, last_name }) => async dispatch => {
-  // const body = { email, password, first_name, last_name };
-  try {
-    // let res = await api.createUser(body);
-    const res = { data: {} };
-    dispatch({
-      type: REGISTER_SUCCESS,
-      payload: res.data,
-    });
-  } catch (err) {
-    const errors = err.response.data.errors;
-    if (errors) {
-      alert('LOGIN FAILED');
-      console.error('login failed', errors);
-    }
-    dispatch({
-      type: REGISTER_FAIL,
-    });
-  }
-};
 
 export const login = (email, password) => async dispatch => {
   dispatch({

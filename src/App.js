@@ -9,7 +9,6 @@ import Col from 'react-bootstrap/Col';
 
 // views or route components
 import Landing from 'views/Landing';
-import Register from 'views/Register';
 import Login from 'views/Login';
 import Claims from 'views/Claims';
 import Dashboard from 'views/Dashboard';
@@ -40,7 +39,6 @@ const App = props => {
                 <main>
                   <Switch>
                     <Route exact path="/" component={Landing} />
-                    <Route exact path="/register" component={Register} />
                     <Route exact path="/login" component={Login} />
                     <PrivateRoute exact path="/claims" component={Claims} />
                     <PrivateRoute exact path="/dashboard" component={Dashboard} />

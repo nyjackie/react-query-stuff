@@ -1,6 +1,5 @@
 import jwt_decode from 'jwt-decode';
 import {
-  REGISTER_SUCCESS,
   LOGIN_SUCCESS,
   LOGOUT,
   AUTH_ERROR,
@@ -37,14 +36,6 @@ export default function (state = initialState, action) {
         user: payload,
       };
     case LOGIN_SUCCESS:
-      return {
-        ...state,
-        token: payload,
-        isAuthenticated: true,
-        loading: false,
-        user,
-      };
-    case REGISTER_SUCCESS:
       return {
         ...state,
         token: payload,

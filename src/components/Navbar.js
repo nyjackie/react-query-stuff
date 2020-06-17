@@ -19,9 +19,6 @@ const Navbar = ({ isAuthenticated, logout }) => {
           Login
         </NavLink>
       )}
-      <NavLink to="/register" className="btn btn-primary">
-        Register
-      </NavLink>
     </div>
   );
 };

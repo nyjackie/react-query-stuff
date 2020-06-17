@@ -1,0 +1,39 @@
+@import './theme.scss'; // bootstrap is imported in here
+@import './mixins.scss';
+
+/**
+ * Global CSS
+ */
+
+@font-face {
+  font-family: 'Circular Std';
+  font-style: normal;
+  font-weight: normal;
+  src: url('./fonts/CircularStd-Book.ttf');
+}
+
+@font-face {
+  font-family: 'Circular Std Bold';
+  font-style: normal;
+  font-weight: 900;
+  src: url('./fonts/CircularStd-Bold.otf');
+}
+
+@font-face {
+  font-family: 'Circular Std Medium';
+  font-style: normal;
+  font-weight: 600;
+  src: url('./fonts/CircularStd-Medium.ttf');
+}
+
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}

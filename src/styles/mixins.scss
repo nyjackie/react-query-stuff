@@ -1,0 +1,27 @@
+/**
+ * Mixins
+ * this file depends on Bootstrap variables to must be included _after_ bootstrap
+ */
+
+// @function em($size, $base)
+// Convert a pixel value to an em one,
+// optionally passing in the base size for context.
+@function em($size, $base: $font-size-root) {
+  @return ($size / $base) * 1em;
+}
+
+// @function rem($size)
+// Convert a pixel value to a rem value
+@function rem($size) {
+  @return ($size / $font-size-root) * 1rem;
+}
+
+// @mixins from-bp
+// Just to make writing media queries easier.
+// pass in one of the grid breakpoint keys:
+// @inclide from-bp('lg') { }
+@mixin from-bp($bp) {
+  @media (min-width: map-get($grid-breakpoints, $bp)) {
+    @content;
+  }
+}

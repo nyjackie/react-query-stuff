@@ -12,23 +12,42 @@ instance.defaults.headers.common['Content-Type'] = 'application/json';
 
 let mock;
 if (process.env.NODE_ENV === 'development') {
-  // dont want this accidentally ended up on production
+  // dont want this accidentally ending up on production
   mock = mockApi(instance);
 }
 
-const api = {
-  // Accounts
-  spending: () => instance.get('/accounts/spending/'),
-  transactions: () => instance.get('/accounts/spending/transactions'),
+// Accounts
+function spending() {
+  return instance.get('/accounts/spending/');
+}
+function transactions() {
+  return instance.get('/accounts/spending/transactions');
+}
 
-  // Users
-  users: (body, config = {}) => instance.post('/users', body, config),
-  login: (config = {}) => instance.post('/users/login', {}, config),
-  load: (config = {}) => instance.get('users/', config),
-};
+/**
+ *
+ * @param {object} body
+ */
+function createUser(body) {
+  return instance.post('/users', body);
+}
+
+/**
+ * @param {string} email
+ * @param {string} password
+ * @returns {Promise<object>} Returns a Promise resolving with an axios response object
+ */
+function login(email, password) {
+  const config = {
+    headers: {
+      Authorization: 'Basic ' + window.btoa(email + ':' + password),
+    },
+  };
+  return instance.post('/users/login', {}, config);
+}
 
 //  ***logout the user if the there is an auth error***
-api.interceptors.response.use(
+instance.interceptors.response.use(
   res => res,
   err => {
     if (err.response.status === 401) {
@@ -40,4 +59,14 @@ api.interceptors.response.use(
   }
 );
 
-export default api;
+export default {
+  // users
+  login,
+  createUser,
+
+  // accounts
+  transactions,
+  spending,
+};
+
+// export default api;

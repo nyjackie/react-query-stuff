@@ -7,14 +7,13 @@ import {
   LOGOUT,
   AUTH_ERROR,
   USER_LOADED,
+  LOGIN_REQUESTED,
 } from './types';
-import { wait, fakeJWT } from 'utils'; // TODO: for dev only, remove later
-import api from 'api';
 
 export const register = ({ email, password, first_name, last_name }) => async dispatch => {
-  const body = JSON.stringify({ email, password, first_name, last_name });
+  // const body = { email, password, first_name, last_name };
   try {
-    // let res = await api.users(body);
+    // let res = await api.createUser(body);
     const res = { data: {} };
     dispatch({
       type: REGISTER_SUCCESS,
@@ -33,16 +32,21 @@ export const register = ({ email, password, first_name, last_name }) => async di
 };
 
 export const login = (email, password) => async dispatch => {
-  const [err, data] = userService.login(email, password);
+  dispatch({
+    type: LOGIN_REQUESTED,
+  });
+
+  const [err, data] = await userService.login(email, password);
   if (data) {
     dispatch({
       type: LOGIN_SUCCESS,
       payload: data.token,
     });
+    return;
   }
 
   if (err) {
-    console.error(err);
+    console.error(err); // TODO delete this line eventually
     const errors = err.response?.data?.errors;
     if (errors) {
       console.error(errors);
@@ -50,7 +54,6 @@ export const login = (email, password) => async dispatch => {
     dispatch({
       type: LOGIN_FAIL,
     });
-    return;
   }
 };
 
@@ -60,21 +63,19 @@ export const logout = () => dispatch => {
   dispatch({ type: LOGOUT });
 };
 
-// Load User
+// Load Logged in User
 export const loadUser = () => async dispatch => {
   try {
     const token = userService.loadUser();
-    console.log('what token', token);
 
-    /// GET RID OF IF STATEMENT LATER.
-    if (token) {
-      dispatch({
-        type: USER_LOADED,
-        payload: token,
-      });
-    } else {
-      throw 'AUTH_ERROR';
+    if (!token) {
+      throw new Error(AUTH_ERROR);
     }
+
+    dispatch({
+      type: USER_LOADED,
+      payload: token,
+    });
   } catch (err) {
     dispatch({
       type: AUTH_ERROR,

@@ -1,5 +1,12 @@
 import jwt_decode from 'jwt-decode';
-import { REGISTER_SUCCESS, LOGIN_SUCCESS, LOGOUT, AUTH_ERROR, LOGIN_FAIL } from '../actions/types';
+import {
+  REGISTER_SUCCESS,
+  LOGIN_SUCCESS,
+  LOGOUT,
+  AUTH_ERROR,
+  LOGIN_FAIL,
+  USER_LOADED,
+} from '../actions/types';
 
 let initialState = {
   token: null,
@@ -26,6 +33,13 @@ export default function (state = initialState, action) {
   console.log('Reudcer: ', type);
 
   switch (type) {
+    case USER_LOADED:
+      return {
+        ...state,
+        isAuthenticated: true,
+        loading: false,
+        user: payload,
+      };
     case LOGIN_SUCCESS:
       return {
         ...state,

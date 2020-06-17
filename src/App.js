@@ -12,6 +12,7 @@ import Landing from 'views/Landing';
 import Register from 'views/Register';
 import Login from 'views/Login';
 import Claims from 'views/Claims';
+import Dashboard from 'views/Dashboard';
 
 // components/other
 import Navbar from 'components/Navbar';
@@ -39,6 +40,9 @@ const App = () => {
                     <Route exact path="/login" component={Login} />
                     <PrivateRoute exact path="/claims">
                       <Claims />
+                    </PrivateRoute>
+                    <PrivateRoute exact path="/dashboard">
+                      <Dashboard />
                     </PrivateRoute>
                   </Switch>
                 </main>

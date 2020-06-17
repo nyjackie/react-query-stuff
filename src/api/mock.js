@@ -6,8 +6,8 @@ export default function (axiosInstance) {
   const mock = new MockAdapter(axiosInstance);
 
   // Routes
-
-  mock.onPost('/users/login').reply(200, {
+  console.log('its hitting here');
+  mock.onPost('/users/login').reply(401, {
     token: fakeJWT(),
   });
 

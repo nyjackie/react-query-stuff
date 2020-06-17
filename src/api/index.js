@@ -52,6 +52,7 @@ instance.interceptors.response.use(
   err => {
     if (err.response.status === 401) {
       ///Change it to data.msg instead of status code?
+
       store.dispatch({ type: LOGOUT });
       // store.dispatch({ type: CLEAR_STATES })  //This should clear ALL STATES data... but LOGOUT might be enough
     }

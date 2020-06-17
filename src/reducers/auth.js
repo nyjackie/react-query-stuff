@@ -55,6 +55,7 @@ export default function (state = initialState, action) {
     case LOGIN_FAIL:
     case AUTH_ERROR: //will do same as logout??? or maybe include payload with message?
     case LOGOUT:
+      console.log('LOGOUT');
       return {
         ...state,
         token: null,

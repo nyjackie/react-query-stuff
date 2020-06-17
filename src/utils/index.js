@@ -15,7 +15,16 @@ export const fakeJWT = () => {
   const segments = [];
   segments.push(btoa(JSON.stringify(header)));
   segments.push(btoa(JSON.stringify({ username: 'fakeUser', email: 'noone@gooddeedsdata.com' })));
-  segments.push('long-encoded-string-to-be-used-for-authentication');
+  segments.push('long-encoded-string-signature');
 
   return segments.join('.');
+};
+
+export const decryptBasicAuth = encrypted => {
+  //  'Basic ' + window.btoa(email + ':' + password),
+  const parts = window.atob(encrypted.substring(6)).split(':');
+  return {
+    email: parts[0],
+    password: parts[1],
+  };
 };

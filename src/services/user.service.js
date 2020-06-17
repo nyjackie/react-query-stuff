@@ -4,15 +4,11 @@ import setAuthToken from 'utils/setAuthToken';
 import { wait } from 'utils';
 
 async function login(email, password) {
-  await wait(2000);
-
   try {
     const res = await api.login(email, password);
-    if (res.status === 401) {
-      logout();
-      window.location.reload(true);
-      return;
-    }
+
+    await wait(2000);
+
     setAuthToken(res.data.token);
     return [null, res.data];
   } catch (err) {

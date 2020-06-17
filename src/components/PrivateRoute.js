@@ -13,16 +13,16 @@ function PrivateRoute({ component: Component, auth: { isAuthenticated, loading }
   return (
     <Route
       {...rest}
-      render={({ location }) =>
+      render={props =>
         loading ? (
           <Spinner />
         ) : isAuthenticated ? (
-          <Component />
+          <Component {...props}/>
         ) : (
           <Redirect
             to={{
               pathname: '/login',
-              state: { from: location },
+              state: { from: props.location },
             }}
           />
         )
@@ -38,4 +38,5 @@ PrivateRoute.propTypes = {
 const mapStateToProps = state => ({
   auth: state.auth,
 });
+
 export default connect(mapStateToProps)(PrivateRoute);

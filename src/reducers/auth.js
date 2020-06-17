@@ -8,22 +8,12 @@ import {
   USER_LOADED,
 } from '../actions/types';
 
-let initialState = {
+const initialState = {
   token: null,
   isAuthenticated: null,
   loading: true,
   user: null,
 };
-const token = localStorage.getItem('token');
-if (token) {
-  const user = jwt_decode(token);
-  initialState = {
-    token: token,
-    isAuthenticated: true,
-    loading: false,
-    user: user,
-  };
-}
 
 export default function (state = initialState, action) {
   const { type, payload } = action;

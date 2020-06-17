@@ -13,7 +13,6 @@ import Register from 'views/Register';
 import Login from 'views/Login';
 import Claims from 'views/Claims';
 import Dashboard from 'views/Dashboard';
-import setAuthToken from './utils/setAuthToken';
 
 // components/other
 import Navbar from 'components/Navbar';
@@ -23,7 +22,6 @@ import { loadUser } from './actions/auth';
 
 const App = () => {
   useEffect(() => {
-    setAuthToken(localStorage.token);
     store.dispatch(loadUser());
   }, []);
   return (

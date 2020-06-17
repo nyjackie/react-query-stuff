@@ -1,4 +1,5 @@
 import axios from 'axios';
+import mockApi from 'api/mock';
 
 const instance = axios.create({
   baseURL: process.env.REACT_APP_API_BASE_URL,
@@ -6,6 +7,12 @@ const instance = axios.create({
 
 // always use JSON for all API calls
 instance.defaults.headers.common['Content-Type'] = 'application/json';
+
+let mock;
+if (process.env.NODE_ENV === 'development') {
+  // dont want this accidentally ended up on production
+  mock = mockApi(instance);
+}
 
 const api = {
   // Accounts

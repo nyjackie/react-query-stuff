@@ -15,7 +15,7 @@ export const fakeJWT = () => {
   const segments = [];
   segments.push(btoa(JSON.stringify(header)));
   segments.push(btoa(JSON.stringify({ username: 'fakeUser', email: 'noone@gooddeedsdata.com' })));
-  segments.push('fake-signed-string-which-will-never-be-decoded');
+  segments.push('long-encoded-string-to-be-used-for-authentication');
 
   return segments.join('.');
 };

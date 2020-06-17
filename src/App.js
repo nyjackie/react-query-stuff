@@ -17,7 +17,7 @@ import setAuthToken from './utils/setAuthToken';
 
 // components/other
 import Navbar from 'components/Navbar';
-import PrivateRoutes from 'components/PrivateRoutes';
+import PrivateRoute from 'components/PrivateRoute';
 import store from 'store';
 import { loadUser } from './actions/auth';
 
@@ -44,11 +44,12 @@ const App = () => {
                     <Route exact path="/" component={Landing} />
                     <Route exact path="/register" component={Register} />
                     <Route exact path="/login" component={Login} />
-                    <PrivateRoutes>
-                      {/* place routes that require auth in here */}
-                      <Route exact path="/claims" component={Claims} />
-                      <Route exact path="/dashboard" component={Dashboard} />
-                    </PrivateRoutes>
+                    <PrivateRoute exact path="/claims">
+                      <Claims />
+                    </PrivateRoute>
+                    <PrivateRoute exact path="/dashboard">
+                      <Dashboard />
+                    </PrivateRoute>
                   </Switch>
                 </main>
               </Col>

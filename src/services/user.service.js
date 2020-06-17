@@ -26,7 +26,14 @@ function logout() {
   setAuthToken(null);
 }
 
+function loadUser() {
+  const token = localStorage.getItem('token');
+  setAuthToken(token);
+  return token;
+}
+
 export default {
   login,
   logout,
+  loadUser,
 };

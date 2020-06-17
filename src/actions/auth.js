@@ -1,5 +1,14 @@
 import userService from 'services/user.service';
-import { REGISTER_SUCCESS, REGISTER_FAIL, LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT } from './types';
+import {
+  REGISTER_SUCCESS,
+  REGISTER_FAIL,
+  LOGIN_SUCCESS,
+  LOGIN_FAIL,
+  LOGOUT,
+  AUTH_ERROR,
+  USER_LOADED,
+} from './types';
+import { wait, fakeJWT } from 'utils'; // TODO: for dev only, remove later
 
 export const register = ({ email, password, first_name, last_name }) => async dispatch => {
   const body = JSON.stringify({ email, password, first_name, last_name });
@@ -27,7 +36,7 @@ export const login = (email, password) => async dispatch => {
   if (data) {
     dispatch({
       type: LOGIN_SUCCESS,
-      payload: data,
+      payload: data.token,
     });
   }
 
@@ -48,4 +57,19 @@ export const login = (email, password) => async dispatch => {
 export const logout = () => dispatch => {
   userService.logout();
   dispatch({ type: LOGOUT });
+};
+
+// Load User
+export const loadUser = () => async dispatch => {
+  try {
+    const token = userService.loadUser();
+    dispatch({
+      type: USER_LOADED,
+      payload: token,
+    });
+  } catch (err) {
+    dispatch({
+      type: AUTH_ERROR,
+    });
+  }
 };

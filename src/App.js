@@ -1,5 +1,5 @@
 // npm libs
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
@@ -18,8 +18,12 @@ import Dashboard from 'views/Dashboard';
 import Navbar from 'components/Navbar';
 import PrivateRoute from 'components/PrivateRoute';
 import store from 'store';
+import { loadUser } from './actions/auth';
 
 const App = () => {
+  useEffect(() => {
+    store.dispatch(loadUser());
+  }, []);
   return (
     <Provider store={store}>
       <Router>

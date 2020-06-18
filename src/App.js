@@ -9,6 +9,7 @@ import Landing from 'views/Landing';
 import Login from 'views/Login';
 import Claims from 'views/Claims';
 import Dashboard from 'views/Dashboard';
+import Search from 'views/Search';
 
 // components/other
 import Layout from 'components/Layout';
@@ -32,6 +33,7 @@ const App = props => {
             <Route exact path="/login" component={Login} />
             <PrivateRoute exact path="/claims" component={Claims} />
             <PrivateRoute exact path="/dashboard" component={Dashboard} />
+            <PrivateRoute exact path="/search" component={Search} />
           </Switch>
         </Layout>
       </Router>

@@ -1,5 +1,4 @@
 import axios from 'axios';
-import mockApi from 'api/mock';
 import store from '../store';
 import { LOGOUT } from '../actions/types';
 
@@ -12,7 +11,7 @@ instance.defaults.headers.common['Content-Type'] = 'application/json';
 
 if (process.env.NODE_ENV === 'development') {
   // dont want this accidentally ending up on production
-  mockApi(instance);
+  import('api/mock').then(mock => mock.default(instance));
 }
 
 /**
@@ -29,6 +28,7 @@ function login(email, password) {
   return instance.post('/users/login', {}, config);
 }
 
+
 function getClaims() {
   return instance.get('/claims');
 }
@@ -36,6 +36,12 @@ function getClaims() {
 function getClaim(id) {
   return instance.get(`/claims/${id}`);
 }
+
+function search(term) {
+  return instance.post('/internal/search', { search_terms: term });
+}
+
+
 //  ***logout the user if the there is an auth error***
 instance.interceptors.response.use(
   res => res,
@@ -51,8 +57,9 @@ instance.interceptors.response.use(
 );
 
 export default {
-  // users
   login,
   getClaims,
   getClaim,
+  search,
+
 };

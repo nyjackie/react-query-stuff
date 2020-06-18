@@ -9,22 +9,19 @@ const initialState = {
 
 export default function (state = initialState, action) {
   const { type, payload } = action;
-
-  let user = payload ? jwt_decode(payload) : null;
-
   switch (type) {
     case USER_LOADED:
       return {
         ...state,
         isAuthenticated: true,
-        user: payload,
+        user: jwt_decode(payload),
       };
     case LOGIN_SUCCESS:
       return {
         ...state,
         token: payload,
         isAuthenticated: true,
-        user,
+        user: jwt_decode(payload),
       };
     case LOGIN_FAIL:
     case AUTH_ERROR: //will do same as logout??? or maybe include payload with message?

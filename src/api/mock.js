@@ -11,6 +11,10 @@ export default function (axiosInstance) {
       return [401, {}];
     }
 
+    if (creds.password === '500') {
+      return [500, {}];
+    }
+
     return [
       200,
       {

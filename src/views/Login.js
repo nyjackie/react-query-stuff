@@ -11,12 +11,16 @@ const Login = ({ login, isAuthenticated }) => {
     email: '',
     password: '',
   });
+  const [loginError, setLoginError] = useState(null);
   const { email, password } = formData;
   const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
   const onSubmit = e => {
     e.preventDefault();
-    console.log('Email and Password', email, password);
-    login(email, password);
+    setLoginError(null); // clear error
+    login(email, password).catch(err => {
+      // console.error(err)
+      setLoginError(err.message);
+    });
   };
 
   if (isAuthenticated) {
@@ -29,7 +33,7 @@ const Login = ({ login, isAuthenticated }) => {
       <PageHeader pageTitle="Login Page" />
       <Row>
         <Col md={6}>
-          <Form onSubmit={e => onSubmit(e)}>
+          <Form onSubmit={onSubmit}>
             <Form.Group controlId="loginEmail">
               <Form.Label className="email">
                 <b>Email</b>
@@ -59,6 +63,7 @@ const Login = ({ login, isAuthenticated }) => {
             <Button type="submit" value="Login">
               Login
             </Button>
+            {loginError && <p className="mt-2 text-danger">{loginError}</p>}
           </Form>
         </Col>
       </Row>

@@ -1,14 +1,9 @@
 import api from 'api';
 import setAuthToken from 'utils/setAuthToken';
 
-import { wait } from 'utils';
-
 async function login(email, password) {
   try {
     const res = await api.login(email, password);
-
-    await wait(1000);
-
     setAuthToken(res.data.token);
     return [null, res.data];
   } catch (err) {

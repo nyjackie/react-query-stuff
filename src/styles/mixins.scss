@@ -1,3 +1,6 @@
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins';
 /**
  * Mixins
  * this file depends on Bootstrap variables to must be included _after_ bootstrap
@@ -22,6 +25,12 @@
 // @inclide from-bp('lg') { }
 @mixin from-bp($bp) {
   @media (min-width: map-get($grid-breakpoints, $bp)) {
+    @content;
+  }
+}
+
+@mixin to-bp($bp) {
+  @media (max-width: #{map-get($grid-breakpoints, $bp) - 1}) {
     @content;
   }
 }

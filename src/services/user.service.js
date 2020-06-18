@@ -7,7 +7,7 @@ async function login(email, password) {
   try {
     const res = await api.login(email, password);
 
-    await wait(2000);
+    await wait(1000);
 
     setAuthToken(res.data.token);
     return [null, res.data];

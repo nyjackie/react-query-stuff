@@ -37,3 +37,10 @@ body,
 #root {
   height: 100%;
 }
+
+// use together with .btn-link
+// this makes a button truely look like a link
+.btn-link-reset {
+  padding: 0;
+  text-align: left;
+}

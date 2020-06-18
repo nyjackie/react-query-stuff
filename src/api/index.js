@@ -15,22 +15,6 @@ if (process.env.NODE_ENV === 'development') {
   mockApi(instance);
 }
 
-// Accounts
-function spending() {
-  return instance.get('/accounts/spending/');
-}
-function transactions() {
-  return instance.get('/accounts/spending/transactions');
-}
-
-/**
- *
- * @param {object} body
- */
-function createUser(body) {
-  return instance.post('/users', body);
-}
-
 /**
  * @param {string} email
  * @param {string} password
@@ -62,9 +46,4 @@ instance.interceptors.response.use(
 export default {
   // users
   login,
-  createUser,
-
-  // accounts
-  transactions,
-  spending,
 };

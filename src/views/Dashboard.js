@@ -9,13 +9,11 @@ const Dashboard = () => {
         className="text-primary"
         pageTitle="Dashboard **THIS SHOULD APPEAR AFTER LOGIN**"
       />
-      <Container>
-        <h2>Replace Home page?</h2>
-        <Container fluid="lg" className="dashboard">
-          <Row>
-            <Col> Admin page </Col>
-          </Row>
-        </Container>
+      <h2>Replace Home page?</h2>
+      <Container fluid="lg" className="dashboard">
+        <Row>
+          <Col> Admin page </Col>
+        </Row>
       </Container>
     </Fragment>
   );

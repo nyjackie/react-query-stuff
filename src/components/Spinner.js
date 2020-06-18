@@ -1,11 +1,13 @@
-import React, { Fragment } from 'react';
-// import spinner from './spinner.gif';
+import React from 'react';
+import Spinner from 'react-bootstrap/Spinner';
+import Modal from 'react-bootstrap/Modal';
 
-export default () => (
-  <Fragment>
-    There should be a spinnner img here....
-    {/* <img
-      src={spinner}
-    /> */}
-  </Fragment>
+export default ({ show }) => (
+  <Modal show={show}>
+    <div className="d-flex justify-content-center align-items-center">
+      <Spinner animation="border" role="status">
+        <span className="sr-only">Loading...</span>
+      </Spinner>
+    </div>
+  </Modal>
 );

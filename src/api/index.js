@@ -1,5 +1,4 @@
 import axios from 'axios';
-import mockApi from 'api/mock';
 import store from '../store';
 import { LOGOUT } from '../actions/types';
 
@@ -12,7 +11,7 @@ instance.defaults.headers.common['Content-Type'] = 'application/json';
 
 if (process.env.NODE_ENV === 'development') {
   // dont want this accidentally ending up on production
-  mockApi(instance);
+  import('api/mock').then(mock => mock.default(instance));
 }
 
 /**

@@ -10,6 +10,7 @@ import Login from 'views/Login';
 import Claims from 'views/Claims';
 import Dashboard from 'views/Dashboard';
 import Search from 'views/Search';
+import NpProfile from 'views/NpProfile';
 
 // components/other
 import Layout from 'components/Layout';
@@ -34,6 +35,7 @@ const App = props => {
             <PrivateRoute exact path="/claims" component={Claims} />
             <PrivateRoute exact path="/dashboard" component={Dashboard} />
             <PrivateRoute exact path="/search" component={Search} />
+            <PrivateRoute exact path="/nonprofit/:ein" component={NpProfile} />
           </Switch>
         </Layout>
       </Router>

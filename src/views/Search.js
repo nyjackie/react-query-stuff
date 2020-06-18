@@ -1,10 +1,49 @@
 import React, { Fragment, useState } from 'react';
 import { connect } from 'react-redux';
-// import PropTypes from 'prop-types';
-import { Form, Button, Row, Col } from 'react-bootstrap';
+import { useHistory } from 'react-router-dom';
+import { Form, Button, Row, Col, Table } from 'react-bootstrap';
 import PageHeader from 'components/PageHeader';
+import { search } from 'actions/search';
 
-const SearchPage = props => {
+const SingleResult = ({ result }) => {
+  let history = useHistory();
+
+  function handleClick() {
+    history.push(`/nonprofit/${result.ein}`);
+  }
+
+  return (
+    <tr className="pointer" onClick={handleClick}>
+      <td>{result.organization_name}</td>
+      <td>{result.ein}</td>
+      <td>{result.mission}</td>
+    </tr>
+  );
+};
+
+const SearchResults = ({ results }) => {
+  if (!results || results.length === 0) {
+    return null;
+  }
+  return (
+    <Table borderless hover responsive>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>EIN</th>
+          <th>Mission</th>
+        </tr>
+      </thead>
+      <tbody>
+        {results.map((item, i) => (
+          <SingleResult result={item} key={item.ein} />
+        ))}
+      </tbody>
+    </Table>
+  );
+};
+
+const SearchPage = ({ results, search }) => {
   const [formData, setFormData] = useState({
     searchTerm: '',
   });
@@ -16,17 +55,16 @@ const SearchPage = props => {
   const onSubmit = e => {
     e.preventDefault();
     setSearchError(null); // clear error
-    // login(email, password).catch(err => {
-    //   // console.error(err)
-    //   setSearchError(err.message);
-    // });
+    search(searchTerm).catch(err => {
+      setSearchError(err.message);
+    });
   };
 
   return (
     <Fragment>
       <PageHeader pageTitle="Search Nonprofits" />
       <Row>
-        <Col md={6}>
+        <Col>
           <Form onSubmit={onSubmit}>
             <Form.Group controlId="searchNP">
               <Form.Label>
@@ -45,17 +83,15 @@ const SearchPage = props => {
             </Button>
             {searchError && <p className="mt-2 text-danger">{searchError}</p>}
           </Form>
+          <SearchResults results={results} />
         </Col>
       </Row>
     </Fragment>
   );
 };
 
-// SearchPage.propTypes = {
-//   login: PropTypes.func.isRequired,
-//   isAuthenticated: PropTypes.bool,
-// };
+const mapStateToProps = state => ({
+  results: state.search.results,
+});
 
-const mapStateToProps = state => ({});
-
-export default connect(mapStateToProps)(SearchPage);
+export default connect(mapStateToProps, { search })(SearchPage);

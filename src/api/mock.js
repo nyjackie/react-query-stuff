@@ -4,6 +4,12 @@ import { fakeJWT, decryptBasicAuth } from 'utils';
 
 faker.seed(111);
 
+function randBetween(min, max) {
+  // min and max included
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+const ein = () => `${randBetween(10, 99)}-${randBetween(1000000, 5555555)}`;
+
 /**
  * guidestar essentials api documentation
  * https://apiportal.guidestar.org/api-static-documentation-v3
@@ -18,7 +24,7 @@ function successGuideStarResults(total = 5) {
       return {
         organization_id: faker.random.number(),
         bridge_id: faker.random.number(),
-        ein: faker.random.number(),
+        ein: ein(),
         organization_name: faker.company.companyName(),
         also_known_as: faker.company.companyName(),
         mission: faker.lorem.sentence(),
@@ -83,7 +89,7 @@ export default function (axiosInstance) {
     ];
   });
 
-  mock.onPost('/nonprofit/search').reply(200, successGuideStarResults());
+  mock.onPost('/internal/search').reply(200, successGuideStarResults());
 
   return mock;
 }

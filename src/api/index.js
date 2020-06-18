@@ -28,6 +28,10 @@ function login(email, password) {
   return instance.post('/users/login', {}, config);
 }
 
+function search(term) {
+  return instance.post('/internal/search', { search_terms: term });
+}
+
 //  ***logout the user if the there is an auth error***
 instance.interceptors.response.use(
   res => res,
@@ -43,6 +47,6 @@ instance.interceptors.response.use(
 );
 
 export default {
-  // users
   login,
+  search,
 };

@@ -12,3 +12,9 @@ export const CLEAR_PROFILE = 'CLEAR_PROFILE';
 // UI
 export const DRAWER_TOGGLE = 'DRAWER_TOGGLE';
 export const DRAWER_CLOSE = 'DRAWER_CLOSE';
+
+// Search Nonprofits
+export const SEARCH_REQUEST = 'SEARCH_REQUEST';
+export const SEARCH_SUCCESS = 'SEARCH_SUCCESS';
+export const SEARCH_FAIL = 'SEARCH_FAIL';
+export const SEARCH_SELECT = 'SEARCH_SELECT';

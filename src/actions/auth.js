@@ -1,4 +1,4 @@
-import userService from 'services/user.service';
+import userService from 'services/user';
 import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT, AUTH_ERROR, USER_LOADED } from './types';
 import { wait } from 'utils';
 

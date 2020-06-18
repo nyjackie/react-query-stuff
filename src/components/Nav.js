@@ -13,17 +13,17 @@ const SideNav = ({ isAuthenticated, logout, closeDrawer }) => {
   }
 
   return (
-    <Nav className="flex-column h-100" onClick={onNavClick}>
-      <NavLink className="js-closeDrawer" to="/" exact={true}>
+    <Nav className="flex-column h-100 p-3" onClick={onNavClick}>
+      <NavLink className="js-closeDrawer mb-2" to="/" exact={true}>
         Home
       </NavLink>
       {isAuthenticated && (
-        <button onClick={logout} className="js-closeDrawer btn btn-link">
+        <button onClick={logout} className="js-closeDrawer mb-2 btn btn-link">
           Logout
         </button>
       )}
       {!isAuthenticated && (
-        <NavLink to="/login" className="js-closeDrawer">
+        <NavLink to="/login" className="js-closeDrawer mb-2">
           Login
         </NavLink>
       )}

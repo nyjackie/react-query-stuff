@@ -2,21 +2,18 @@ import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import Spinner from './Spinner';
 
 // help from react-router docs
 // https://reacttraining.com/react-router/web/example/auth-workflow
 
 // A wrapper for <Route> that redirects to the login
 // screen if you're not yet authenticated.
-function PrivateRoute({ component: Component, auth: { isAuthenticated, loading }, ...rest }) {
+function PrivateRoute({ component: Component, auth: { isAuthenticated }, ...rest }) {
   return (
     <Route
       {...rest}
       render={props =>
-        loading ? (
-          <Spinner />
-        ) : isAuthenticated ? (
+        isAuthenticated ? (
           <Component {...props} />
         ) : (
           <Redirect

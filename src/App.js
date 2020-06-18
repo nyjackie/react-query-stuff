@@ -7,8 +7,9 @@ import { Helmet } from 'react-helmet';
 // views or route components
 import Landing from 'views/Landing';
 import Login from 'views/Login';
-import Claims from 'views/Claims';
+import Claims from 'views/claims/Claims';
 import Dashboard from 'views/Dashboard';
+import ClaimInfo from './views/claims/ClaimInfo';
 import Search from 'views/Search';
 import NpProfile from 'views/NpProfile';
 
@@ -33,6 +34,7 @@ const App = props => {
             <Route exact path="/" component={Landing} />
             <Route exact path="/login" component={Login} />
             <PrivateRoute exact path="/claims" component={Claims} />
+            <PrivateRoute exact path="/claims/:id" component={ClaimInfo} />
             <PrivateRoute exact path="/dashboard" component={Dashboard} />
             <PrivateRoute exact path="/search" component={Search} />
             <PrivateRoute exact path="/nonprofit/:ein" component={NpProfile} />

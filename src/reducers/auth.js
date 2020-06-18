@@ -17,6 +17,7 @@ export default function (state = initialState, action) {
         ...state,
         isAuthenticated: true,
         user: payload ? jwt_decode(payload) : null,
+
       };
     case LOGIN_SUCCESS:
       return {

@@ -28,9 +28,19 @@ function login(email, password) {
   return instance.post('/users/login', {}, config);
 }
 
+
+function getClaims() {
+  return instance.get('/claims');
+}
+
+function getClaim(id) {
+  return instance.get(`/claims/${id}`);
+}
+
 function search(term) {
   return instance.post('/internal/search', { search_terms: term });
 }
+
 
 //  ***logout the user if the there is an auth error***
 instance.interceptors.response.use(
@@ -48,5 +58,8 @@ instance.interceptors.response.use(
 
 export default {
   login,
+  getClaims,
+  getClaim,
   search,
+
 };

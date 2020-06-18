@@ -1,7 +1,7 @@
-import api from 'api';
 import setAuthToken from 'utils/setAuthToken';
+import api from 'api';
 
-async function login(email, password) {
+export async function login(email, password) {
   try {
     const res = await api.login(email, password);
     setAuthToken(res.data.token);
@@ -11,11 +11,11 @@ async function login(email, password) {
   }
 }
 
-function logout() {
+export function logout() {
   setAuthToken(null);
 }
 
-function loadUser() {
+export function loadUser() {
   const token = localStorage.getItem('token');
   setAuthToken(token);
   return token;

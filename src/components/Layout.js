@@ -25,7 +25,7 @@ const Layout = ({ children, drawerOpen, toggleDrawer, isLoading }) => {
               <Navbar.Toggle aria-controls="drawer" onClick={toggleDrawer} />
               <Navbar.Brand href="/">Good Deeds Data | Admin</Navbar.Brand>
             </Navbar>
-            <main className="flex-fill">{children}</main>
+            <main className="flex-fill container-fluid">{children}</main>
             <footer>
               <p>&copy; Good Deeds Data</p>
             </footer>

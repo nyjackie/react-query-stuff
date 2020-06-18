@@ -3,7 +3,7 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { login } from 'actions/auth';
-import { Container, Form, Button, Row, Col } from 'react-bootstrap';
+import { Form, Button, Row, Col } from 'react-bootstrap';
 import PageHeader from 'components/PageHeader';
 
 const Login = ({ login, isAuthenticated }) => {
@@ -27,43 +27,41 @@ const Login = ({ login, isAuthenticated }) => {
   return (
     <Fragment>
       <PageHeader pageTitle="Login Page" />
-      <Container>
-        <Row>
-          <Col md={6}>
-            <Form onSubmit={e => onSubmit(e)}>
-              <Form.Group controlId="loginEmail">
-                <Form.Label className="email">
-                  <b>Email</b>
-                </Form.Label>
-                <Form.Control
-                  type="email"
-                  placeholder="Email Address"
-                  name="email"
-                  onChange={e => onChange(e)}
-                  value={email}
-                  required
-                />
-              </Form.Group>
-              <Form.Group controlId="loginPassword">
-                <Form.Label className="password">
-                  <b>Password</b>
-                </Form.Label>
-                <Form.Control
-                  type="password"
-                  placeholder="Password"
-                  name="password"
-                  onChange={e => onChange(e)}
-                  value={password}
-                  required
-                />
-              </Form.Group>
-              <Button type="submit" value="Login">
-                Login
-              </Button>
-            </Form>
-          </Col>
-        </Row>
-      </Container>
+      <Row>
+        <Col md={6}>
+          <Form onSubmit={e => onSubmit(e)}>
+            <Form.Group controlId="loginEmail">
+              <Form.Label className="email">
+                <b>Email</b>
+              </Form.Label>
+              <Form.Control
+                type="email"
+                placeholder="Email Address"
+                name="email"
+                onChange={e => onChange(e)}
+                value={email}
+                required
+              />
+            </Form.Group>
+            <Form.Group controlId="loginPassword">
+              <Form.Label className="password">
+                <b>Password</b>
+              </Form.Label>
+              <Form.Control
+                type="password"
+                placeholder="Password"
+                name="password"
+                onChange={e => onChange(e)}
+                value={password}
+                required
+              />
+            </Form.Group>
+            <Button type="submit" value="Login">
+              Login
+            </Button>
+          </Form>
+        </Col>
+      </Row>
     </Fragment>
   );
 };

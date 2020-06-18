@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { logout } from 'actions/auth';
-import { Container, Row } from 'react-bootstrap';
+import { Row } from 'react-bootstrap';
 import PageHeader from 'components/PageHeader';
 
 const Landing = ({ auth: { isAuthenticated }, logout }) => {
@@ -26,9 +26,7 @@ const Landing = ({ auth: { isAuthenticated }, logout }) => {
   return (
     <Fragment>
       <PageHeader pageTitle="Admin" hideBack />
-      <Container>
-        <Row>{isAuthenticated ? authLinks : guestLinks}</Row>
-      </Container>
+      <Row>{isAuthenticated ? authLinks : guestLinks}</Row>
     </Fragment>
   );
 };

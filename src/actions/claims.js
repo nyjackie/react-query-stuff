@@ -12,6 +12,8 @@ import {
 } from './types';
 
 export const getClaims = () => async dispatch => {
+  console.log('are we in claims?');
+
   dispatch({
     type: CLAIMS_REQUEST,
   });
@@ -38,17 +40,25 @@ export const getClaim = id => async dispatch => {
     type: CLAIMS_REQUEST,
   });
   try {
-    const res = null; //Placeholder
+    const [err, data] = await claimsService.getClaim(id);
+    console.log('in here?', data);
     // const res = await api.get(`/claims/${id}`);
     // const [err, data] = await userService.getClaim(id);
-    dispatch({
-      type: GET_CLAIM_SUCCESS,
-      payload: res.data,
-    });
+    if (data) {
+      dispatch({
+        type: GET_CLAIM_SUCCESS,
+        payload: data.data,
+      });
+    } else {
+      dispatch({
+        type: CLAIMS_ERROR,
+        // payload: { msg: err.response.msg, status: err.response.status },
+      });
+    }
   } catch (err) {
     dispatch({
       type: CLAIMS_ERROR,
-      payload: { msg: err.response.msg, status: err.response.status },
+      // payload: { msg: err.response.msg, status: err.response.status },
     });
   }
 };

@@ -10,7 +10,6 @@ import {
 const initialState = {
   claims: [],
   claim: null,
-  loading: true,
   error: {}, // <--- Do we need this?
 };
 
@@ -22,13 +21,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         claims: payload,
-        loading: false,
       };
     case GET_CLAIM_SUCCESS:
       return {
         ...state,
         claim: payload,
-        loading: false,
       };
 
     //approve and delete will do the same, remove it from claims list, but will make different api calls.
@@ -37,7 +34,6 @@ export default function (state = initialState, action) {
       return {
         ...state,
         claims: state.claims.filter(claim => claim._id !== payload),
-        loading: false,
       };
 
     // DO WE NEED THIS?

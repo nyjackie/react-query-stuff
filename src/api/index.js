@@ -33,6 +33,9 @@ function getClaims() {
   return instance.get('/claims');
 }
 
+function getClaim(id) {
+  return instance.get(`/claims/${id}`);
+}
 //  ***logout the user if the there is an auth error***
 instance.interceptors.response.use(
   res => res,
@@ -51,4 +54,5 @@ export default {
   // users
   login,
   getClaims,
+  getClaim,
 };

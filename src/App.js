@@ -9,6 +9,7 @@ import Landing from 'views/Landing';
 import Login from 'views/Login';
 import Claims from 'views/claims/Claims';
 import Dashboard from 'views/Dashboard';
+import ClaimInfo from './views/claims/ClaimInfo';
 
 // components/other
 import Layout from 'components/Layout';
@@ -31,6 +32,7 @@ const App = props => {
             <Route exact path="/" component={Landing} />
             <Route exact path="/login" component={Login} />
             <PrivateRoute exact path="/claims" component={Claims} />
+            <PrivateRoute exact path="/claims/:id" component={ClaimInfo} />
             <PrivateRoute exact path="/dashboard" component={Dashboard} />
           </Switch>
         </Layout>

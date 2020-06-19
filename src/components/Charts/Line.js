@@ -24,6 +24,7 @@ function LineChart(props) {
   };
   const chartOptions = {
     responsive: !!responsive,
+    maintainAspectRatio: false,
     title: {
       display: false,
     },
@@ -55,9 +56,11 @@ function LineChart(props) {
   });
 
   return (
-    <canvas ref={refCanvas}>
-      <p>there will be a tabular fallback here</p>
-    </canvas>
+    <div style={{ position: 'relative', width: '100%', height: '300px' }}>
+      <canvas ref={refCanvas}>
+        <p>there will be a tabular fallback here</p>
+      </canvas>
+    </div>
   );
 }
 

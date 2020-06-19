@@ -69,7 +69,6 @@ function successGuideStarResults(total = 5) {
 
 export default function (axiosInstance) {
   const mock = new MockAdapter(axiosInstance);
-  console.log('inside?', mock);
 
   mock.onPost('/users/login').reply(function (config) {
     const creds = decryptBasicAuth(config.headers.Authorization);
@@ -89,7 +88,6 @@ export default function (axiosInstance) {
       },
     ];
   });
-
 
   mock.onGet('/claims').reply(function (config) {
     return [

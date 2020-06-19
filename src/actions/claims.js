@@ -5,22 +5,19 @@ import {
   CLAIMS_REQUEST,
   GET_CLAIMS_SUCCESS,
   GET_CLAIM_SUCCESS,
-  DELETE_CLAIM_SUCCESS,
+  DENY_CLAIM_SUCCESS,
   APPROVE_CLAIM_SUCCESS,
   CLAIMS_ERROR,
   // CREATE_CLAIM,
 } from './types';
 
 export const getClaims = () => async dispatch => {
-  console.log('are we in claims?');
-
   dispatch({
     type: CLAIMS_REQUEST,
   });
 
   const [err, data] = await claimsService.getClaims();
   if (data) {
-    console.log('data', err, data);
     dispatch({
       type: GET_CLAIMS_SUCCESS,
       payload: data.data,
@@ -41,7 +38,6 @@ export const getClaim = id => async dispatch => {
   });
   try {
     const [err, data] = await claimsService.getClaim(id);
-    console.log('in here?', data);
     // const res = await api.get(`/claims/${id}`);
     // const [err, data] = await userService.getClaim(id);
     if (data) {
@@ -63,7 +59,7 @@ export const getClaim = id => async dispatch => {
   }
 };
 
-export const deleteClaim = id => async dispatch => {
+export const denyClaim = (id, history) => async dispatch => {
   dispatch({
     type: CLAIMS_REQUEST,
   });
@@ -71,9 +67,10 @@ export const deleteClaim = id => async dispatch => {
     // await api.delete(`/claims/${id}`);
     // await userService.deleteClaim(id)
     dispatch({
-      type: DELETE_CLAIM_SUCCESS,
+      type: DENY_CLAIM_SUCCESS,
       payload: id,
     });
+    history.push('/claims');
   } catch (err) {
     dispatch({
       type: CLAIMS_ERROR,
@@ -82,7 +79,7 @@ export const deleteClaim = id => async dispatch => {
   }
 };
 
-export const approveClaim = id => async dispatch => {
+export const approveClaim = (id, history) => async dispatch => {
   dispatch({
     type: CLAIMS_REQUEST,
   });
@@ -93,6 +90,7 @@ export const approveClaim = id => async dispatch => {
       type: APPROVE_CLAIM_SUCCESS,
       payload: id,
     });
+    history.push('/claims');
   } catch (err) {
     dispatch({
       type: CLAIMS_ERROR,

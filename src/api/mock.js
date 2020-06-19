@@ -96,24 +96,28 @@ export default function (axiosInstance) {
         data: [
           {
             _id: '1',
+            company: 'Company1',
             description: 'CLAIM REQUEST 1111',
             user: 'alpha@gdd.com',
             date: '2020-04-02T20:38:22.115Z',
           },
           {
             _id: '2',
+            company: 'Company2',
             description: 'CLAIM REQUEST 222',
             user: 'beta@gdd.com',
             date: '2020-05-20T20:38:22.115Z',
           },
           {
             _id: '3',
+            company: 'Company3',
             description: 'CLAIM REQUEST 3333',
             user: 'gamma@gdd.com',
             date: '2020-06-09T20:38:22.115Z',
           },
           {
             _id: '4',
+            company: 'Company4',
             description: 'CLAIM REQUEST 44444',
             user: 'delta@gdd.com',
             date: '2020-06-15T20:38:22.115Z',

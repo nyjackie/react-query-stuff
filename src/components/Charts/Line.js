@@ -53,6 +53,7 @@ function LineChart(props) {
       myChart.destroy();
     };
   });
+
   return (
     <canvas ref={refCanvas}>
       <p>there will be a tabular fallback here</p>

@@ -4,7 +4,7 @@ import { Row, Col } from 'react-bootstrap';
 import { useParams, Link } from 'react-router-dom';
 import PageHeader from 'components/PageHeader';
 import { search } from 'actions/search';
-import Profile from './Profile';
+import Profile from 'views/Profile';
 
 const Nonprofit = ({ results, isLoading, search }) => {
   const { ein } = useParams();

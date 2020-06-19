@@ -1,6 +1,12 @@
 import React from 'react';
 import { Col, Row, Image } from 'react-bootstrap';
+import LineChart from 'components/Charts/Line';
+import { MONTHS_SHORT } from 'components/Charts/constants';
 import styles from './Profile.module.scss';
+
+const Img = props => {
+  return <Image onError={e => e.target.classList.add(styles['img-fail'])} {...props} />;
+};
 
 export default function Profile({ data }) {
   return (
@@ -33,14 +39,54 @@ export default function Profile({ data }) {
         </Col>
       </Row>
       <Row>
-        <h3>Profile photo</h3>
+        <Col>
+          <h3>Profile photo</h3>
+        </Col>
       </Row>
       <Row>
         <Col md={3}>
-          <Image className={styles.logoImg} fluid src="missing.jpg" alt="logo" />
+          <Img className={styles.logoImg} fluid src="missing.jpg" alt="logo" />
         </Col>
         <Col>
-          <Image className={styles.coverImg} fluid src="missing.jpg" alt="cover" />
+          <Img className={styles.coverImg} fluid src="missing.jpg" alt="cover" />
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <h3>Mission</h3>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <p>{data.mission}</p>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <h3>Website</h3>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <p>
+            <a href={data.website_url} target="_blank" rel="noopener noreferrer">
+              {data.website_url}
+            </a>
+          </p>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <h3>Additional Insights</h3>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <LineChart
+            responsive
+            data={[0, 0, 0.1, 0.2, 0.25, 0.3, 0.5, 0.6, 0.57, 0.75, 1.2, 1.9]}
+            labels={MONTHS_SHORT}
+          />
         </Col>
       </Row>
     </article>

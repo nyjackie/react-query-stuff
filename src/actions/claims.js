@@ -59,9 +59,7 @@ export const getClaim = id => async dispatch => {
   }
 };
 
-export const denyClaim = id => async dispatch => {
-  console.log('we are in deny claim');
-  return ' ';
+export const denyClaim = (id, history) => async dispatch => {
   dispatch({
     type: CLAIMS_REQUEST,
   });
@@ -72,6 +70,7 @@ export const denyClaim = id => async dispatch => {
       type: DENY_CLAIM_SUCCESS,
       payload: id,
     });
+    history.push('/claims');
   } catch (err) {
     dispatch({
       type: CLAIMS_ERROR,
@@ -80,9 +79,7 @@ export const denyClaim = id => async dispatch => {
   }
 };
 
-export const approveClaim = id => async dispatch => {
-  console.log('we are in approve claim section', id);
-  return ' ';
+export const approveClaim = (id, history) => async dispatch => {
   dispatch({
     type: CLAIMS_REQUEST,
   });
@@ -93,6 +90,7 @@ export const approveClaim = id => async dispatch => {
       type: APPROVE_CLAIM_SUCCESS,
       payload: id,
     });
+    history.push('/claims');
   } catch (err) {
     dispatch({
       type: CLAIMS_ERROR,

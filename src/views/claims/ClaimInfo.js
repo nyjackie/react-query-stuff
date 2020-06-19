@@ -4,6 +4,7 @@ import Moment from 'react-moment';
 import { connect } from 'react-redux';
 import { approveClaim, denyClaim, getClaim } from 'actions/claims';
 import { Modal, Button } from 'react-bootstrap';
+import PageHeader from 'components/PageHeader';
 
 const ClaimInfo = ({ getClaim, approveClaim, denyClaim, claim: { claim }, match, history }) => {
   const [show, setShow] = useState(false);
@@ -68,6 +69,8 @@ const ClaimInfo = ({ getClaim, approveClaim, denyClaim, claim: { claim }, match,
     <div></div>
   ) : (
     <Fragment>
+      <PageHeader pageTitle="Claim Info Page" />
+
       <div>
         <Moment format="YYYY/MM/DD">{claim.date}</Moment>
         {' | '}

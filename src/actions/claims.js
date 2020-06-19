@@ -12,15 +12,12 @@ import {
 } from './types';
 
 export const getClaims = () => async dispatch => {
-  console.log('are we in claims?');
-
   dispatch({
     type: CLAIMS_REQUEST,
   });
 
   const [err, data] = await claimsService.getClaims();
   if (data) {
-    console.log('data', err, data);
     dispatch({
       type: GET_CLAIMS_SUCCESS,
       payload: data.data,
@@ -41,7 +38,6 @@ export const getClaim = id => async dispatch => {
   });
   try {
     const [err, data] = await claimsService.getClaim(id);
-    console.log('in here?', data);
     // const res = await api.get(`/claims/${id}`);
     // const [err, data] = await userService.getClaim(id);
     if (data) {

@@ -6,15 +6,13 @@ import { approveClaim, denyClaim, getClaim } from 'actions/claims';
 import { Button } from 'react-bootstrap';
 
 const ClaimInfo = ({ getClaim, approveClaim, denyClaim, claim: { claim }, match, history }) => {
-  console.log(claim);
   useEffect(() => {
     getClaim(match.params.id);
   }, [getClaim, match.params.id]);
 
   const popUp = e => {
-    console.log('whats e?', e);
     if (e === 1) {
-      if (window.confirm('Are you sure?')) {
+      if (window.confirm('Confirm Approval')) {
         approveClaim(claim._id);
       }
     }

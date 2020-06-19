@@ -14,7 +14,6 @@ const initialState = {
 };
 
 export default function (state = initialState, action) {
-  console.log('hereee', action);
   const { type, payload } = action;
   switch (type) {
     case GET_CLAIMS_SUCCESS:

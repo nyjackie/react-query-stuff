@@ -37,10 +37,18 @@ const Nonprofit = ({ results, isLoading, search }) => {
     );
   }
 
+  if (selected) {
+    return <Profile data={selected} />;
+  }
+
   return (
     <Fragment>
       <PageHeader pageTitle="Nonprofit Profile" />
-      {selected && <Profile data={selected} />}
+      <Row>
+        <Col>
+          <p>Loading...</p>
+        </Col>
+      </Row>
     </Fragment>
   );
 };

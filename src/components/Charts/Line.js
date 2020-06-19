@@ -10,7 +10,7 @@ import Chart from 'chart.js';
 
 function LineChart(props) {
   const refCanvas = useRef(null);
-  const { options, dataObj, responsive, data, labels, fill, maxTicksLimit } = props;
+  const { options, dataObj, responsive, data, labels, fill, maxTicksLimit, color } = props;
 
   const chartData = {
     labels,
@@ -18,7 +18,7 @@ function LineChart(props) {
       {
         data,
         fill: !!fill,
-        borderColor: 'blue',
+        borderColor: color,
       },
     ],
   };
@@ -62,6 +62,7 @@ function LineChart(props) {
 
 LineChart.defaultProps = {
   maxTicksLimit: 5,
+  color: Chart.defaults.global.defaultColor,
 };
 
 LineChart.propTypes = {
@@ -74,6 +75,7 @@ LineChart.propTypes = {
   data: PropTypes.array,
   labels: PropTypes.array,
   maxTicksLimit: PropTypes.number,
+  color: PropTypes.string,
 };
 
 export default LineChart;

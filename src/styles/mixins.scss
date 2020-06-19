@@ -34,3 +34,30 @@
     @content;
   }
 }
+
+@mixin square() {
+  position: relative;
+  width: 50%;
+
+  .square-content {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+
+  &:after {
+    content: '';
+    display: block;
+    padding-bottom: 100%;
+  }
+}
+
+@mixin innerMargin($mg) {
+  margin: $mg;
+  &:first-child {
+    margin-top: 0;
+  }
+  &:last-child {
+    margin-bottom: 0;
+  }
+}

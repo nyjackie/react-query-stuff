@@ -4,12 +4,6 @@ import { fakeJWT, decryptBasicAuth } from 'utils';
 
 faker.seed(111);
 
-function randBetween(min, max) {
-  // min and max included
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
-const ein = () => `${randBetween(10, 99)}-${randBetween(1000000, 5555555)}`;
-
 /**
  * guidestar essentials api documentation
  * https://apiportal.guidestar.org/api-static-documentation-v3
@@ -24,10 +18,10 @@ function successGuideStarResults(total = 5) {
       return {
         organization_id: faker.random.number(),
         bridge_id: faker.random.number(),
-        ein: ein(),
+        ein: faker.fake('{{random.number}}-{{random.number}}'),
         organization_name: faker.company.companyName(),
         also_known_as: faker.company.companyName(),
-        mission: faker.lorem.sentence(),
+        mission: faker.lorem.paragraph(),
         address_line_1: faker.address.streetAddress(),
         address_line_2: faker.address.secondaryAddress(),
         city: faker.address.city(),

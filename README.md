@@ -36,14 +36,14 @@ https://getbootstrap.com/
 The project has [absolute imports](https://create-react-app.dev/docs/importing-a-component#absolute-imports) set up to `./src` so you can import files easier and it makes import statements easier to copy and paste between files
 
 ```js
-// bad
+// ok
 import './components/Header';
 import '../../utils/my-utils';
 import './Header.module.scss';
 ```
 
 ```js
-// good
+// better
 import 'components/Header';
 import 'utils/my-utils';
 import 'components/Header.module.scss';

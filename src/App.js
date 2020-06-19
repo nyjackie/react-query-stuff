@@ -11,7 +11,7 @@ import Claims from 'views/claims/Claims';
 import Dashboard from 'views/Dashboard';
 import ClaimInfo from './views/claims/ClaimInfo';
 import Search from 'views/Search';
-import NpProfile from 'views/NpProfile';
+import Nonprofit from 'views/Nonprofit';
 
 // components/other
 import Layout from 'components/Layout';
@@ -37,7 +37,7 @@ const App = props => {
             <PrivateRoute exact path="/claims/:id" component={ClaimInfo} />
             <PrivateRoute exact path="/dashboard" component={Dashboard} />
             <PrivateRoute exact path="/search" component={Search} />
-            <PrivateRoute exact path="/nonprofit/:ein" component={NpProfile} />
+            <PrivateRoute exact path="/nonprofit/:ein" component={Nonprofit} />
           </Switch>
         </Layout>
       </Router>

@@ -3,7 +3,7 @@ import { SEARCH_REQUEST, SEARCH_SUCCESS, SEARCH_FAIL, SEARCH_SELECT } from 'acti
 import { wait } from 'utils'; // TODO delete after testing
 
 /**
- *
+ * Generic search by EIN or NP Name or by key words
  * @param {string} searchTerm
  */
 export const search = searchTerm => async dispatch => {

@@ -5,7 +5,7 @@ import {
   CLAIMS_REQUEST,
   GET_CLAIMS_SUCCESS,
   GET_CLAIM_SUCCESS,
-  DELETE_CLAIM_SUCCESS,
+  DENY_CLAIM_SUCCESS,
   APPROVE_CLAIM_SUCCESS,
   CLAIMS_ERROR,
   // CREATE_CLAIM,
@@ -63,7 +63,9 @@ export const getClaim = id => async dispatch => {
   }
 };
 
-export const deleteClaim = id => async dispatch => {
+export const denyClaim = id => async dispatch => {
+  console.log('we are in deny claim');
+  return ' ';
   dispatch({
     type: CLAIMS_REQUEST,
   });
@@ -71,7 +73,7 @@ export const deleteClaim = id => async dispatch => {
     // await api.delete(`/claims/${id}`);
     // await userService.deleteClaim(id)
     dispatch({
-      type: DELETE_CLAIM_SUCCESS,
+      type: DENY_CLAIM_SUCCESS,
       payload: id,
     });
   } catch (err) {
@@ -83,6 +85,8 @@ export const deleteClaim = id => async dispatch => {
 };
 
 export const approveClaim = id => async dispatch => {
+  console.log('we are in approve claim section', id);
+  return ' ';
   dispatch({
     type: CLAIMS_REQUEST,
   });

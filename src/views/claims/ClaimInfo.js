@@ -2,20 +2,21 @@ import React, { Fragment, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Moment from 'react-moment';
 import { connect } from 'react-redux';
-import { getClaim } from '../../actions/claims';
+import { approveClaim, denyClaim, getClaim } from 'actions/claims';
 import { Button } from 'react-bootstrap';
 
-const ClaimInfo = ({ getClaim, claim: { claim }, match, history }) => {
+const ClaimInfo = ({ getClaim, approveClaim, denyClaim, claim: { claim }, match, history }) => {
   console.log(claim);
   useEffect(() => {
     getClaim(match.params.id);
   }, [getClaim, match.params.id]);
 
-  const popUp = () => {
-    if (window.confirm('Are you sure?')) {
-      /// Dispatch DELETE/APPROVE event here?
-
-      history.push('/claims');
+  const popUp = e => {
+    console.log('whats e?', e);
+    if (e === 1) {
+      if (window.confirm('Are you sure?')) {
+        approveClaim(claim._id);
+      }
     }
   };
 
@@ -30,8 +31,8 @@ const ClaimInfo = ({ getClaim, claim: { claim }, match, history }) => {
         {' | '} {claim.user}
       </div>
       <div>
-        <Button onClick={() => popUp()}>Approve</Button>{' '}
-        <Button onClick={() => popUp()}> Deny</Button>
+        <Button onClick={() => popUp(1)}>Approve</Button>{' '}
+        <Button onClick={() => popUp(2)}> Deny</Button>
       </div>
     </Fragment>
   );
@@ -39,10 +40,12 @@ const ClaimInfo = ({ getClaim, claim: { claim }, match, history }) => {
 
 ClaimInfo.propTypes = {
   getClaim: PropTypes.func.isRequired,
+  approveClaim: PropTypes.func.isRequired,
+  denyClaim: PropTypes.func.isRequired,
   claim: PropTypes.object.isRequired,
 };
 const mapStateToProps = state => ({
   claim: state.claims,
 });
 
-export default connect(mapStateToProps, { getClaim })(ClaimInfo);
+export default connect(mapStateToProps, { getClaim, approveClaim, denyClaim })(ClaimInfo);

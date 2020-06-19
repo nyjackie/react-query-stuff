@@ -29,7 +29,7 @@ const ClaimInfo = ({ getClaim, approveClaim, denyClaim, claim: { claim }, match,
   };
 
   const ConfirmationModal = ({ show, choice }) => (
-    <Modal show={show}>
+    <Modal show={show} onHide={() => setShow(false)}>
       <Modal.Header
         closeButton
         onClick={() => {
@@ -79,7 +79,10 @@ const ClaimInfo = ({ getClaim, approveClaim, denyClaim, claim: { claim }, match,
       </div>
       <div>
         <Button onClick={() => openModal('Approve')}> Approve</Button>{' '}
-        <Button onClick={() => openModal('Deny')}> Deny</Button>
+        <Button onClick={() => openModal('Deny')} variant="secondary">
+          {' '}
+          Deny
+        </Button>
       </div>
       <ConfirmationModal show={show} choice={choice} />
     </Fragment>

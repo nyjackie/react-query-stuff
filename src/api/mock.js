@@ -5,6 +5,28 @@ import { fakeJWT, decryptBasicAuth } from 'utils';
 faker.seed(111);
 
 /**
+ * This needs to be updated when we get the final api scheme
+ * This will be used in the table of donation data on a profile page
+ */
+function fakeUserTableData() {
+  return Array(30)
+    .fill(0)
+    .map(() => {
+      return {
+        user_id: faker.random.uuid(),
+        firstName: faker.name.firstName(),
+        lastName: faker.name.lastName(),
+        email: faker.internet.email(),
+        phone: faker.phone.phoneNumber(),
+        donationAmount: faker.finance.amount(),
+        donationDate: faker.date.recent(),
+        addtional1: 'Value',
+        addtional2: 'Value',
+      };
+    });
+}
+
+/**
  * guidestar essentials api documentation
  * https://apiportal.guidestar.org/api-static-documentation-v3
  *
@@ -16,35 +38,40 @@ function successGuideStarResults(total = 5) {
     .fill({})
     .map(() => {
       return {
-        organization_id: faker.random.number(),
-        bridge_id: faker.random.number(),
+        id: faker.random.number(),
         ein: faker.fake('{{random.number}}-{{random.number}}'),
-        organization_name: faker.company.companyName(),
-        also_known_as: faker.company.companyName(),
+        name: faker.company.companyName(),
+        alias: faker.company.companyName(),
+        profile_status: {
+          status: '',
+          description: '',
+        },
         mission: faker.lorem.paragraph(),
-        address_line_1: faker.address.streetAddress(),
-        address_line_2: faker.address.secondaryAddress(),
-        city: faker.address.city(),
-        state: faker.address.stateAbbr(),
-        zip: faker.address.zipCode(),
-        lat_long: faker.fake('{{address.latitude}},{{address.longitude}}'),
-        ntee_code: faker.fake(
-          'T50 {{lorem.word}} / {{lorem.word}} / {{lorem.word}} {{lorem.word}} ({{lorem.word}})'
-        ),
-        public_report: faker.internet.url(),
-        subsection_code: '501(c)(3) Public Charity',
-        number_of_employees: faker.random.number(),
+        description: faker.lorem.paragraphs(),
+        category: '',
         website_url: faker.internet.url(),
         logo_url: faker.image.avatar(),
-        bmf_gross_receipts: '11269539',
-        bmf_assets: '3965331',
-        form990_total_revenue: '11253739',
-        form990_total_expenses: '12792537',
-        form990_total_assets: '3965331',
+        hero_url: null,
         contact_email: faker.internet.email(),
         contact_name: faker.fake('{{name.firstName}} {{name.lastName}}'),
         contact_phone: faker.phone.phoneNumber(),
-        contact_title: faker.name.jobTitle(),
+        gross_receipts: '11269539',
+        ntee_code: faker.fake(
+          'T50 {{lorem.word}} / {{lorem.word}} / {{lorem.word}} {{lorem.word}} ({{lorem.word}})'
+        ),
+        subsection_code: '501(c)(3) Public Charity',
+        guidestar_id: faker.random.number(),
+        bridge_id: faker.random.number(),
+        address: {
+          address_line_1: faker.address.streetAddress(),
+          address_line_2: faker.address.secondaryAddress(),
+          city: faker.address.city(),
+          state: faker.address.stateAbbr(),
+          zip: faker.address.zipCode(),
+          msa: '',
+          lat_long: faker.fake('{{address.latitude}},{{address.longitude}}'),
+        },
+        donationData: fakeUserTableData(),
       };
     });
 

@@ -3,6 +3,7 @@ import { Col, Row, Image, Media } from 'react-bootstrap';
 import { BarChart, LineChart, PieChart } from 'components/Charts';
 import { MONTHS_SHORT } from 'components/Charts/constants';
 import styles from './Profile.module.scss';
+import SortableTable from 'components/SortableTable';
 
 const Img = props => {
   return <Image onError={e => e.target.classList.add(styles['img-fail'])} {...props} />;
@@ -13,7 +14,7 @@ export default function Profile({ data }) {
     <article className={styles['np-profile']}>
       <header className={styles.header}>
         <h3>Welcome to your profile</h3>
-        <h2>{data.organization_name}</h2>
+        <h2>{data.name}</h2>
         <p>{data.ntee_code}</p>
       </header>
       <Row>
@@ -194,6 +195,22 @@ export default function Profile({ data }) {
                   );
                 })}
             </ul>
+          </Col>
+        </Row>
+      </section>
+      <section>
+        <Row>
+          <Col>
+            <h3>Report</h3>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <div className={styles.donationTable}>
+              <div className={styles.tableInner}>
+                <SortableTable data={data.donationData} ignore={['user_id']} />
+              </div>
+            </div>
           </Col>
         </Row>
       </section>

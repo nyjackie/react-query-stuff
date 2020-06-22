@@ -119,3 +119,14 @@
   background: #c4c4c4;
   margin-right: 1em;
 }
+
+.donationTable {
+  max-height: 682px;
+  padding: 30px 24px;
+  overflow: hidden;
+}
+
+.tableInner {
+  height: calc(682px - 60px);
+  overflow: scroll;
+}

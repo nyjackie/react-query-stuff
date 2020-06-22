@@ -10,8 +10,12 @@ import { mapToPrettyHeader } from 'utils/donation';
 /**
  * Table Header <th> component which also handles triggering sort for its column
  */
-const TableHeader = ({ children, sortFunc, sortKey, sortingBy }) => {
+const TableHeader = ({ children, sortFunc, sortKey, sortingBy, dataType }) => {
   const [dir, setdir] = useState(null);
+  const thClassName = ['pointer'];
+  if (dataType === 'currency') {
+    thClassName.push('text-right');
+  }
 
   function handleSort() {
     setdir(dir === 'desc' ? 'asc' : 'desc');
@@ -20,7 +24,7 @@ const TableHeader = ({ children, sortFunc, sortKey, sortingBy }) => {
 
   if (dir && sortingBy && sortingBy === sortKey) {
     return (
-      <th scope="col" className="pointer" onClick={handleSort}>
+      <th scope="col" className={thClassName.join(' ')} onClick={handleSort}>
         {children} <span className={`${styles.sort} ${styles[dir]}`} />
         <span className="sr-only">
           sorted in {dir !== 'asc' ? 'ascending' : 'descending'} order
@@ -30,7 +34,7 @@ const TableHeader = ({ children, sortFunc, sortKey, sortingBy }) => {
   }
 
   return (
-    <th scope="col" className="pointer" onClick={handleSort}>
+    <th scope="col" className={thClassName.join(' ')} onClick={handleSort}>
       {children} <span className={styles.sort} />
       <span className="sr-only">click to sort {dir !== 'asc' ? 'ascending' : 'descending'}</span>
     </th>
@@ -40,13 +44,21 @@ const TableHeader = ({ children, sortFunc, sortKey, sortingBy }) => {
 /**
  * Sortable Table component
  */
-function SortableTable({ id, data, ignore }) {
+function SortableTable({ id, data, ignore, columnTypes, rowKey }) {
   const [rowData, setRowData] = useState(data);
   const [sortingBy, setSortingBy] = useState(null);
 
   function doSort(property, dir) {
     setSortingBy(property);
-    let sorted = sortBy(data, [property]);
+    const dataType = columnTypes[property] || 'string';
+    let sorted;
+    if (dataType === 'currency') {
+      sorted = [...data].sort((a, b) => {
+        return a[property] - b[property];
+      });
+    } else {
+      sorted = sortBy(data, [property]);
+    }
     if (dir === 'desc') {
       sorted = sorted.reverse();
     }
@@ -62,7 +74,7 @@ function SortableTable({ id, data, ignore }) {
   const headers = mapToPrettyHeader(tableKeys);
 
   return (
-    <Table id={id} borderless striped className={styles.table}>
+    <Table id={id} borderless striped responsive className={styles.table}>
       <thead>
         <tr>
           {headers.map((header, i) => {
@@ -72,6 +84,7 @@ function SortableTable({ id, data, ignore }) {
                 key={`${id}-th-${i}`}
                 sortFunc={doSort}
                 sortKey={tableKeys[i]}
+                dataType={columnTypes[tableKeys[i]]}
               >
                 {header}
               </TableHeader>
@@ -80,19 +93,27 @@ function SortableTable({ id, data, ignore }) {
         </tr>
       </thead>
       <tbody>
-        {rowData.map((row, i) => {
-          const rowKey = `${id}-row-${i}`;
+        {rowData.map(row => {
+          const _key = row[rowKey];
           return (
-            <tr key={rowKey}>
+            <tr key={_key}>
               {Object.keys(row)
                 .filter(key => !ignore.includes(key))
-                .map((key, n) => {
+                .map(key => {
                   const val = row[key];
-                  const reactKey = `${rowKey}-td-${n}`;
-                  if (key.toLowerCase().includes('date')) {
+                  const reactKey = `${_key}-${key}`;
+                  const dataType = columnTypes[key] || 'string';
+                  if (dataType === 'date') {
                     return (
                       <td key={reactKey}>
                         <Moment format="MMM DD, YYYY" date={val} />
+                      </td>
+                    );
+                  }
+                  if (dataType === 'currency') {
+                    return (
+                      <td key={reactKey} className="text-right">
+                        ${val}
                       </td>
                     );
                   }
@@ -109,6 +130,7 @@ function SortableTable({ id, data, ignore }) {
 SortableTable.defaultProps = {
   ignore: [],
   id: uniqueId('table'),
+  columnTypes: {},
 };
 
 SortableTable.propTypes = {
@@ -121,6 +143,17 @@ SortableTable.propTypes = {
    * things like "user_id", etc
    */
   ignore: PropTypes.arrayOf(PropTypes.string),
+
+  /**
+   * an object mapping a column to a specific data type
+   */
+  columnTypes: PropTypes.object,
+
+  /**
+   * Tell the component which property in each object is to be used in in the `key`
+   * property when iterating and dynamically creating rows
+   */
+  rowKey: PropTypes.string.isRequired,
 };
 
 export default SortableTable;

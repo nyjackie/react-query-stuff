@@ -128,5 +128,5 @@
 
 .tableInner {
   height: calc(682px - 60px);
-  overflow: scroll;
+  overflow-y: auto;
 }

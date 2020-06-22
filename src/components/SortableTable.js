@@ -5,6 +5,9 @@ import Moment from 'react-moment';
 import sortBy from 'lodash/sortBy';
 import styles from './SortableTable.module.scss';
 
+/****************************************
+ * local helper functions
+ */
 const tableTitles = {
   firstName: 'First Name',
   lastName: 'Last Name',
@@ -23,6 +26,13 @@ function makeKey(str, append = '') {
   return str.replace(/ /g, '-').toLowerCase() + append;
 }
 
+/****************************************
+ * Components
+ */
+
+/**
+ * Table Header <th> component which also handles triggering sort for its column
+ */
 const TableHeader = ({ children, sortFunc, sortKey, sortingBy }) => {
   const [dir, setdir] = useState(null);
 
@@ -31,21 +41,24 @@ const TableHeader = ({ children, sortFunc, sortKey, sortingBy }) => {
     sortFunc(sortKey, dir);
   }
 
-  if (dir && sortingBy === sortKey) {
+  if (dir && sortingBy && sortingBy === sortKey) {
     return (
-      <th className="pointer" onClick={handleSort}>
+      <th scope="col" className="pointer" onClick={handleSort}>
         {children} <span className={`${styles.sort} ${styles[dir]}`} />
       </th>
     );
   }
 
   return (
-    <th className="pointer" onClick={handleSort}>
+    <th scope="col" className="pointer" onClick={handleSort}>
       {children} <span className={styles.sort} />
     </th>
   );
 };
 
+/**
+ * Sortable Table component
+ */
 function SortableTable({ data, ignore }) {
   const [rowData, setRowData] = useState(data);
   const [sortingBy, setSortingBy] = useState(null);
@@ -66,12 +79,9 @@ function SortableTable({ data, ignore }) {
   // create an array of keys with the "ignored" items removed
   const tableKeys = Object.keys(data[0]).filter(key => !ignore.includes(key));
   const headers = mapToPrettyHeader(tableKeys);
-  if (!sortingBy) {
-    setSortingBy(tableKeys[0]);
-  }
 
   return (
-    <Table bordered responsive striped>
+    <Table borderless striped className={styles.table}>
       <thead>
         <tr>
           {headers.map((header, i) => {

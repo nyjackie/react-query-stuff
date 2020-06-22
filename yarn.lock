@@ -4659,6 +4659,11 @@ file-loader@4.3.0:
     loader-utils "^1.2.3"
     schema-utils "^2.5.0"
 
+file-saver@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/file-saver/-/file-saver-2.0.2.tgz#06d6e728a9ea2df2cce2f8d9e84dfcdc338ec17a"
+  integrity sha512-Wz3c3XQ5xroCxd1G8b7yL0Ehkf0TC9oYC6buPFkNnU9EnaPlifeAFCyCh+iewXTyFRcg0a6j3J7FmJsIhlhBdw==
+
 file-uri-to-path@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/file-uri-to-path/-/file-uri-to-path-1.0.0.tgz#553a7b8446ff6f684359c445f1e37a05dacc33dd"
@@ -9171,6 +9176,13 @@ react-bootstrap@^1.0.1:
     react-transition-group "^4.0.0"
     uncontrollable "^7.0.0"
     warning "^4.0.3"
+
+react-csv-downloader@^1.8.0:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/react-csv-downloader/-/react-csv-downloader-1.8.0.tgz#a6aedcb6c6c58cefdc8341ab0b51a9a5e9ab0ffc"
+  integrity sha512-YNN8pyKOqBMZL4XV+mdIYAnbokmpLmMHFcWhgbLo8BjHN4Ar/K5buKBWKgOmSve9dGqdjyADYuZVOQyZ5A9+/Q==
+  dependencies:
+    file-saver "^2.0.2"
 
 react-dev-utils@^10.2.1:
   version "10.2.1"

@@ -14,7 +14,7 @@ const SingleResult = ({ result }) => {
 
   return (
     <tr className="pointer" onClick={handleClick}>
-      <td>{result.organization_name}</td>
+      <td>{result.name}</td>
       <td>{result.ein}</td>
       <td>{result.mission}</td>
     </tr>

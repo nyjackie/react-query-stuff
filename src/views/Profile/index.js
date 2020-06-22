@@ -1,9 +1,11 @@
 import React from 'react';
 import { Col, Row, Image, Media } from 'react-bootstrap';
 import { BarChart, LineChart, PieChart } from 'components/Charts';
+import CsvDownloader from 'react-csv-downloader';
 import { MONTHS_SHORT } from 'components/Charts/constants';
 import styles from './Profile.module.scss';
 import SortableTable from 'components/SortableTable';
+import { processForDownload } from 'utils/donation';
 
 const Img = props => {
   return <Image onError={e => e.target.classList.add(styles['img-fail'])} {...props} />;
@@ -207,6 +209,19 @@ export default function Profile({ data }) {
         <Row>
           <Col>
             <div className={styles.donationTable}>
+              <div className={styles.donateTableHead}>
+                <select>
+                  <option>Last 3 months</option>
+                </select>
+                <CsvDownloader
+                  filename="donate_report"
+                  datas={processForDownload(data.donationData)}
+                >
+                  <button className={styles.dlCsv}>
+                    Download (CSV) <span />
+                  </button>
+                </CsvDownloader>
+              </div>
               <div className={styles.tableInner}>
                 <SortableTable data={data.donationData} ignore={['user_id']} />
               </div>

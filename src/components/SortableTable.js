@@ -4,23 +4,11 @@ import PropTypes from 'prop-types';
 import Moment from 'react-moment';
 import sortBy from 'lodash/sortBy';
 import styles from './SortableTable.module.scss';
+import { mapToPrettyHeader } from 'utils/donation';
 
 /****************************************
  * local helper functions
  */
-const tableTitles = {
-  firstName: 'First Name',
-  lastName: 'Last Name',
-  email: 'Email',
-  phone: 'Phone',
-  donationAmount: 'Amount Donated',
-  donationDate: 'Donation Date',
-  addtional1: 'Aditional Column',
-  addtional2: 'Aditional Column',
-};
-const mapToPrettyHeader = keys => {
-  return keys.map(key => tableTitles[key]);
-};
 
 function makeKey(str, append = '') {
   return str.replace(/ /g, '-').toLowerCase() + append;
@@ -45,6 +33,9 @@ const TableHeader = ({ children, sortFunc, sortKey, sortingBy }) => {
     return (
       <th scope="col" className="pointer" onClick={handleSort}>
         {children} <span className={`${styles.sort} ${styles[dir]}`} />
+        <span className="sr-only">
+          sorted in {dir !== 'asc' ? 'ascending' : 'descending'} order
+        </span>
       </th>
     );
   }
@@ -52,6 +43,7 @@ const TableHeader = ({ children, sortFunc, sortKey, sortingBy }) => {
   return (
     <th scope="col" className="pointer" onClick={handleSort}>
       {children} <span className={styles.sort} />
+      <span className="sr-only">click to sort {dir !== 'asc' ? 'ascending' : 'descending'}</span>
     </th>
   );
 };

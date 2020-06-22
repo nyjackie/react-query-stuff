@@ -5,6 +5,12 @@ import { logout } from 'actions/auth';
 import Nav from 'react-bootstrap/Nav';
 import { closeDrawer } from 'actions/ui';
 
+const Title = () => (
+  <a aria-hidden="true" href="/" className="mb-3">
+    Good Deeds Data | Admin
+  </a>
+);
+
 const SideNav = ({ isAuthenticated, logout, closeDrawer }) => {
   function onNavClick(e) {
     if (e.target.classList.contains('js-closeDrawer')) {
@@ -15,6 +21,7 @@ const SideNav = ({ isAuthenticated, logout, closeDrawer }) => {
   if (!isAuthenticated) {
     return (
       <Nav className="flex-column h-100 p-3" onClick={onNavClick}>
+        <Title />
         <NavLink className="js-closeDrawer mb-2" to="/" exact={true}>
           Home
         </NavLink>
@@ -27,6 +34,7 @@ const SideNav = ({ isAuthenticated, logout, closeDrawer }) => {
 
   return (
     <Nav className="flex-column h-100 p-3" onClick={onNavClick}>
+      <Title />
       <NavLink className="js-closeDrawer mb-2" to="/dashboard" exact={true}>
         Home
       </NavLink>

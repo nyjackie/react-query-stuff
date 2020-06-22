@@ -1,6 +1,6 @@
 import React from 'react';
 import { Col, Row, Image, Media } from 'react-bootstrap';
-import { BarChart, LineChart, PieChart } from 'components/Charts';
+import { BarChart, LineChart, PieChart, GeoMap } from 'components/Charts';
 import { MONTHS_SHORT } from 'components/Charts/constants';
 import styles from './Profile.module.scss';
 
@@ -167,6 +167,11 @@ export default function Profile({ data }) {
                 'rgba(90,99,132,0.6)',
               ]}
             />
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <GeoMap />
           </Col>
         </Row>
       </section>

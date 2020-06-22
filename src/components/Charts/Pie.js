@@ -70,7 +70,7 @@ PieChart.propTypes = {
   //labels for legends
   labels: PropTypes.array,
   title: PropTypes.string,
-  color: PropTypes.string,
+  color: PropTypes.array,
 };
 
 export default PieChart;

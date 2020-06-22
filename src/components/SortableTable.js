@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Table } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import Moment from 'react-moment';
+import sortBy from 'lodash/sortBy';
+import styles from './SortableTable.module.scss';
 
 const tableTitles = {
   firstName: 'First Name',
@@ -22,22 +24,26 @@ function makeKey(str, append = '') {
 }
 
 const TableHeader = ({ children, sortFunc, sortKey, sortingBy }) => {
-  const [dir, setdir] = useState('dsc');
+  const [dir, setdir] = useState(null);
 
   function handleSort() {
-    setdir(dir === 'dsc' ? 'asc' : 'dsc');
+    setdir(dir === 'desc' ? 'asc' : 'desc');
     sortFunc(sortKey, dir);
   }
 
-  if (sortingBy === sortKey) {
+  if (dir && sortingBy === sortKey) {
     return (
-      <th onClick={handleSort}>
-        {children} sort:{dir}
+      <th className="pointer" onClick={handleSort}>
+        {children} <span className={`${styles.sort} ${styles[dir]}`} />
       </th>
     );
   }
 
-  return <th onClick={handleSort}>{children}</th>;
+  return (
+    <th className="pointer" onClick={handleSort}>
+      {children} <span className={styles.sort} />
+    </th>
+  );
 };
 
 function SortableTable({ data, ignore }) {
@@ -46,10 +52,11 @@ function SortableTable({ data, ignore }) {
 
   function doSort(property, dir) {
     setSortingBy(property);
-    // do some complicated sorting
-    // const sorted = data
-    // setRowData(sorted);
-    console.log(property, dir);
+    let sorted = sortBy(data, [property]);
+    if (dir === 'desc') {
+      sorted = sorted.reverse();
+    }
+    setRowData(sorted);
   }
 
   if (data.length === 0) {

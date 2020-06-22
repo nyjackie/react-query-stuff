@@ -1,0 +1,17 @@
+.sort {
+  display: inline-block;
+  background-image: url(../assets/sort-arrows.svg);
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 14px;
+  height: 14px;
+}
+
+.desc {
+  background-image: url(../assets/sort-desc.svg);
+}
+
+.asc {
+  background-image: url(../assets/sort-desc.svg);
+  transform: scaleY(-1);
+}

@@ -1,0 +1,36 @@
+.table {
+  thead {
+    border-bottom: 1px solid black;
+  }
+
+  th {
+    box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 1);
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background-color: #fff;
+  }
+
+  th,
+  td {
+    white-space: nowrap;
+  }
+}
+
+.sort {
+  display: inline-block;
+  background-image: url(../assets/sort-arrows.svg);
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 14px;
+  height: 14px;
+}
+
+.desc {
+  background-image: url(../assets/sort-desc.svg);
+}
+
+.asc {
+  background-image: url(../assets/sort-desc.svg);
+  transform: scaleY(-1);
+}

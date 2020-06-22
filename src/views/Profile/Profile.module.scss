@@ -9,10 +9,10 @@
 }
 
 .header {
-  @include from-bp('md') {
-    position: sticky;
-  }
-  top: 0;
+  // @include from-bp('md') {
+  //   position: sticky;
+  // }
+  // top: 0;
   z-index: 3;
   background-color: white;
 
@@ -129,6 +129,8 @@
 
 .tableInner {
   max-height: calc(682px - 60px);
+  width: 100%;
+  overflow: scroll;
   overflow-y: auto;
 }
 

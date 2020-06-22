@@ -19,7 +19,7 @@ function fakeUserTableData() {
         email: faker.internet.email(),
         phone: faker.phone.phoneNumber(),
         donationAmount: faker.finance.amount(),
-        donationDate: faker.date.recent(),
+        donationDate: faker.date.past(),
         addtional1: 'Value',
         addtional2: 'Value',
       };

@@ -153,7 +153,12 @@ export default function Profile({ data }) {
                 </CsvDownloader>
               </div>
               <div className={styles.tableInner}>
-                <SortableTable data={data.donationData} ignore={['user_id']} />
+                <SortableTable
+                  data={data.donationData}
+                  ignore={['user_id']}
+                  columnTypes={{ donationAmount: 'currency', donationDate: 'date' }}
+                  rowKey="user_id"
+                />
               </div>
             </div>
           </Col>

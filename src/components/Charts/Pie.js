@@ -67,6 +67,7 @@ PieChart.propTypes = {
   fill: PropTypes.bool,
   view: PropTypes.string,
   data: PropTypes.array,
+  //labels for legends
   labels: PropTypes.array,
   title: PropTypes.string,
   color: PropTypes.string,

@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import Chart from 'chart.js';
 
 /**
- * Line Chart
- * react component to render a Chart.js Line chart
- * https://www.chartjs.org/docs/latest/charts/line.html
+ * Bar Chart
+ * react component to render a Chart.js Bar chart
+ * https://www.chartjs.org/docs/latest/charts/bar.html
  */
 
 function BarChart(props) {

@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Chart from 'chart.js';
+import SimpleTable from 'components/SimpleTable';
 
 /**
  * Line Chart
@@ -10,7 +11,17 @@ import Chart from 'chart.js';
 
 function LineChart(props) {
   const refCanvas = useRef(null);
-  const { options, dataObj, responsive, data, labels, fill, maxTicksLimit, color } = props;
+  const {
+    options,
+    dataObj,
+    responsive,
+    data,
+    labels,
+    fill,
+    maxTicksLimit,
+    color,
+    a11yCaption,
+  } = props;
 
   const chartData = {
     labels,
@@ -58,7 +69,7 @@ function LineChart(props) {
   return (
     <div style={{ position: 'relative', width: '100%', height: '300px' }}>
       <canvas ref={refCanvas}>
-        <p>there will be a tabular fallback here</p>
+        <SimpleTable caption={a11yCaption} headers={labels} data={[data]} />
       </canvas>
     </div>
   );

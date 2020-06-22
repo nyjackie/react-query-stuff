@@ -3,20 +3,9 @@ import { Table } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import Moment from 'react-moment';
 import sortBy from 'lodash/sortBy';
+import uniqueId from 'lodash/uniqueId';
 import styles from './SortableTable.module.scss';
 import { mapToPrettyHeader } from 'utils/donation';
-
-/****************************************
- * local helper functions
- */
-
-function makeKey(str, append = '') {
-  return str.replace(/ /g, '-').toLowerCase() + append;
-}
-
-/****************************************
- * Components
- */
 
 /**
  * Table Header <th> component which also handles triggering sort for its column
@@ -51,7 +40,7 @@ const TableHeader = ({ children, sortFunc, sortKey, sortingBy }) => {
 /**
  * Sortable Table component
  */
-function SortableTable({ data, ignore }) {
+function SortableTable({ id, data, ignore }) {
   const [rowData, setRowData] = useState(data);
   const [sortingBy, setSortingBy] = useState(null);
 
@@ -73,14 +62,14 @@ function SortableTable({ data, ignore }) {
   const headers = mapToPrettyHeader(tableKeys);
 
   return (
-    <Table borderless striped className={styles.table}>
+    <Table id={id} borderless striped className={styles.table}>
       <thead>
         <tr>
           {headers.map((header, i) => {
             return (
               <TableHeader
                 sortingBy={sortingBy}
-                key={makeKey(header, i)}
+                key={`${id}-th-${i}`}
                 sortFunc={doSort}
                 sortKey={tableKeys[i]}
               >
@@ -91,21 +80,23 @@ function SortableTable({ data, ignore }) {
         </tr>
       </thead>
       <tbody>
-        {rowData.map(row => {
+        {rowData.map((row, i) => {
+          const rowKey = `${id}-row-${i}`;
           return (
-            <tr key={row.user_id}>
+            <tr key={rowKey}>
               {Object.keys(row)
                 .filter(key => !ignore.includes(key))
-                .map(key => {
+                .map((key, n) => {
                   const val = row[key];
+                  const reactKey = `${rowKey}-td-${n}`;
                   if (key.toLowerCase().includes('date')) {
                     return (
-                      <td key={`${row.user_id}-${key}`}>
+                      <td key={reactKey}>
                         <Moment format="MMM DD, YYYY" date={val} />
                       </td>
                     );
                   }
-                  return <td key={`${row.user_id}-${key}`}>{val}</td>;
+                  return <td key={reactKey}>{val}</td>;
                 })}
             </tr>
           );
@@ -117,6 +108,7 @@ function SortableTable({ data, ignore }) {
 
 SortableTable.defaultProps = {
   ignore: [],
+  id: uniqueId('table'),
 };
 
 SortableTable.propTypes = {

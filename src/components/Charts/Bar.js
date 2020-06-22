@@ -97,11 +97,11 @@ BarChart.propTypes = {
   responsive: PropTypes.bool,
   fill: PropTypes.bool,
   view: PropTypes.string,
-  data: PropTypes.array,
   labels: PropTypes.array,
+  data: PropTypes.array,
   title: PropTypes.string,
   maxTicksLimit: PropTypes.number,
-  color: PropTypes.string,
+  color: PropTypes.array,
 };
 
 export default BarChart;

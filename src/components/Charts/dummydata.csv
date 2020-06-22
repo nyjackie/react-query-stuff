@@ -1,0 +1,52 @@
+id,state,unemployment_rate
+01,Alabama,9.9
+02,Alaska,12.6
+04,Arizona,8.9
+05,Arkansas,9.5
+06,California,16.3
+08,Colorado,10.2
+09,Connecticut,9.4
+10,Delaware,15.8
+11,District of Columbia,8.9
+12,Florida,14.5
+13,Georgia,9.7
+15,Hawaii,22.6
+16,Idaho,8.9
+17,Illinois,15.2
+18,Indiana,12.3
+19,Iowa,10
+20,Kansas,10
+21,Kentucky,11
+22,Louisiana,13.3
+23,Maine,9.3
+24,Maryland,9.9
+25,Massachusetts,16.3
+26,Michigan,21.2
+27,Minnesota,9.9
+28,Mississippi,10.6
+29,Missouri,10.1
+30,Montana,9
+31,Nebraska,5.2
+32,Nevada,25.3
+33,New Hampshire,14.5
+34,New Jersey,15.2
+35,New Mexico,9.2
+36,New York,14.5
+37,North Carolina,12.9
+38,North Dakota,9.1
+39,Ohio,13.7
+40,Oklahoma,12.6
+41,Oregon,14.2
+42,Pennsylvania,13.1
+44,Rhode Island,16.3
+45,South Carolina,12.5
+46,South Dakota,9.4
+47,Tennessee,11.3
+48,Texas,13
+49,Utah,8.5
+50,Vermont,12.7
+51,Virginia,9.4
+53,Washington,15.1
+54,West Virginia,12.9
+55,Wisconsin,12
+56,Wyoming,8.8

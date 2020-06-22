@@ -1,6 +1,6 @@
 import React from 'react';
 import { Col, Row, Image, Media } from 'react-bootstrap';
-import LineChart from 'components/Charts/Line';
+import { BarChart, LineChart, PieChart } from 'components/Charts';
 import { MONTHS_SHORT } from 'components/Charts/constants';
 import styles from './Profile.module.scss';
 
@@ -95,6 +95,77 @@ export default function Profile({ data }) {
               data={[0, 0, 0.1, 0.2, 0.25, 0.3, 0.5, 0.6, 0.57, 0.75, 1.2, 1.9]}
               labels={MONTHS_SHORT}
               color="green"
+            />
+          </Col>
+        </Row>
+        <Row className="justify-content-lg-center">
+          <Col className="col-12 col-lg-6">
+            <BarChart
+              responsive
+              title="horizontal barchart"
+              data={[4, 5, 7, 6, 3, 5]}
+              labels={['18-24', '25-34', '35-44', '45-54', '55-64', '65+']}
+              color={[
+                'rgba(255,99,132,0.6)',
+                'rgba(255,206,95,0.6)',
+                'rgba(99,55,132,0.6)',
+                'rgba(10,99,132,0.6)',
+                'rgba(70,200,100,0.6)',
+                'rgba(90,99,132,0.6)',
+              ]}
+              view="horizontalBar"
+            />
+          </Col>
+          <Col className="col-12 col-lg-6">
+            <PieChart
+              responsive
+              title="horizontal barchart"
+              data={[4, 5, 7, 6, 3, 5]}
+              labels={['18-24', '25-34', '35-44', '45-54', '55-64', '65+']}
+              color={[
+                'rgba(255,99,132,0.6)',
+                'rgba(255,206,95,0.6)',
+                'rgba(99,55,132,0.6)',
+                'rgba(10,99,132,0.6)',
+                'rgba(70,200,100,0.6)',
+                'rgba(90,99,132,0.6)',
+              ]}
+              view="doughnut"
+            />
+          </Col>
+        </Row>
+        <Row className="justify-content-lg-center">
+          <Col className="col-12 col-lg-6">
+            <BarChart
+              responsive
+              title="horizontal barchart"
+              data={[55, 100, 70, 120, 60, 90]}
+              labels={['18-24', '25-34', '35-44', '45-54', '55-64', '65+']}
+              color={[
+                'rgba(255,99,132,0.6)',
+                'rgba(255,206,95,0.6)',
+                'rgba(99,55,132,0.6)',
+                'rgba(10,99,132,0.6)',
+                'rgba(70,200,100,0.6)',
+                'rgba(90,99,132,0.6)',
+              ]}
+              view="horizontalBar"
+            />
+          </Col>
+          <Col className="col-12 col-lg-6">
+            <BarChart
+              responsive
+              title="bar chart"
+              data={[1, 0.9, 1.5, 0.75, 1.2, 0.5]}
+              labels={['18-24', '25-34', '35-44', '45-54', '55-64', '65+']}
+              color={[
+                'rgba(255,99,132,0.6)',
+                'rgba(255,206,95,0.6)',
+                'rgba(99,55,132,0.6)',
+                'rgba(10,99,132,0.6)',
+                'rgba(70,200,100,0.6)',
+                'rgba(90,99,132,0.6)',
+              ]}
             />
           </Col>
         </Row>

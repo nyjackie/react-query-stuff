@@ -17,7 +17,7 @@ function Editable({ children, labelId, multiline, label, editMode, name }) {
   }, []);
 
   useEffect(() => {
-    if (isEdit) {
+    if (isEdit && editMode) {
       inputRef.current.focus();
     }
   });
@@ -33,10 +33,8 @@ function Editable({ children, labelId, multiline, label, editMode, name }) {
       return;
     }
 
-    if (e.keyCode === 13) {
+    if (e.keyCode === 13 && !multiline) {
       e.preventDefault();
-      console.log('this should be saving the new data:', inputRef.current.value);
-      setEdit(false);
     }
   }
 

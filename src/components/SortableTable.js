@@ -47,6 +47,7 @@ const TableHeader = ({ children, sortFunc, sortKey, sortingBy, dataType }) => {
 function SortableTable({ id, data, ignore, columnTypes, rowKey }) {
   const [rowData, setRowData] = useState(data);
   const [sortingBy, setSortingBy] = useState(null);
+  const _id = id || uniqueId('table');
 
   function doSort(property, dir) {
     setSortingBy(property);
@@ -74,14 +75,14 @@ function SortableTable({ id, data, ignore, columnTypes, rowKey }) {
   const headers = mapToPrettyHeader(tableKeys);
 
   return (
-    <Table id={id} borderless striped responsive className={styles.table}>
+    <Table id={_id} borderless striped responsive className={styles.table}>
       <thead>
         <tr>
           {headers.map((header, i) => {
             return (
               <TableHeader
                 sortingBy={sortingBy}
-                key={`${id}-th-${i}`}
+                key={`${_id}-th-${i}`}
                 sortFunc={doSort}
                 sortKey={tableKeys[i]}
                 dataType={columnTypes[tableKeys[i]]}
@@ -129,7 +130,6 @@ function SortableTable({ id, data, ignore, columnTypes, rowKey }) {
 
 SortableTable.defaultProps = {
   ignore: [],
-  id: uniqueId('table'),
   columnTypes: {},
 };
 
@@ -150,7 +150,7 @@ SortableTable.propTypes = {
   columnTypes: PropTypes.object,
 
   /**
-   * Tell the component which property in each object is to be used in in the `key`
+   * Tell the component which property in each object is to be used in the `key`
    * property when iterating and dynamically creating rows
    */
   rowKey: PropTypes.string.isRequired,

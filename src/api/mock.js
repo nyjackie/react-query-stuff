@@ -170,5 +170,11 @@ export default function (axiosInstance) {
   });
   mock.onPost('/internal/search').reply(200, successGuideStarResults());
 
+  let saveReply = 400;
+  mock.onPost('/nonprofit/save').reply(function () {
+    saveReply = saveReply === 400 ? 200 : 400;
+    return [saveReply];
+  });
+
   return mock;
 }

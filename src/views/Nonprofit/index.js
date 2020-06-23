@@ -3,10 +3,10 @@ import { connect } from 'react-redux';
 import { Row, Col } from 'react-bootstrap';
 import { useParams, Link } from 'react-router-dom';
 import PageHeader from 'components/PageHeader';
-import { search } from 'actions/search';
+import { search, saveProfile } from 'actions/nonprofits';
 import Profile from 'views/Profile';
 
-const Nonprofit = ({ results, isLoading, search }) => {
+const Nonprofit = ({ results, isLoading, search, saveProfile }) => {
   const { ein } = useParams();
 
   const selected = results.find(item => item.ein === ein);
@@ -20,6 +20,10 @@ const Nonprofit = ({ results, isLoading, search }) => {
       });
     }
   }, [ein, search, selected]);
+
+  function update(obj) {
+    return saveProfile(obj).catch(console.err);
+  }
 
   if (!selected && !isLoading) {
     return (
@@ -38,7 +42,7 @@ const Nonprofit = ({ results, isLoading, search }) => {
   }
 
   if (selected) {
-    return <Profile data={selected} />;
+    return <Profile onSave={update} data={selected} />;
   }
 
   return (
@@ -54,8 +58,8 @@ const Nonprofit = ({ results, isLoading, search }) => {
 };
 
 const mapStateToProps = state => ({
-  results: state.search.results,
+  results: state.nonprofits.results,
   isLoading: state.loading.isLoading,
 });
 
-export default connect(mapStateToProps, { search })(Nonprofit);
+export default connect(mapStateToProps, { search, saveProfile })(Nonprofit);

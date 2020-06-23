@@ -3,8 +3,8 @@ import auth from './auth';
 import claims from './claims';
 import ui from './ui';
 import loading from './loading';
-import search from './search';
 import notification from './notifications';
+import nonprofits from './nonprofits';
 
 export default combineReducers({
   notification,
@@ -12,5 +12,5 @@ export default combineReducers({
   ui,
   loading,
   claims,
-  search,
+  nonprofits,
 });

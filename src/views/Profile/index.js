@@ -62,10 +62,10 @@ export default function Profile({ data, onSave }) {
         {editing && saveError && <Alert variant="danger">{saveError}</Alert>}
         <header className={styles.header}>
           <h3>Welcome to your profile</h3>
-          <Editable label="Name" editing={editing} name="name">
+          <Editable label="Name" editMode={editing} name="name">
             <h2>{data.name}</h2>
           </Editable>
-          <Editable label="Organization type" editing={editing} name="ntee_code">
+          <Editable label="Organization type" editMode={editing} name="ntee_code">
             <p>{data.ntee_code}</p>
           </Editable>
         </header>
@@ -115,7 +115,7 @@ export default function Profile({ data, onSave }) {
           </Row>
           <Row>
             <Col>
-              <Editable label="Mission statement" multiline editing={editing} name="mission">
+              <Editable label="Mission statement" multiline editMode={editing} name="mission">
                 <p>{data.mission}</p>
               </Editable>
             </Col>
@@ -129,7 +129,7 @@ export default function Profile({ data, onSave }) {
           </Row>
           <Row>
             <Col>
-              <Editable label="Website url" editing={editing} name="website_url">
+              <Editable label="Website url" editMode={editing} name="website_url">
                 <a href={data.website_url} target="_blank" rel="noopener noreferrer">
                   {data.website_url}
                 </a>

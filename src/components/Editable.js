@@ -1,31 +1,76 @@
-import React, { useState, useRef, useLayoutEffect } from 'react';
+import React, { useState, useRef, useLayoutEffect, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import uniqueId from 'lodash/uniqueId';
 import Form from 'react-bootstrap/Form';
+import styles from './Editable.module.scss';
 
-function Editable({ children, labelId, multiline, label, editing, name }) {
-  const [font, setFont] = useState(null);
+function Editable({ children, labelId, multiline, label, editMode, name }) {
+  const [css, setCSS] = useState({});
+  const [isEdit, setEdit] = useState(false);
   const tagRef = useRef(null);
+  const inputRef = useRef(null);
   const id = labelId || uniqueId('editable');
 
   useLayoutEffect(() => {
     const _styles = window.getComputedStyle(tagRef.current);
-    setFont(_styles.font);
+    setCSS({ font: _styles.font, textAlign: _styles.textAlign, color: _styles.color });
   }, []);
 
-  const { type: Tag, props: tagProps } = children;
+  useEffect(() => {
+    if (isEdit) {
+      inputRef.current.focus();
+    }
+  });
 
-  if (editing) {
+  function handleEditClick(e) {
+    e.preventDefault();
+    setEdit(true);
+  }
+
+  function handleKeydown(e) {
+    if (e.keyCode === 27) {
+      setEdit(false);
+      return;
+    }
+
+    if (e.keyCode === 13) {
+      e.preventDefault();
+      console.log('this should be saving the new data:', inputRef.current.value);
+      setEdit(false);
+    }
+  }
+
+  const {
+    type: Tag,
+    props: { children: subChildren, ...tagProps },
+  } = children;
+
+  /**************************************
+   * When content is static, no edit button
+   */
+  if (!editMode) {
     return (
-      <Form.Group controlId={id}>
+      <Tag ref={tagRef} {...tagProps}>
+        {subChildren}
+      </Tag>
+    );
+  }
+
+  /**************************************
+   * Full on edit mode, input visible
+   */
+  if (isEdit) {
+    return (
+      <Form.Group controlId={id} onKeyDown={handleKeydown}>
         <Form.Label className="sr-only">{label}</Form.Label>
         {!multiline && (
           <Form.Control
-            style={{ font }}
+            ref={inputRef}
+            style={css}
             type="text"
             required
             name={name}
-            defaultValue={tagProps.children}
+            defaultValue={subChildren}
           />
         )}
         {multiline && (
@@ -33,9 +78,10 @@ function Editable({ children, labelId, multiline, label, editing, name }) {
             as="textarea"
             required
             rows="5"
-            style={{ font }}
+            style={css}
             name={name}
-            defaultValue={tagProps.children}
+            ref={inputRef}
+            defaultValue={subChildren}
           />
         )}
         <Form.Control.Feedback type="invalid">This field is required.</Form.Control.Feedback>
@@ -43,7 +89,20 @@ function Editable({ children, labelId, multiline, label, editing, name }) {
     );
   }
 
-  return <Tag ref={tagRef} {...tagProps} />;
+  /**************************************
+   * Button to turn on edit mode visible
+   */
+  return (
+    <Tag ref={tagRef} style={{ position: 'relative' }} {...tagProps}>
+      {subChildren}
+      <button
+        className={`${styles.btn} ${multiline ? styles.multi : ''}`}
+        onClick={handleEditClick}
+      >
+        <span className="sr-only">edit this field</span>
+      </button>
+    </Tag>
+  );
 }
 
 Editable.defaultProps = {
@@ -80,7 +139,7 @@ Editable.propTypes = {
   /**
    * [optional] Toggles editing mode. default: false
    */
-  editing: PropTypes.bool,
+  editMode: PropTypes.bool,
 };
 
 export default Editable;

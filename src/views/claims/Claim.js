@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Moment from 'react-moment';
 
-const Claim = ({ claim: { ein, name, description, contact_email, date } }) => {
+const Claim = ({ claim: { ein, name, description, mission, contact_email, date } }) => {
   return (
     <Fragment>
       <tr key={ein}>
         <td>{name}</td>
         <td>
-          <Link to={`/claims/${ein}`}>{description}</Link>
+          <Link to={`/claims/${ein}`}>{mission}</Link>
         </td>
         <td>{contact_email}</td>
         <td>

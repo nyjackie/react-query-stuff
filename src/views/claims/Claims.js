@@ -27,7 +27,7 @@ const ClaimsPage = ({ getClaims, claims: { claims } }) => {
           </thead>
           <tbody>
             {claims.map(claim => (
-              <Claim key={claim._id} claim={claim} />
+              <Claim key={claim.ein} claim={claim} />
             ))}
           </tbody>
         </Table>

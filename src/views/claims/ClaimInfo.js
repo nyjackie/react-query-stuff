@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Moment from 'react-moment';
 import { connect } from 'react-redux';
 import { approveClaim, denyClaim, getClaim } from 'actions/claims';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button, InputGroup, FormControl } from 'react-bootstrap';
 import PageHeader from 'components/PageHeader';
 
 const ClaimInfo = ({ getClaim, approveClaim, denyClaim, claim: { claim }, match, history }) => {
@@ -18,52 +18,70 @@ const ClaimInfo = ({ getClaim, approveClaim, denyClaim, claim: { claim }, match,
     decision(e);
     setShow(true);
   };
-  const claimChoice = e => {
-    console.log('inhere', e);
-    setShow(false);
-    if (e === 'Approve') {
-      approveClaim(claim._id, history);
-    } else if (e === 'Deny') {
-      denyClaim(claim._id, history);
-    }
-  };
 
-  const ConfirmationModal = ({ show, choice }) => (
-    <Modal show={show} onHide={() => setShow(false)}>
-      <Modal.Header
-        closeButton
-        onClick={() => {
-          setShow(false);
-        }}
-      >
-        <Modal.Title>Please Confirm</Modal.Title>
-      </Modal.Header>
+  const ConfirmationModal = ({ show, choice }) => {
+    const [msg, setMsg] = useState({
+      note: '',
+    });
+    const onChange = e => setMsg({ ...msg, note: e.target.value });
 
-      <Modal.Body>
-        <p>{choice} this claim.</p>
-      </Modal.Body>
-
-      <Modal.Footer>
-        <Button
-          variant="secondary"
+    const claimChoice = e => {
+      setShow(false);
+      if (e === 'approve') {
+        approveClaim(claim._id, history, msg);
+      } else if (e === 'deny') {
+        denyClaim(claim._id, history, msg);
+      }
+    };
+    return (
+      <Modal show={show} onHide={() => setShow(false)}>
+        <Modal.Header
+          closeButton
           onClick={() => {
             setShow(false);
           }}
         >
-          Close
-        </Button>
-        <Button
-          variant="primary"
-          onClick={() => {
-            claimChoice(choice);
-          }}
-        >
-          {' '}
-          Save changes
-        </Button>
-      </Modal.Footer>
-    </Modal>
-  );
+          <Modal.Title>Please Confirm</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          <p>You are about to {choice} this claim.</p>
+          <br />
+          <InputGroup>
+            <InputGroup.Prepend>
+              <InputGroup.Text>Leave a comment</InputGroup.Text>
+            </InputGroup.Prepend>
+            <FormControl
+              as="textarea"
+              aria-label="Leave Comments"
+              value={msg.note}
+              onChange={onChange}
+            />
+          </InputGroup>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              setShow(false);
+            }}
+          >
+            Close
+          </Button>
+          <Button
+            variant="primary"
+            onClick={() => {
+              claimChoice(choice);
+            }}
+          >
+            {' '}
+            Save changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  };
 
   return claim === null ? (
     <div></div>
@@ -72,15 +90,16 @@ const ClaimInfo = ({ getClaim, approveClaim, denyClaim, claim: { claim }, match,
       <PageHeader pageTitle="Claim Info Page" />
 
       <div>
-        <Moment format="YYYY/MM/DD">{claim.date}</Moment>
-        {' | '}
-        {claim.description}
-        {' | '} {claim.user}
+        <p>
+          <Moment format="YYYY/MM/DD">{claim.date}</Moment>
+        </p>
+        <p>{claim.name}</p>
+        <p>{claim.description}</p>
+        <p>{claim.contact_email}</p>
       </div>
       <div>
-        <Button onClick={() => openModal('Approve')}> Approve</Button>{' '}
-        <Button onClick={() => openModal('Deny')} variant="secondary">
-          {' '}
+        <Button onClick={() => openModal('approve')}> Approve</Button>{' '}
+        <Button onClick={() => openModal('deny')} variant="secondary">
           Deny
         </Button>
       </div>

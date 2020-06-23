@@ -59,11 +59,12 @@ export const getClaim = id => async dispatch => {
   }
 };
 
-export const denyClaim = (id, history) => async dispatch => {
+export const denyClaim = (id, history, msg) => async dispatch => {
   dispatch({
     type: CLAIMS_REQUEST,
   });
   try {
+    console.log('msg', msg);
     // await api.delete(`/claims/${id}`);
     // await userService.deleteClaim(id)
     dispatch({
@@ -79,7 +80,8 @@ export const denyClaim = (id, history) => async dispatch => {
   }
 };
 
-export const approveClaim = (id, history) => async dispatch => {
+export const approveClaim = (id, history, msg) => async dispatch => {
+  console.log('msg', msg);
   dispatch({
     type: CLAIMS_REQUEST,
   });

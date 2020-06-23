@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Col, Row, Image, Media } from 'react-bootstrap';
+import { Col, Row, Image, Media, Button, Form, Alert } from 'react-bootstrap';
 import { BarChart, LineChart, PieChart, GeoMap } from 'components/Charts';
 import CsvDownloader from 'react-csv-downloader';
 import { MONTHS_SHORT } from 'components/Charts/constants';
@@ -8,7 +8,6 @@ import SortableTable from 'components/SortableTable';
 import { processForDownload } from 'utils/donation';
 import { serialize } from 'utils';
 import Editable from 'components/Editable';
-import Button from 'react-bootstrap/Button';
 import merge from 'lodash/merge';
 
 const Img = props => {
@@ -17,6 +16,8 @@ const Img = props => {
 
 export default function Profile({ data, onSave }) {
   const [editing, setEditing] = useState(false);
+  const [validated, setValidated] = useState(false);
+  const [saveError, setSaveError] = useState(null);
   const formRef = useRef(null);
 
   function toggleEdit(e) {
@@ -24,35 +25,42 @@ export default function Profile({ data, onSave }) {
     setEditing(!editing);
   }
 
-  function publish(e) {
+  function handleSubmit(e) {
     e.preventDefault();
-    const obj = serialize(formRef.current, false);
-    const newData = merge({}, data, obj);
-    onSave(newData).then(() => {
-      setEditing(false);
-    });
+    const form = e.currentTarget;
+    if (form.checkValidity() === false) {
+      console.log('validation failed');
+    } else {
+      const obj = serialize(formRef.current, false);
+      const newData = merge({}, data, obj);
+      onSave(newData)
+        .then(() => {
+          setEditing(false);
+          setSaveError(null);
+        })
+        .catch(err => {
+          setSaveError(err.message);
+        });
+    }
+    setValidated(true);
   }
 
   return (
-    <form
-      ref={formRef}
-      onSubmit={e => {
-        e.preventDefault();
-      }}
-    >
+    <Form noValidate validated={validated} ref={formRef} onSubmit={handleSubmit}>
       <input type="hidden" defaultValue={data.ein} name="ein" />
       <article className={styles['np-profile']}>
-        <header className={styles.header}>
-          <div className="controls">
-            <Button onClick={toggleEdit} variant={editing ? 'danger' : 'primary'}>
-              {editing ? 'Discard' : 'Edit'}
+        <div className="controls">
+          <Button onClick={toggleEdit} variant={editing ? 'danger' : 'primary'}>
+            {editing ? 'Discard' : 'Edit'}
+          </Button>
+          {editing && (
+            <Button type="submit" variant="success">
+              Publish
             </Button>
-            {editing && (
-              <Button onClick={publish} variant="success">
-                Publish
-              </Button>
-            )}
-          </div>
+          )}
+        </div>
+        {editing && saveError && <Alert variant="danger">{saveError}</Alert>}
+        <header className={styles.header}>
           <h3>Welcome to your profile</h3>
           <Editable label="Name" editing={editing} name="name">
             <h2>{data.name}</h2>
@@ -142,7 +150,7 @@ export default function Profile({ data, onSave }) {
                 data={[0, 0, 0.1, 0.2, 0.25, 0.3, 0.5, 0.6, 0.57, 0.75, 1.2, 1.9]}
                 labels={MONTHS_SHORT}
                 color="green"
-                a11yCaption="Donation growth in the last 12 months"
+                ariaLabel="Donation growth in the last 12 months"
               />
             </Col>
           </Row>
@@ -287,6 +295,6 @@ export default function Profile({ data, onSave }) {
           </Row>
         </section>
       </article>
-    </form>
+    </Form>
   );
 }

@@ -55,7 +55,7 @@ export const saveProfile = profileData => async dispatch => {
       });
       return;
     }
-    // do something if response is not 200?
+    // TODO: do something if response is not 200?
   } catch (err) {
     dispatch({
       type: SAVE_FAIL,

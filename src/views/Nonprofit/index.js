@@ -22,7 +22,7 @@ const Nonprofit = ({ results, isLoading, search, saveProfile }) => {
   }, [ein, search, selected]);
 
   function update(obj) {
-    return saveProfile(obj).catch(console.err);
+    return saveProfile(obj);
   }
 
   if (!selected && !isLoading) {

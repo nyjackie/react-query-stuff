@@ -20,17 +20,25 @@ function Editable({ children, labelId, multiline, label, editing, name }) {
       <Form.Group controlId={id}>
         <Form.Label className="sr-only">{label}</Form.Label>
         {!multiline && (
-          <Form.Control style={{ font }} type="text" name={name} defaultValue={tagProps.children} />
+          <Form.Control
+            style={{ font }}
+            type="text"
+            required
+            name={name}
+            defaultValue={tagProps.children}
+          />
         )}
         {multiline && (
           <Form.Control
             as="textarea"
+            required
             rows="5"
             style={{ font }}
             name={name}
             defaultValue={tagProps.children}
           />
         )}
+        <Form.Control.Feedback type="invalid">This field is required.</Form.Control.Feedback>
       </Form.Group>
     );
   }

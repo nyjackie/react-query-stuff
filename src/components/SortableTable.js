@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Table } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import Moment from 'react-moment';
@@ -12,14 +12,15 @@ import { mapToPrettyHeader } from 'utils/donation';
  */
 const TableHeader = ({ children, sortFunc, sortKey, sortingBy, dataType }) => {
   const [dir, setdir] = useState(null);
-  const thClassName = ['pointer'];
-  if (dataType === 'currency') {
-    thClassName.push('text-right');
-  }
 
   function handleSort() {
     setdir(dir === 'desc' ? 'asc' : 'desc');
     sortFunc(sortKey, dir);
+  }
+
+  const thClassName = ['pointer'];
+  if (dataType === 'currency') {
+    thClassName.push('text-right');
   }
 
   if (dir && sortingBy && sortingBy === sortKey) {
@@ -45,12 +46,19 @@ const TableHeader = ({ children, sortFunc, sortKey, sortingBy, dataType }) => {
  * Sortable Table component
  */
 function SortableTable({ id, data, ignore, columnTypes, rowKey }) {
-  const [rowData, setRowData] = useState(data);
   const [sortingBy, setSortingBy] = useState(null);
-  const _id = id || uniqueId('table');
+  const [rowData, setRowData] = useState(data);
+
+  const _id = useMemo(() => {
+    // this makes sure we have the same exact ID on every render for every instance
+    return id || uniqueId('sorTable');
+  }, [id]);
+
+  // create an array of keys with the "ignored" items removed
+  const tableKeys = Object.keys(data[0]).filter(key => !ignore.includes(key));
+  const headers = mapToPrettyHeader(tableKeys);
 
   function doSort(property, dir) {
-    setSortingBy(property);
     const dataType = columnTypes[property] || 'string';
     let sorted;
     if (dataType === 'currency') {
@@ -63,16 +71,9 @@ function SortableTable({ id, data, ignore, columnTypes, rowKey }) {
     if (dir === 'desc') {
       sorted = sorted.reverse();
     }
+    setSortingBy(property);
     setRowData(sorted);
   }
-
-  if (data.length === 0) {
-    return;
-  }
-
-  // create an array of keys with the "ignored" items removed
-  const tableKeys = Object.keys(data[0]).filter(key => !ignore.includes(key));
-  const headers = mapToPrettyHeader(tableKeys);
 
   return (
     <Table id={_id} borderless striped responsive className={styles.table}>
@@ -129,7 +130,7 @@ function SortableTable({ id, data, ignore, columnTypes, rowKey }) {
 }
 
 SortableTable.defaultProps = {
-  ignore: [],
+  ignore: [{}],
   columnTypes: {},
 };
 

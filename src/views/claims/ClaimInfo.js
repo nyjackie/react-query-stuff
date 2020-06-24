@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Moment from 'react-moment';
 import { connect } from 'react-redux';
 import { approveClaim, denyClaim, getClaim } from 'actions/claims';
-import { setNotification } from 'actions/notifications';
+import { addNotification } from 'actions/notifications';
 import {
   Modal,
   Button,
@@ -17,7 +17,7 @@ import {
 import PageHeader from 'components/PageHeader';
 
 const ClaimInfo = ({
-  setNotification,
+  addNotification,
   getClaim,
   approveClaim,
   denyClaim,
@@ -46,12 +46,11 @@ const ClaimInfo = ({
     const claimChoice = e => {
       setShow(false);
       if (e === 'approve') {
-        console.log('why is it in here??');
         approveClaim(claim._id, history, msg);
-        setNotification(`${claim.name} - Approved`);
+        addNotification(`${claim.name} - Approved`, 'success');
       } else if (e === 'deny') {
         denyClaim(claim._id, history, msg);
-        setNotification(`${claim.name} - Denied`);
+        addNotification(`${claim.name} - Denied`, 'fail');
       }
     };
     return (
@@ -193,7 +192,7 @@ const ClaimInfo = ({
 };
 
 ClaimInfo.propTypes = {
-  setNotification: PropTypes.func.isRequired,
+  addNotification: PropTypes.func.isRequired,
   getClaim: PropTypes.func.isRequired,
   approveClaim: PropTypes.func.isRequired,
   denyClaim: PropTypes.func.isRequired,
@@ -203,6 +202,6 @@ const mapStateToProps = state => ({
   claim: state.claims,
 });
 
-export default connect(mapStateToProps, { setNotification, getClaim, approveClaim, denyClaim })(
+export default connect(mapStateToProps, { addNotification, getClaim, approveClaim, denyClaim })(
   ClaimInfo
 );

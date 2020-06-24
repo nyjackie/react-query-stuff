@@ -123,6 +123,7 @@ export default function Profile({ data, onSave }) {
                 src={data.logo_url}
                 alt="logo"
                 name="logo_url"
+                helpText="Provide a square photo. Max size 500k"
               />
             </Col>
             <Col>
@@ -133,6 +134,7 @@ export default function Profile({ data, onSave }) {
                 src={data.hero_url}
                 alt="cover photo"
                 name="hero_url"
+                helpText="Recommended dimensions 950x215, Max size 2mb"
               />
             </Col>
           </Row>

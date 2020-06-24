@@ -1,6 +1,6 @@
 import claimsService from 'services/claims.service';
 // import api from '../utils/api';
-
+import { setNotification } from './notifications';
 import {
   CLAIMS_REQUEST,
   GET_CLAIMS_SUCCESS,
@@ -72,6 +72,7 @@ export const denyClaim = (id, history, msg) => async dispatch => {
       payload: id,
     });
     history.push('/claims');
+    dispatch(setNotification('Item Approved'));
   } catch (err) {
     dispatch({
       type: CLAIMS_ERROR,

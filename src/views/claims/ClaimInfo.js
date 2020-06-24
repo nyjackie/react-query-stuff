@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Moment from 'react-moment';
 import { connect } from 'react-redux';
 import { approveClaim, denyClaim, getClaim } from 'actions/claims';
+import { setNotification } from 'actions/notifications';
 import {
   Modal,
   Button,
@@ -15,7 +16,15 @@ import {
 } from 'react-bootstrap';
 import PageHeader from 'components/PageHeader';
 
-const ClaimInfo = ({ getClaim, approveClaim, denyClaim, claim: { claim }, match, history }) => {
+const ClaimInfo = ({
+  setNotification,
+  getClaim,
+  approveClaim,
+  denyClaim,
+  claim: { claim },
+  match,
+  history,
+}) => {
   const [show, setShow] = useState(false);
   const [choice, decision] = useState('');
 
@@ -172,6 +181,7 @@ const ClaimInfo = ({ getClaim, approveClaim, denyClaim, claim: { claim }, match,
             <Button onClick={() => openModal('deny')} variant="secondary">
               Deny
             </Button>
+            <Button onClick={() => setNotification('sd')}> click</Button>
           </div>
         </Container>
       </Jumbotron>
@@ -181,6 +191,7 @@ const ClaimInfo = ({ getClaim, approveClaim, denyClaim, claim: { claim }, match,
 };
 
 ClaimInfo.propTypes = {
+  setNotification: PropTypes.func.isRequired,
   getClaim: PropTypes.func.isRequired,
   approveClaim: PropTypes.func.isRequired,
   denyClaim: PropTypes.func.isRequired,
@@ -190,4 +201,6 @@ const mapStateToProps = state => ({
   claim: state.claims,
 });
 
-export default connect(mapStateToProps, { getClaim, approveClaim, denyClaim })(ClaimInfo);
+export default connect(mapStateToProps, { setNotification, getClaim, approveClaim, denyClaim })(
+  ClaimInfo
+);

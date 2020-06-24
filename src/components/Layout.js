@@ -8,6 +8,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import SideNav from 'components/Nav';
 import Spinner from 'components/Spinner';
 import styles from './Layout.module.scss';
+import Notification from 'components/Notification';
 
 const Layout = ({ children, drawerOpen, toggleDrawer, isLoading }) => {
   const drawerCSS = ['flex-fill', 'bg-dark', styles.transition, styles.drawer];
@@ -22,6 +23,8 @@ const Layout = ({ children, drawerOpen, toggleDrawer, isLoading }) => {
   return (
     <Fragment>
       <Spinner show={isLoading} />
+
+      <Notification />
       <Container fluid className="d-flex flex-column h-100">
         <h1 className="sr-only">Good Deeds Data admin portal</h1>
         <Row className="h-100 position-relative">

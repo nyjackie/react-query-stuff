@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Toast } from 'react-bootstrap';
 import { setNotification } from 'actions/notifications';
+
 const Notification = ({ notifications, notifications: { id }, setNotification }) => {
   if (!notifications || notifications.length === 0) {
     return null;
@@ -10,23 +11,24 @@ const Notification = ({ notifications, notifications: { id }, setNotification })
 
   return (
     <div style={{ position: 'fixed', top: '20px', right: '20px', zIndex: '10' }}>
-      {notifications.map(notification => {
+      {notifications.map((notification, i) => {
         return (
           <div
             aria-live="polite"
             aria-atomic="true"
+            key={notification.id}
             style={{ position: 'relative', minHeight: '45px' }}
           >
             <div style={{ position: 'absolute', top: 0, right: 0 }}>
               <Toast
-                key={notification.id}
-                show={notification.show}
+                show={true}
+                style={{ visibility: notification.show ? 'visible' : 'invisible' }}
                 onClick={() => {
                   setNotification('', notification.id, false);
                 }}
               >
                 <Toast.Header>
-                  <strong className="mr-auto">{notification.msg}</strong>
+                  <strong className="mr-auto">{notification.msg + i}</strong>
                 </Toast.Header>
               </Toast>
             </div>

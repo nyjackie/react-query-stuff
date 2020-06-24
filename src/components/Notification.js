@@ -4,14 +4,14 @@ import { connect } from 'react-redux';
 import { Toast } from 'react-bootstrap';
 import { setNotification } from 'actions/notifications';
 
-const Notification = ({ notifications, notifications: { id }, setNotification }) => {
+const Notification = ({ notifications, setNotification }) => {
   if (!notifications || notifications.length === 0) {
     return null;
   }
 
   return (
     <div style={{ position: 'fixed', top: '20px', right: '20px', zIndex: '10' }}>
-      {notifications.map((notification, i) => {
+      {notifications.map(notification => {
         return (
           <div
             aria-live="polite"
@@ -21,14 +21,14 @@ const Notification = ({ notifications, notifications: { id }, setNotification })
           >
             <div style={{ position: 'absolute', top: 0, right: 0 }}>
               <Toast
-                show={true}
-                style={{ visibility: notification.show ? 'visible' : 'invisible' }}
+                show={notification.show}
                 onClick={() => {
                   setNotification('', notification.id, false);
                 }}
+                style={{ minWidth: '300px' }}
               >
                 <Toast.Header>
-                  <strong className="mr-auto">{notification.msg + i}</strong>
+                  <strong className="mr-auto">{notification.msg}</strong>
                 </Toast.Header>
               </Toast>
             </div>

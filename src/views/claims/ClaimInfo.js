@@ -46,9 +46,12 @@ const ClaimInfo = ({
     const claimChoice = e => {
       setShow(false);
       if (e === 'approve') {
+        console.log('why is it in here??');
         approveClaim(claim._id, history, msg);
+        setNotification(`${claim.name} - Approved`);
       } else if (e === 'deny') {
         denyClaim(claim._id, history, msg);
+        setNotification(`${claim.name} - Denied`);
       }
     };
     return (
@@ -181,7 +184,6 @@ const ClaimInfo = ({
             <Button onClick={() => openModal('deny')} variant="secondary">
               Deny
             </Button>
-            <Button onClick={() => setNotification('sd')}> click</Button>
           </div>
         </Container>
       </Jumbotron>

@@ -18,6 +18,6 @@ export const setNotification = (msg, id = uuidv4(), show = true, waitTime = 4000
         type: REMOVE_NOTIFICATION,
         payload: id,
       }),
-    waitTime + 500
+    waitTime + 1500
   );
 };

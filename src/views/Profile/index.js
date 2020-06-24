@@ -2,7 +2,7 @@
 import React, { useState, useRef } from 'react';
 import CsvDownloader from 'react-csv-downloader';
 import merge from 'lodash/merge';
-import { Col, Row, Image, Media, Button, Form, Alert } from 'react-bootstrap';
+import { Col, Row, Media, Button, Form, Alert } from 'react-bootstrap';
 
 // styles
 import styles from './Profile.module.scss';
@@ -17,10 +17,6 @@ import UploadableImg from 'components/UploadableImg';
 import { MONTHS_SHORT } from 'components/Charts/constants';
 import { processForDownload } from 'utils/donation';
 import { serialize } from 'utils';
-
-const Img = props => {
-  return <Image onError={e => e.target.classList.add(styles['img-fail'])} {...props} />;
-};
 
 export default function Profile({ data, onSave }) {
   const [editing, setEditing] = useState(false);
@@ -40,16 +36,15 @@ export default function Profile({ data, onSave }) {
       console.log('validation failed');
     } else {
       const obj = serialize(formRef.current, false);
-      console.log(obj);
-      // const newData = merge({}, data, obj);
-      // onSave(newData)
-      //   .then(() => {
-      //     setEditing(false);
-      //     setSaveError(null);
-      //   })
-      //   .catch(err => {
-      //     setSaveError(err.message);
-      //   });
+      const newData = merge({}, data, obj);
+      onSave(newData)
+        .then(() => {
+          setEditing(false);
+          setSaveError(null);
+        })
+        .catch(err => {
+          setSaveError(err.message);
+        });
     }
     setValidated(true);
   }
@@ -74,7 +69,13 @@ export default function Profile({ data, onSave }) {
             </Button>
           )}
         </div>
-        {editing && saveError && <Alert variant="danger">{saveError}</Alert>}
+        {editing && saveError && (
+          <Row>
+            <Col>
+              <Alert variant="danger">{saveError}</Alert>
+            </Col>
+          </Row>
+        )}
         <header className={styles.header}>
           <h3>Welcome to your profile</h3>
           <Editable label="Name" editMode={editing} name="name">
@@ -119,8 +120,7 @@ export default function Profile({ data, onSave }) {
                 editMode={editing}
                 uploadText="Upload Profile Photo"
                 className={styles.logoImg}
-                fluid
-                src="missing.jpg"
+                src={data.logo_url}
                 alt="logo"
                 name="logo_url"
               />
@@ -130,8 +130,7 @@ export default function Profile({ data, onSave }) {
                 editMode={editing}
                 uploadText="Upload Cover Photo"
                 className={styles.coverImg}
-                fluid
-                src="missing.jpg"
+                src={data.hero_url}
                 alt="cover photo"
                 name="hero_url"
               />

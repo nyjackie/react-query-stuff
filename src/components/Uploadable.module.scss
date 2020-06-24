@@ -11,10 +11,16 @@
 .bgImg {
   background-position: center;
   background-repeat: no-repeat;
-  background-size: contain;
   display: block;
   width: 100%;
   height: 100%;
+}
+
+.bgContain {
+  background-size: contain;
+}
+.bgCover {
+  background-size: cover;
 }
 
 .img {
@@ -25,6 +31,27 @@
 
 .dropzone {
   position: relative;
+}
+
+.icon {
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: block;
+  width: 36px;
+  height: 27px;
+  background-image: url(../assets/icon-image.svg);
+  margin-bottom: 10px;
+}
+
+.action {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  background-color: rgba(255, 255, 255, 0.5);
+
   display: flex;
   flex-direction: column;
   justify-content: center;

@@ -64,3 +64,26 @@ body,
   display: block;
   padding-bottom: 100%;
 }
+
+.img-fail {
+  position: relative;
+}
+
+/* style this to fit your needs */
+.img-fail:after {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: lightgray;
+  font-family: 'Helvetica';
+  font-weight: 300;
+  line-height: 2;
+  text-align: center;
+  // content: attr(alt);
+  content: '';
+}

@@ -11,7 +11,7 @@ import styles from './Profile.module.scss';
 import { BarChart, LineChart, PieChart, GeoMap } from 'components/Charts';
 import SortableTable from 'components/SortableTable';
 import Editable from 'components/Editable';
-import Uploadable from 'components/Uploadable';
+import UploadableImg from 'components/UploadableImg';
 
 // our utils
 import { MONTHS_SHORT } from 'components/Charts/constants';
@@ -40,21 +40,28 @@ export default function Profile({ data, onSave }) {
       console.log('validation failed');
     } else {
       const obj = serialize(formRef.current, false);
-      const newData = merge({}, data, obj);
-      onSave(newData)
-        .then(() => {
-          setEditing(false);
-          setSaveError(null);
-        })
-        .catch(err => {
-          setSaveError(err.message);
-        });
+      console.log(obj);
+      // const newData = merge({}, data, obj);
+      // onSave(newData)
+      //   .then(() => {
+      //     setEditing(false);
+      //     setSaveError(null);
+      //   })
+      //   .catch(err => {
+      //     setSaveError(err.message);
+      //   });
     }
     setValidated(true);
   }
 
   return (
-    <Form noValidate validated={validated} ref={formRef} onSubmit={handleSubmit}>
+    <Form
+      encType="multipart/form-data"
+      noValidate
+      validated={validated}
+      ref={formRef}
+      onSubmit={handleSubmit}
+    >
       <input type="hidden" defaultValue={data.ein} name="ein" />
       <article className={styles['np-profile']}>
         <div className="controls">
@@ -77,7 +84,6 @@ export default function Profile({ data, onSave }) {
             <p>{data.ntee_code}</p>
           </Editable>
         </header>
-        <Uploadable />
         <Row>
           <Col lg={4}>
             <div className={styles['stat-block']}>
@@ -109,10 +115,26 @@ export default function Profile({ data, onSave }) {
           </Row>
           <Row>
             <Col md={3}>
-              <Img className={styles.logoImg} fluid src="missing.jpg" alt="logo" />
+              <UploadableImg
+                editMode={editing}
+                uploadText="Upload Profile Photo"
+                className={styles.logoImg}
+                fluid
+                src="missing.jpg"
+                alt="logo"
+                name="logo_url"
+              />
             </Col>
             <Col>
-              <Img className={styles.coverImg} fluid src="missing.jpg" alt="cover" />
+              <UploadableImg
+                editMode={editing}
+                uploadText="Upload Cover Photo"
+                className={styles.coverImg}
+                fluid
+                src="missing.jpg"
+                alt="cover photo"
+                name="hero_url"
+              />
             </Col>
           </Row>
         </section>

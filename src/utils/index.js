@@ -68,32 +68,11 @@ function addToObj(obj, key, val, encode) {
  * @param {boolean} encode whether to run encodeUriComponent on both the key and values
  */
 export function serialize(form, encode = true) {
+  const formData = new FormData(form);
   let data = {};
-  Array.prototype.slice.call(form.elements).forEach(function (field) {
-    if (
-      !field.name ||
-      field.disabled ||
-      ['file', 'reset', 'submit', 'button'].indexOf(field.type) > -1
-    ) {
-      return;
-    }
-
-    if (field.type === 'select-multiple') {
-      Array.prototype.slice.call(field.options).forEach(function (option) {
-        if (!option.selected) return;
-        data = addToObj(data, field.name, option.value, encode);
-      });
-      return;
-    }
-
-    // skipped adding any unchecked or unselected items
-    if (['checkbox', 'radio'].indexOf(field.type) > -1 && !field.checked) {
-      return;
-    }
-
-    data = addToObj(data, field.name, field.value, encode);
-  });
-
+  for (let pair of formData.entries()) {
+    data = addToObj(data, pair[0], pair[1], encode);
+  }
   return data;
 }
 

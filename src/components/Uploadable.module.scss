@@ -1,27 +1,48 @@
-.thumbsContainer {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  margin-top: 16px;
+.previewContainer {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  background-color: transparent;
 }
 
-.thumb {
-  display: inline-flex;
-  border-radius: 2px;
-  border: 1px solid #eaeaea;
-  margin-bottom: 8px;
-  margin-right: 8px;
-  width: 100px;
-  height: 100px;
-  padding: 4px;
+.bgImg {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: block;
+  width: 100%;
+  height: 100%;
 }
-.thumbInner {
-  display: flex;
-  min-width: 0;
-  overflow: hidden;
-}
+
 .img {
   display: block;
   width: auto;
   height: 100%;
+}
+
+.dropzone {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+
+  input {
+    display: block;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  p {
+    position: relative;
+    z-index: 2;
+    cursor: pointer;
+    margin: 0;
+  }
 }

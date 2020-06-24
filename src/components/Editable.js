@@ -1,26 +1,28 @@
-import React, { useState, useRef, useLayoutEffect, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import uniqueId from 'lodash/uniqueId';
 import Form from 'react-bootstrap/Form';
 import styles from './Editable.module.scss';
 
-function Editable({ children, labelId, multiline, label, editMode, name }) {
+function Editable({ children, labelId, multiline, label, editMode, name, inputType }) {
   const [css, setCSS] = useState({});
   const [isEdit, setEdit] = useState(false);
   const tagRef = useRef(null);
   const inputRef = useRef(null);
   const id = labelId || uniqueId('editable');
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const _styles = window.getComputedStyle(tagRef.current);
-    setCSS({ font: _styles.font, textAlign: _styles.textAlign, color: _styles.color });
+    setCSS({ font: _styles.font, textAlign: _styles.textAlign });
   }, []);
 
   useEffect(() => {
     if (isEdit && editMode) {
       inputRef.current.focus();
+    } else if (!editMode && isEdit) {
+      setEdit(false);
     }
-  });
+  }, [isEdit, editMode]);
 
   function handleEditClick(e) {
     e.preventDefault();
@@ -65,7 +67,7 @@ function Editable({ children, labelId, multiline, label, editMode, name }) {
           <Form.Control
             ref={inputRef}
             style={css}
-            type="text"
+            type={inputType}
             required
             name={name}
             defaultValue={subChildren}
@@ -82,7 +84,9 @@ function Editable({ children, labelId, multiline, label, editMode, name }) {
             defaultValue={subChildren}
           />
         )}
-        <Form.Control.Feedback type="invalid">This field is required.</Form.Control.Feedback>
+        <Form.Control.Feedback type="invalid">
+          This field is required or invalid.
+        </Form.Control.Feedback>
       </Form.Group>
     );
   }
@@ -106,6 +110,7 @@ function Editable({ children, labelId, multiline, label, editMode, name }) {
 Editable.defaultProps = {
   multiline: false,
   editMode: false,
+  inputType: 'text',
 };
 
 Editable.propTypes = {
@@ -120,7 +125,7 @@ Editable.propTypes = {
   label: PropTypes.string.isRequired,
 
   /**
-   * the name of the state property being edit, will be used for the input.name
+   * Required: Set the <input name="">
    */
   name: PropTypes.string.isRequired,
 
@@ -130,7 +135,7 @@ Editable.propTypes = {
   labelId: PropTypes.string,
 
   /**
-   * [optional] sets contentedtiable multiline. default: false
+   * [optional] sets whether input is text or textarea. default: false
    */
   multiline: PropTypes.bool,
 
@@ -138,6 +143,11 @@ Editable.propTypes = {
    * [optional] Toggles editing mode. default: false
    */
   editMode: PropTypes.bool,
+
+  /**
+   * [optional] Set the <input type="">. default: "text"
+   */
+  inputType: PropTypes.string,
 };
 
 export default Editable;

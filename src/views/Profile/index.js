@@ -1,14 +1,22 @@
+// external libs
 import React, { useState, useRef } from 'react';
-import { Col, Row, Image, Media, Button, Form, Alert } from 'react-bootstrap';
-import { BarChart, LineChart, PieChart, GeoMap } from 'components/Charts';
 import CsvDownloader from 'react-csv-downloader';
-import { MONTHS_SHORT } from 'components/Charts/constants';
+import merge from 'lodash/merge';
+import { Col, Row, Image, Media, Button, Form, Alert } from 'react-bootstrap';
+
+// styles
 import styles from './Profile.module.scss';
+
+// our components
+import { BarChart, LineChart, PieChart, GeoMap } from 'components/Charts';
 import SortableTable from 'components/SortableTable';
+import Editable from 'components/Editable';
+import Uploadable from 'components/Uploadable';
+
+// our utils
+import { MONTHS_SHORT } from 'components/Charts/constants';
 import { processForDownload } from 'utils/donation';
 import { serialize } from 'utils';
-import Editable from 'components/Editable';
-import merge from 'lodash/merge';
 
 const Img = props => {
   return <Image onError={e => e.target.classList.add(styles['img-fail'])} {...props} />;
@@ -69,6 +77,7 @@ export default function Profile({ data, onSave }) {
             <p>{data.ntee_code}</p>
           </Editable>
         </header>
+        <Uploadable />
         <Row>
           <Col lg={4}>
             <div className={styles['stat-block']}>
@@ -129,7 +138,7 @@ export default function Profile({ data, onSave }) {
           </Row>
           <Row>
             <Col>
-              <Editable label="Website url" editMode={editing} name="website_url">
+              <Editable label="Website url" editMode={editing} name="website_url" inputType="url">
                 <a href={data.website_url} target="_blank" rel="noopener noreferrer">
                   {data.website_url}
                 </a>

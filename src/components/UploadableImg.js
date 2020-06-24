@@ -1,10 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-// import Image from 'react-bootstrap/Image';
+// import Modal from 'react-bootstrap/Modal';
 import styles from './Uploadable.module.scss';
 
+function getDimensions(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onabort = reject;
+    reader.onerror = reject;
+    reader.onload = e => {
+      // Do whatever you want with the file contents
+      const binaryStr = reader.result;
+      const image = new Image();
+
+      image.onload = () => {
+        console.log(image.width, 'x', image.height);
+        resolve(image.width, image.height);
+      };
+      image.onerror = reject;
+      image.src = binaryStr;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
 const Img = props => {
-  // return <Image onError={e => e.target.classList.add('img-fail')} {...props} />;
   return (
     <span
       style={{ backgroundImage: `url(${props.src})` }}
@@ -33,9 +54,12 @@ function Uploadable({ editMode, className, uploadText, name, ...props }) {
     accept: 'image/*',
     multiple: false,
     noDrag: true,
+    // TODO: set Maxsize when we know it
+    // maxSize: ????????,
     onDrop: acceptedFiles => {
       const file = acceptedFiles[0];
       if (file) {
+        // getDimensions(file); TODO: in case we need to validate dimensions
         setFile(
           Object.assign(file, {
             preview: URL.createObjectURL(file),

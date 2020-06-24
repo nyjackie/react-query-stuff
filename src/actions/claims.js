@@ -1,6 +1,6 @@
 import claimsService from 'services/claims.service';
 // import api from '../utils/api';
-
+import { setNotification } from './notifications';
 import {
   CLAIMS_REQUEST,
   GET_CLAIMS_SUCCESS,
@@ -64,7 +64,7 @@ export const denyClaim = (id, history, msg) => async dispatch => {
     type: CLAIMS_REQUEST,
   });
   try {
-    console.log('msg', msg);
+    console.log('deny msg', msg);
     // await api.delete(`/claims/${id}`);
     // await userService.deleteClaim(id)
     dispatch({
@@ -81,7 +81,7 @@ export const denyClaim = (id, history, msg) => async dispatch => {
 };
 
 export const approveClaim = (id, history, msg) => async dispatch => {
-  console.log('msg', msg);
+  console.log('approve msg', msg);
   dispatch({
     type: CLAIMS_REQUEST,
   });

@@ -21,3 +21,10 @@ export const setNotification = (msg, id = uuidv4(), show = true, waitTime = 4000
     waitTime + 1500
   );
 };
+
+export const removeNotification = id => dispatch => {
+  dispatch({
+    type: REMOVE_NOTIFICATION,
+    payload: id,
+  });
+};

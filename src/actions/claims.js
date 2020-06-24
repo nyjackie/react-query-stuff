@@ -1,6 +1,4 @@
 import claimsService from 'services/claims.service';
-// import api from '../utils/api';
-import { setNotification } from './notifications';
 import {
   CLAIMS_REQUEST,
   GET_CLAIMS_SUCCESS,
@@ -8,7 +6,6 @@ import {
   DENY_CLAIM_SUCCESS,
   APPROVE_CLAIM_SUCCESS,
   CLAIMS_ERROR,
-  // CREATE_CLAIM,
 } from './types';
 
 export const getClaims = () => async dispatch => {

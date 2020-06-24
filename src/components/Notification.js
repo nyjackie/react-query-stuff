@@ -1,51 +1,64 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Toast } from 'react-bootstrap';
-import { setNotification } from 'actions/notifications';
+import { removeNotification } from 'actions/notifications';
+import styles from './Notification.module.scss';
 
-const Notification = ({ notifications, setNotification }) => {
+const Notification = ({ notification, onClose }) => {
+  const [show, setShow] = useState(true);
+
+  return (
+    <div aria-live="polite" aria-atomic="true" className={styles.toastContainer}>
+      <div className={styles.toastInner}>
+        <Toast
+          show={show}
+          onClose={() => {
+            setShow(false);
+            onClose();
+          }}
+          className={`${styles.toast} ${styles[notification.variant]}`}
+        >
+          <Toast.Header>
+            <strong className="mr-auto">{notification.msg}</strong>
+          </Toast.Header>
+        </Toast>
+      </div>
+    </div>
+  );
+};
+
+const Notifications = ({ notifications, removeNotification }) => {
   if (!notifications || notifications.length === 0) {
     return null;
   }
 
   return (
-    <div style={{ position: 'fixed', top: '20px', right: '20px', zIndex: '10' }}>
+    <div className={styles.container}>
       {notifications.map(notification => {
         return (
-          <div
-            aria-live="polite"
-            aria-atomic="true"
+          <Notification
             key={notification.id}
-            style={{ position: 'relative', minHeight: '45px' }}
-          >
-            <div style={{ position: 'absolute', top: 0, right: 0 }}>
-              <Toast
-                show={notification.show}
-                onClick={() => {
-                  setNotification('', notification.id, false);
-                }}
-                style={{ minWidth: '300px' }}
-              >
-                <Toast.Header>
-                  <strong className="mr-auto">{notification.msg}</strong>
-                </Toast.Header>
-              </Toast>
-            </div>
-          </div>
+            notification={notification}
+            onClose={() => {
+              setTimeout(() => {
+                removeNotification(notification.id);
+              }, 160); // Boostrap's Toast css fade is 150ms
+            }}
+          />
         );
       })}
     </div>
   );
 };
 
-Notification.propTypes = {
+Notifications.propTypes = {
   notifications: PropTypes.array.isRequired,
-  setNotification: PropTypes.func.isRequired,
+  removeNotification: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   notifications: state.notification,
 });
 
-export default connect(mapStateToProps, { setNotification })(Notification);
+export default connect(mapStateToProps, { removeNotification })(Notifications);

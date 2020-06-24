@@ -1,0 +1,36 @@
+.container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 10;
+}
+
+.toastContainer {
+  position: relative;
+  min-height: 45px;
+}
+
+.toastInner {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.toast {
+  min-width: 300px;
+}
+
+.none {
+}
+
+.success {
+  background-color: var(--success);
+}
+
+.fail {
+  background-color: var(--danger);
+}
+
+.warning {
+  background-color: var(--warning);
+}

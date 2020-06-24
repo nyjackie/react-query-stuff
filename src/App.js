@@ -12,6 +12,7 @@ import Dashboard from 'views/Dashboard';
 import ClaimInfo from './views/claims/ClaimInfo';
 import Search from 'views/Search';
 import Nonprofit from 'views/Nonprofit';
+import Fundraise from 'views/Fundraise';
 
 // components/other
 import Layout from 'components/Layout';
@@ -33,6 +34,7 @@ const App = props => {
           <Switch>
             <Route exact path="/" component={Landing} />
             <Route exact path="/login" component={Login} />
+            <PrivateRoute exact path="/fundraise" component={Fundraise} />
             <PrivateRoute exact path="/claims" component={Claims} />
             <PrivateRoute exact path="/claims/:id" component={ClaimInfo} />
             <PrivateRoute exact path="/dashboard" component={Dashboard} />

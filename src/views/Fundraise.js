@@ -1,16 +1,24 @@
 import React, { Fragment, useState, useRef } from 'react';
-import { Container, Row, Col, FormControl, InputGroup } from 'react-bootstrap';
+import { Container, Row, Col, FormControl, InputGroup, Form, Button } from 'react-bootstrap';
 import PageHeader from 'components/PageHeader';
 import styles from './Fundraise.module.scss';
+const initialState = {
+  twitter: '',
+  facebook: '',
+  youtube: '',
+  linkedin: '',
+  instagram: '',
+};
+const icons = {
+  Facebook: 'facebook-square',
+  Twitter: 'twitter',
+  Instagram: 'instagram',
+  Linkedin: 'linkedin',
+  Youtube: 'youtube',
+};
 
 const Fundraise = () => {
-  const icons = {
-    Facebook: 'facebook-square',
-    Twitter: 'twitter',
-    Instagram: 'instagram',
-    Linkedin: 'linkedin',
-    Youtube: 'youtube',
-  };
+  const [formData, setFormData] = useState(initialState);
   const [show, setShow] = useState(false);
   const ref = useRef(null);
   const [id, setId] = useState('');
@@ -20,8 +28,13 @@ const Fundraise = () => {
     } else {
       setId(e.target.id);
       setShow(true);
-      console.log(e.target);
     }
+  };
+  const onChange = e => setFormData({ ...formData, [e.target.id.toLowerCase()]: e.target.value });
+
+  const onSubmit = e => {
+    e.preventDefault();
+    console.log('form data', formData);
   };
   return (
     <Fragment>
@@ -53,8 +66,14 @@ const Fundraise = () => {
               id="Linkedin"
               onClick={onClick}
             />
-            <div className="w3-animate-opacity" style={{ display: show ? 'block' : 'none' }}>
-              <label htmlFor="basic-url">Enter your {id} URL</label>
+            <Form
+              className="w3-animate-opacity"
+              style={{ display: show ? 'block' : 'none' }}
+              onSubmit={onSubmit}
+            >
+              <Form.Label htmlFor="basic-url" srOnly>
+                Enter your {id} URL
+              </Form.Label>
               <InputGroup className="mb-3">
                 <InputGroup.Prepend>
                   <InputGroup.Text id="basic-addon3">
@@ -66,11 +85,14 @@ const Fundraise = () => {
                 </InputGroup.Prepend>
                 <FormControl
                   placeholder="https://example.com/"
-                  id="basic-url"
+                  id={id.toLowerCase()}
+                  value={formData[`${id.toLowerCase()}`] || ''}
+                  onChange={onChange}
                   aria-describedby="basic-addon3"
                 />
               </InputGroup>
-            </div>
+              <Button type="submit">Submit</Button>
+            </Form>
           </div>
         </Row>
       </Container>

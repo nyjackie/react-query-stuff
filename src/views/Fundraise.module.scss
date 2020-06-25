@@ -1,7 +1,12 @@
 @import '../styles/mixins.scss';
 
 i {
-  margin: 10px;
+  padding: 20px;
+  cursor: pointer;
+  opacity: 0.9;
+}
+i:hover {
+  opacity: 1;
 }
 .twitter {
   color: #38a1f3;

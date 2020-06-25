@@ -4,6 +4,13 @@ import PageHeader from 'components/PageHeader';
 import styles from './Fundraise.module.scss';
 
 const Fundraise = () => {
+  const icons = {
+    Facebook: 'facebook-square',
+    Twitter: 'twitter',
+    Instagram: 'instagram',
+    Linkedin: 'linkedin',
+    Youtube: 'youtube',
+  };
   const [show, setShow] = useState(false);
   const ref = useRef(null);
   const [id, setId] = useState('');
@@ -46,14 +53,14 @@ const Fundraise = () => {
               id="Linkedin"
               onClick={onClick}
             />
-            <div id="el" style={{ visibility: show ? 'visible' : 'hidden' }}>
-              <label htmlFor="basic-url">{id} URL</label>
+            <div className="w3-animate-opacity" style={{ display: show ? 'block' : 'none' }}>
+              <label htmlFor="basic-url">Enter your {id} URL</label>
               <InputGroup className="mb-3">
                 <InputGroup.Prepend>
                   <InputGroup.Text id="basic-addon3">
                     <i
-                      className={`fa fa-${id.toLowerCase()} ${styles[id.toLowerCase()]}`}
-                      style={{ margin: '0px' }}
+                      className={`fa fa-${icons[id]} ${styles[id.toLowerCase()]}`}
+                      style={{ padding: '0px', width: '20px' }}
                     />
                   </InputGroup.Text>
                 </InputGroup.Prepend>

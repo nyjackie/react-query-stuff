@@ -22,6 +22,11 @@ export const CREATE_CLAIM_SUCCESS = 'CREATE_CLAIM_SUCCESS';
 export const GET_CLAIM_SUCCESS = 'GET_CLAIM_SUCCESS';
 export const CLAIMS_ERROR = 'CLAIMS_ERROR';
 
+//Profile
+export const GET_PROFILE = 'GET_PROFILE';
+export const UPDATE_PROFILE = 'UPDATE_PROFILE';
+export const PROFILE_ERROR = 'PROFILE_ERROR';
+
 // Search Nonprofits
 export const SEARCH_REQUEST = 'SEARCH_REQUEST';
 export const SEARCH_SUCCESS = 'SEARCH_SUCCESS';

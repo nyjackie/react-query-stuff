@@ -49,8 +49,8 @@ const guideStarHits = (total = 5) => {
         description: faker.lorem.paragraphs(),
         category: '',
         website_url: faker.internet.url(),
-        logo_url: faker.image.avatar(),
-        hero_url: null,
+        logo_url: 'https://picsum.photos/seed/barrel/215/215',
+        hero_url: 'https://picsum.photos/seed/0/949/215',
         contact_email: faker.internet.email(),
         contact_name: faker.fake('{{name.firstName}} {{name.lastName}}'),
         contact_phone: faker.phone.phoneNumber(),
@@ -169,6 +169,15 @@ export default function (axiosInstance) {
     ];
   });
   mock.onPost('/internal/search').reply(200, successGuideStarResults());
+
+  /**
+   * This flips between success and fail
+   */
+  let saveReply = 400;
+  mock.onPost('/nonprofit/save').reply(function () {
+    saveReply = saveReply === 400 ? 200 : 400;
+    return [saveReply, {}];
+  });
 
   return mock;
 }

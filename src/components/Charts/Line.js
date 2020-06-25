@@ -1,7 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Chart from 'chart.js';
-import SimpleTable from 'components/SimpleTable';
 
 /**
  * Line Chart
@@ -20,7 +19,7 @@ function LineChart(props) {
     fill,
     maxTicksLimit,
     color,
-    a11yCaption,
+    ariaLabel,
   } = props;
 
   const chartData = {
@@ -68,9 +67,7 @@ function LineChart(props) {
 
   return (
     <div style={{ position: 'relative', width: '100%', height: '300px' }}>
-      <canvas ref={refCanvas}>
-        <SimpleTable caption={a11yCaption} headers={labels} data={[data]} />
-      </canvas>
+      <canvas ref={refCanvas} aria-label={ariaLabel} role="img" />
     </div>
   );
 }
@@ -81,6 +78,7 @@ LineChart.defaultProps = {
 };
 
 LineChart.propTypes = {
+  ariaLabel: PropTypes.string.isRequired,
   // this allows you to complete override the default options with your own
   option: PropTypes.object,
   // this allows you to completely override the data object

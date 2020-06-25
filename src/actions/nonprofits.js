@@ -1,5 +1,12 @@
 import api from 'api';
-import { SEARCH_REQUEST, SEARCH_SUCCESS, SEARCH_FAIL, SEARCH_SELECT } from 'actions/types';
+import {
+  SEARCH_REQUEST,
+  SEARCH_SUCCESS,
+  SEARCH_FAIL,
+  SAVE_REQUEST,
+  SAVE_SUCCESS,
+  SAVE_FAIL,
+} from 'actions/types';
 import { wait } from 'utils'; // TODO delete after testing
 
 /**
@@ -31,9 +38,28 @@ export const search = searchTerm => async dispatch => {
   }
 };
 
-export const searchSelect = ein => dispatch => {
+export const saveProfile = profileData => async dispatch => {
   dispatch({
-    type: SEARCH_SELECT,
-    payload: ein,
+    type: SAVE_REQUEST,
   });
+
+  // TODO: this is only during mock testing to show the spinner
+  await wait(1000);
+
+  try {
+    const response = await api.saveProfile(profileData);
+    if (response.status === 200) {
+      dispatch({
+        type: SAVE_SUCCESS,
+        payload: profileData,
+      });
+      return;
+    }
+    // TODO: do something if response is not 200?
+  } catch (err) {
+    dispatch({
+      type: SAVE_FAIL,
+    });
+    throw err;
+  }
 };

@@ -30,3 +30,54 @@ export const decryptBasicAuth = encrypted => {
     password: parts[1],
   };
 };
+
+/**
+ * Simple func to combine className strings
+ * can make this more robust if needed like this: https://github.com/JedWatson/classnames#readme
+ * @param {string} original
+ * @param {string} extra
+ */
+export function classNames(original, extra) {
+  if (original) return `${original} ${extra}`;
+
+  return extra;
+}
+
+export function getTextNodeWidth(textNode) {
+  var range = document.createRange();
+  range.selectNodeContents(textNode);
+  var rects = range.getClientRects();
+  if (rects.length > 0) {
+    return rects[0].width;
+  }
+  return 0;
+}
+
+function addToObj(obj, key, val, encode) {
+  if (encode) {
+    obj[encodeURIComponent(key)] = encodeURIComponent(val);
+  } else {
+    obj[key] = val;
+  }
+  return obj;
+}
+
+/**
+ * Create an object from all form element names and values
+ * @param {HTMLFormElement} form
+ * @param {boolean} encode whether to run encodeUriComponent on both the key and values
+ */
+export function serialize(form, encode = true) {
+  const formData = new FormData(form);
+  let data = {};
+  for (let pair of formData.entries()) {
+    data = addToObj(data, pair[0], pair[1], encode);
+  }
+  return data;
+}
+
+export function toQueryString(data) {
+  return Object.keys(data)
+    .map(key => `${key}=${data[key]}`)
+    .join('&');
+}

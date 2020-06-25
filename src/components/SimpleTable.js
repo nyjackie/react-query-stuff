@@ -22,6 +22,8 @@ function TR({ id, row }) {
 }
 
 function SimpleTable({ id, headers, data, caption }) {
+  const _id = id || uniqueId('table');
+
   return (
     <table>
       {caption && <caption>{caption}</caption>}
@@ -30,7 +32,7 @@ function SimpleTable({ id, headers, data, caption }) {
           <tr>
             {headers.map((h, i) => {
               return (
-                <th scope="col" key={`${id}-header-${i}`}>
+                <th scope="col" key={`${_id}-header-${i}`}>
                   {h}
                 </th>
               );
@@ -40,7 +42,7 @@ function SimpleTable({ id, headers, data, caption }) {
       )}
       <tbody>
         {data.map((row, i) => {
-          const rowKey = `${id}-row-${i}`;
+          const rowKey = `${_id}-row-${i}`;
           return <TR key={rowKey} id={rowKey} row={row} />;
         })}
       </tbody>
@@ -50,7 +52,6 @@ function SimpleTable({ id, headers, data, caption }) {
 
 SimpleTable.defaultProps = {
   headers: [],
-  id: uniqueId('table'),
 };
 
 export default SimpleTable;

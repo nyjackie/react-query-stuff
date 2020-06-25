@@ -1,4 +1,4 @@
-import { SEARCH_SUCCESS, SEARCH_FAIL, SEARCH_SELECT } from 'actions/types';
+import { SEARCH_SUCCESS, SEARCH_FAIL, SAVE_SUCCESS } from 'actions/types';
 
 const initialState = {
   results: [],
@@ -18,10 +18,15 @@ export default function (state = initialState, action) {
         ...state,
         results: [],
       };
-    case SEARCH_SELECT:
+    case SAVE_SUCCESS:
       return {
         ...state,
-        selected: state.results.find(item => item.ein === payload),
+        results: state.results.map(result => {
+          if (result.ein === payload.ein) {
+            return payload;
+          }
+          return result;
+        }),
       };
     default:
       return state;

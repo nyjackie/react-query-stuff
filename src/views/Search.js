@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { Form, Button, Row, Col, Table } from 'react-bootstrap';
 import PageHeader from 'components/PageHeader';
-import { search } from 'actions/search';
+import { search } from 'actions/nonprofits';
 
 const SingleResult = ({ result }) => {
   let history = useHistory();
@@ -91,7 +91,7 @@ const SearchPage = ({ results, search }) => {
 };
 
 const mapStateToProps = state => ({
-  results: state.search.results,
+  results: state.nonprofits.results,
 });
 
 export default connect(mapStateToProps, { search })(SearchPage);

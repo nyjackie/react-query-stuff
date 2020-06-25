@@ -26,8 +26,12 @@ export const CLAIMS_ERROR = 'CLAIMS_ERROR';
 export const SEARCH_REQUEST = 'SEARCH_REQUEST';
 export const SEARCH_SUCCESS = 'SEARCH_SUCCESS';
 export const SEARCH_FAIL = 'SEARCH_FAIL';
-export const SEARCH_SELECT = 'SEARCH_SELECT';
 
 // Notification
 export const SET_NOTIFICATION = 'SET_NOTIFICATION';
 export const REMOVE_NOTIFICATION = 'REMOVE_NOTIFICATION';
+
+// Editing a Nonprofit profile
+export const SAVE_REQUEST = 'SAVE_REQUEST';
+export const SAVE_SUCCESS = 'SAVE_SUCCESS';
+export const SAVE_FAIL = 'SAVE_FAIL';

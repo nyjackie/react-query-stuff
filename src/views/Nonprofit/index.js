@@ -4,10 +4,10 @@ import { Row, Col } from 'react-bootstrap';
 import { useParams, Link } from 'react-router-dom';
 import PageHeader from 'components/PageHeader';
 import { search, saveProfile } from 'actions/nonprofits';
-import { setNotification } from 'actions/notifications';
+import { addNotification } from 'actions/notifications';
 import Profile from 'views/Profile';
 
-const Nonprofit = ({ results, isLoading, search, saveProfile, setNotification }) => {
+const Nonprofit = ({ results, isLoading, search, saveProfile, addNotification }) => {
   const { ein } = useParams();
 
   const selected = results.find(item => item.ein === ein);
@@ -24,7 +24,7 @@ const Nonprofit = ({ results, isLoading, search, saveProfile, setNotification })
 
   function update(obj) {
     return saveProfile(obj).then(() => {
-      setNotification('successfully saved profile updates');
+      addNotification('successfully published profile updates', 'success');
       return Promise.resolve();
     });
   }
@@ -66,4 +66,4 @@ const mapStateToProps = state => ({
   isLoading: state.loading.isLoading,
 });
 
-export default connect(mapStateToProps, { search, saveProfile, setNotification })(Nonprofit);
+export default connect(mapStateToProps, { search, saveProfile, addNotification })(Nonprofit);

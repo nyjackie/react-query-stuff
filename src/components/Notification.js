@@ -12,6 +12,8 @@ const Notification = ({ notification, onClose }) => {
     <div aria-live="polite" aria-atomic="true" className={styles.toastContainer}>
       <div className={styles.toastInner}>
         <Toast
+          autohide
+          delay={notification.waitTime}
           show={show}
           onClose={() => {
             setShow(false);

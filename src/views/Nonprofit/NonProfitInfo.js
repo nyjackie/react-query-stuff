@@ -8,10 +8,10 @@ import { Col, Row, Media, Button, Form, Alert } from 'react-bootstrap';
 import styles from './NonProfitInfo.module.scss';
 
 // our components
-import {LineChart, GeoMap, BarChart, PieChart } from 'gdd-components'
-import SortableTable from 'components/SortableTable';
-import Editable from 'components/Editable';
-import UploadableImg from 'components/UploadableImg';
+import { BarChart, LineChart, PieChart, GeoMap } from 'components/Charts';
+
+// GDD Components
+import { Editable, UploadableImg, SorTable } from 'gdd-components';
 
 // our utils
 import { MONTHS_SHORT } from 'components/Charts/constants';
@@ -39,6 +39,7 @@ export default function Profile({ data, onSave }) {
       console.log('validation failed');
     } else {
       const obj = serialize(formRef.current, false);
+      console.log(obj);
       const newData = merge({}, data, obj);
       onSave(newData)
         .then(() => {
@@ -126,7 +127,7 @@ export default function Profile({ data, onSave }) {
                 src={data.logo_url}
                 alt="logo"
                 name="logo_url"
-                helpText="Provide a square photo. Max size 500k"
+                helpText="Photo should be square"
               />
             </Col>
             <Col>
@@ -137,7 +138,6 @@ export default function Profile({ data, onSave }) {
                 src={data.hero_url}
                 alt="cover photo"
                 name="hero_url"
-                helpText="Recommended dimensions 950x215, Max size 2mb"
               />
             </Col>
           </Row>
@@ -240,7 +240,7 @@ export default function Profile({ data, onSave }) {
                   </CsvDownloader>
                 </div>
                 <div className={styles.tableInner}>
-                  <SortableTable
+                  <SorTable
                     data={data.donationData}
                     ignore={['user_id']}
                     columnTypes={{ donationAmount: 'currency', donationDate: 'date' }}

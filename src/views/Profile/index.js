@@ -8,7 +8,7 @@ import { Col, Row, Media, Button, Form, Alert } from 'react-bootstrap';
 import styles from './Profile.module.scss';
 
 // our components
-import { BarChart, LineChart, PieChart, GeoMap } from 'components/Charts';
+import {LineChart, GeoMap, BarChart, PieChart } from 'gdd-components'
 import SortableTable from 'components/SortableTable';
 import Editable from 'components/Editable';
 import UploadableImg from 'components/UploadableImg';
@@ -17,6 +17,9 @@ import UploadableImg from 'components/UploadableImg';
 import { MONTHS_SHORT } from 'components/Charts/constants';
 import { processForDownload } from 'utils/donation';
 import { serialize } from 'utils';
+
+//Mock Data
+import dummyData from 'components/Charts/dummydata.csv'
 
 export default function Profile({ data, onSave }) {
   const [editing, setEditing] = useState(false);
@@ -322,7 +325,7 @@ export default function Profile({ data, onSave }) {
           </Row>
           <Row>
             <Col>
-              <GeoMap />
+              <GeoMap data={dummyData}/>
             </Col>
           </Row>
         </section>

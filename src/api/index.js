@@ -44,6 +44,10 @@ function saveProfile(data) {
   return instance.post('/nonprofit/save', data);
 }
 
+function resetPassword(email) {
+  return instance.post('/internal/password/reset', { email });
+}
+
 //  ***logout the user if the there is an auth error***
 instance.interceptors.response.use(
   res => res,
@@ -64,4 +68,5 @@ export default {
   getClaim,
   search,
   saveProfile,
+  resetPassword
 };

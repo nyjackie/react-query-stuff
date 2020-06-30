@@ -21,8 +21,18 @@ export function loadUser() {
   return token;
 }
 
+export async function resetPassword(email) {
+  try {
+    const res = await api.resetPassword(email);
+    return [null, res.data];
+  } catch (err) {
+    return [err, null];
+  }
+}
+
 export default {
   login,
   logout,
   loadUser,
+  resetPassword
 };

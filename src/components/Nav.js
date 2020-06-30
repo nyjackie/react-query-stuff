@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useHistory } from 'react-router-dom';
 import { logout } from 'actions/auth';
 import Nav from 'react-bootstrap/Nav';
 import { closeDrawer } from 'actions/ui';
@@ -12,10 +12,17 @@ const Title = () => (
 );
 
 const SideNav = ({ isAuthenticated, logout, closeDrawer }) => {
+  let history = useHistory();
+
   function onNavClick(e) {
     if (e.target.classList.contains('js-closeDrawer')) {
       closeDrawer();
     }
+  }
+
+  function doLogout() {
+    logout();
+    history.push('/');
   }
 
   if (!isAuthenticated) {
@@ -47,7 +54,7 @@ const SideNav = ({ isAuthenticated, logout, closeDrawer }) => {
       <NavLink className="js-closeDrawer mb-2" to="/fundraise" exact={true}>
         Fundraising Tool
       </NavLink>
-      <button onClick={logout} className="js-closeDrawer mb-2 btn btn-link btn-link-reset">
+      <button onClick={doLogout} className="js-closeDrawer mb-2 btn btn-link btn-link-reset">
         Logout
       </button>
     </Nav>

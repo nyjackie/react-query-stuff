@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { login } from 'actions/auth';
@@ -65,6 +65,9 @@ const Login = ({ login, isAuthenticated }) => {
             </Button>
             {loginError && <p className="mt-2 text-danger">{loginError}</p>}
           </Form>
+          <p className="mt-3">
+            <Link to="/reset-password">Forgot Password?</Link>
+          </p>
         </Col>
       </Row>
     </Fragment>

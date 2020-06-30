@@ -178,6 +178,10 @@ export default function (axiosInstance) {
     saveReply = saveReply === 400 ? 200 : 400;
     return [saveReply, {}];
   });
+  
+  mock.onPost('/internal/password/reset').reply(function () {
+    return [200, {}];
+  });
 
   return mock;
 }

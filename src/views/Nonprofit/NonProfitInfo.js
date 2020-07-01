@@ -5,7 +5,7 @@ import merge from 'lodash/merge';
 import { Col, Row, Media, Button, Form, Alert } from 'react-bootstrap';
 
 // styles
-import styles from './Profile.module.scss';
+import styles from './NonProfitInfo.module.scss';
 
 // our components
 import {LineChart, GeoMap, BarChart, PieChart } from 'gdd-components'

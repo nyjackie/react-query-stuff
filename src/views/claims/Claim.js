@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import Moment from 'react-moment';
 
 const Claim = ({ claim: { ein, name, description, mission, contact_email, date } }) => {
@@ -20,3 +21,7 @@ const Claim = ({ claim: { ein, name, description, mission, contact_email, date }
 };
 
 export default Claim;
+
+Claim.propTypes = {
+  claim: PropTypes.object.isRequired,
+};

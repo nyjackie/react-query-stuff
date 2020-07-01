@@ -46,7 +46,10 @@ const SideNav = ({ isAuthenticated, logout, closeDrawer }) => {
         Home
       </NavLink>
       <NavLink className="js-closeDrawer mb-2" to="/search" exact={true}>
-        Search
+        Search Nonprofit
+      </NavLink>
+      <NavLink className="js-closeDrawer mb-2" to="/users" exact={true}>
+        Search User
       </NavLink>
       <NavLink className="js-closeDrawer mb-2" to="/claims" exact={true}>
         Claims

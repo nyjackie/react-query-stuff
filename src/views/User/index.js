@@ -8,7 +8,7 @@ import { Table } from 'react-bootstrap';
 const Users = () => {
   return (
     <Fragment>
-        Hello World
+        This will be user search page
     </Fragment>
   );
 };

@@ -9,7 +9,7 @@ import Landing from 'views/Landing';
 import Login from 'views/Login';
 import Claims from 'views/Claims/Claims';
 import Dashboard from 'views/Dashboard';
-import ClaimInfo from './views/Claims/ClaimInfo';
+import ClaimInfo from 'views/Claims/ClaimInfo';
 import Search from 'views/Search';
 import Nonprofit from 'views/Nonprofit';
 import Fundraise from 'views/Fundraise';

@@ -183,5 +183,22 @@ export default function (axiosInstance) {
     return [200, {}];
   });
 
+  mock.onGet('/internal/banned').reply(function(){
+    return [
+      200,
+      {
+        data: Array(20).fill(' ').map(()=>{
+          return {
+            id: faker.random.number(),
+            ein: faker.fake('{{random.number}}-{{random.number}}'),
+            name: faker.company.companyName(),
+            bannedBy: faker.internet.email(),
+            bannedReason: faker.lorem.sentence()
+          }
+        })
+      }
+    ]
+  })
+
   return mock;
 }

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import store from '../store';
 import { LOGOUT } from '../actions/types';
+import mock from './mock';
 
 const instance = axios.create({
   baseURL: process.env.REACT_APP_API_BASE_URL,
@@ -9,10 +10,9 @@ const instance = axios.create({
 // always use JSON for all API calls
 instance.defaults.headers.common['Content-Type'] = 'application/json';
 
-if (process.env.NODE_ENV === 'development') {
-  // dont want this accidentally ending up on production
-  import('api/mock').then(mock => mock.default(instance));
-}
+// TODO: remove this once we have backend working
+mock(instance)
+
 
 /**
  * @param {string} email
@@ -48,11 +48,21 @@ function resetPassword(email) {
   return instance.post('/internal/password/reset', { email });
 }
 
+function getBanned() {
+  return instance.get('/internal/banned');
+}
+
 //  ***logout the user if the there is an auth error***
 instance.interceptors.response.use(
   res => res,
   err => {
-    if (err.response.status === 401) {
+    console.log('intercept', err)
+    if (!err.response) {
+      // network error
+      store.dispatch({ type: LOGOUT });
+    }
+
+    if (err.response && err.response.status === 401) {
       ///Change it to data.msg instead of status code?
 
       store.dispatch({ type: LOGOUT });
@@ -68,5 +78,6 @@ export default {
   getClaim,
   search,
   saveProfile,
-  resetPassword
+  resetPassword,
+  getBanned
 };

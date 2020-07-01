@@ -1,5 +1,5 @@
 // npm libs
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
@@ -14,17 +14,14 @@ import Search from 'views/Search';
 import Nonprofit from 'views/Nonprofit';
 import Fundraise from 'views/Fundraise';
 import ResetPassword from 'views/ResetPassword';
+import Banlist from 'views/Banlist';
 
 // components/other
 import Layout from 'components/Layout';
 import PrivateRoute from 'components/PrivateRoute';
 import store from 'store';
-import { loadUser } from './actions/auth';
 
-const App = props => {
-  useEffect(() => {
-    store.dispatch(loadUser());
-  }, []);
+const App = () => {
   return (
     <Provider store={store}>
       <Router>
@@ -37,6 +34,7 @@ const App = props => {
             <Route exact path="/login" component={Login} />
             <Route exact path="/reset-password" component={ResetPassword} />
             <PrivateRoute exact path="/fundraise" component={Fundraise} />
+            <PrivateRoute exact path="/banlist" component={Banlist} />
             <PrivateRoute exact path="/claims" component={Claims} />
             <PrivateRoute exact path="/claims/:id" component={ClaimInfo} />
             <PrivateRoute exact path="/dashboard" component={Dashboard} />

@@ -40,3 +40,8 @@ export const REMOVE_NOTIFICATION = 'REMOVE_NOTIFICATION';
 export const SAVE_REQUEST = 'SAVE_REQUEST';
 export const SAVE_SUCCESS = 'SAVE_SUCCESS';
 export const SAVE_FAIL = 'SAVE_FAIL';
+
+// List of Banned Nonprofits
+export const BANNED_REQUEST = 'BANNED_REQUEST';
+export const BANNED_SUCCESS = 'BANNED_SUCCESS';
+export const BANNED_FAIL = 'BANNED_FAIL';

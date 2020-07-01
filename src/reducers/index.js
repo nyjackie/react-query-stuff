@@ -5,6 +5,7 @@ import ui from './ui';
 import loading from './loading';
 import notification from './notifications';
 import nonprofits from './nonprofits';
+import banned from './banned';
 
 export default combineReducers({
   notification,
@@ -13,4 +14,5 @@ export default combineReducers({
   loading,
   claims,
   nonprofits,
+  banned
 });

@@ -55,7 +55,7 @@ const SideNav = ({ isAuthenticated, logout, closeDrawer }) => {
         Fundraising Tool
       </NavLink>
       <NavLink className="js-closeDrawer mb-2" to="/banlist" exact={true}>
-        Ban list
+        Ban List
       </NavLink>
       <button onClick={doLogout} className="js-closeDrawer mb-2 btn btn-link btn-link-reset">
         Logout

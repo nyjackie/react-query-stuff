@@ -40,7 +40,7 @@ const App = () => {
             <PrivateRoute exact path="/claims" component={Claims} />
             <PrivateRoute exact path="/claims/:id" component={ClaimInfo} />
             <PrivateRoute exact path="/dashboard" component={Dashboard} />
-            <PrivateRoute exact path="/noneprofit" component={Search} />
+            <PrivateRoute exact path="/nonprofit" component={Search} />
             <PrivateRoute exact path="/nonprofit/:ein" component={Nonprofit} />
             <PrivateRoute exact path="/users" component={Users} />
           </Switch>

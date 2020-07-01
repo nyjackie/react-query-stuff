@@ -37,7 +37,7 @@ const Nonprofit = ({ results, isLoading, search, saveProfile, addNotification })
           <Col>
             <p>A profile for {ein} could not be found.</p>
             <p>
-              <Link to="/noneprofit">Try searching again</Link>
+              <Link to="/nonprofit">Try searching again</Link>
             </p>
           </Col>
         </Row>

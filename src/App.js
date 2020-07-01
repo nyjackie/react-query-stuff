@@ -7,7 +7,7 @@ import { Helmet } from 'react-helmet';
 // views or route components
 import Landing from 'views/Landing';
 import Login from 'views/Login';
-import Claims from 'views/Claims/Claims';
+import Claims from 'views/Claims';
 import Dashboard from 'views/Dashboard';
 import ClaimInfo from 'views/Claims/ClaimInfo';
 import Search from 'views/Search';

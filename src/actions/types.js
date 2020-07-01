@@ -27,19 +27,24 @@ export const GET_PROFILE = 'GET_PROFILE';
 export const UPDATE_PROFILE = 'UPDATE_PROFILE';
 export const PROFILE_ERROR = 'PROFILE_ERROR';
 
-// Search Nonprofits
+// Search
 export const SEARCH_REQUEST = 'SEARCH_REQUEST';
-export const SEARCH_SUCCESS = 'SEARCH_SUCCESS';
-export const SEARCH_FAIL = 'SEARCH_FAIL';
+export const SEARCH_NONPROFIT_SUCCESS = 'SEARCH_NONPROFIT_SUCCESS';
+export const SEARCH_NONPROFIT_FAIL = 'SEARCH_NONPROFIT_FAIL';
+export const SEARCH_USERS_SUCCESS = 'SEARCH_USERS_SUCCESS'
+export const SEARCH_USERS_FAIL = 'SEARCH_USERS_FAIL'
 
 // Notification
 export const SET_NOTIFICATION = 'SET_NOTIFICATION';
 export const REMOVE_NOTIFICATION = 'REMOVE_NOTIFICATION';
 
-// Editing a Nonprofit profile
-export const SAVE_REQUEST = 'SAVE_REQUEST';
-export const SAVE_SUCCESS = 'SAVE_SUCCESS';
-export const SAVE_FAIL = 'SAVE_FAIL';
+// Editing a Nonprofit/User profile
+export const SAVE_NONPROFIT_REQUEST = 'SAVE_NONPROFIT_REQUEST';
+export const SAVE_NONPROFIT_SUCCESS = 'SAVE_NONPROFIT_SUCCESS';
+export const SAVE_NONPROFIT_FAIL = 'SAVE_NONPROFIT_FAIL';
+export const SAVE_USER_REQUEST = 'SAVE_USER_REQUEST';
+export const SAVE_USER_SUCCESS = 'SAVE_USER_SUCCESS';
+export const SAVE_USER_FAIL = 'SAVE_USER_FAIL';
 
 // List of Banned Nonprofits
 export const BANNED_REQUEST = 'BANNED_REQUEST';

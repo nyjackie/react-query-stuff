@@ -3,11 +3,11 @@ import { connect } from 'react-redux';
 import { Row, Col } from 'react-bootstrap';
 import { useParams, Link } from 'react-router-dom';
 import PageHeader from 'components/PageHeader';
-import { search, saveProfile } from 'actions/nonprofits';
+import { searchNonprofit, saveProfile } from 'actions/search';
 import { addNotification } from 'actions/notifications';
 import Profile from 'views/Nonprofit/NonProfitInfo';
 
-const Nonprofit = ({ results, isLoading, search, saveProfile, addNotification }) => {
+const Nonprofit = ({ results, isLoading, searchNonprofit, saveProfile, addNotification }) => {
   const { ein } = useParams();
 
   const selected = results.find(item => item.ein === ein);
@@ -16,11 +16,11 @@ const Nonprofit = ({ results, isLoading, search, saveProfile, addNotification })
   // in our local state
   useEffect(() => {
     if (!selected) {
-      search(ein).catch(err => {
+      searchNonprofit(ein).catch(err => {
         console.log(err);
       });
     }
-  }, [ein, search, selected]);
+  }, [ein, searchNonprofit, selected]);
 
   function update(obj) {
     return saveProfile(obj).then(() => {
@@ -66,4 +66,4 @@ const mapStateToProps = state => ({
   isLoading: state.loading.isLoading,
 });
 
-export default connect(mapStateToProps, { search, saveProfile, addNotification })(Nonprofit);
+export default connect(mapStateToProps, { searchNonprofit, saveProfile, addNotification })(Nonprofit);

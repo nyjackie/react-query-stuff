@@ -3,10 +3,12 @@ import { loadUser } from '../services/user';
 import { LOGIN_SUCCESS, LOGOUT, AUTH_ERROR, LOGIN_FAIL, USER_LOADED } from 'actions/types';
 
 const token = loadUser();
+const user = token ? jwt_decode(token) : null;
+
 const initialState = {
   token: token,
-  isAuthenticated: typeof token === 'string',
-  user: token ? jwt_decode(token) : null,
+  isAuthenticated: user !== null,
+  user
 };
 
 export default function (state = initialState, action) {

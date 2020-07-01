@@ -14,6 +14,7 @@ import Search from 'views/Search';
 import Nonprofit from 'views/Nonprofit';
 import Fundraise from 'views/Fundraise';
 import ResetPassword from 'views/ResetPassword';
+import Banlist from 'views/Banlist';
 
 // components/other
 import Layout from 'components/Layout';
@@ -37,6 +38,7 @@ const App = props => {
             <Route exact path="/login" component={Login} />
             <Route exact path="/reset-password" component={ResetPassword} />
             <PrivateRoute exact path="/fundraise" component={Fundraise} />
+            <PrivateRoute exact path="/banlist" component={Banlist} />
             <PrivateRoute exact path="/claims" component={Claims} />
             <PrivateRoute exact path="/claims/:id" component={ClaimInfo} />
             <PrivateRoute exact path="/dashboard" component={Dashboard} />

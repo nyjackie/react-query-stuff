@@ -21,3 +21,7 @@ const Claim = ({ claim: { ein, name, description, mission, contact_email, date }
 };
 
 export default Claim;
+
+Claim.propTypes = {
+  claim: PropTypes.object.isRequired,
+};

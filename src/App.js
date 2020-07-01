@@ -7,12 +7,14 @@ import { Helmet } from 'react-helmet';
 // views or route components
 import Landing from 'views/Landing';
 import Login from 'views/Login';
-import Claims from 'views/claims/Claims';
+import Claims from 'views/Claims/Claims';
 import Dashboard from 'views/Dashboard';
-import ClaimInfo from './views/claims/ClaimInfo';
+import ClaimInfo from './views/Claims/ClaimInfo';
 import Search from 'views/Search';
 import Nonprofit from 'views/Nonprofit';
 import Fundraise from 'views/Fundraise';
+import Users from 'views/User';
+
 
 // components/other
 import Layout from 'components/Layout';
@@ -40,6 +42,7 @@ const App = props => {
             <PrivateRoute exact path="/dashboard" component={Dashboard} />
             <PrivateRoute exact path="/search" component={Search} />
             <PrivateRoute exact path="/nonprofit/:ein" component={Nonprofit} />
+            <PrivateRoute exact path="/users" component={Users} />
           </Switch>
         </Layout>
       </Router>

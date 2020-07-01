@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { Form, Button, Row, Col, Table } from 'react-bootstrap';
 import PageHeader from 'components/PageHeader';
-import { search } from 'actions/nonprofits';
+import { searchNonprofit } from 'actions/search';
 
 const SingleResult = ({ result }) => {
   let history = useHistory();
@@ -43,7 +43,7 @@ const SearchResults = ({ results }) => {
   );
 };
 
-const SearchPage = ({ results, search }) => {
+const SearchPage = ({ results, searchNonprofit }) => {
   const [formData, setFormData] = useState({
     searchTerm: '',
   });
@@ -55,7 +55,7 @@ const SearchPage = ({ results, search }) => {
   const onSubmit = e => {
     e.preventDefault();
     setSearchError(null); // clear error
-    search(searchTerm).catch(err => {
+    searchNonprofit(searchTerm).catch(err => {
       setSearchError(err.message);
     });
   };
@@ -94,4 +94,4 @@ const mapStateToProps = state => ({
   results: state.nonprofits.results,
 });
 
-export default connect(mapStateToProps, { search })(SearchPage);
+export default connect(mapStateToProps, { searchNonprofit })(SearchPage);

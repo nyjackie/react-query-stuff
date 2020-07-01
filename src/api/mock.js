@@ -75,7 +75,28 @@ const guideStarHits = (total = 5) => {
     });
   return data;
 };
-
+const userHits = (total = 10) => {
+  const data = Array(total)
+    .fill({})
+    .map(() => {
+      return {
+        id: faker.random.number(),
+        first_name: faker.name.firstName(),
+		last_name: faker.name.lastName(),
+        profile_status: {
+          status: '',
+          description: '',
+        },
+        contact_email: faker.internet.email(),
+        contact_phone: faker.phone.phoneNumber(),
+		password_hash: faker.lorem.sentence(),
+        donationData: fakeUserTableData(),
+		created_at: faker.date.past(),
+		modified_at: faker.date.past()
+      };
+    });
+  return data;
+};
 function successGuideStarResults(total) {
   return {
     code: 200,
@@ -86,6 +107,20 @@ function successGuideStarResults(total) {
       took: 39,
       total_hits: total,
       hits: guideStarHits(total),
+    },
+  };
+}
+
+function successUserResults(total) {
+  return {
+    code: 200,
+    message: 'Request was processed successfully!',
+    took: 42,
+    errors: [],
+    data: {
+      took: 39,
+      total_hits: total,
+      hits: userHits(total),
     },
   };
 }
@@ -168,7 +203,8 @@ export default function (axiosInstance) {
       },
     ];
   });
-  mock.onPost('/internal/search').reply(200, successGuideStarResults());
+  mock.onPost('/internal/nonprofit').reply(200, successGuideStarResults());
+  mock.onPost('/internal/users').reply(200, successUserResults());
 
   /**
    * This flips between success and fail

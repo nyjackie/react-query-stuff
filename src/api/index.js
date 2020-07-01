@@ -36,8 +36,12 @@ function getClaim(id) {
   return instance.get(`/claims/${id}`);
 }
 
-function search(term) {
-  return instance.post('/internal/search', { search_terms: term });
+function searchNonprofit(term) {
+  return instance.post('/internal/nonprofit', { search_terms: term });
+}
+
+function searchUsers(term) {
+  return instance.post('/internal/users', { search_terms: term });
 }
 
 function saveProfile(data) {
@@ -76,7 +80,8 @@ export default {
   login,
   getClaims,
   getClaim,
-  search,
+  searchNonprofit,
+  searchUsers,
   saveProfile,
   resetPassword,
   getBanned

@@ -1,4 +1,4 @@
-import { SEARCH_NONPROFIT_SUCCESS, SEARCH_NONPROFIT_FAIL, SAVE_NONPROFIT_SUCCESS } from 'actions/types';
+import { SEARCH_USERS_SUCCESS, SEARCH_USERS_FAIL, SAVE_USER_SUCCESS } from 'actions/types';
 
 const initialState = {
   results: [],
@@ -8,19 +8,19 @@ const initialState = {
 export default function (state = initialState, action) {
   const { type, payload } = action;
   switch (type) {
-    case SEARCH_NONPROFIT_SUCCESS:
+    case SEARCH_USERS_SUCCESS:
       return {
         ...state,
         results: payload,
       };
 
-    case SEARCH_NONPROFIT_FAIL:
+    case SEARCH_USERS_FAIL:
       return {
         ...state,
         results: [],
       };
       
-    case SAVE_NONPROFIT_SUCCESS:
+    case SAVE_USER_SUCCESS:
       return {
         ...state,
         results: state.results.map(result => {

@@ -35,19 +35,19 @@ export const getClaim = id => async dispatch => {
   });
   try {
     const [err, data] = await claimsService.getClaim(id);
-    // const res = await api.get(`/claims/${id}`);
-    // const [err, data] = await userService.getClaim(id);
+
     if (data) {
       dispatch({
         type: GET_CLAIM_SUCCESS,
         payload: data.data,
       });
-    } else {
-      dispatch({
-        type: CLAIMS_ERROR,
-        // payload: { msg: err.response.msg, status: err.response.status },
-      });
+      return;
     }
+
+    dispatch({
+      type: CLAIMS_ERROR,
+      // payload: { msg: err.response.msg, status: err.response.status },
+    });
   } catch (err) {
     dispatch({
       type: CLAIMS_ERROR,
@@ -62,8 +62,6 @@ export const denyClaim = (id, history, msg) => async dispatch => {
   });
   try {
     console.log('deny msg', msg);
-    // await api.delete(`/claims/${id}`);
-    // await userService.deleteClaim(id)
     dispatch({
       type: DENY_CLAIM_SUCCESS,
       payload: id,
@@ -83,8 +81,6 @@ export const approveClaim = (id, history, msg) => async dispatch => {
     type: CLAIMS_REQUEST,
   });
   try {
-    // await api.put(`/claims/${id}`);
-    // await userService.approveClaim(id)
     dispatch({
       type: APPROVE_CLAIM_SUCCESS,
       payload: id,

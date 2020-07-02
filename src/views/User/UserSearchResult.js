@@ -1,6 +1,5 @@
-import React, { Fragment, useEffect, useState } from 'react';
-import { Container, Form, Button, Row, Col, Table } from 'react-bootstrap';
-import PropTypes from 'prop-types';
+import React from 'react';
+import { Table } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import Moment from 'react-moment';
 

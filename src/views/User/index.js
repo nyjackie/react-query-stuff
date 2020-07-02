@@ -1,12 +1,11 @@
-import React, { Fragment, useEffect, useState } from 'react';
-import { Container, Form, Button, Row, Col, Table } from 'react-bootstrap';
-import PropTypes from 'prop-types';
+import React, { Fragment, useState } from 'react';
+import { Form, Button, Row, Col } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import PageHeader from 'components/PageHeader';
 import { searchUsers } from 'actions/search';
 import UserSearchResult from './UserSearchResult';
 
-const Users = ({ type, results, searchUsers }) => {
+const Users = ({ searchUsers }) => {
   const [formData, setFormData] = useState({
     searchTerm: '',
   });

@@ -7,19 +7,25 @@ import { Col, Row, Media, Button, Form, Alert } from 'react-bootstrap';
 // styles
 import styles from './NonProfitInfo.module.scss';
 
-// our components
-import {LineChart, GeoMap, BarChart, PieChart } from 'gdd-components'
-import SortableTable from 'components/SortableTable';
-import Editable from 'components/Editable';
-import UploadableImg from 'components/UploadableImg';
+// GDD Components
+import {
+  BarChart,
+  PieChart,
+  LineChart,
+  GeoMap,
+  Editable,
+  UploadableImg,
+  SorTable,
+  Tooltip,
+} from 'gdd-components';
 
 // our utils
-import { MONTHS_SHORT } from 'components/Charts/constants';
+import { MONTHS_SHORT } from 'utils/constants';
 import { processForDownload } from 'utils/donation';
 import { serialize } from 'utils';
 
 //Mock Data
-import dummyData from 'components/Charts/dummydata.csv'
+import dummyData from 'assets/dummydata.csv';
 
 export default function Profile({ data, onSave }) {
   const [editing, setEditing] = useState(false);
@@ -39,6 +45,7 @@ export default function Profile({ data, onSave }) {
       console.log('validation failed');
     } else {
       const obj = serialize(formRef.current, false);
+      console.log(obj);
       const newData = merge({}, data, obj);
       onSave(newData)
         .then(() => {
@@ -80,7 +87,35 @@ export default function Profile({ data, onSave }) {
           </Row>
         )}
         <header className={styles.header}>
-          <h3>Welcome to your profile</h3>
+          <h3>
+            Profile{" "}
+            <Tooltip>
+              <Tooltip.Content id="profile-info">
+                <p>
+                  <b>How can I update my organization's profile information?</b>
+                </p>
+                <p>
+                  It is a long established fact that a reader will be distracted by the readable
+                  content of a page when looking at its layout
+                </p>
+                <p>
+                  <b>How can I update my organization's profile information?</b>
+                </p>
+                <p>
+                  It is a long established fact that a reader will be distracted by the readable
+                  content of a page when looking at its layout
+                </p>
+                <p>
+                  <b>How can I update my organization's profile information?</b>
+                </p>
+                <p>
+                  It is a long established fact that a reader will be distracted by the readable
+                  content of a page when looking at its layout
+                </p>
+              </Tooltip.Content>
+            </Tooltip>
+          </h3>
+          <hr />
           <Editable label="Name" editMode={editing} name="name">
             <h2>{data.name}</h2>
           </Editable>
@@ -126,7 +161,7 @@ export default function Profile({ data, onSave }) {
                 src={data.logo_url}
                 alt="logo"
                 name="logo_url"
-                helpText="Provide a square photo. Max size 500k"
+                helpText="Photo should be square"
               />
             </Col>
             <Col>
@@ -137,7 +172,6 @@ export default function Profile({ data, onSave }) {
                 src={data.hero_url}
                 alt="cover photo"
                 name="hero_url"
-                helpText="Recommended dimensions 950x215, Max size 2mb"
               />
             </Col>
           </Row>
@@ -240,7 +274,7 @@ export default function Profile({ data, onSave }) {
                   </CsvDownloader>
                 </div>
                 <div className={styles.tableInner}>
-                  <SortableTable
+                  <SorTable
                     data={data.donationData}
                     ignore={['user_id']}
                     columnTypes={{ donationAmount: 'currency', donationDate: 'date' }}
@@ -325,7 +359,7 @@ export default function Profile({ data, onSave }) {
           </Row>
           <Row>
             <Col>
-              <GeoMap data={dummyData}/>
+              <GeoMap data={dummyData} />
             </Col>
           </Row>
         </section>

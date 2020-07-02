@@ -1,4 +1,4 @@
-import { SEARCH_USERS_SUCCESS, SEARCH_USERS_FAIL, SAVE_USER_SUCCESS } from 'actions/types';
+import { SEARCH_USERS_SUCCESS, SEARCH_USERS_FAIL, SAVE_USER_SUCCESS, SEARCH_USER_SUCCESS, SEARCH_USER_FAIL  } from 'actions/types';
 
 const initialState = {
   results: [],
@@ -13,12 +13,22 @@ export default function (state = initialState, action) {
         ...state,
         results: payload,
       };
+      case SEARCH_USER_SUCCESS:
+        return {
+          ...state,
+          selected: payload,
+        };
 
     case SEARCH_USERS_FAIL:
       return {
         ...state,
         results: [],
       };
+      case SEARCH_USER_FAIL:
+        return {
+          ...state,
+          selected: null,
+        };
       
     case SAVE_USER_SUCCESS:
       return {

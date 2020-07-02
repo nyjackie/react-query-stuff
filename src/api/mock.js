@@ -205,6 +205,30 @@ export default function (axiosInstance) {
   });
   mock.onPost('/internal/nonprofit').reply(200, successGuideStarResults());
   mock.onPost('/internal/users').reply(200, successUserResults());
+  mock.onGet(route('/internal/users/:id')).reply(function (config) {
+    return [
+      200,
+      {
+        data: {
+          id: faker.random.number(),
+          first_name: faker.name.firstName(),
+          last_name: faker.name.lastName(),
+          profile_status: {
+            status: 'active',
+            description: 'some random description',
+          },
+          contact_email: faker.internet.email(),
+          contact_phone: faker.phone.phoneNumber(),
+          password_hash: faker.lorem.sentence(),
+          donationData: fakeUserTableData(),
+          created_at: faker.date.past(),
+          modified_at: faker.date.past()
+        }
+      }
+    ]
+  })
+
+
 
   /**
    * This flips between success and fail

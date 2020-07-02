@@ -16,6 +16,9 @@ import Fundraise from 'views/Fundraise';
 import ResetPassword from 'views/ResetPassword';
 import Banlist from 'views/Banlist';
 import Users from 'views/User';
+import UserInfo from 'views/User/UserInfo'
+
+
 
 // components/other
 import Layout from 'components/Layout';
@@ -42,6 +45,8 @@ const App = () => {
             <PrivateRoute exact path="/nonprofit" component={Search} />
             <PrivateRoute exact path="/nonprofit/:ein" component={Nonprofit} />
             <PrivateRoute exact path="/users" component={Users} />
+            <PrivateRoute exact path="/users/:id" component={UserInfo} />
+
           </Switch>
         </Layout>
       </Router>

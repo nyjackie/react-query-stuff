@@ -2,16 +2,18 @@ import React from 'react';
 import { Table } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import Moment from 'react-moment';
+import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
-const SingleResult = ({ result: { first_name, last_name, contact_phone, contact_email, created_at } }) => {
-    // let history = useHistory();
+const SingleResult = ({ result: { id, first_name, last_name, contact_phone, contact_email, created_at } }) => {
+    let history = useHistory();
 
-    // function handleClick() {
-    //   history.push(`/nonprofit/${result.ein}`);
-    // }
+    function onClick() {
+      history.push(`/users/${id}`);
+    }
 
     return (
-        <tr className="pointer">
+        <tr className="pointer" onClick={onClick}>
             <td>{first_name}</td>
             <td>{last_name}</td>
             <td>{contact_phone}</td>
@@ -19,6 +21,7 @@ const SingleResult = ({ result: { first_name, last_name, contact_phone, contact_
             <td><Moment format="YYYY/MM/DD">{created_at}</Moment>
             </td>
         </tr>
+       
     );
 };
 

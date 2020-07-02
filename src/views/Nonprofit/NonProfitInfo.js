@@ -16,6 +16,7 @@ import {
   Editable,
   UploadableImg,
   SorTable,
+  Tooltip,
 } from 'gdd-components';
 
 // our utils
@@ -86,7 +87,35 @@ export default function Profile({ data, onSave }) {
           </Row>
         )}
         <header className={styles.header}>
-          <h3>Welcome to your profile</h3>
+          <h3>
+            Profile{" "}
+            <Tooltip>
+              <Tooltip.Content id="profile-info">
+                <p>
+                  <b>How can I update my organization's profile information?</b>
+                </p>
+                <p>
+                  It is a long established fact that a reader will be distracted by the readable
+                  content of a page when looking at its layout
+                </p>
+                <p>
+                  <b>How can I update my organization's profile information?</b>
+                </p>
+                <p>
+                  It is a long established fact that a reader will be distracted by the readable
+                  content of a page when looking at its layout
+                </p>
+                <p>
+                  <b>How can I update my organization's profile information?</b>
+                </p>
+                <p>
+                  It is a long established fact that a reader will be distracted by the readable
+                  content of a page when looking at its layout
+                </p>
+              </Tooltip.Content>
+            </Tooltip>
+          </h3>
+          <hr />
           <Editable label="Name" editMode={editing} name="name">
             <h2>{data.name}</h2>
           </Editable>

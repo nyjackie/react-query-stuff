@@ -17,7 +17,6 @@ import ResetPassword from 'views/ResetPassword';
 import Banlist from 'views/Banlist';
 import Users from 'views/User';
 
-
 // components/other
 import Layout from 'components/Layout';
 import PrivateRoute from 'components/PrivateRoute';

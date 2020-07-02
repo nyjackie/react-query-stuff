@@ -33,26 +33,22 @@ export const getClaim = id => async dispatch => {
   dispatch({
     type: CLAIMS_REQUEST,
   });
-  try {
-    const [err, data] = await claimsService.getClaim(id);
 
-    if (data) {
-      dispatch({
-        type: GET_CLAIM_SUCCESS,
-        payload: data.data,
-      });
-      return;
-    }
+  const [err, data] = await claimsService.getClaim(id);
 
+  if (err) {
     dispatch({
       type: CLAIMS_ERROR,
-      // payload: { msg: err.response.msg, status: err.response.status },
     });
-  } catch (err) {
+    return;
+  }
+
+  if (data) {
     dispatch({
-      type: CLAIMS_ERROR,
-      // payload: { msg: err.response.msg, status: err.response.status },
+      type: GET_CLAIM_SUCCESS,
+      payload: data.data,
     });
+    return;
   }
 };
 

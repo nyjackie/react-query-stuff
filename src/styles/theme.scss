@@ -12,4 +12,8 @@ $secondary: #fc5e6b;
 $light: #fff;
 $dark: #424242;
 
+:root {
+  --tt-bg-color: #e2e2e2;
+}
+
 @import '~bootstrap/scss/bootstrap';

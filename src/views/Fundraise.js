@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import SocialLinks from 'components/SocialLinks';
 import {LineChart, Editable}  from 'gdd-components'
-import { MONTHS_SHORT } from 'components/Charts/constants';
+import { MONTHS_SHORT } from 'utils/constants';
 
 const Fundraise = () => {
   return (

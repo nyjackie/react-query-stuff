@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Row, Col } from 'react-bootstrap';
 import { useParams, Link } from 'react-router-dom';
 import PageHeader from 'components/PageHeader';
-import { searchNonprofit, saveProfile } from 'actions/search';
+import { searchNonprofit, saveProfile } from 'actions/nonprofit';
 import { addNotification } from 'actions/notifications';
 import Profile from 'views/Nonprofit/NonProfitInfo';
 

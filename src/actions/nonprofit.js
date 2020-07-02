@@ -3,8 +3,6 @@ import {
   SEARCH_REQUEST,
   SEARCH_NONPROFIT_SUCCESS,
   SEARCH_NONPROFIT_FAIL,
-  SEARCH_USERS_SUCCESS,
-  SEARCH_USERS_FAIL,
   SAVE_NONPROFIT_REQUEST,
   SAVE_NONPROFIT_SUCCESS,
   SAVE_NONPROFIT_FAIL,
@@ -39,33 +37,6 @@ export const searchNonprofit = searchTerm => async dispatch => {
     throw err;
   }
 };
-
-export const searchUsers = searchTerm => async dispatch => {
-  dispatch({
-    type: SEARCH_REQUEST,
-  });
-
-  // TODO: this is only during mock testing to show the spinner
-  await wait(1000);
-
-  try {
-    const { data } = await api.searchUsers(searchTerm);
-    if (data) {
-      dispatch({
-        type: SEARCH_USERS_SUCCESS,
-        payload: data.data.hits,
-      });
-      return;
-    }
-  } catch (err) {
-    dispatch({
-      type: SEARCH_USERS_FAIL,
-    });
-    throw err;
-  }
-};
-
-
 
 export const saveProfile = profileData => async dispatch => {
   dispatch({

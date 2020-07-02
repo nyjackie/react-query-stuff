@@ -40,8 +40,12 @@ function searchNonprofit(term) {
   return instance.post('/internal/nonprofit', { search_terms: term });
 }
 
-function searchUsers(term) {
+function getUsers(term) {
   return instance.post('/internal/users', { search_terms: term });
+}
+
+function getUser(id) {
+  return instance.get(`/internal/users/${id}`);
 }
 
 function saveProfile(data) {
@@ -81,7 +85,8 @@ export default {
   getClaims,
   getClaim,
   searchNonprofit,
-  searchUsers,
+  getUsers,
+  getUser,
   saveProfile,
   resetPassword,
   getBanned

@@ -3,10 +3,10 @@ import { Container, Form, Button, Row, Col, Table } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import PageHeader from 'components/PageHeader';
-import { searchUsers } from 'actions/search';
+import { getUsers } from 'actions/user';
 import UserSearchResult from './UserSearchResult';
 
-const Users = ({ type, results, searchUsers }) => {
+const Users = ({ type, results, getUsers }) => {
   const [formData, setFormData] = useState({
     searchTerm: '',
   });
@@ -18,7 +18,7 @@ const Users = ({ type, results, searchUsers }) => {
   const onSubmit = e => {
     e.preventDefault();
     setSearchError(null); // clear error
-    searchUsers(searchTerm).catch(err => {
+    getUsers(searchTerm).catch(err => {
       setSearchError(err.message);
     });
   };
@@ -56,4 +56,4 @@ const mapStateToProps = state => ({
 });
 
 
-export default connect(mapStateToProps, { searchUsers })(Users);
+export default connect(mapStateToProps, { getUsers })(Users);

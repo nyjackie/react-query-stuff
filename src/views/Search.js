@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { Form, Button, Row, Col, Table } from 'react-bootstrap';
 import PageHeader from 'components/PageHeader';
-import { searchNonprofit } from 'actions/search';
+import { searchNonprofit } from 'actions/nonprofit';
 
 const SingleResult = ({ result }) => {
   let history = useHistory();

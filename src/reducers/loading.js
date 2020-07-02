@@ -3,7 +3,7 @@
  */
 const loadingReducer = (state = { isLoading: false }, action) => {
   const { type } = action;
-  const matches = /([A-Z]+)_(REQUEST|SUCCESS|FAIL)/.exec(type);
+  const matches = /([A-Z]+)_(REQUEST|SUCCESS|FAIL|ERROR)/.exec(type);
 
   // not a *_REQUEST / *_SUCCESS / *_FAILURE actions, so we ignore them
   if (!matches) return state;

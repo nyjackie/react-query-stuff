@@ -7,19 +7,24 @@ import { Col, Row, Media, Button, Form, Alert } from 'react-bootstrap';
 // styles
 import styles from './NonProfitInfo.module.scss';
 
-// our components
-import { BarChart, LineChart, PieChart, GeoMap } from 'components/Charts';
-
 // GDD Components
-import { Editable, UploadableImg, SorTable } from 'gdd-components';
+import {
+  BarChart,
+  PieChart,
+  LineChart,
+  GeoMap,
+  Editable,
+  UploadableImg,
+  SorTable,
+} from 'gdd-components';
 
 // our utils
-import { MONTHS_SHORT } from 'components/Charts/constants';
+import { MONTHS_SHORT } from 'utils/constants';
 import { processForDownload } from 'utils/donation';
 import { serialize } from 'utils';
 
 //Mock Data
-import dummyData from 'components/Charts/dummydata.csv'
+import dummyData from 'assets/dummydata.csv';
 
 export default function Profile({ data, onSave }) {
   const [editing, setEditing] = useState(false);
@@ -325,7 +330,7 @@ export default function Profile({ data, onSave }) {
           </Row>
           <Row>
             <Col>
-              <GeoMap data={dummyData}/>
+              <GeoMap data={dummyData} />
             </Col>
           </Row>
         </section>

@@ -76,6 +76,13 @@ const UserInfo = ({ getUser, match, user: { selected }, addNotification }) => {
 
     const BanModal = ({ show }) => {
         const [confirmation, setConfirmation] = useState(false)
+        const BanUser = e => {
+            console.log("this user will be banned")
+            // make post request here...
+            // api.post requestttttt
+            // then close the modal after the request
+            setShow(false)
+        }
         return (
             <Fragment>
                 <Modal show={show} onHide={() => setShow(false)}>
@@ -96,7 +103,7 @@ const UserInfo = ({ getUser, match, user: { selected }, addNotification }) => {
                     </Modal.Header>
                     <Modal.Body>This is the last warning!</Modal.Body>
                     <Modal.Footer>
-                        <Button variant="primary" onClick={() => setShow(false)}>
+                        <Button variant="primary" onClick={() => BanUser()}>
                             Ban
                         </Button>
                         <Button variant="secondary" onClick={() => setShow(false)}>
@@ -205,9 +212,6 @@ const UserInfo = ({ getUser, match, user: { selected }, addNotification }) => {
                 </Jumbotron>
             </Fragment>
         )
-
-
-
 }
 
 

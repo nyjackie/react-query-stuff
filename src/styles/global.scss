@@ -86,3 +86,10 @@ body,
   // content: attr(alt);
   content: '';
 }
+
+.custom-plaintext { 
+  border-color: transparent;
+  appearance: none;
+  background-color: transparent;
+  color: #212529;
+}

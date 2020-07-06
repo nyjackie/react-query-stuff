@@ -185,7 +185,7 @@ const UserInfo = ({ getUser, match, user: { selected }, addNotification }) => {
                                 <Form.Group as={Row} controlId="formGridStatus">
                                     <Form.Label column xl="1">Status: </Form.Label>
                                     <Col xl="3">
-                                        <Form.Control plaintext={edit} readOnly={edit} disabled={edit} as="select" name="status" defaultValue={status} onChange={onChange} >
+                                        <Form.Control plaintext={edit} readOnly={edit} disabled={edit} as="select" name="status" defaultValue={status} onChange={onChange} custom>
                                             <option>active</option>
                                             <option>inactive</option>
                                         </Form.Control>

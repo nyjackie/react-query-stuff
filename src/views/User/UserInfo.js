@@ -1,16 +1,12 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import Moment from 'react-moment';
 import moment from 'moment'
 
 import {
     Modal,
     Button,
-    InputGroup,
-    FormControl,
     Col,
     Row,
-    Container,
     Jumbotron,
     Form
 } from 'react-bootstrap';
@@ -18,6 +14,7 @@ import PageHeader from 'components/PageHeader';
 import { connect } from 'react-redux';
 import { getUser } from 'actions/user';
 import styles from './User.module.scss'
+import { addNotification } from 'actions/notifications';
 
 const initialState = {
     first_name: '',
@@ -33,16 +30,25 @@ const initialState = {
 
 };
 
-const UserInfo = ({
-    getUser,
-    match,
-    user,
-}) => {
+const UserInfo = ({ getUser, match, user: { selected }, addNotification }) => {
+    const [show, setShow] = useState(false);
+    const [edit, toggleEdit] = useState(true);
+    const [formData, setFormData] = useState(initialState);
+
+
     useEffect(() => {
         getUser(match.params.id);
     }, [getUser, match.params.id]);
-    const [edit, toggleEdit] = useState(true);
-    const [formData, setFormData] = useState(initialState);
+
+    useEffect(() => {
+        const userData = { ...initialState };
+        for (const el in selected) {
+            if (el in userData) userData[el] = selected[el];
+        }
+        setFormData(userData)
+    }, [selected])
+
+
     const {
         first_name,
         last_name,
@@ -53,109 +59,171 @@ const UserInfo = ({
         modified_at
     } = formData;
 
-    return user === null ? (
+    const onChange = e => {
+        if (e.target.name === "status" || e.target.name === "description") {
+            setFormData({ ...formData, profile_status: { ...formData.profile_status, [e.target.name]: e.target.value } })
+        } else {
+            setFormData({ ...formData, [e.target.name]: e.target.value })
+        }
+    }
+
+    const onSubmit = e => {
+        e.preventDefault();
+        const time = moment().format()
+        setFormData({ ...formData, modified_at: time })
+        console.log("Form data", formData)
+    }
+
+    const BanModal = ({ show }) => {
+        const [confirmation, setConfirmation] = useState(false)
+        return (
+            <Fragment>
+                <Modal show={show} onHide={() => setShow(false)}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Ban Current User</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>Woohoo, you're about to ban this user!</Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={() => setShow(false)}>
+                            Close </Button>
+                        <Button variant="primary" onClick={() => setConfirmation(true)}>
+                            Ban </Button>
+                    </Modal.Footer>
+                </Modal>
+                <Modal show={confirmation} onHide={() => setShow(false)} dialogClassName={styles.confModal}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>ARE YOU SURE?</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>This is the last warning!</Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="primary" onClick={() => setShow(false)}>
+                            Ban
+                        </Button>
+                        <Button variant="secondary" onClick={() => setShow(false)}>
+                            Close
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+            </Fragment>
+        );
+    }
+
+
+    return selected === null ? (
         <div>Loading...</div>
     ) : (
             <Fragment>
+                <PageHeader className="text-primary" pageTitle="User Info" />
                 <Jumbotron className={styles.jumbotron}>
                     <Button onClick={() => { toggleEdit(!edit) }} className={styles.edit}>
                         Edit
                 </Button>
-                    <Form >
+                    <Form onSubmit={onSubmit}>
                         <Form.Row>
-                            <Col sm={6}>
-                            <Form.Group as={Row} controlId="first_name" >
-                                <Form.Label column sm="2">Created at: </Form.Label>
-                                <Col sm="5" >
-                                    {/* <Moment className={styles.date} format="YYYY/MM/DD">{user.created_at}</Moment> */}
-                                    <Form.Control plaintext readOnly value={moment(user.created_at).format('MM/DD/YYYY')}/>
-                                </Col>
-                            </Form.Group>
+                            <Col xl={6}>
+                                <Form.Group as={Row} controlId="first_name" >
+                                    <Form.Label column xl="2">Created at: </Form.Label>
+                                    <Col xl="5" >
+                                        <Form.Control plaintext readOnly value={moment(created_at).format('MM/DD/YYYY')} />
+                                    </Col>
+                                </Form.Group>
                             </Col >
-                            <Col sm={6}>
-                            <Form.Group as={Row} controlId="modified_at">
-                                <Form.Label column sm="2">Modified at: </Form.Label>
-                                <Col sm="5" >
-                                <Form.Control plaintext readOnly value={moment(user.modified_at).format('MM/DD/YYYY')}/>
-                                </Col>
-                            </Form.Group>
+                            <Col xl={6}>
+                                <Form.Group as={Row} controlId="modified_at">
+                                    <Form.Label column xl="2">Modified at: </Form.Label>
+                                    <Col xl="5" >
+                                        <Form.Control plaintext readOnly value={moment(modified_at).format('MM/DD/YYYY')} />
+                                    </Col>
+                                </Form.Group>
                             </Col>
                         </Form.Row>
                         <Form.Row>
-                            <Col sm={6}>
-                            <Form.Group as={Row} controlId="first_name" >
-                                <Form.Label column sm="2">First Name: </Form.Label>
-                                <Col sm="9">
-                                <Form.Control plaintext={edit} readOnly={edit} type="name" value={user.first_name} />
-                                </Col>
-                            </Form.Group>
+                            <Col xl={6}>
+                                <Form.Group as={Row} controlId="first_name" >
+                                    <Form.Label column xl="2">First Name: </Form.Label>
+                                    <Col xl="9">
+                                        <Form.Control plaintext={edit} readOnly={edit} name="first_name" value={first_name} onChange={onChange} />
+                                    </Col>
+                                </Form.Group>
                             </Col>
-                            <Col sm={6}>
-                            <Form.Group as={Row} controlId="last_name">
-                                <Form.Label column sm="2">Last Name: </Form.Label>
-                                <Col sm="9">
-                                <Form.Control plaintext={edit} readOnly={edit} type="name" value={user.last_name} />
-                                </Col>
-                            </Form.Group>
-                            </Col>
-                        </Form.Row>
-                        <Form.Row>
-                            <Col sm={6}>
-                            <Form.Group as={Row} controlId="email" >
-                                <Form.Label column sm="2">Email: </Form.Label>
-                                <Col sm="9">
-                                <Form.Control plaintext={edit} readOnly={edit} type="email" value={user.contact_email} />
-                                </Col>
-                            </Form.Group>
-                            </Col>
-                            <Col sm={6}>
-                            <Form.Group as={Row} controlId="phone">
-                                <Form.Label column sm="2">Phone#: </Form.Label>
-                                <Col sm="9">
-                                <Form.Control plaintext={edit} readOnly={edit} type="phone" value={user.contact_phone} />
-                                </Col>
-                            </Form.Group>
+                            <Col xl={6}>
+                                <Form.Group as={Row} controlId="last_name">
+                                    <Form.Label column xl="2">Last Name: </Form.Label>
+                                    <Col xl="9">
+                                        <Form.Control plaintext={edit} readOnly={edit} name="last_name" value={last_name} onChange={onChange} />
+                                    </Col>
+                                </Form.Group>
                             </Col>
                         </Form.Row>
                         <Form.Row>
-                            <Col sm={12}>
-                            <Form.Group as={Row} controlId="formGridStatus">
-                                <Form.Label column sm="1">Status: </Form.Label>
-                                <Col sm="3">
-                                <Form.Control plaintext={edit} readOnly={edit} disabled={edit} as="select" defaultValue={user.profile_status.status}>
-                                    <option>active</option>
-                                    <option>inactive</option>
-                                </Form.Control>
-                                </Col>
-                            </Form.Group>
+                            <Col xl={6}>
+                                <Form.Group as={Row} controlId="email" >
+                                    <Form.Label column xl="2">Email: </Form.Label>
+                                    <Col xl="9">
+                                        <Form.Control plaintext={edit} readOnly={edit} type="email" name="contact_email" value={contact_email} onChange={onChange} />
+                                    </Col>
+                                </Form.Group>
+                            </Col>
+                            <Col xl={6}>
+                                <Form.Group as={Row} controlId="phone">
+                                    <Form.Label column xl="2">Phone#: </Form.Label>
+                                    <Col xl="9">
+                                        <Form.Control plaintext={edit} readOnly={edit} type="tel" name="contact_phone" value={contact_phone} onChange={onChange} />
+                                    </Col>
+                                </Form.Group>
                             </Col>
                         </Form.Row>
                         <Form.Row>
-                        <Col sm={12}>
-                            <Form.Group as={Row} controlId="formGridStatus">
-                                <Form.Label column sm="1">Description: </Form.Label>
-                                <Col sm="8">
-                                <Form.Control rows="3" plaintext={edit} readOnly={edit} disabled={edit} as="textarea" defaultValue={user.profile_status.description} />
-                                </Col>
-                            </Form.Group>
+                            <Col xl={12}>
+                                <Form.Group as={Row} controlId="formGridStatus">
+                                    <Form.Label column xl="1">Status: </Form.Label>
+                                    <Col xl="3">
+                                        <Form.Control plaintext={edit} readOnly={edit} disabled={edit} as="select" name="status" defaultValue={status} onChange={onChange} >
+                                            <option>active</option>
+                                            <option>inactive</option>
+                                        </Form.Control>
+                                    </Col>
+                                </Form.Group>
                             </Col>
                         </Form.Row>
-                        {!edit && (<Button type="submit">Submit</Button>)}
+                        <Form.Row>
+                            <Col xl={12}>
+                                <Form.Group as={Row} controlId="formGridStatus">
+                                    <Form.Label column xl="1">Description: </Form.Label>
+                                    <Col xl="8">
+                                        <Form.Control rows="8" plaintext={edit} readOnly={edit} disabled={edit} as="textarea" name="description" defaultValue={description} onChange={onChange} />
+                                    </Col>
+                                </Form.Group>
+                            </Col>
+                        </Form.Row>
+                        <Row>
+                            <Col>{!edit && (<Button type="submit" >Submit</Button>)}</Col>
+                            <Col><Button variant="danger" className={styles.ban} onClick={() => setShow(true)}>Ban</Button></Col>
+                        </Row>
                     </Form>
+                    <BanModal show={show} />
                 </Jumbotron>
             </Fragment>
         )
+
+
+
 }
+
+
+
+
+
 
 UserInfo.propTypes = {
     addNotification: PropTypes.func.isRequired,
     getUser: PropTypes.func.isRequired,
-    selected: PropTypes.object.isRequired,
+    user: PropTypes.object.isRequired,
 };
 
 
 const mapStateToProps = state => ({
-    user: state.users.selected,
+    user: state.users,
 });
 
-export default connect(mapStateToProps, { getUser })(UserInfo)
+export default connect(mapStateToProps, { getUser, addNotification })(UserInfo)

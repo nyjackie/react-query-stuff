@@ -14,3 +14,22 @@
     vertical-align: middle;
     top:10px;
 }
+
+select{
+    text-transform:capitalize;
+}
+
+select:disabled{
+    opacity: 1;
+}
+
+textarea { 
+    resize: none; 
+}
+
+.ban{
+    float: right;
+}
+
+.confModal{
+}

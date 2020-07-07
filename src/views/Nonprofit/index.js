@@ -5,7 +5,7 @@ import { useParams, Link } from 'react-router-dom';
 import PageHeader from 'components/PageHeader';
 import { searchNonprofit, saveProfile } from 'actions/nonprofit';
 import { addNotification } from 'actions/notifications';
-import Profile from 'views/Nonprofit/NonProfitInfo';
+import Profile from 'views/Nonprofit/Edit';
 
 const Nonprofit = ({ results, isLoading, searchNonprofit, saveProfile, addNotification }) => {
   const { ein } = useParams();

@@ -45,7 +45,7 @@ const guideStarHits = (total = 5) => {
           status: '',
           description: '',
         },
-        mission: faker.lorem.paragraph(),
+        mission: faker.lorem.paragraphs(),
         description: faker.lorem.paragraphs(),
         category: '',
         website_url: faker.internet.url(),

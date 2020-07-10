@@ -1,3 +1,4 @@
 # https://www.robotstxt.org/robotstxt.html
+# this site should not be crawled
 User-agent: *
-Disallow:
+Disallow: /

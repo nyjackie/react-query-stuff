@@ -4,17 +4,14 @@
   padding-bottom: 300px;
 
   section {
-    margin: 0 0 2em;
+    margin: 0 0 60px;
   }
 }
 
 .header {
-  // @include from-bp('md') {
-  //   position: sticky;
-  // }
-  // top: 0;
   z-index: 3;
   background-color: white;
+  margin: 0 0 60px;
 
   h2 {
     font-weight: normal;
@@ -75,9 +72,9 @@
 .logoImg,
 .coverImg {
   background-color: lightgray;
-  min-height: 215px;
+  min-height: 300px;
+  height: 1px;
   width: 100%;
-  height: auto;
   display: block;
 }
 

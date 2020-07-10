@@ -60,6 +60,10 @@ function getBanned() {
   return instance.get('/internal/banned');
 }
 
+function locationSearch(searchTerm) {
+  return instance.get('/location/search/'+ encodeURIComponent(searchTerm))
+}
+
 //  ***logout the user if the there is an auth error***
 instance.interceptors.response.use(
   res => res,

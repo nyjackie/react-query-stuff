@@ -1,24 +1,16 @@
 // external libs
 import React, { useState, useRef } from 'react';
-import CsvDownloader from 'react-csv-downloader';
 import merge from 'lodash/merge';
-import { Col, Row, Media, Button, Form, Alert } from 'react-bootstrap';
+import { Col, Row, Button, Form, Alert } from 'react-bootstrap';
 
 // styles
 import 'gdd-components/dist/styles/shared.scss';
 import styles from './NonProfitInfo.module.scss';
 
-
 // GDD Components
-import {
-  UploadableImg,
-  SorTable,
-  Tooltip,
-  InputSwap
-} from 'gdd-components';
+import { UploadableImg, Tooltip, InputSwap, Share, Combobox } from 'gdd-components';
 
 // our utils
-import { processForDownload } from 'utils/donation';
 import { serialize } from 'utils';
 
 export default function Profile({ data, onSave }) {
@@ -62,27 +54,11 @@ export default function Profile({ data, onSave }) {
       onSubmit={handleSubmit}
     >
       <input type="hidden" defaultValue={data.ein} name="ein" />
+
       <article className={styles['np-profile']}>
-        <div className="controls">
-          <Button onClick={toggleEdit} variant={editing ? 'danger' : 'primary'}>
-            {editing ? 'Discard' : 'Edit'}
-          </Button>
-          {editing && (
-            <Button type="submit" variant="success">
-              Publish
-            </Button>
-          )}
-        </div>
-        {editing && saveError && (
-          <Row>
-            <Col>
-              <Alert variant="danger">{saveError}</Alert>
-            </Col>
-          </Row>
-        )}
-        <header className={styles.header}>
-          <h3>
-            Profile{" "}
+        <div className="d-flex flex-row justify-content-between align-items-end mt-3">
+          <h3 className="m-0">
+            Profile{' '}
             <Tooltip>
               <Tooltip.Content id="profile-info">
                 <p>
@@ -109,63 +85,68 @@ export default function Profile({ data, onSave }) {
               </Tooltip.Content>
             </Tooltip>
           </h3>
-          <hr />
-          <InputSwap label="Name" editMode={editing} name="name">
-            <h2>{data.name}</h2>
+          <div className="controls">
+            <Button onClick={toggleEdit} variant={editing ? 'danger' : 'primary'}>
+              {editing ? 'Discard' : 'Edit'}
+            </Button>
+            {editing && (
+              <Button type="submit" variant="success" className="ml-3">
+                Publish
+              </Button>
+            )}
+          </div>
+        </div>
+
+        {editing && saveError && (
+          <Row>
+            <Col>
+              <Alert variant="danger">{saveError}</Alert>
+            </Col>
+          </Row>
+        )}
+        <hr className="mb-5" />
+        <header className={styles.header}>
+          <InputSwap className="mb-5" label="Name" editMode={editing} name="name">
+            <h2 className="mb-5">{data.name}</h2>
           </InputSwap>
           <InputSwap label="Organization type" editMode={editing} name="ntee_code">
             <p>{data.ntee_code}</p>
           </InputSwap>
         </header>
-        <Row>
-          <Col lg={4}>
-            <div className={styles['stat-block']}>
-              <p>icon</p>
-              <p>Stat title</p>
-              <p className={styles['large-stat']}>500K</p>
-            </div>
-          </Col>
-          <Col lg={4}>
-            <div className={styles['stat-block']}>
-              <p>icon</p>
-              <p>Stat title</p>
-              <p className={styles['large-stat']}>500K</p>
-            </div>
-          </Col>
-          <Col lg={4}>
-            <div className={styles['stat-block']}>
-              <p>icon</p>
-              <p>Stat title</p>
-              <p className={styles['large-stat']}>500K</p>
-            </div>
-          </Col>
-        </Row>
+
         <section>
-          <Row>
+          <Row className="mb-4">
             <Col>
-              <h3>Profile photo</h3>
+              <h3>Nonprofit's Logo and Profile Header Image</h3>
             </Col>
           </Row>
           <Row>
             <Col md={3}>
               <UploadableImg
                 editMode={editing}
-                uploadText="Upload Profile Photo"
+                uploadText="Upload Organization Logo"
                 className={styles.logoImg}
                 src={data.logo_url}
                 alt="logo"
                 name="logo_url"
                 helpText="Photo should be square"
+                maxSize={1000}
+                minWidth={1000}
+                minHeight={1000}
               />
             </Col>
             <Col>
               <UploadableImg
                 editMode={editing}
-                uploadText="Upload Cover Photo"
+                uploadText="Upload Profile Header Image"
+                helpText="Recommended dimensions 2000 x 300"
                 className={styles.coverImg}
                 src={data.hero_url}
                 alt="cover photo"
                 name="hero_url"
+                maxSize={3000}
+                minWidth={2000}
+                minHeight={2000}
               />
             </Col>
           </Row>
@@ -178,7 +159,13 @@ export default function Profile({ data, onSave }) {
           </Row>
           <Row>
             <Col>
-              <InputSwap label="Mission statement" multiline editMode={editing} name="mission">
+              <InputSwap
+                hideLabel
+                label="Mission statement"
+                multiline
+                editMode={editing}
+                name="mission"
+              >
                 <p>{data.mission}</p>
               </InputSwap>
             </Col>
@@ -187,12 +174,19 @@ export default function Profile({ data, onSave }) {
         <section>
           <Row>
             <Col>
-              <h3>Website</h3>
+              <h3 className="d-inline-block mr-4">Website</h3>
+              <Share url={data.website_url} />
             </Col>
           </Row>
           <Row>
             <Col>
-              <InputSwap label="Website url" editMode={editing} name="website_url" inputType="url">
+              <InputSwap
+                hideLabel
+                label="Website url"
+                editMode={editing}
+                name="website_url"
+                inputType="url"
+              >
                 <a href={data.website_url} target="_blank" rel="noopener noreferrer">
                   {data.website_url}
                 </a>
@@ -200,69 +194,28 @@ export default function Profile({ data, onSave }) {
             </Col>
           </Row>
         </section>
-
         <section>
           <Row>
             <Col>
-              <h3>Donation Tracking</h3>
+              <h3>Location</h3>
             </Col>
           </Row>
           <Row>
             <Col>
-              <ul className={styles['donation-list']}>
-                {Array(50)
-                  .fill('')
-                  .map((e, i) => {
-                    return (
-                      <li key={`temp-${i}`}>
-                        <Media>
-                          <span className={styles.circle} />
-                          <Media.Body className={styles['donation-list-body']}>
-                            <p>$50 by Jamie Lee 2 minutes ago</p>
-                          </Media.Body>
-                        </Media>
-                      </li>
-                    );
-                  })}
-              </ul>
+              {editing ? (
+              <Combobox
+                label="Location"
+                clearOnBlur
+                autoSelect
+                hideLabel
+                value={`${data.address.city}, ${data.address.state}`}
+                onSearch={searchString => {
+                  return ["New York, NY", "Chicago, IL", "Dallas, TX", "Miami, FL"];
+                }}
+              /> ) : <p>{data.address.city}, {data.address.state}</p>}
             </Col>
           </Row>
         </section>
-        <section>
-          <Row>
-            <Col>
-              <h3>Report</h3>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <div className={styles.donationTable}>
-                <div className={styles.donateTableHead}>
-                  <select>
-                    <option>Last 3 months</option>
-                  </select>
-                  <CsvDownloader
-                    filename="donate_report"
-                    datas={processForDownload(data.donationData)}
-                  >
-                    <span className={styles.dlCsv}>
-                      Download (CSV) <span />
-                    </span>
-                  </CsvDownloader>
-                </div>
-                <div className={styles.tableInner}>
-                  <SorTable
-                    data={data.donationData}
-                    ignore={['user_id']}
-                    columnTypes={{ donationAmount: 'currency', donationDate: 'date' }}
-                    rowKey="user_id"
-                  />
-                </div>
-              </div>
-            </Col>
-          </Row>
-        </section>
-        
       </article>
     </Form>
   );

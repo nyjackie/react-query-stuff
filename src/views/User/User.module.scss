@@ -1,33 +1,32 @@
-.jumbotron{
-    max-width: 1500px;
+.jumbotron {
+  max-width: 1500px;
 }
 
-.edit{
-    margin-bottom: 20px;
+.edit {
+  margin-bottom: 20px;
 }
 
-.gridcol{
-    display: inline-block;
+.gridcol {
+  display: inline-block;
 }
 
-.date{
-    vertical-align: middle;
-    top:10px;
+.date {
+  vertical-align: middle;
+  top: 10px;
 }
 
-select{
-    text-transform:capitalize;
+select {
+  text-transform: capitalize;
 }
 
-select:disabled{
-    opacity: 1;
+select:disabled {
+  opacity: 1;
 }
 
-textarea { 
-    resize: none; 
+textarea {
+  resize: none;
 }
 
-.ban{
-    float: right;
+.ban {
+  float: right;
 }
-

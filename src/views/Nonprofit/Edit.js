@@ -8,7 +8,7 @@ import 'gdd-components/dist/styles/shared.scss';
 import styles from './NonProfitInfo.module.scss';
 
 // GDD Components
-import { UploadableImg, Tooltip, InputSwap, Share } from 'gdd-components';
+import { UploadableImg, Tooltip, InputSwap, Share, Combobox } from 'gdd-components';
 
 // our utils
 import { serialize } from 'utils';
@@ -159,7 +159,13 @@ export default function Profile({ data, onSave }) {
           </Row>
           <Row>
             <Col>
-              <InputSwap hideLabel label="Mission statement" multiline editMode={editing} name="mission">
+              <InputSwap
+                hideLabel
+                label="Mission statement"
+                multiline
+                editMode={editing}
+                name="mission"
+              >
                 <p>{data.mission}</p>
               </InputSwap>
             </Col>
@@ -174,11 +180,39 @@ export default function Profile({ data, onSave }) {
           </Row>
           <Row>
             <Col>
-              <InputSwap hideLabel label="Website url" editMode={editing} name="website_url" inputType="url">
+              <InputSwap
+                hideLabel
+                label="Website url"
+                editMode={editing}
+                name="website_url"
+                inputType="url"
+              >
                 <a href={data.website_url} target="_blank" rel="noopener noreferrer">
                   {data.website_url}
                 </a>
               </InputSwap>
+            </Col>
+          </Row>
+        </section>
+        <section>
+          <Row>
+            <Col>
+              <h3>Location</h3>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              {editing ? (
+              <Combobox
+                label="Location"
+                clearOnBlur
+                autoSelect
+                hideLabel
+                value={`${data.address.city}, ${data.address.state}`}
+                onSearch={searchString => {
+                  return ["New York, NY", "Chicago, IL", "Dallas, TX", "Miami, FL"];
+                }}
+              /> ) : <p>{data.address.city}, {data.address.state}</p>}
             </Col>
           </Row>
         </section>

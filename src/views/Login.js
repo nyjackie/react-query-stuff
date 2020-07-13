@@ -1,10 +1,12 @@
 import React, { Fragment, useState } from 'react';
+import PropTypes from 'prop-types';
 import { Redirect, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { login } from 'actions/auth';
 import { Form, Button, Row, Col } from 'react-bootstrap';
-import PageHeader from 'components/PageHeader';
+
+import { ReactComponent as Logo } from '../assets/good-deeds-logo-teal.svg';
+import { login } from 'actions/auth';
+import styles from './Login.module.scss';
 
 const Login = ({ login, isAuthenticated }) => {
   const [formData, setFormData] = useState({
@@ -30,17 +32,18 @@ const Login = ({ login, isAuthenticated }) => {
 
   return (
     <Fragment>
-      <PageHeader pageTitle="Login Page" />
-      <Row>
-        <Col md={6}>
+      <Row className="justify-content-md-center">
+        <Col md={3} className={styles.loginPage}>
+          <Logo className={styles.logo} aria-hidden="true" />
+          <h1 className="sr-only">Good Deeds Data admin portal</h1>
           <Form onSubmit={onSubmit}>
             <Form.Group controlId="loginEmail">
-              <Form.Label className="email">
+              <Form.Label className="sr-only">
                 <b>Email</b>
               </Form.Label>
               <Form.Control
                 type="email"
-                placeholder="Email Address"
+                placeholder="Email"
                 name="email"
                 onChange={e => onChange(e)}
                 value={email}
@@ -48,7 +51,7 @@ const Login = ({ login, isAuthenticated }) => {
               />
             </Form.Group>
             <Form.Group controlId="loginPassword">
-              <Form.Label className="password">
+              <Form.Label className="sr-only">
                 <b>Password</b>
               </Form.Label>
               <Form.Control
@@ -60,7 +63,7 @@ const Login = ({ login, isAuthenticated }) => {
                 required
               />
             </Form.Group>
-            <Button type="submit" value="Login">
+            <Button type="submit" variant="primary" block>
               Login
             </Button>
             {loginError && <p className="mt-2 text-danger">{loginError}</p>}

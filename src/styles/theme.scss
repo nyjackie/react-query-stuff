@@ -7,13 +7,37 @@
  * https://github.com/twbs/bootstrap/blob/master/scss/_variables.scss
  */
 
-$primary: #2bc2bd;
-$secondary: #fc5e6b;
+$primary: #0C2C4D;
+$secondary: #2BC2BD;
+
 $light: #fff;
 $dark: #424242;
+
+$grid-gutter-width: 24px;
+
+// Default bootstrap breakpoints
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1280px // our container max-width
+);
+
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1280px
+);
+
+$font-size-root: 17px;
+$font-size-base: (17/16) * 1rem;
+$line-height-base: 1.7;
 
 :root {
   --tt-bg-color: #e2e2e2;
 }
+
 
 @import '~bootstrap/scss/bootstrap';

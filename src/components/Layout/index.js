@@ -35,7 +35,6 @@ const Layout = ({ children, drawerOpen, toggleDrawer, isLoading }) => {
 
   const drawerCSS = cn(
     'flex-fill',
-    'bg-dark',
     styles.transition,
     styles.drawer,
     !drawerOpen && styles.closed

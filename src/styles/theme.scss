@@ -39,5 +39,9 @@ $line-height-base: 1.7;
   --tt-bg-color: #e2e2e2;
 }
 
+// adding Circular Std to the default font-family
+$font-family-sans-serif: 'Circular Std', system-ui, -apple-system, 'Segoe UI',
+  Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji',
+  'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
 @import '~bootstrap/scss/bootstrap';

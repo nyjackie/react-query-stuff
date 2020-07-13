@@ -4,10 +4,12 @@ import { NavLink, useHistory } from 'react-router-dom';
 import { logout } from 'actions/auth';
 import Nav from 'react-bootstrap/Nav';
 import { closeDrawer } from 'actions/ui';
+import { ReactComponent as Logo } from 'assets/good-deeds-logo-teal.svg';
+import styles from './Nav.module.scss';
 
 const Title = () => (
   <a aria-hidden="true" href="/" className="mb-3">
-    Good Deeds Data | Admin
+    <Logo className={styles.logo} />
   </a>
 );
 

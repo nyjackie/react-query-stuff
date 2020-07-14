@@ -1,7 +1,7 @@
 @font-face {
   font-family: 'Circular Std';
   font-style: normal;
-  font-weight: normal;
+  font-weight: normal; // aka 400
   src: url('./fonts/CircularStd-Book.ttf');
   font-display: swap;
 }
@@ -10,6 +10,14 @@
   font-family: 'Circular Std';
   font-style: normal;
   font-weight: 900;
+  src: url('./fonts/CircularStd-Bold.otf');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Circular Std';
+  font-style: normal;
+  font-weight: bold; // aka 700
   src: url('./fonts/CircularStd-Bold.otf');
   font-display: swap;
 }
@@ -28,7 +36,6 @@
 /**
  * Global CSS
  */
- 
 
 body {
   margin: 0;
@@ -91,9 +98,27 @@ body,
   content: '';
 }
 
-.custom-plaintext { 
+.custom-plaintext {
   border-color: transparent;
   appearance: none;
   background-color: transparent;
   color: #212529;
+}
+
+.h2 {
+  font-family: 'Circular Std', sans-serif;
+  font-weight: bold;
+  font-size: em(36px);
+  font-size: rem(36px);
+  line-height: (46/36);
+  color: var(--dark);
+}
+
+.h3 {
+  font-family: 'Circular Std', sans-serif;
+  font-weight: bold;
+  font-size: em(16px);
+  font-size: rem(16px);
+  line-height: (20/16);
+  color: var(--dark);
 }

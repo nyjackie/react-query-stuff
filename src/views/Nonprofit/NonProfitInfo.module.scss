@@ -1,6 +1,6 @@
 @import '../../styles/mixins.scss';
 
-.np-profile {
+.profile {
   padding-bottom: 300px;
 
   section {
@@ -10,7 +10,6 @@
 
 .header {
   z-index: 3;
-  background-color: white;
   margin: 0 0 60px;
 
   h2 {

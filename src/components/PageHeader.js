@@ -6,7 +6,7 @@ const PageHeader = ({ pageTitle, className }) => {
   return (
     <Row>
       <section>
-        <h1 className={className}>{pageTitle}</h1>
+        <h2 className={className}>{pageTitle}</h2>
       </section>
     </Row>
   );

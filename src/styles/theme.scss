@@ -4,15 +4,20 @@
  * https://getbootstrap.com/docs/4.5/getting-started/theming/
  *
  * view all bootstrap variables:
- * https://github.com/twbs/bootstrap/blob/master/scss/_variables.scss
+ * https://github.com/twbs/bootstrap/blob/v4.5.0/scss/_variables.scss
  */
 
-$primary: #0C2C4D;
-$secondary: #2BC2BD;
+ // brand colors
+$primary: #0c2c4d;
+$secondary: #2bc2bd;
+// $light: #fff;
+$dark: #212b36;
 
-$light: #fff;
-$dark: #424242;
+// named colors
+$teal: $secondary;
+$white-teal: #F4FAF9;
 
+// Grid
 $grid-gutter-width: 24px;
 
 // Default bootstrap breakpoints
@@ -21,27 +26,27 @@ $grid-breakpoints: (
   sm: 576px,
   md: 768px,
   lg: 992px,
-  xl: 1280px // our container max-width
+  xl: 1280px // our container max-width,
 );
 
 $container-max-widths: (
   sm: 540px,
   md: 720px,
   lg: 960px,
-  xl: 1280px
+  xl: 1280px,
 );
 
-$font-size-root: 17px;
-$font-size-base: (17/16) * 1rem;
-$line-height-base: 1.7;
+$font-size-root: 16px;
+$font-size-base: 1rem;
 
 :root {
   --tt-bg-color: #e2e2e2;
+  --white-teal: $white-teal;
 }
 
 // adding Circular Std to the default font-family
-$font-family-sans-serif: 'Circular Std', system-ui, -apple-system, 'Segoe UI',
-  Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji',
-  'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+$font-family-sans-serif: 'Circular Std', system-ui, -apple-system, 'Segoe UI', Roboto,
+  'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+  'Segoe UI Symbol', 'Noto Color Emoji';
 
 @import '~bootstrap/scss/bootstrap';

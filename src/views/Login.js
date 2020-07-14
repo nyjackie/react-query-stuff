@@ -26,7 +26,8 @@ const Login = ({ login, isAuthenticated }) => {
   };
 
   if (isAuthenticated) {
-    //REDIRECTS USER TO DASHBOARD AFTER LOGIN
+    // For now /claims is the default logged in home page after logging in
+    // this might change in the future
     return <Redirect to="/claims" />;
   }
 

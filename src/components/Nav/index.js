@@ -44,25 +44,22 @@ const SideNav = ({ isAuthenticated, logout, closeDrawer }) => {
   return (
     <Nav className="flex-column h-100 p-3" onClick={onNavClick}>
       <Title />
-      <NavLink className="js-closeDrawer mb-2" to="/dashboard" exact={true}>
+      <NavLink className="js-closeDrawer mb-2" to="/" exact={true}>
         Home
       </NavLink>
       <NavLink className="js-closeDrawer mb-2" to="/nonprofit" exact={true}>
-        Search Nonprofit
+        Search Nonprofits
       </NavLink>
       <NavLink className="js-closeDrawer mb-2" to="/users" exact={true}>
-        Search User
+        Search Users
       </NavLink>
       <NavLink className="js-closeDrawer mb-2" to="/claims" exact={true}>
         Claims
       </NavLink>
-      <NavLink className="js-closeDrawer mb-2" to="/fundraise" exact={true}>
-        Fundraising Tool
-      </NavLink>
       <NavLink className="js-closeDrawer mb-2" to="/banlist" exact={true}>
         Ban List
       </NavLink>
-      <button onClick={doLogout} className="js-closeDrawer mb-2 btn btn-link btn-link-reset">
+      <button onClick={doLogout} className="js-closeDrawer mt-5 btn btn-secondary">
         Logout
       </button>
     </Nav>

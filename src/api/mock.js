@@ -8,23 +8,21 @@ faker.seed(111);
  * This needs to be updated when we get the final api scheme
  * This will be used in the table of donation data on a profile page
  */
-function fakeUserTableData() {
-  return Array(30)
-    .fill(0)
-    .map(() => {
-      return {
-        user_id: faker.random.uuid(),
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
-        email: faker.internet.email(),
-        phone: faker.phone.phoneNumber(),
-        donationAmount: faker.finance.amount(),
-        donationDate: faker.date.past(),
-        addtional1: 'Value',
-        addtional2: 'Value',
-      };
-    });
-}
+const fakeUserTableData = Array(30)
+  .fill(0)
+  .map(() => {
+    return {
+      user_id: faker.random.uuid(),
+      firstName: faker.name.firstName(),
+      lastName: faker.name.lastName(),
+      email: faker.internet.email(),
+      phone: faker.phone.phoneNumber(),
+      donationAmount: faker.finance.amount(),
+      donationDate: faker.date.past(),
+      addtional1: 'Value',
+      addtional2: 'Value',
+    };
+  });
 
 /**
  * guidestar essentials api documentation
@@ -70,7 +68,7 @@ const guideStarHits = (total = 5) => {
           msa: '',
           lat_long: faker.fake('{{address.latitude}},{{address.longitude}}'),
         },
-        donationData: fakeUserTableData(),
+        donationData: fakeUserTableData,
       };
     });
   return data;
@@ -91,29 +89,27 @@ const claimsList = npList.map(np => {
   };
 });
 
-const userHits = (total = 10) => {
-  const data = Array(total)
-    .fill({})
-    .map(() => {
-      return {
-        id: faker.random.number(),
-        first_name: faker.name.firstName(),
-        last_name: faker.name.lastName(),
-        profile_status: {
-          status: '',
-          description: '',
-        },
-        contact_email: faker.internet.email(),
-        contact_phone: faker.phone.phoneNumber(),
-        password_hash: faker.lorem.sentence(),
-        donationData: fakeUserTableData(),
-        created_at: faker.date.past(),
-        modified_at: faker.date.past(),
-      };
-    });
-  return data;
-};
-function successGuideStarResults(total) {
+const userSearchResults = Array(10)
+  .fill({})
+  .map(() => {
+    return {
+      id: faker.random.number(),
+      first_name: faker.name.firstName(),
+      last_name: faker.name.lastName(),
+      profile_status: {
+        status: '',
+        description: '',
+      },
+      contact_email: faker.internet.email(),
+      contact_phone: faker.phone.phoneNumber(),
+      password_hash: faker.lorem.sentence(),
+      donationData: fakeUserTableData,
+      created_at: faker.date.past(),
+      modified_at: faker.date.past(),
+    };
+  });
+
+function successGuideStarResults() {
   return {
     code: 200,
     message: 'Request was processed successfully!',
@@ -121,8 +117,7 @@ function successGuideStarResults(total) {
     errors: [],
     data: {
       took: 39,
-      total_hits: total,
-      hits: guideStarHits(total),
+      hits: npList,
     },
   };
 }
@@ -136,7 +131,7 @@ function successUserResults(total) {
     data: {
       took: 39,
       total_hits: total,
-      hits: userHits(total),
+      hits: userSearchResults,
     },
   };
 }
@@ -172,14 +167,9 @@ export default function (axiosInstance) {
     ];
   });
 
-  function route(path = '') {
-    return typeof path === 'string' ? new RegExp(path.replace(/:\w+/g, '[^/]+')) : path;
-  }
-
   function getRouteParam(route, url) {
-    const _url = url.split('/');
     const _route = route.split('/');
-    return _url.reduce((acc, item, i) => {
+    return url.split('/').reduce((acc, item, i) => {
       const param = _route[i];
       if (!param || !param.startsWith(':')) return acc;
       acc[param.substring(1)] = item;
@@ -198,26 +188,16 @@ export default function (axiosInstance) {
   });
 
   mock.onPost('/internal/nonprofit').reply(200, successGuideStarResults());
+
   mock.onPost('/internal/users').reply(200, successUserResults());
-  mock.onGet(route('/internal/users/:id')).reply(function (config) {
+
+  mock.onGet(/\/internal\/users\/\d+/).reply(function (config) {
+    const params = getRouteParam('/internal/users/:id', config.url);
+    console.log(userSearchResults.find(u => u.id.toString() === params.id))
     return [
       200,
       {
-        data: {
-          id: faker.random.number(),
-          first_name: faker.name.firstName(),
-          last_name: faker.name.lastName(),
-          profile_status: {
-            status: 'active',
-            description: 'some random description',
-          },
-          contact_email: faker.internet.email(),
-          contact_phone: faker.phone.phoneNumber(),
-          password_hash: faker.lorem.sentence(),
-          donationData: fakeUserTableData(),
-          created_at: faker.date.past(),
-          modified_at: faker.date.past(),
-        },
+        data: userSearchResults.find(user => user.id.toString() === params.id),
       },
     ];
   });

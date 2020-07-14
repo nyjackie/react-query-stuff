@@ -81,3 +81,36 @@ export function toQueryString(data) {
     .map(key => `${key}=${data[key]}`)
     .join('&');
 }
+
+/**
+ * Converts a URL query/search string into an object
+ * 
+ * for example: "?first_name=Charlie&last_name=Foxtrot&role=human"
+ * becomes: { first_name: "Charlie", last_name: "Foxtrot", role: "human" }
+ * 
+ * @param {string} str
+ * @returns {object}
+ */
+export function fromQueryString(str) {
+  if (str.startsWith('?')) {
+    str = str.substring(1);
+  }
+  return str.split('&').reduce((acc, pair) => {
+    const [key, val] = pair.split('=');
+    if (key) {
+      acc[key] = val;
+    }
+    return acc;
+  }, {});
+}
+
+/**
+ * source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent
+ * @param {string} str 
+ * @returns {string}
+ */
+export function fixedEncodeURIComponent(str) {
+  return encodeURIComponent(str).replace(/[!'()*]/g, function(c) {
+    return '%' + c.charCodeAt(0).toString(16);
+  });
+}

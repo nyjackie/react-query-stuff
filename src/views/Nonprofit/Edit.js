@@ -1,14 +1,14 @@
 // external libs
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, createRef } from 'react';
 import merge from 'lodash/merge';
-import { Col, Row, Button, Form, Alert, Container } from 'react-bootstrap';
+import { Col, Row, Button, Form, Alert } from 'react-bootstrap';
 
 // styles
 import 'gdd-components/dist/styles/shared.scss';
 import styles from './NonProfitInfo.module.scss';
 
 // GDD Components
-import { UploadableImg } from 'gdd-components';
+import { ImageUpload } from 'gdd-components';
 
 // GDD utils
 import { cn } from 'gdd-components/dist/utils';
@@ -20,6 +20,18 @@ export default function Profile({ data, onSave }) {
   const [validated, setValidated] = useState(false);
   const [saveError, setSaveError] = useState(null);
   const formRef = useRef(null);
+  const logoDropRef = createRef();
+  const openLogoDrop = () => {
+    if (logoDropRef.current) {
+      logoDropRef.current.open();
+    }
+  };
+  const coverDropRef = createRef();
+  const openCoverDrop = () => {
+    if (coverDropRef.current) {
+      coverDropRef.current.open();
+    }
+  };
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -55,7 +67,7 @@ export default function Profile({ data, onSave }) {
           <input type="hidden" defaultValue={data.ein} name="ein" />
 
           <article className={styles.profile}>
-            <header className="d-flex flex-row justify-content-between align-items-end mt-3">
+            <header className={styles.header}>
               <h2 className="h2">Profile</h2>
               <div className="controls">
                 <Button
@@ -97,73 +109,84 @@ export default function Profile({ data, onSave }) {
                 </Col>
               </Row>
               <Row>
-                <Col xl={3}>
-                  <UploadableImg
-                    editMode={true}
-                    uploadText="Upload Organization Logo"
-                    className={styles.logoImg}
-                    src={data.logo_url}
-                    alt="logo"
-                    name="logo_url"
-                    helpText="Photo should be square"
-                    maxSize={1000}
-                    minWidth={1000}
-                    minHeight={1000}
-                  />
+                <Col xl>
+                  <div className={styles.uploadBlock}>
+                    <div className={styles.uploadImg}>
+                      <ImageUpload
+                        uploadText="Logo not yet customized"
+                        width={128}
+                        height={128}
+                        src={data.logo_url}
+                        alt="logo"
+                        name="logo_url"
+                        maxSize={2000}
+                        minWidth={300}
+                        minHeight={300}
+                        ref={logoDropRef}
+                      />
+                    </div>
+                    <div className={styles.uploadContent}>
+                      <h3 className="h3">Organization Logo</h3>
+                      <p>Image should be at least 300*300 px</p>
+                      <Button variant="primary" onClick={openLogoDrop}>
+                        Upload
+                      </Button>
+                    </div>
+                  </div>
                 </Col>
-                <Col xl={9}>
-                  <UploadableImg
-                    editMode={true}
-                    uploadText="Upload Profile Header Image"
-                    helpText="Recommended dimensions 2000 x 300"
-                    className={styles.coverImg}
-                    src={data.hero_url}
-                    alt="cover photo"
-                    name="hero_url"
-                    maxSize={3000}
-                    minWidth={2000}
-                    minHeight={2000}
-                  />
-                </Col>
-              </Row>
-            </section>
-            <section>
-              <Row>
-                <Col>
-                  <h3 className="h3">Mission</h3>
-                </Col>
-              </Row>
-              <Row>
-                <Col>
-                  <p>{data.mission}</p>
-                </Col>
-              </Row>
-            </section>
-            <section>
-              <Row>
-                <Col>
-                  <h3 className="d-inline-block mr-4 h3">Website</h3>
-                </Col>
-              </Row>
-              <Row>
-                <Col>
-                  <a href={data.website_url} target="_blank" rel="noopener noreferrer">
-                    {data.website_url}
-                  </a>
+                <Col xl>
+                  <div className={styles.uploadBlock}>
+                    <div className={cn(styles.uploadImg, styles.uploadImgCover)}>
+                      <ImageUpload
+                        uploadText="Logo not yet customized"
+                        width={256}
+                        height={128}
+                        src={data.hero_url}
+                        alt="cover photo"
+                        name="hero_url"
+                        maxSize={3000}
+                        minWidth={640}
+                        minHeight={320}
+                        ref={coverDropRef}
+                      />
+                    </div>
+                    <div className={styles.uploadContent}>
+                      <h3 className="h3">Cover Photo</h3>
+                      <p>Image should be at least 640*320 px</p>
+                      <Button variant="primary" onClick={openCoverDrop}>
+                        Upload
+                      </Button>
+                    </div>
+                  </div>
                 </Col>
               </Row>
             </section>
             <section>
               <Row>
-                <Col>
-                  <h3 className="h3">Location</h3>
+                <Col xl>
+                  <h3 className="h3">Basic Information</h3>
                 </Col>
               </Row>
               <Row>
+                <Col xl>
+                  <Form.Group controlId="name">
+                    <Form.Label>Organization Name</Form.Label>
+                    <Form.Control defaultValue={data.name} />
+                  </Form.Group>
+                  <Form.Group controlId="name">
+                    <Form.Label>Location</Form.Label>
+                    <Form.Control defaultValue={data.name} />
+                  </Form.Group>
+                  <Form.Group controlId="website_url">
+                    <Form.Label>Domain URL</Form.Label>
+                    <Form.Control defaultValue={data.website_url} />
+                  </Form.Group>
+                </Col>
                 <Col>
-                  <p>
-                    {data.address.city}, {data.address.state}
-                  </p>
+                  <Form.Group controlId="mission">
+                    <Form.Label>Mission</Form.Label>
+                    <Form.Control as="textarea" rows={8} defaultValue={data.mission} />
+                  </Form.Group>
                 </Col>
               </Row>
             </section>

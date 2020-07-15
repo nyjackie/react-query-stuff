@@ -16,18 +16,20 @@ const ClaimsPage = ({ getClaims, claims: { claims } }) => {
     <Fragment>
       <Container>
         <PageHeader pageTitle="Claims Page" />
-        <Table striped bordered hover variant="dark">
+        <Table striped bordered hover>
           <thead>
             <tr>
-              <th>Comapny</th>
-              <th>Description</th>
-              <th>Email Address</th>
               <th>Date</th>
+              <th>Nonprofit</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {claims.map(claim => (
-              <Claim key={claim.ein} claim={claim} />
+              <Claim key={claim.id} claim={claim} />
             ))}
           </tbody>
         </Table>

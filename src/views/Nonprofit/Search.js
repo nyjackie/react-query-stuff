@@ -1,9 +1,23 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { Form, Button, Row, Col, Table } from 'react-bootstrap';
 import PageHeader from 'components/PageHeader';
 import { searchNonprofit } from 'actions/nonprofit';
+import { fromQueryString, fixedEncodeURIComponent } from 'utils';
+import { KEYCODES } from 'gdd-components/dist/utils';
+
+function queryEncode(str) {
+  return fixedEncodeURIComponent(str).replace(/%20/g, '+');
+}
+function queryDecode(str) {
+  try {
+    return decodeURIComponent(str.replace(/\+/g, '%20'));
+  } catch (err) {
+    console.error(err);
+    return '';
+  }
+}
 
 const SingleResult = ({ result }) => {
   let history = useHistory();
@@ -12,8 +26,16 @@ const SingleResult = ({ result }) => {
     history.push(`/nonprofit/${result.ein}`);
   }
 
+  function handleKeyboardSelect(evt) {
+    const key = evt.which || evt.keyCode;
+    if (key === KEYCODES.RETURN || key === KEYCODES.SPACE) {
+      evt.preventDefault();
+      history.push(`/nonprofit/${result.ein}`);
+    }
+  }
+
   return (
-    <tr className="pointer" onClick={handleClick}>
+    <tr tabIndex="0" className="pointer" onKeyDown={handleKeyboardSelect} onClick={handleClick}>
       <td>{result.name}</td>
       <td>{result.ein}</td>
       <td>{result.mission}</td>
@@ -43,22 +65,42 @@ const SearchResults = ({ results }) => {
   );
 };
 
-const SearchPage = ({ results, searchNonprofit }) => {
-  const [formData, setFormData] = useState({
-    searchTerm: '',
-  });
+const NonprofitSearch = ({ results, searchNonprofit }) => {
+  const location = useLocation();
+  const history = useHistory();
+  const [searchTerm, setSearchTerm] = useState('');
   const [searchError, setSearchError] = useState(null);
-  const { searchTerm } = formData;
-
-  const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
+  const onChange = e => setSearchTerm(e.target.value);
 
   const onSubmit = e => {
     e.preventDefault();
     setSearchError(null); // clear error
-    searchNonprofit(searchTerm).catch(err => {
-      setSearchError(err.message);
-    });
+    if (searchTerm) {
+      history.push(`${location.pathname}?query=${queryEncode(searchTerm.trim())}`);
+    }
   };
+
+  useEffect(() => {
+    if (!location.search) {
+      setSearchTerm('');
+      return;
+    }
+    const { query } = fromQueryString(location.search);
+    if (query) {
+      const decoded = queryDecode(query);
+      if (!decoded) {
+        setSearchTerm('');
+        return;
+      }
+      setSearchTerm(decoded.trim());
+      setSearchError(null); // clear error
+      searchNonprofit(decoded).catch(err => {
+        setSearchError(err.message);
+      });
+      return;
+    }
+    setSearchTerm('');
+  }, [location, searchNonprofit]);
 
   return (
     <Fragment>
@@ -83,7 +125,7 @@ const SearchPage = ({ results, searchNonprofit }) => {
             </Button>
             {searchError && <p className="mt-2 text-danger">{searchError}</p>}
           </Form>
-          <SearchResults results={results} />
+          {location.search && <SearchResults results={results} />}
         </Col>
       </Row>
     </Fragment>
@@ -94,4 +136,4 @@ const mapStateToProps = state => ({
   results: state.nonprofits.results,
 });
 
-export default connect(mapStateToProps, { searchNonprofit })(SearchPage);
+export default connect(mapStateToProps, { searchNonprofit })(NonprofitSearch);

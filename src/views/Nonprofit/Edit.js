@@ -1,5 +1,5 @@
 // external libs
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, createRef } from 'react';
 import merge from 'lodash/merge';
 import { Col, Row, Button, Form, Alert } from 'react-bootstrap';
 
@@ -8,21 +8,30 @@ import 'gdd-components/dist/styles/shared.scss';
 import styles from './NonProfitInfo.module.scss';
 
 // GDD Components
-import { UploadableImg, Tooltip, InputSwap, Share, Combobox } from 'gdd-components';
+import { ImageUpload } from 'gdd-components';
+
+// GDD utils
+import { cn } from 'gdd-components/dist/utils';
 
 // our utils
 import { serialize } from 'utils';
 
 export default function Profile({ data, onSave }) {
-  const [editing, setEditing] = useState(false);
   const [validated, setValidated] = useState(false);
   const [saveError, setSaveError] = useState(null);
   const formRef = useRef(null);
-
-  function toggleEdit(e) {
-    e.preventDefault();
-    setEditing(!editing);
-  }
+  const logoDropRef = createRef();
+  const openLogoDrop = () => {
+    if (logoDropRef.current) {
+      logoDropRef.current.open();
+    }
+  };
+  const coverDropRef = createRef();
+  const openCoverDrop = () => {
+    if (coverDropRef.current) {
+      coverDropRef.current.open();
+    }
+  };
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -35,7 +44,6 @@ export default function Profile({ data, onSave }) {
       const newData = merge({}, data, obj);
       onSave(newData)
         .then(() => {
-          setEditing(false);
           setSaveError(null);
         })
         .catch(err => {
@@ -46,177 +54,145 @@ export default function Profile({ data, onSave }) {
   }
 
   return (
-    <Form
-      encType="multipart/form-data"
-      noValidate
-      validated={validated}
-      ref={formRef}
-      onSubmit={handleSubmit}
-    >
-      <input type="hidden" defaultValue={data.ein} name="ein" />
+    <Row>
+      <Col lg={10}>
+        <Form
+          encType="multipart/form-data"
+          noValidate
+          validated={validated}
+          ref={formRef}
+          onSubmit={handleSubmit}
+          className="container"
+        >
+          <input type="hidden" defaultValue={data.ein} name="ein" />
 
-      <article className={styles['np-profile']}>
-        <div className="d-flex flex-row justify-content-between align-items-end mt-3">
-          <h3 className="m-0">
-            Profile{' '}
-            <Tooltip>
-              <Tooltip.Content id="profile-info">
-                <p>
-                  <b>How can I update my organization's profile information?</b>
-                </p>
-                <p>
-                  It is a long established fact that a reader will be distracted by the readable
-                  content of a page when looking at its layout
-                </p>
-                <p>
-                  <b>How can I update my organization's profile information?</b>
-                </p>
-                <p>
-                  It is a long established fact that a reader will be distracted by the readable
-                  content of a page when looking at its layout
-                </p>
-                <p>
-                  <b>How can I update my organization's profile information?</b>
-                </p>
-                <p>
-                  It is a long established fact that a reader will be distracted by the readable
-                  content of a page when looking at its layout
-                </p>
-              </Tooltip.Content>
-            </Tooltip>
-          </h3>
-          <div className="controls">
-            <Button onClick={toggleEdit} variant={editing ? 'danger' : 'primary'}>
-              {editing ? 'Discard' : 'Edit'}
-            </Button>
-            {editing && (
-              <Button type="submit" variant="success" className="ml-3">
-                Publish
-              </Button>
+          <article className={styles.profile}>
+            <header className={styles.header}>
+              <h2 className="h2">Profile</h2>
+              <div className="controls">
+                <Button
+                  onClick={e => {
+                    e.preventDefault();
+                  }}
+                  variant="outline-primary"
+                >
+                  Preview
+                </Button>
+                <Button type="submit" variant="success" className="ml-3">
+                  Publish
+                </Button>
+                <Button
+                  variant="danger"
+                  className="ml-5"
+                  onClick={e => {
+                    e.preventDefault();
+                  }}
+                >
+                  Ban User
+                </Button>
+              </div>
+            </header>
+            <h3 className="mb-5 h3">{data.name}</h3>
+
+            {saveError && (
+              <Row>
+                <Col>
+                  <Alert variant="danger">{saveError}</Alert>
+                </Col>
+              </Row>
             )}
-          </div>
-        </div>
 
-        {editing && saveError && (
-          <Row>
-            <Col>
-              <Alert variant="danger">{saveError}</Alert>
-            </Col>
-          </Row>
-        )}
-        <hr className="mb-5" />
-        <header className={styles.header}>
-          <InputSwap className="mb-5" label="Name" editMode={editing} name="name">
-            <h2 className="mb-5">{data.name}</h2>
-          </InputSwap>
-          <InputSwap label="Organization type" editMode={editing} name="ntee_code">
-            <p>{data.ntee_code}</p>
-          </InputSwap>
-        </header>
-
-        <section>
-          <Row className="mb-4">
-            <Col>
-              <h3>Nonprofit's Logo and Profile Header Image</h3>
-            </Col>
-          </Row>
-          <Row>
-            <Col md={3}>
-              <UploadableImg
-                editMode={editing}
-                uploadText="Upload Organization Logo"
-                className={styles.logoImg}
-                src={data.logo_url}
-                alt="logo"
-                name="logo_url"
-                helpText="Photo should be square"
-                maxSize={1000}
-                minWidth={1000}
-                minHeight={1000}
-              />
-            </Col>
-            <Col>
-              <UploadableImg
-                editMode={editing}
-                uploadText="Upload Profile Header Image"
-                helpText="Recommended dimensions 2000 x 300"
-                className={styles.coverImg}
-                src={data.hero_url}
-                alt="cover photo"
-                name="hero_url"
-                maxSize={3000}
-                minWidth={2000}
-                minHeight={2000}
-              />
-            </Col>
-          </Row>
-        </section>
-        <section>
-          <Row>
-            <Col>
-              <h3>Mission</h3>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <InputSwap
-                hideLabel
-                label="Mission statement"
-                multiline
-                editMode={editing}
-                name="mission"
-              >
-                <p>{data.mission}</p>
-              </InputSwap>
-            </Col>
-          </Row>
-        </section>
-        <section>
-          <Row>
-            <Col>
-              <h3 className="d-inline-block mr-4">Website</h3>
-              <Share url={data.website_url} />
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <InputSwap
-                hideLabel
-                label="Website url"
-                editMode={editing}
-                name="website_url"
-                inputType="url"
-              >
-                <a href={data.website_url} target="_blank" rel="noopener noreferrer">
-                  {data.website_url}
-                </a>
-              </InputSwap>
-            </Col>
-          </Row>
-        </section>
-        <section>
-          <Row>
-            <Col>
-              <h3>Location</h3>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              {editing ? (
-              <Combobox
-                label="Location"
-                clearOnBlur
-                autoSelect
-                hideLabel
-                value={`${data.address.city}, ${data.address.state}`}
-                onSearch={searchString => {
-                  return ["New York, NY", "Chicago, IL", "Dallas, TX", "Miami, FL"];
-                }}
-              /> ) : <p>{data.address.city}, {data.address.state}</p>}
-            </Col>
-          </Row>
-        </section>
-      </article>
-    </Form>
+            <section>
+              <Row className="mb-4">
+                <Col>
+                  <h3 className="h3">Profile Image</h3>
+                </Col>
+              </Row>
+              <Row>
+                <Col xl>
+                  <div className={styles.uploadBlock}>
+                    <div className={styles.uploadImg}>
+                      <ImageUpload
+                        uploadText="Logo not yet customized"
+                        width={128}
+                        height={128}
+                        src={data.logo_url}
+                        alt="logo"
+                        name="logo_url"
+                        maxSize={2000}
+                        minWidth={300}
+                        minHeight={300}
+                        ref={logoDropRef}
+                      />
+                    </div>
+                    <div className={styles.uploadContent}>
+                      <h3 className="h3">Organization Logo</h3>
+                      <p>Image should be at least 300*300 px</p>
+                      <Button variant="primary" onClick={openLogoDrop}>
+                        Upload
+                      </Button>
+                    </div>
+                  </div>
+                </Col>
+                <Col xl>
+                  <div className={styles.uploadBlock}>
+                    <div className={cn(styles.uploadImg, styles.uploadImgCover)}>
+                      <ImageUpload
+                        uploadText="Logo not yet customized"
+                        width={256}
+                        height={128}
+                        src={data.hero_url}
+                        alt="cover photo"
+                        name="hero_url"
+                        maxSize={3000}
+                        minWidth={640}
+                        minHeight={320}
+                        ref={coverDropRef}
+                      />
+                    </div>
+                    <div className={styles.uploadContent}>
+                      <h3 className="h3">Cover Photo</h3>
+                      <p>Image should be at least 640*320 px</p>
+                      <Button variant="primary" onClick={openCoverDrop}>
+                        Upload
+                      </Button>
+                    </div>
+                  </div>
+                </Col>
+              </Row>
+            </section>
+            <section>
+              <Row>
+                <Col xl>
+                  <h3 className="h3">Basic Information</h3>
+                </Col>
+              </Row>
+              <Row>
+                <Col xl>
+                  <Form.Group controlId="name">
+                    <Form.Label>Organization Name</Form.Label>
+                    <Form.Control defaultValue={data.name} />
+                  </Form.Group>
+                  <Form.Group controlId="name">
+                    <Form.Label>Location</Form.Label>
+                    <Form.Control defaultValue={data.name} />
+                  </Form.Group>
+                  <Form.Group controlId="website_url">
+                    <Form.Label>Domain URL</Form.Label>
+                    <Form.Control defaultValue={data.website_url} />
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group controlId="mission">
+                    <Form.Label>Mission</Form.Label>
+                    <Form.Control as="textarea" rows={8} defaultValue={data.mission} />
+                  </Form.Group>
+                </Col>
+              </Row>
+            </section>
+          </article>
+        </Form>
+      </Col>
+    </Row>
   );
 }

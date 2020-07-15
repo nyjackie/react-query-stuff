@@ -1,10 +1,4 @@
-@import '../styles/mixins';
-
-.closed {
-}
-
-.push {
-}
+@import '../../styles/mixins';
 
 .drawer {
   width: 250px;
@@ -14,6 +8,8 @@
   z-index: 5;
   top: 0;
   left: 0;
+  border-right: 1px solid black;
+  background-color: #F4FAF9;
 }
 
 .content {

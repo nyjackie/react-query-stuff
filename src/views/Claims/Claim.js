@@ -3,17 +3,25 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Moment from 'react-moment';
 
-const Claim = ({ claim: { ein, name, description, mission, contact_email, date } }) => {
+const Claim = ({ claim }) => {
+  const { id, created_at, first_name, last_name, email, phone, nonprofit } = claim;
+
   return (
     <Fragment>
-      <tr key={ein}>
-        <td>{name}</td>
+      <tr>
         <td>
-          <Link to={`/claims/${ein}`}>{mission}</Link>
+          <Moment format="YYYY/MM/DD">{created_at}</Moment>
         </td>
-        <td>{contact_email}</td>
         <td>
-          <Moment format="YYYY/MM/DD">{date}</Moment>
+          <Link to={`/nonprofit/${nonprofit.ein}`}>{nonprofit.name}</Link>
+        </td>
+        <td>
+          {first_name} {last_name}
+        </td>
+        <td>{email}</td>
+        <td>{phone}</td>
+        <td>
+          <Link to={`/claims/${id}`} className="btn btn-primary">view claim</Link>
         </td>
       </tr>
     </Fragment>

@@ -7,6 +7,11 @@ import { searchNonprofit, saveProfile } from 'actions/nonprofit';
 import { addNotification } from 'actions/notifications';
 import Profile from 'views/Nonprofit/Edit';
 
+/**
+ * Nonprofit profile
+ * If a `selected` item lives in redux state it will use that to populate the 
+ * date, if not it will search our api using the ein in the url parameter
+ */
 const Nonprofit = ({ results, isLoading, searchNonprofit, saveProfile, addNotification }) => {
   const { ein } = useParams();
 

@@ -1,4 +1,4 @@
-import claimsService from 'services/claims.service';
+import claimsService from 'services/claims';
 import {
   CLAIMS_REQUEST,
   GET_CLAIMS_SUCCESS,

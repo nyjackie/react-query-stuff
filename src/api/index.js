@@ -1,4 +1,4 @@
-import instance, { setAuthHeader, removeAuthHeader } from './instance';
+import instance, { setAuthHeader, removeAuthHeader } from './axios';
 
 /**************************************************
  * "Public" api endpoints that dont require auth

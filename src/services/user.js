@@ -1,7 +1,6 @@
 import jwt_decode from 'jwt-decode';
 import API from 'api';
 import errorHandler from '../utils/errorHandler'
-import setAuthToken from 'utils/setAuthToken';
 
 /**
  * Sends login info to api
@@ -11,7 +10,8 @@ import setAuthToken from 'utils/setAuthToken';
 export async function login(email, password) {
   try {
     const res = await API.login(email, password);
-    setAuthToken(res.data.token);
+    API.setAuthHeader(res.data.token);
+    localStorage.setItem('token', res.data.token);
     return [null, res.data];
   } catch (err) {
     return [err, null];

@@ -1,5 +1,5 @@
 import userService from 'services/user';
-import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT, AUTH_ERROR, USER_LOADED } from './types';
+import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT } from './types';
 import { wait } from 'utils';
 
 export const login = (email, password) => async dispatch => {
@@ -21,7 +21,6 @@ export const login = (email, password) => async dispatch => {
   }
 
   if (err) {
-    // debugger;
     const errors = err.response?.data?.errors;
     if (errors) {
       console.error(errors);
@@ -40,24 +39,4 @@ export const login = (email, password) => async dispatch => {
 export const logout = () => dispatch => {
   userService.logout();
   dispatch({ type: LOGOUT });
-};
-
-// Load Logged in User
-export const loadUser = () => async dispatch => {
-  try {
-    const token = userService.loadUser();
-
-    if (!token) {
-      throw new Error(AUTH_ERROR);
-    }
-
-    dispatch({
-      type: USER_LOADED,
-      payload: token,
-    });
-  } catch (err) {
-    dispatch({
-      type: AUTH_ERROR,
-    });
-  }
 };

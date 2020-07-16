@@ -1,9 +1,16 @@
+import jwt_decode from 'jwt-decode';
+import API from 'api';
+import errorHandler from '../utils/errorHandler'
 import setAuthToken from 'utils/setAuthToken';
-import api from 'api';
 
+/**
+ * Sends login info to api
+ * @param {string} email 
+ * @param {string} password 
+ */
 export async function login(email, password) {
   try {
-    const res = await api.login(email, password);
+    const res = await API.login(email, password);
     setAuthToken(res.data.token);
     return [null, res.data];
   } catch (err) {
@@ -11,19 +18,36 @@ export async function login(email, password) {
   }
 }
 
+/**
+ * "logout" user by deleting all tokens from localStorage and api header
+ */
 export function logout() {
-  setAuthToken(null);
+  localStorage.removeItem('token');
+  localStorage.removeItem('refreshToken')
+  API.removeAuthHeader();
 }
 
+/**
+ * loads and decodes the auth token from localStorage
+ * @returns {{token: string?, user: object?}}
+ */
 export function loadUser() {
-  const token = localStorage.getItem('token');
-  setAuthToken(token);
-  return token;
+  try {
+    const token = localStorage.getItem('token');
+    if (token) {
+      API.setAuthHeader(token);
+      const user = jwt_decode(token);
+      return { token, user };
+    }
+  } catch (err) {
+    errorHandler(err);
+  }
+  return { token: null, user: null };
 }
 
 export async function resetPassword(email) {
   try {
-    const res = await api.resetPassword(email);
+    const res = await API.resetPassword(email);
     return [null, res.data];
   } catch (err) {
     return [err, null];
@@ -34,5 +58,5 @@ export default {
   login,
   logout,
   loadUser,
-  resetPassword
+  resetPassword,
 };

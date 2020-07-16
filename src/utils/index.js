@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 /**
  * Wrapper around setTimeout to use within in an async function and have it wait
  * for X number of ms
@@ -15,12 +17,29 @@ export const fakeJWT = email => {
   const segments = [];
   segments.push(btoa(JSON.stringify(header)));
   segments.push(
-    btoa(JSON.stringify({ username: 'mockUser', email: email || 'noone@gooddeedsdata.com' }))
+    btoa(JSON.stringify({ 
+      username: 'mockUser', 
+      email: email || 'noone@gooddeedsdata.com',
+      role: "admin",
+      expires: moment.utc().add(5, 'minutes').toISOString()
+     }))
   );
   segments.push('long-encoded-string-signature');
 
   return segments.join('.');
 };
+
+/**
+ * checks whether the timestamp provide is within <given seconds> of right now
+ * @param {string} timestamp UTC time stamp to check against
+ * @returns {boolean} true if timestamp is <= seconds
+ */
+export function willExpire(timestamp, seconds) {
+  const expires = moment(timestamp);
+  const now = moment(expires).diff(moment.utc())
+  const diff = moment.duration(now).asSeconds();
+  return diff <= seconds
+}
 
 export const decryptBasicAuth = encrypted => {
   //  'Basic ' + window.btoa(email + ':' + password),

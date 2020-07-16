@@ -1,5 +1,5 @@
 // external libs
-import React, { useState, useRef, createRef } from 'react';
+import React, { useState, useRef } from 'react';
 import merge from 'lodash/merge';
 import { Col, Row, Button, Form, Alert } from 'react-bootstrap';
 
@@ -20,13 +20,13 @@ export default function Profile({ data, onSave }) {
   const [validated, setValidated] = useState(false);
   const [saveError, setSaveError] = useState(null);
   const formRef = useRef(null);
-  const logoDropRef = createRef();
+  const logoDropRef = useRef(null);
   const openLogoDrop = () => {
     if (logoDropRef.current) {
       logoDropRef.current.open();
     }
   };
-  const coverDropRef = createRef();
+  const coverDropRef = useRef(null);
   const openCoverDrop = () => {
     if (coverDropRef.current) {
       coverDropRef.current.open();

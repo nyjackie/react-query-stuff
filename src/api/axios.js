@@ -5,7 +5,7 @@ import { LOGOUT } from '../actions/types';
 import errorHandler from 'utils/errorHandler';
 
 const instance = axios.create({
-  baseURL: process.env.REACT_APP_API_BASE_URL,
+  baseURL: process.env.REACT_APP_API_URL,
 });
 
 // always use JSON for all API calls

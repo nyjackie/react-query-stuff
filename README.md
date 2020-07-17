@@ -17,7 +17,7 @@ use `.env.development.local` or `.env.local` to override what's in `.env`. ([mor
 
 | variable                 | desc                                       |
 | ------------------------ | ------------------------------------------ |
-| `REACT_APP_API_BASE_URL` | set the base API url for all GDD api calls |
+| `REACT_APP_API_URL` | set the base API url for all GDD api calls |
 
 ## CSS
 

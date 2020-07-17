@@ -1,8 +1,16 @@
 import jwt_decode from 'jwt-decode';
 import { LOGIN_SUCCESS, LOGOUT, AUTH_ERROR, LOGIN_FAIL, USER_LOADED } from 'actions/types';
-import svc from '../services/user.js';
+import { loadUser } from '../services/user.js';
+import setAuthToken from '../utils/setAuthToken';
 
-const { token, user } = svc.loadUser();
+const token = loadUser();
+let user = null
+try {
+  if (token) {
+    setAuthToken(token)
+    user = jwt_decode(token)
+  }
+} catch (err) {}
 
 const initialState = {
   token: token,

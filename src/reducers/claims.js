@@ -4,7 +4,7 @@ import {
   DENY_CLAIM_SUCCESS, //<--- Dissapprove/Remove claim
   APPROVE_CLAIM_SUCCESS, //<--- guess what it does
   CLAIMS_ERROR,
-  // CREATE_CLAIM_SUCCESS   //* Do we need this? */
+  CLEAR_STATE,
 } from '../actions/types';
 
 const initialState = {
@@ -35,13 +35,12 @@ export default function (state = initialState, action) {
         claims: state.claims.filter(claim => claim._id !== payload),
       };
 
-    // DO WE NEED THIS?
-    // case CREATE_CLAIM_SUCCESS:
-    //     return {
-    //         ...state,
-    //         claims: [payload, ...state.claims],
-    //         loading: false
-    //     }
+    case CLEAR_STATE:
+      return {
+        claims: [],
+        ...state,
+      };
+
     case CLAIMS_ERROR:
     default:
       return state;

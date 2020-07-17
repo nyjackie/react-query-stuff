@@ -1,6 +1,4 @@
-import jwt_decode from 'jwt-decode';
 import API from 'api';
-import errorHandler from '../utils/errorHandler'
 
 /**
  * Sends login info to api
@@ -10,8 +8,6 @@ import errorHandler from '../utils/errorHandler'
 export async function login(email, password) {
   try {
     const res = await API.login(email, password);
-    API.setAuthHeader(res.data.token);
-    localStorage.setItem('token', res.data.token);
     return [null, res.data];
   } catch (err) {
     return [err, null];
@@ -32,17 +28,10 @@ export function logout() {
  * @returns {{token: string?, user: object?}}
  */
 export function loadUser() {
-  try {
-    const token = localStorage.getItem('token');
-    if (token) {
-      API.setAuthHeader(token);
-      const user = jwt_decode(token);
-      return { token, user };
-    }
-  } catch (err) {
-    errorHandler(err);
-  }
-  return { token: null, user: null };
+  const token = localStorage.getItem('token');
+  // API.setAuthHeader(token)
+  return token;
+  
 }
 
 export async function resetPassword(email) {

@@ -1,7 +1,8 @@
 import {
   BANNED_REQUEST,
   BANNED_SUCCESS,
-  BANNED_FAIL
+  BANNED_FAIL,
+  CLEAR_STATE
 } from '../actions/types';
 
 const initialState = {
@@ -16,6 +17,7 @@ export default function bannedReducer (state = initialState, action) {
         ...state,
         list: payload,
       };
+    case CLEAR_STATE:
     case BANNED_FAIL:
       return {
         ...state,

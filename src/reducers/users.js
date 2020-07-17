@@ -1,4 +1,11 @@
-import { SEARCH_USERS_SUCCESS, SEARCH_USERS_FAIL, SAVE_USER_SUCCESS, SEARCH_USER_SUCCESS, SEARCH_USER_FAIL  } from 'actions/types';
+import {
+  SEARCH_USERS_SUCCESS,
+  SEARCH_USERS_FAIL,
+  SAVE_USER_SUCCESS,
+  SEARCH_USER_SUCCESS,
+  SEARCH_USER_FAIL,
+  CLEAR_STATE,
+} from 'actions/types';
 
 const initialState = {
   results: [],
@@ -13,23 +20,23 @@ export default function (state = initialState, action) {
         ...state,
         results: payload,
       };
-      case SEARCH_USER_SUCCESS:
-        return {
-          ...state,
-          selected: payload,
-        };
+    case SEARCH_USER_SUCCESS:
+      return {
+        ...state,
+        selected: payload,
+      };
 
     case SEARCH_USERS_FAIL:
       return {
         ...state,
         results: [],
       };
-      case SEARCH_USER_FAIL:
-        return {
-          ...state,
-          selected: null,
-        };
-      
+    case SEARCH_USER_FAIL:
+      return {
+        ...state,
+        selected: null,
+      };
+
     case SAVE_USER_SUCCESS:
       return {
         ...state,
@@ -40,6 +47,14 @@ export default function (state = initialState, action) {
           return result;
         }),
       };
+
+    case CLEAR_STATE:
+      return {
+        results: [],
+        selected: null,
+        ...state,
+      };
+
     default:
       return state;
   }

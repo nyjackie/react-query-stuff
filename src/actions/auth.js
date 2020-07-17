@@ -1,6 +1,7 @@
 import userService from 'services/user';
 import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT } from './types';
 import { wait } from 'utils';
+import setAuthToken from 'utils/setAuthToken';
 
 export const login = (email, password) => async dispatch => {
   dispatch({
@@ -13,6 +14,7 @@ export const login = (email, password) => async dispatch => {
   const [err, data] = await userService.login(email, password);
 
   if (data) {
+    setAuthToken(data.token);
     dispatch({
       type: LOGIN_SUCCESS,
       payload: data.token,

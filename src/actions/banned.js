@@ -1,4 +1,4 @@
-import api from 'api';
+import { api } from 'gdd-components';
 import { BANNED_REQUEST, BANNED_SUCCESS, BANNED_FAIL } from './types';
 
 export const getBanned = () => async dispatch => {
@@ -7,8 +7,8 @@ export const getBanned = () => async dispatch => {
   });
 
   try {
-    const response = await api.getBanned();
-    console.log('getBanned response', response)
+    const response = await api.ban.getAll();
+    console.log('getBanned response', response);
     if (response.status === 200 && response.data) {
       dispatch({
         type: BANNED_SUCCESS,
@@ -16,9 +16,9 @@ export const getBanned = () => async dispatch => {
       });
       return;
     }
-    throw new Error(`${response.status} - something went wrong`)
+    throw new Error(`${response.status} - something went wrong`);
   } catch (err) {
-    console.log('getBanned error', err)
+    console.log('getBanned error', err);
     dispatch({
       type: BANNED_FAIL,
     });

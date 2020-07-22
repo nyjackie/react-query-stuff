@@ -1,5 +1,5 @@
 // npm libs
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
@@ -20,8 +20,16 @@ import UserInfo from 'views/User/UserInfo';
 import Layout from 'components/Layout';
 import PrivateRoute from 'components/PrivateRoute';
 import store from 'store';
+import { autoLogin } from 'actions/auth';
 
 const App = () => {
+  useEffect(() => {
+    const isAuthed = store.getState().auth.isAuthenticated;
+    if (!isAuthed) {
+      store.dispatch(autoLogin());
+    }
+  }, []);
+
   return (
     <Provider store={store}>
       <Router>

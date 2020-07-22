@@ -1,0 +1,62 @@
+// npm packages
+// import jwt_decode from 'jwt-decode';
+
+// gdd-components
+import { api } from 'gdd-components';
+import mock from 'gdd-components/dist/api/mock';
+import tokenStore from 'gdd-components/dist/api/tokenStore';
+
+// local modules
+import store from '../store';
+import { LOGOUT, CLEAR_STATE, LOGIN_SUCCESS } from '../actions/types';
+import errorHandler from 'utils/errorHandler';
+
+// required setting a IndexedDB database name
+tokenStore.openDB('gdd-admin-db');
+
+// TODO: remove this mock once API is completed
+api.provideMock(mock);
+
+api.setupResponseInterceptor(
+  function isAuthenticated() {
+    return store.getState().auth.isAuthenticated;
+  },
+  function networkError(err) {
+    errorHandler(err);
+    // network error, should we logout?
+    store.dispatch({ type: LOGOUT });
+  },
+  function unauthorized(err) {
+    errorHandler(err);
+    // definitely logout and clear state if unauthorized
+    store.dispatch({ type: LOGOUT });
+    store.dispatch({ type: CLEAR_STATE });
+  }
+);
+
+api.setupRequestInterceptor(
+  function getTokens() {
+    // this function should return a promise resolving with the tokens object
+    // in indexeddb
+    return tokenStore.get();
+  },
+  function onAccessToken(token) {
+    // new token has already been set in the header so at this point we just
+    // need to store it
+    tokenStore.update({ accessToken: token }).catch(err => {
+      errorHandler('error storing new access token from refresh', err);
+    });
+
+    // we should maybe update user in memory too
+    // TODO: should this be LOGIN_SUCCESS? maybe a NEW_ACCESS_TOKEN or something
+    store.dispatch({
+      type: LOGIN_SUCCESS,
+      payload: token,
+    });
+  },
+  function onError(err) {
+    // refresh token failed to get a new access token OR there was a problem
+    // decoding the current access token
+    errorHandler(err);
+  }
+);

@@ -1,21 +1,10 @@
 import jwt_decode from 'jwt-decode';
 import { LOGIN_SUCCESS, LOGOUT, AUTH_ERROR, LOGIN_FAIL, USER_LOADED } from 'actions/types';
-import { loadUser } from '../services/user.js';
-import setAuthToken from '../utils/setAuthToken';
-
-const token = loadUser();
-let user = null
-try {
-  if (token) {
-    setAuthToken(token)
-    user = jwt_decode(token)
-  }
-} catch (err) {}
 
 const initialState = {
-  token: token,
-  isAuthenticated: user !== null,
-  user
+  token: null,
+  isAuthenticated: false,
+  user: null,
 };
 
 export default function (state = initialState, action) {
@@ -26,7 +15,7 @@ export default function (state = initialState, action) {
         ...state,
         isAuthenticated: true,
         user: payload ? jwt_decode(payload) : null,
-
+        token: payload,
       };
     case LOGIN_SUCCESS:
       return {

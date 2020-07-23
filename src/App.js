@@ -24,10 +24,7 @@ import { autoLogin } from 'actions/auth';
 
 const App = () => {
   useEffect(() => {
-    const isAuthed = store.getState().auth.isAuthenticated;
-    if (!isAuthed) {
-      store.dispatch(autoLogin());
-    }
+    store.dispatch(autoLogin());
   }, []);
 
   return (

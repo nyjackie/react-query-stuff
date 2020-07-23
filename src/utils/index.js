@@ -12,25 +12,6 @@ export const wait = ms => {
   });
 };
 
-export const fakeJWT = email => {
-  const header = { typ: 'JWT', alg: 'HS256' };
-  const segments = [];
-  segments.push(btoa(JSON.stringify(header)));
-  segments.push(
-    btoa(
-      JSON.stringify({
-        username: 'mockUser',
-        email: email || 'noone@gooddeedsdata.com',
-        role: 'admin',
-        expires: moment.utc().add(5, 'minutes').toISOString(),
-      })
-    )
-  );
-  segments.push('long-encoded-string-signature');
-
-  return segments.join('.');
-};
-
 /**
  * checks whether the timestamp provide is within <given seconds> of right now
  * @param {string} timestamp UTC time stamp to check against

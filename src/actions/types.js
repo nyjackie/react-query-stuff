@@ -8,7 +8,8 @@ export const LOGOUT = 'LOGOUT';
 export const CLEAR_STATE = 'CLEAR_STATE';
 
 // Auth
-export const USER_LOADED = 'USER_LOADED';
+export const AUTO_LOGIN_SUCCESS = 'AUTO_LOGIN_SUCCESS';
+export const AUTO_LOGIN_FAILED = 'AUTO_LOGIN_FAILED';
 export const AUTH_ERROR = 'AUTH_ERROR';
 export const CLEAR_PROFILE = 'CLEAR_PROFILE';
 

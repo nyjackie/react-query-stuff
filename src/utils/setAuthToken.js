@@ -10,8 +10,8 @@ const setAuthToken = token => {
     });
   } else {
     api.removeAuthHeader();
-    tokenStore.remove().catch(err => {
-      errorHandler('failed to remove tokens in indexedb', err);
+    tokenStore.update({ accessToken: void 0 }).catch(err => {
+      errorHandler('error storing new access token from refresh', err);
     });
   }
 };

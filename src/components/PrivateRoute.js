@@ -8,22 +8,27 @@ import PropTypes from 'prop-types';
 
 // A wrapper for <Route> that redirects to the login
 // screen if you're not yet authenticated.
-function PrivateRoute({ component: Component, auth: { isAuthenticated }, ...rest }) {
+function PrivateRoute({ component: Component, auth: { isAuthenticated, isLoading }, ...rest }) {
   return (
     <Route
       {...rest}
-      render={props =>
-        isAuthenticated ? (
-          <Component {...props} />
-        ) : (
-          <Redirect
-            to={{
-              pathname: '/login',
-              state: { from: props.location },
-            }}
-          />
-        )
-      }
+      render={props => {
+        if (isAuthenticated) {
+          return <Component {...props} />;
+        } else if (isLoading) {
+          // TODO: makes this a real loading component
+          return <p>Loading...</p>;
+        } else {
+          return (
+            <Redirect
+              to={{
+                pathname: '/login',
+                state: { from: props.location },
+              }}
+            />
+          );
+        }
+      }}
     />
   );
 }

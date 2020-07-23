@@ -1,6 +1,3 @@
-// npm packages
-// import jwt_decode from 'jwt-decode';
-
 // gdd-components
 import { api } from 'gdd-components';
 import mock from 'gdd-components/dist/api/mock';
@@ -17,26 +14,30 @@ tokenStore.openDB('gdd-admin-db');
 // TODO: remove this mock once API is completed
 api.provideMock(mock);
 
+/**
+ * Set up the response inteceptor which will automatically handle logging out
+ * if any api response returns a 401
+ */
 api.setupResponseInterceptor(
   function isAuthenticated() {
     return store.getState().auth.isAuthenticated;
   },
-  function networkError(err) {
-    errorHandler(err);
-    // network error, should we logout?
-    store.dispatch({ type: LOGOUT });
-  },
   function unauthorized(err) {
-    errorHandler(err);
+    errorHandler('unauthorized', err);
     // definitely logout and clear state if unauthorized
     store.dispatch({ type: LOGOUT });
     store.dispatch({ type: CLEAR_STATE });
+  },
+  function onError(err) {
+    errorHandler(err);
+    // logout on all other errors?
+    store.dispatch({ type: LOGOUT });
   }
 );
 
 api.setupRequestInterceptor(
   function getTokens() {
-    // this function should return a promise resolving with the tokens object
+    // this function should return a promise resolving with the complete object
     // in indexeddb
     return tokenStore.get();
   },

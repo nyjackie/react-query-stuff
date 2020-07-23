@@ -16,13 +16,15 @@ export async function login(email, password) {
 
     const user = jwt_decode(res.data.accessToken);
 
-    await tokenStore.set({
+    const authData = {
       user,
       accessToken: res.data.accessToken,
       refreshToken: res.data.refreshToken,
-    });
+    };
 
-    return [null, res.data];
+    await tokenStore.set(authData);
+
+    return [null, authData];
   } catch (err) {
     return [err, null];
   }
@@ -31,23 +33,11 @@ export async function login(email, password) {
 /**
  * "logout" user by deleting all tokens from localStorage and api header
  */
-export function logout() {
-  api.auth.logout(localStorage.getItem('refresh_token'));
+export async function logout() {
+  const tokensData = await tokenStore.get();
+  api.auth.logout(tokensData?.refreshToken);
   tokenStore.remove();
   api.removeAuthHeader();
-}
-
-/**
- * loads user data from localStorage
- * @returns {string?}
- */
-export function loadUser() {
-  try {
-    return JSON.parse(localStorage.getItem('user'));
-  } catch (err) {
-    errorHandler(err);
-    return null;
-  }
 }
 
 export async function resetPassword(email) {
@@ -56,6 +46,20 @@ export async function resetPassword(email) {
     return [null, res.data];
   } catch (err) {
     return [err, null];
+  }
+}
+
+export async function loadUser() {
+  try {
+    const tokensData = await tokenStore.get();
+    if (tokensData) {
+      api.setAuthHeader(tokensData.accessToken);
+      return tokensData;
+    }
+    return false;
+  } catch (err) {
+    errorHandler(err);
+    return false;
   }
 }
 

@@ -1,28 +1,45 @@
-import jwt_decode from 'jwt-decode';
-import { LOGIN_SUCCESS, LOGOUT, AUTH_ERROR, LOGIN_FAIL, USER_LOADED } from 'actions/types';
+import isObj from 'lodash/isPlainObject';
+import {
+  LOGIN_SUCCESS,
+  LOGOUT,
+  AUTH_ERROR,
+  LOGIN_FAIL,
+  AUTO_LOGIN_SUCCESS,
+  AUTO_LOGIN_FAILED,
+} from 'actions/types';
 
 const initialState = {
   token: null,
   isAuthenticated: false,
   user: null,
+  isLoading: true,
 };
 
 export default function (state = initialState, action) {
   const { type, payload } = action;
   switch (type) {
-    case USER_LOADED:
+    case AUTO_LOGIN_SUCCESS:
       return {
         ...state,
-        isAuthenticated: true,
-        user: payload ? jwt_decode(payload) : null,
-        token: payload,
+        isAuthenticated: isObj(payload.user),
+        user: payload.user,
+        token: payload.accessToken,
+        isLoading: false,
+      };
+    case AUTO_LOGIN_FAILED:
+      return {
+        ...state,
+        token: null,
+        isAuthenticated: false,
+        user: null,
+        isLoading: false,
       };
     case LOGIN_SUCCESS:
       return {
         ...state,
-        token: payload,
+        token: payload.accessToken,
         isAuthenticated: true,
-        user: payload ? jwt_decode(payload) : null,
+        user: payload.user,
       };
     case LOGIN_FAIL:
     case AUTH_ERROR: //will do same as logout??? or maybe include payload with message?

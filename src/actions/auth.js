@@ -1,8 +1,14 @@
 import userService from 'services/user';
-import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT } from './types';
+import {
+  LOGIN_REQUEST,
+  LOGIN_SUCCESS,
+  LOGIN_FAIL,
+  LOGOUT,
+  AUTO_LOGIN_SUCCESS,
+  AUTO_LOGIN_FAILED,
+} from './types';
 import { wait } from 'utils';
 import errorHandler from 'utils/errorHandler';
-import tokenStore from 'gdd-components/dist/api/tokenStore';
 
 export const login = (email, password) => async dispatch => {
   dispatch({
@@ -12,12 +18,12 @@ export const login = (email, password) => async dispatch => {
   // TODO: this is only during mock testing to show the spinner
   await wait(1000);
 
-  const [err, data] = await userService.login(email, password);
+  const [err, authData] = await userService.login(email, password);
 
-  if (data) {
+  if (authData) {
     dispatch({
       type: LOGIN_SUCCESS,
-      payload: data.token,
+      payload: authData,
     });
     return;
   }
@@ -41,22 +47,17 @@ export const logout = () => dispatch => {
 };
 
 export const autoLogin = () => async dispatch => {
-  try {
-    const tokensData = await tokenStore.get();
-    if (tokensData && tokensData.accessToken) {
-      dispatch({
-        type: LOGIN_SUCCESS,
-        payload: tokensData.accessToken,
-      });
-      return;
-    }
+  const tokensData = await userService.loadUser();
+
+  if (tokensData) {
     dispatch({
-      type: LOGIN_FAIL,
+      type: AUTO_LOGIN_SUCCESS,
+      payload: tokensData,
     });
-  } catch (err) {
-    errorHandler(err);
-    dispatch({
-      type: LOGIN_FAIL,
-    });
+    return;
   }
+
+  dispatch({
+    type: AUTO_LOGIN_FAILED,
+  });
 };

@@ -12,7 +12,8 @@ import errorHandler from 'utils/errorHandler';
 tokenStore.openDB('gdd-admin-db');
 
 // TODO: remove this mock once API is completed
-api.provideMock(mock);
+// setting the refresh tokens only last 60 minutes
+api.provideMock(mock, 60);
 
 /**
  * Set up the response inteceptor which will automatically handle logging out
@@ -23,7 +24,7 @@ api.setupResponseInterceptor(
     return store.getState().auth.isAuthenticated;
   },
   function unauthorized(err) {
-    errorHandler('unauthorized', err);
+    errorHandler('Response Interceptor: Unauthorized', err);
     // definitely logout and clear state if unauthorized
     store.dispatch({ type: LOGOUT });
     store.dispatch({ type: CLEAR_STATE });
@@ -45,7 +46,7 @@ api.setupRequestInterceptor(
     // new token has already been set in the header so at this point we just
     // need to store it
     tokenStore.update({ accessToken: token }).catch(err => {
-      errorHandler('error storing new access token from refresh', err);
+      errorHandler('Error storing new access token from refresh', err);
     });
 
     // we should maybe update user in memory too
@@ -58,6 +59,6 @@ api.setupRequestInterceptor(
   function onError(err) {
     // refresh token failed to get a new access token OR there was a problem
     // decoding the current access token
-    errorHandler(err);
+    errorHandler('Request Interceptor:', err);
   }
 );

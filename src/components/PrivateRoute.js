@@ -2,6 +2,8 @@ import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import Spinner from 'components/Spinner';
+import Layout from 'components/Layout';
 
 // help from react-router docs
 // https://reacttraining.com/react-router/web/example/auth-workflow
@@ -14,10 +16,13 @@ function PrivateRoute({ component: Component, auth: { isAuthenticated, isLoading
       {...rest}
       render={props => {
         if (isAuthenticated) {
-          return <Component {...props} />;
+          return (
+            <Layout>
+              <Component {...props} />
+            </Layout>
+          );
         } else if (isLoading) {
-          // TODO: makes this a real loading component
-          return <p>Loading...</p>;
+          return <Spinner fullPage={true} />;
         } else {
           return (
             <Redirect

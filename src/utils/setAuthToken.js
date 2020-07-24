@@ -1,12 +1,18 @@
-import axios from 'axios';
+import { api } from 'gdd-components';
+import tokenStore from 'gdd-components/dist/api/tokenStore';
+import errorHandler from 'utils/errorHandler';
 
 const setAuthToken = token => {
   if (token) {
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    localStorage.setItem('token', token);
+    api.setAuthHeader(token);
+    tokenStore.update({ accessToken: token }).catch(err => {
+      errorHandler('error storing new access token from refresh', err);
+    });
   } else {
-    delete axios.defaults.headers.common['Authorization'];
-    localStorage.removeItem('token');
+    api.removeAuthHeader();
+    tokenStore.update({ accessToken: void 0 }).catch(err => {
+      errorHandler('error storing new access token from refresh', err);
+    });
   }
 };
 

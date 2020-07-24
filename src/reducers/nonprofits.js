@@ -1,4 +1,9 @@
-import { SEARCH_NONPROFIT_SUCCESS, SEARCH_NONPROFIT_FAIL, SAVE_NONPROFIT_SUCCESS } from 'actions/types';
+import {
+  SEARCH_NONPROFIT_SUCCESS,
+  SEARCH_NONPROFIT_FAIL,
+  SAVE_NONPROFIT_SUCCESS,
+  CLEAR_STATE,
+} from 'actions/types';
 
 const initialState = {
   results: [],
@@ -14,12 +19,6 @@ export default function (state = initialState, action) {
         results: payload,
       };
 
-    case SEARCH_NONPROFIT_FAIL:
-      return {
-        ...state,
-        results: [],
-      };
-      
     case SAVE_NONPROFIT_SUCCESS:
       return {
         ...state,
@@ -30,6 +29,14 @@ export default function (state = initialState, action) {
           return result;
         }),
       };
+
+    case CLEAR_STATE:
+    case SEARCH_NONPROFIT_FAIL:
+      return {
+        ...state,
+        results: [],
+      };
+
     default:
       return state;
   }

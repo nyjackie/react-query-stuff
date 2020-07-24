@@ -1,5 +1,5 @@
 // npm libs
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
@@ -17,35 +17,43 @@ import Users from 'views/User';
 import UserInfo from 'views/User/UserInfo';
 
 // components|other
-import Layout from 'components/Layout';
+import PublicRoute from 'components/PublicRoute';
 import PrivateRoute from 'components/PrivateRoute';
 import store from 'store';
+import { autoLogin } from 'actions/auth';
 
 const App = () => {
+  useEffect(() => {
+    store.dispatch(autoLogin());
+  }, []);
+
   return (
     <Provider store={store}>
       <Router>
         <Helmet>
           <title>Good Deeds Data | Admin Portal</title>
         </Helmet>
-        <Layout>
-          <Switch>
-            <Route exact path="/" component={Landing} />
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/reset-password" component={ResetPassword} />
-            <PrivateRoute exact path="/banlist" component={Banlist} />
-            <PrivateRoute exact path="/claims" component={Claims} />
-            <PrivateRoute exact path="/claims/:id" component={ClaimInfo} />
-            <PrivateRoute exact path="/nonprofit" component={NonprofitSearch} />
-            <PrivateRoute exact path="/nonprofit/:ein" component={Nonprofit} />
-            <PrivateRoute exact path="/users" component={Users} />
-            <PrivateRoute exact path="/users/:id" component={UserInfo} />
-            <Route path="*">
-              <h2>404</h2>
-              <p>This page does not exist</p>
-            </Route>
-          </Switch>
-        </Layout>
+        <Switch>
+          {/* Public Routes */}
+          <PublicRoute exact path="/" component={Landing} />
+          <PublicRoute exact path="/login" component={Login} />
+          <PublicRoute exact path="/reset-password" component={ResetPassword} />
+
+          {/* Private Routes */}
+          <PrivateRoute exact path="/banlist" component={Banlist} />
+          <PrivateRoute exact path="/claims" component={Claims} />
+          <PrivateRoute exact path="/claims/:id" component={ClaimInfo} />
+          <PrivateRoute exact path="/nonprofit" component={NonprofitSearch} />
+          <PrivateRoute exact path="/nonprofit/:ein" component={Nonprofit} />
+          <PrivateRoute exact path="/users" component={Users} />
+          <PrivateRoute exact path="/users/:id" component={UserInfo} />
+
+          {/* 404 and other */}
+          <Route path="*">
+            <h2>404</h2>
+            <p>This page does not exist</p>
+          </Route>
+        </Switch>
       </Router>
     </Provider>
   );

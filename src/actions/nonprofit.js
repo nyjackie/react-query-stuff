@@ -1,4 +1,4 @@
-import api from 'api';
+import { api } from 'gdd-components';
 import {
   SEARCH_REQUEST,
   SEARCH_NONPROFIT_SUCCESS,
@@ -22,7 +22,7 @@ export const searchNonprofit = searchTerm => async dispatch => {
   await wait(1000);
 
   try {
-    const { data } = await api.searchNonprofit(searchTerm);
+    const { data } = await api.nonprofit.search(searchTerm);
     if (data) {
       dispatch({
         type: SEARCH_NONPROFIT_SUCCESS,
@@ -47,7 +47,7 @@ export const saveProfile = profileData => async dispatch => {
   await wait(1000);
 
   try {
-    const response = await api.saveProfile(profileData);
+    const response = await api.nonprofit.saveProfile(profileData);
     if (response.status === 200) {
       dispatch({
         type: SAVE_NONPROFIT_SUCCESS,

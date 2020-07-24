@@ -1,6 +1,14 @@
 import userService from 'services/user';
-import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT, AUTH_ERROR, USER_LOADED } from './types';
+import {
+  LOGIN_REQUEST,
+  LOGIN_SUCCESS,
+  LOGIN_FAIL,
+  LOGOUT,
+  AUTO_LOGIN_SUCCESS,
+  AUTO_LOGIN_FAILED,
+} from './types';
 import { wait } from 'utils';
+import errorHandler from 'utils/errorHandler';
 
 export const login = (email, password) => async dispatch => {
   dispatch({
@@ -10,22 +18,18 @@ export const login = (email, password) => async dispatch => {
   // TODO: this is only during mock testing to show the spinner
   await wait(1000);
 
-  const [err, data] = await userService.login(email, password);
+  const [err, authData] = await userService.login(email, password);
 
-  if (data) {
+  if (authData) {
     dispatch({
       type: LOGIN_SUCCESS,
-      payload: data.token,
+      payload: authData,
     });
     return;
   }
 
   if (err) {
-    // debugger;
-    const errors = err.response?.data?.errors;
-    if (errors) {
-      console.error(errors);
-    }
+    errorHandler(err);
     dispatch({
       type: LOGIN_FAIL,
     });
@@ -42,22 +46,18 @@ export const logout = () => dispatch => {
   dispatch({ type: LOGOUT });
 };
 
-// Load Logged in User
-export const loadUser = () => async dispatch => {
-  try {
-    const token = userService.loadUser();
+export const autoLogin = () => async dispatch => {
+  const tokensData = await userService.loadUser();
 
-    if (!token) {
-      throw new Error(AUTH_ERROR);
-    }
-
+  if (tokensData) {
     dispatch({
-      type: USER_LOADED,
-      payload: token,
+      type: AUTO_LOGIN_SUCCESS,
+      payload: tokensData,
     });
-  } catch (err) {
-    dispatch({
-      type: AUTH_ERROR,
-    });
+    return;
   }
+
+  dispatch({
+    type: AUTO_LOGIN_FAILED,
+  });
 };

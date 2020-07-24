@@ -1,13 +1,26 @@
-
-/**
- * a global error handler just in case we want to start using some kind of third
- * party error tracking
- * @param {Error|string|object} err 
- */
-function handleError() {
-  // for now it's just this but maybe in the future we might be sending
-  // data via an API or something.
-  console.error(...arguments);
+function errorTypes(err) {
+  if (err.response) {
+    // this is an API error
+    return `API responded with: ${err.response.status}, for route: ${err.config.url}`;
+  }
 }
 
-export default handleError;
+/**
+ * a global error handler
+ *
+ * TODO: this should eventually get a more defined interface and integrate with
+ * a third party like bugsnag or similar
+ */
+export default function handleError() {
+  [...arguments].forEach(arg => {
+    let msg = [];
+    if (arg instanceof Error) {
+      const specialErrors = errorTypes(arg);
+      if (specialErrors) {
+        msg.push(specialErrors);
+      }
+    }
+    msg.push(arg);
+    console.error(...msg);
+  });
+}

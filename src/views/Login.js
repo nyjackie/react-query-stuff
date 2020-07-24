@@ -34,7 +34,7 @@ const Login = ({ login, isAuthenticated }) => {
   return (
     <Fragment>
       <Row className="justify-content-md-center">
-        <Col md={3} className={styles.loginPage}>
+        <Col md={4} className={styles.loginPage}>
           <Logo className={styles.logo} aria-hidden="true" />
           <h1 className="sr-only">Good Deeds Data admin portal</h1>
           <Form onSubmit={onSubmit}>

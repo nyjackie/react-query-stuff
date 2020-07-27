@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
+import { ReactQueryDevtools } from 'react-query-devtools';
 
 // views or route components
 import Landing from 'views/Landing';
@@ -29,6 +30,7 @@ const App = () => {
 
   return (
     <Provider store={store}>
+      <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
       <Router>
         <Helmet>
           <title>Good Deeds Data | Admin Portal</title>

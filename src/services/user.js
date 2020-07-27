@@ -1,9 +1,7 @@
 import jwt_decode from 'jwt-decode';
 import { api } from 'gdd-components';
-import { willExpire } from 'gdd-components/dist/api/helpers';
 import errorHandler from 'utils/errorHandler';
 import tokenStore from 'gdd-components/dist/api/tokenStore';
-import handleError from 'utils/errorHandler';
 
 /**
  * replace the IndexedDB auth object with new data. If for some reason the accessToken

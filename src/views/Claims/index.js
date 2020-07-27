@@ -1,16 +1,21 @@
-import React, { Fragment, useEffect } from 'react';
-import { Container } from 'react-bootstrap';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import Container from 'react-bootstrap/Container';
+import Table from 'react-bootstrap/Table';
 import PageHeader from 'components/PageHeader';
 import Claim from './Claim';
-import { getClaims } from '../../actions/claims';
-import { Table } from 'react-bootstrap';
+import useClaims from 'hooks/useClaims';
 
-const ClaimsPage = ({ getClaims, claims: { claims } }) => {
-  useEffect(() => {
-    getClaims();
-  }, [getClaims]);
+const ClaimsPage = () => {
+  const { isLoading, isError, data: claims, error } = useClaims();
+
+  if (isLoading) {
+    return <span>Loading...</span>;
+  }
+
+  if (isError) {
+    return <span>Error: {error.message}</span>;
+  }
 
   return (
     <Fragment>
@@ -43,8 +48,4 @@ ClaimsPage.propTypes = {
   claims: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = state => ({
-  claims: state.claims,
-});
-
-export default connect(mapStateToProps, { getClaims })(ClaimsPage);
+export default ClaimsPage;

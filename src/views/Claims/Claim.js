@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Moment from 'react-moment';
 
-const Claim = ({ claim }) => {
+const Claim = ({ claim, note }) => {
   const { id, created_at, first_name, last_name, email, phone, nonprofit } = claim;
 
   return (
@@ -19,11 +19,15 @@ const Claim = ({ claim }) => {
       </td>
       <td>{email}</td>
       <td>{phone}</td>
-      <td>
-        <Link to={`/claims/${id}`} className="btn btn-primary">
-          view claim
-        </Link>
-      </td>
+      {note ? (
+        <td>{note}</td>
+      ) : (
+        <td>
+          <Link to={`/claims/${id}`} className="btn btn-primary">
+            view claim
+          </Link>
+        </td>
+      )}
     </tr>
   );
 };

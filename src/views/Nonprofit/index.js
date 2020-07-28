@@ -55,9 +55,4 @@ const Nonprofit = ({ addNotification }) => {
   );
 };
 
-const mapStateToProps = state => ({
-  results: state.nonprofits.results,
-  isLoading: state.loading.isLoading,
-});
-
-export default connect(mapStateToProps, { addNotification })(Nonprofit);
+export default connect(null, { addNotification })(Nonprofit);

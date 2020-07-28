@@ -4,6 +4,9 @@ export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAIL = 'LOGIN_FAIL';
 export const LOGOUT = 'LOGOUT';
 
+// Error
+export const ERROR = 'ERROR';
+
 // for all reducers
 export const CLEAR_STATE = 'CLEAR_STATE';
 

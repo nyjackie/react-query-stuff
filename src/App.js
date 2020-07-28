@@ -1,7 +1,7 @@
 // npm libs
 import React, { useEffect } from 'react';
 import { Provider } from 'react-redux';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Redirect } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { ReactQueryDevtools } from 'react-query-devtools';
 
@@ -16,6 +16,8 @@ import ResetPassword from 'views/ResetPassword';
 import Banlist from 'views/Banlist';
 import Users from 'views/User';
 import UserInfo from 'views/User/UserInfo';
+import ErrorPage from 'views/Error';
+import NotFound from 'views/NotFound';
 
 // components|other
 import PublicRoute from 'components/PublicRoute';
@@ -40,6 +42,8 @@ const App = () => {
           <PublicRoute exact path="/" component={Landing} />
           <PublicRoute exact path="/login" component={Login} />
           <PublicRoute exact path="/reset-password" component={ResetPassword} />
+          <PublicRoute exact path="/error" component={ErrorPage} />
+          <PublicRoute exact path="/notfound" component={NotFound} />
 
           {/* Private Routes */}
           <PrivateRoute exact path="/banlist" component={Banlist} />
@@ -50,11 +54,10 @@ const App = () => {
           <PrivateRoute exact path="/users" component={Users} />
           <PrivateRoute exact path="/users/:id" component={UserInfo} />
 
-          {/* 404 and other */}
-          <Route path="*">
-            <h2>404</h2>
-            <p>This page does not exist</p>
-          </Route>
+          {/* 404 */}
+          <PublicRoute path="*">
+            <Redirect to="/notfound" />
+          </PublicRoute>
         </Switch>
       </Router>
     </Provider>

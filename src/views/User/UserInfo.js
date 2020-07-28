@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { Modal, Button, Col, Row, Jumbotron, Form } from 'react-bootstrap';
@@ -17,8 +17,8 @@ const Confirm = ({ show, onBan, onClose }) => {
         <Modal.Title>ARE YOU SURE?</Modal.Title>
       </Modal.Header>
       <Modal.Body>This is the last warning!</Modal.Body>
-      <Modal.Footer>
-        <Button variant="primary" onClick={onBan}>
+      <Modal.Footer className="justify-content-start">
+        <Button variant="danger" onClick={onBan}>
           Ban
         </Button>
         <Button variant="secondary" onClick={onClose}>
@@ -50,9 +50,14 @@ const BanModal = ({ show, onClose, user }) => {
         <Modal.Header closeButton>
           <Modal.Title>Ban Current User</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Woohoo, you're about to ban this user!</Modal.Body>
+        <Modal.Body>
+          <p>You are about to ban this user, are you sure?</p>
+          <p>
+            <b>TODO: do we need to add a note for why they are being banned here?</b>
+          </p>
+        </Modal.Body>
         <Modal.Footer>
-          <Button variant="primary" onClick={() => setConfirmation(true)}>
+          <Button variant="danger" onClick={() => setConfirmation(true)}>
             Ban
           </Button>
           <Button variant="secondary" onClick={onClose}>
@@ -82,8 +87,8 @@ function UserInfo({ match, addNotification }) {
   const { id } = match.params;
   const [show, setShow] = useState(false);
   const [edit, toggleEdit] = useState(true);
-  const [formData, setFormData] = useState(initialState);
   const { isLoading, isError, data, error } = useGetUser(id);
+  const [formData, setFormData] = useState(initialState);
 
   const onChange = e => {
     if (e.target.name === 'status' || e.target.name === 'description') {
@@ -95,6 +100,12 @@ function UserInfo({ match, addNotification }) {
       setFormData({ ...formData, [e.target.name]: e.target.value });
     }
   };
+
+  useEffect(() => {
+    if (data) {
+      setFormData(data);
+    }
+  }, [data]);
 
   const onSubmit = e => {
     e.preventDefault();
@@ -119,7 +130,7 @@ function UserInfo({ match, addNotification }) {
     profile_status: { status, description },
     created_at,
     modified_at,
-  } = data;
+  } = formData;
 
   return (
     <Fragment>
@@ -137,10 +148,10 @@ function UserInfo({ match, addNotification }) {
           <Form.Row>
             <Col xl={6}>
               <Form.Group as={Row} controlId="create_at">
-                <Form.Label column xl="2">
+                <Form.Label column xl={3}>
                   Created at:
                 </Form.Label>
-                <Col xl="5">
+                <Col>
                   <Form.Control
                     plaintext
                     readOnly
@@ -151,10 +162,10 @@ function UserInfo({ match, addNotification }) {
             </Col>
             <Col xl={6}>
               <Form.Group as={Row} controlId="modified_at">
-                <Form.Label column xl="2">
+                <Form.Label column xl={3}>
                   Modified at:
                 </Form.Label>
-                <Col xl="5">
+                <Col>
                   <Form.Control
                     plaintext
                     readOnly
@@ -167,10 +178,10 @@ function UserInfo({ match, addNotification }) {
           <Form.Row>
             <Col xl={6}>
               <Form.Group as={Row} controlId="first_name">
-                <Form.Label column xl="2">
+                <Form.Label column xl={3}>
                   First Name:
                 </Form.Label>
-                <Col xl="9">
+                <Col>
                   <Form.Control
                     plaintext={edit}
                     readOnly={edit}
@@ -183,10 +194,10 @@ function UserInfo({ match, addNotification }) {
             </Col>
             <Col xl={6}>
               <Form.Group as={Row} controlId="last_name">
-                <Form.Label column xl="2">
+                <Form.Label column xl={3}>
                   Last Name:
                 </Form.Label>
-                <Col xl="9">
+                <Col>
                   <Form.Control
                     plaintext={edit}
                     readOnly={edit}
@@ -201,10 +212,10 @@ function UserInfo({ match, addNotification }) {
           <Form.Row>
             <Col xl={6}>
               <Form.Group as={Row} controlId="email">
-                <Form.Label column xl="2">
+                <Form.Label column xl={3}>
                   Email:
                 </Form.Label>
-                <Col xl="9">
+                <Col>
                   <Form.Control
                     plaintext={edit}
                     readOnly={edit}
@@ -218,10 +229,10 @@ function UserInfo({ match, addNotification }) {
             </Col>
             <Col xl={6}>
               <Form.Group as={Row} controlId="phone">
-                <Form.Label column xl="2">
+                <Form.Label column xl={3}>
                   Phone#:
                 </Form.Label>
-                <Col xl="9">
+                <Col>
                   <Form.Control
                     plaintext={edit}
                     readOnly={edit}
@@ -235,12 +246,12 @@ function UserInfo({ match, addNotification }) {
             </Col>
           </Form.Row>
           <Form.Row>
-            <Col xl={12}>
+            <Col xl={6}>
               <Form.Group as={Row} controlId="formGridStatus">
-                <Form.Label column xl="1">
+                <Form.Label column xl={3}>
                   Status:
                 </Form.Label>
-                <Col xl="3">
+                <Col>
                   <Form.Control
                     plaintext={edit}
                     readOnly={edit}
@@ -259,12 +270,12 @@ function UserInfo({ match, addNotification }) {
             </Col>
           </Form.Row>
           <Form.Row>
-            <Col xl={12}>
+            <Col>
               <Form.Group as={Row} controlId="formGridStatus">
-                <Form.Label column xl="1">
+                <Form.Label column xl={12}>
                   Description:
                 </Form.Label>
-                <Col xl="8">
+                <Col>
                   <Form.Control
                     rows="8"
                     plaintext={edit}

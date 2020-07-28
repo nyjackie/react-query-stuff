@@ -6,6 +6,7 @@ export const LOGOUT = 'LOGOUT';
 
 // Error
 export const ERROR = 'ERROR';
+export const ERROR_SEEN = 'ERROR_SEEN';
 
 // for all reducers
 export const CLEAR_STATE = 'CLEAR_STATE';

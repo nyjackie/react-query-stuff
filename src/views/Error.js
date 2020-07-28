@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
+import { setSeen } from 'actions/errors';
 
 const testError = new Error('This is an example error message');
 
-function ErrorPage({ error, errorType }) {
+function ErrorPage({ error, errorType, setSeen }) {
+  useEffect(() => {
+    setSeen(true);
+  }, [setSeen]);
+
   return (
     <>
       <h2>{errorType || 'Unknown'} Error</h2>
@@ -17,4 +22,4 @@ const mapStateToProps = state => ({
   errorType: state.error.errorType,
 });
 
-export default connect(mapStateToProps)(ErrorPage);
+export default connect(mapStateToProps, { setSeen })(ErrorPage);

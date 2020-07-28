@@ -5,7 +5,7 @@ import { api } from 'gdd-components';
  * Functions that perform api calls
  */
 function fetchClaim(key, claimId) {
-  return api.claims.getSingle(claimId).then(res => res.data.data);
+  return api.claims.getSingle(claimId).then(res => res.data);
 }
 
 function updateClaim({ id, status, note }) {
@@ -21,7 +21,7 @@ function updateClaim({ id, status, note }) {
 
 export function useClaims() {
   return useQuery('claims', () => {
-    return api.claims.getAll().then(res => res.data.data);
+    return api.claims.getAll().then(res => res.data);
   });
 }
 

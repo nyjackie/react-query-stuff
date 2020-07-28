@@ -22,7 +22,7 @@ const Nonprofit = ({ addNotification }) => {
     return <Spinner />;
   }
 
-  if (!isError) {
+  if (isError) {
     return (
       <Fragment>
         <PageHeader pageTitle="Nonprofit Profile" />

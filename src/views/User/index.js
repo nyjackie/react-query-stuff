@@ -1,26 +1,27 @@
 import React, { Fragment, useState } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap';
-import { connect } from 'react-redux';
 import PageHeader from 'components/PageHeader';
-import { getUsers } from 'actions/user';
 import UserSearchResult from './UserSearchResult';
-const Users = ({ type, results, getUsers }) => {
+import { useSearchUsers } from 'hooks/useUsers';
+import { queryEncode, getSearchQuery } from 'utils';
+import Spinner from 'components/Spinner';
 
-  const [formData, setFormData] = useState({
-    searchTerm: '',
-  });
-  const [searchError, setSearchError] = useState(null);
-  const { searchTerm } = formData;
-
-  const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
+function Users({ history, location }) {
+  const query = getSearchQuery(location);
+  const [searchTerm, setSearchTerm] = useState(query);
+  const onChange = e => setSearchTerm(e.target.value);
+  const { isLoading, isError, data, error } = useSearchUsers(query);
 
   const onSubmit = e => {
     e.preventDefault();
-    setSearchError(null); // clear error
-    getUsers(searchTerm).catch(err => {
-      setSearchError(err.message);
-    });
+    if (searchTerm) {
+      history.push(`${location.pathname}?query=${queryEncode(searchTerm.trim())}`);
+    }
   };
+
+  if (isLoading) {
+    return <Spinner fullPage={true} />;
+  }
 
   return (
     <Fragment>
@@ -39,20 +40,14 @@ const Users = ({ type, results, getUsers }) => {
             </Form.Group>
             <Button type="submit" value="Search">
               Search
-              </Button>
-            {searchError && <p className="mt-2 text-danger">{searchError}</p>}
+            </Button>
+            {isError && <p className="mt-2 text-danger">{error.message}</p>}
           </Form>
-          <UserSearchResult />
+          <UserSearchResult results={data} />
         </Col>
       </Row>
     </Fragment>
   );
-};
+}
 
-
-const mapStateToProps = state => ({
-  results: state.nonprofits.results,
-});
-
-
-export default connect(mapStateToProps, { getUsers })(Users);
+export default Users;

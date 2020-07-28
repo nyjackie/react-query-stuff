@@ -1,46 +1,35 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Row, Col } from 'react-bootstrap';
 import { useParams, Link } from 'react-router-dom';
 import PageHeader from 'components/PageHeader';
-import { searchNonprofit, saveProfile } from 'actions/nonprofit';
 import { addNotification } from 'actions/notifications';
 import Profile from 'views/Nonprofit/Edit';
+import { useNonprofit } from 'hooks/useNonprofits';
+import Spinner from 'components/Spinner';
 
 /**
  * Nonprofit profile
- * If a `selected` item lives in redux state it will use that to populate the 
+ * If a `selected` item lives in redux state it will use that to populate the
  * date, if not it will search our api using the ein in the url parameter
  */
-const Nonprofit = ({ results, isLoading, searchNonprofit, saveProfile, addNotification }) => {
+const Nonprofit = ({ addNotification }) => {
   const { ein } = useParams();
 
-  const selected = results.find(item => item.ein === ein);
+  const { isLoading, isError, data: selected, error } = useNonprofit(ein);
 
-  // this will perform a search if nonprofit does not exist
-  // in our local state
-  useEffect(() => {
-    if (!selected) {
-      searchNonprofit(ein).catch(err => {
-        console.log(err);
-      });
-    }
-  }, [ein, searchNonprofit, selected]);
-
-  function update(obj) {
-    return saveProfile(obj).then(() => {
-      addNotification('successfully published profile updates', 'success');
-      return Promise.resolve();
-    });
+  if (isLoading) {
+    return <Spinner fullPage={true} />;
   }
 
-  if (!selected && !isLoading) {
+  if (!isError) {
     return (
       <Fragment>
         <PageHeader pageTitle="Nonprofit Profile" />
         <Row>
           <Col>
             <p>A profile for {ein} could not be found.</p>
+            <p>{error.message}</p>
             <p>
               <Link to="/nonprofit">Try searching again</Link>
             </p>
@@ -51,7 +40,7 @@ const Nonprofit = ({ results, isLoading, searchNonprofit, saveProfile, addNotifi
   }
 
   if (selected) {
-    return <Profile onSave={update} data={selected} />;
+    return <Profile onSave={data => console.log('perform save', data)} data={selected} />;
   }
 
   return (
@@ -71,4 +60,4 @@ const mapStateToProps = state => ({
   isLoading: state.loading.isLoading,
 });
 
-export default connect(mapStateToProps, { searchNonprofit, saveProfile, addNotification })(Nonprofit);
+export default connect(mapStateToProps, { addNotification })(Nonprofit);

@@ -1,13 +1,14 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-
 import { Modal, Button, Col, Row, Jumbotron, Form } from 'react-bootstrap';
-import PageHeader from 'components/PageHeader';
 import { connect } from 'react-redux';
-import { getUser } from 'actions/user';
-import styles from './User.module.scss';
+
+import PageHeader from 'components/PageHeader';
 import { addNotification } from 'actions/notifications';
+import { useGetUser } from 'hooks/useUsers';
+import styles from './User.module.scss';
+import Spinner from 'components/Spinner';
 
 const Confirm = ({ show, onBan, onClose }) => {
   return (
@@ -34,10 +35,10 @@ const BanModal = ({ show, onClose, user }) => {
   const banUser = e => {
     console.log('will ban this user', user);
     // close the confirmation modal
-    setConfirmation(false)
+    setConfirmation(false);
     // close this modal
     onClose();
-    
+
     // make post request here...
     // api.post request
     // handle result
@@ -59,11 +60,7 @@ const BanModal = ({ show, onClose, user }) => {
           </Button>
         </Modal.Footer>
       </Modal>
-      <Confirm
-        show={confirmation}
-        onBan={banUser}
-        onClose={() => setConfirmation(false)}
-      />
+      <Confirm show={confirmation} onBan={banUser} onClose={() => setConfirmation(false)} />
     </Fragment>
   );
 };
@@ -81,32 +78,12 @@ const initialState = {
   modified_at: '',
 };
 
-const UserInfo = ({ getUser, match, user: { selected }, addNotification }) => {
+function UserInfo({ match, addNotification }) {
+  const { id } = match.params;
   const [show, setShow] = useState(false);
   const [edit, toggleEdit] = useState(true);
   const [formData, setFormData] = useState(initialState);
-
-  useEffect(() => {
-    getUser(match.params.id);
-  }, [getUser, match.params.id]);
-
-  useEffect(() => {
-    const userData = { ...initialState };
-    for (const el in selected) {
-      if (el in userData) userData[el] = selected[el];
-    }
-    setFormData(userData);
-  }, [selected]);
-
-  const {
-    first_name,
-    last_name,
-    contact_email,
-    contact_phone,
-    profile_status: { status, description },
-    created_at,
-    modified_at,
-  } = formData;
+  const { isLoading, isError, data, error } = useGetUser(id);
 
   const onChange = e => {
     if (e.target.name === 'status' || e.target.name === 'description') {
@@ -121,14 +98,30 @@ const UserInfo = ({ getUser, match, user: { selected }, addNotification }) => {
 
   const onSubmit = e => {
     e.preventDefault();
-    const time = moment().format();
+    const time = moment().utc().format();
     setFormData({ ...formData, modified_at: time });
     console.log('Form data', formData);
   };
 
-  return selected === null ? (
-    <div>Loading...</div>
-  ) : (
+  if (isLoading) {
+    return <Spinner fullPage={true} />;
+  }
+
+  if (isError) {
+    return <p>{error.message}</p>;
+  }
+
+  const {
+    first_name,
+    last_name,
+    contact_email,
+    contact_phone,
+    profile_status: { status, description },
+    created_at,
+    modified_at,
+  } = data;
+
+  return (
     <Fragment>
       <PageHeader className="text-primary" pageTitle="User Info" />
       <Jumbotron className={styles.jumbotron}>
@@ -295,20 +288,14 @@ const UserInfo = ({ getUser, match, user: { selected }, addNotification }) => {
             </Col>
           </Row>
         </Form>
-        <BanModal show={show} onClose={() => setShow(false)} user={selected} />
+        <BanModal show={show} onClose={() => setShow(false)} user={data} />
       </Jumbotron>
     </Fragment>
   );
-};
+}
 
 UserInfo.propTypes = {
   addNotification: PropTypes.func.isRequired,
-  getUser: PropTypes.func.isRequired,
-  user: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = state => ({
-  user: state.users,
-});
-
-export default connect(mapStateToProps, { getUser, addNotification })(UserInfo);
+export default connect(null, { addNotification })(UserInfo);

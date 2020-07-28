@@ -7,7 +7,7 @@ import Claim from './Claim';
 import { useClaims } from 'hooks/useClaims';
 import Spinner from 'components/Spinner';
 
-const ClaimsPage = () => {
+function ClaimsPage() {
   const { isLoading, isError, data: claims, error } = useClaims();
 
   if (isLoading) {
@@ -89,7 +89,7 @@ const ClaimsPage = () => {
       )}
     </Container>
   );
-};
+}
 
 ClaimsPage.propTypes = {
   getClaims: PropTypes.func.isRequired,

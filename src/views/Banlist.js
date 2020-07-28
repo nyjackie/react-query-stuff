@@ -1,10 +1,10 @@
-import React, { Fragment, useEffect } from 'react';
-import { connect } from 'react-redux';
+import React, { Fragment } from 'react';
 import { Row, Col, Table } from 'react-bootstrap';
-import { getBanned } from 'actions/banned';
 import PageHeader from 'components/PageHeader';
+import { useBanned } from 'hooks/useBanned';
+import Spinner from 'components/Spinner';
 
-const BannedRow = ({ data }) => {
+function BannedRow({ data }) {
   const { ein, name, bannedBy, bannedReason } = data;
   return (
     <tr>
@@ -14,16 +14,18 @@ const BannedRow = ({ data }) => {
       <td>{bannedReason}</td>
     </tr>
   );
-};
+}
 
-function Banlist({ list, getBanned }) {
-  useEffect(() => {
-    getBanned().catch(err => {
-      console.error('error getting banned', err);
-    });
-  }, [getBanned]);
+function Banlist() {
+  const { isLoading, isError, data, error } = useBanned();
 
-  console.log(list);
+  if (isLoading) {
+    return <Spinner fullPage={true} />;
+  }
+
+  if (isError) {
+    return <p>{error.message}</p>;
+  }
 
   return (
     <Fragment>
@@ -40,7 +42,7 @@ function Banlist({ list, getBanned }) {
               </tr>
             </thead>
             <tbody>
-              {list.map(row => (
+              {data.map(row => (
                 <BannedRow key={row.id} data={row} />
               ))}
             </tbody>
@@ -51,8 +53,4 @@ function Banlist({ list, getBanned }) {
   );
 }
 
-const mapStateToProps = state => ({
-  list: state.banned.list,
-});
-
-export default connect(mapStateToProps, { getBanned })(Banlist);
+export default Banlist;

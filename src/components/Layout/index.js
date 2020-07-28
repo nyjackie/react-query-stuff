@@ -6,7 +6,6 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Navbar from 'react-bootstrap/Navbar';
 import SideNav from 'components/Nav';
-import Spinner from 'components/Spinner';
 import styles from './Layout.module.scss';
 import Notification from 'components/Notification';
 import { useLocation } from 'react-router-dom';

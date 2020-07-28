@@ -1,21 +1,39 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Container from 'react-bootstrap/Container';
 import Table from 'react-bootstrap/Table';
+import Alert from 'react-bootstrap/Alert';
 import PageHeader from 'components/PageHeader';
 import Claim from './Claim';
 import { useClaims } from 'hooks/useClaims';
 import Spinner from 'components/Spinner';
 
+function UpdatedTable({ claims }) {
+  return (
+    <Table striped bordered hover responsive>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Nonprofit</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Note</th>
+        </tr>
+      </thead>
+      <tbody>
+        {claims.map(claim => (
+          <Claim key={claim.id} claim={claim} note={claim.note} />
+        ))}
+      </tbody>
+    </Table>
+  );
+}
+
 function ClaimsPage() {
-  const { isLoading, isError, data: claims, error } = useClaims();
+  const { isLoading, isError, data: claims = [], error } = useClaims();
 
   if (isLoading) {
     return <Spinner />;
-  }
-
-  if (isError) {
-    return <span>Error: {error.message}</span>;
   }
 
   const appoved = claims.filter(c => c.status === 'approved');
@@ -25,8 +43,9 @@ function ClaimsPage() {
   return (
     <Container>
       <PageHeader pageTitle="Claims Page" />
+      {isError && <Alert variant={'danger'}>{error.message}</Alert>}
       <h2>Waiting for approval</h2>
-      <Table striped bordered hover>
+      <Table striped bordered hover responsive>
         <thead>
           <tr>
             <th>Date</th>
@@ -46,54 +65,17 @@ function ClaimsPage() {
       {appoved.length > 0 && (
         <>
           <h2>Approved</h2>
-          <Table striped bordered hover>
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Nonprofit</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Note</th>
-              </tr>
-            </thead>
-            <tbody>
-              {appoved.map(claim => (
-                <Claim key={claim.id} claim={claim} note={claim.note} />
-              ))}
-            </tbody>
-          </Table>
+          <UpdatedTable claims={appoved} />
         </>
       )}
       {denied.length > 0 && (
         <>
           <h2>Denied</h2>
-          <Table striped bordered hover>
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Nonprofit</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Note</th>
-              </tr>
-            </thead>
-            <tbody>
-              {denied.map(claim => (
-                <Claim key={claim.id} claim={claim} note={claim.note} />
-              ))}
-            </tbody>
-          </Table>
+          <UpdatedTable claims={denied} />
         </>
       )}
     </Container>
   );
 }
-
-ClaimsPage.propTypes = {
-  getClaims: PropTypes.func.isRequired,
-  claims: PropTypes.object.isRequired,
-};
 
 export default ClaimsPage;

@@ -9,7 +9,7 @@ function search(key, term) {
 }
 
 function fetchNp(key, id) {
-  return api.claims.getSingle(id).then(res => res.data);
+  return api.nonprofit.getSingle(id).then(res => res.data);
 }
 
 /****************************************************************

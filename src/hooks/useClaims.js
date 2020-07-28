@@ -1,5 +1,6 @@
 import { useQuery, useMutation, queryCache } from 'react-query';
 import { api } from 'gdd-components';
+import { updateCollection } from 'utils';
 
 /****************************************************************
  * Functions that perform api calls
@@ -10,9 +11,9 @@ function fetchClaim(key, claimId) {
 
 function updateClaim({ id, status, note }) {
   if (status === 'approve') {
-    return api.claims.approve(id, note).then(res => res.data.data);
+    return api.claims.approve(id, note).then(res => res.data);
   }
-  return api.claims.deny(id, note).then(res => res.data.data);
+  return api.claims.deny(id, note).then(res => res.data);
 }
 
 /****************************************************************
@@ -31,8 +32,10 @@ export function useClaim(claimId) {
 
 export function useUpdateClaim() {
   return useMutation(updateClaim, {
-    onSuccess: () => {
-      queryCache.invalidateQueries('claims');
+    onSuccess: (data, variables) => {
+      queryCache.setQueryData('claims', old => {
+        return updateCollection(old, 'id', data);
+      });
     },
   });
 }

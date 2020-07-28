@@ -170,3 +170,21 @@ export function objectFilter(data, source) {
   }
   return newData;
 }
+
+/**
+ * completely replace an object inside an array with a new one
+ * assumes all objects structured the same and have obj[key] property
+ * @param {object[]} collection
+ * @param {string} key
+ * @param {object} newData
+ * @returns {object[]} collection with replaced item
+ * @throws Uncaught TypeError if item[key] does not exist in any object
+ */
+export function updateCollection(collection, key, newData) {
+  return collection.map(item => {
+    if (item[key].toString() === newData[key].toString()) {
+      return newData;
+    }
+    return item;
+  });
+}

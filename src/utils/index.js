@@ -1,4 +1,5 @@
 import moment from 'moment';
+import errorHandler from './errorHandler';
 
 /**
  * Wrapper around setTimeout to use within in an async function and have it wait
@@ -116,4 +117,56 @@ export function fixedEncodeURIComponent(str) {
   return encodeURIComponent(str).replace(/[!'()*]/g, function (c) {
     return '%' + c.charCodeAt(0).toString(16);
   });
+}
+
+export function queryEncode(str) {
+  return fixedEncodeURIComponent(str).replace(/%20/g, '+');
+}
+
+export function queryDecode(str) {
+  try {
+    return decodeURIComponent(str.replace(/\+/g, '%20'));
+  } catch (err) {
+    errorHandler(err);
+    return '';
+  }
+}
+
+export function getSearchQuery(location) {
+  if (!location.search) {
+    return '';
+  }
+  const { query } = fromQueryString(location.search);
+  if (query) {
+    const decoded = queryDecode(query);
+    if (!decoded) {
+      return '';
+    }
+    return decoded.trim();
+  }
+}
+
+/**
+ * recursively removes properties from `data` object that don't exist in
+ * `source` object.
+ * test https://repl.it/repls/ReadyWorthyLinks#index.js
+ * @param {object} data
+ * @param {object} source
+ */
+export function objectFilter(data, source) {
+  const newData = { ...source };
+  for (const key in data) {
+    const currentVal = data[key];
+
+    if (key in source) {
+      if (typeof currentVal === 'object') {
+        newData[key] = objectFilter(currentVal, source[key]);
+      }
+
+      newData[key] = currentVal || source[key];
+    } else {
+      newData[key] = source[key];
+    }
+  }
+  return newData;
 }

@@ -67,7 +67,7 @@ const NonprofitSearch = ({ history, location }) => {
   };
 
   if (isLoading) {
-    return <Spinner fullPage={true} />;
+    return <Spinner />;
   }
 
   return (

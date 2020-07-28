@@ -20,7 +20,7 @@ function Banlist() {
   const { isLoading, isError, data, error } = useBanned();
 
   if (isLoading) {
-    return <Spinner fullPage={true} />;
+    return <Spinner />;
   }
 
   if (isError) {

@@ -115,7 +115,7 @@ function UserInfo({ match, addNotification }) {
   };
 
   if (isLoading) {
-    return <Spinner fullPage={true} />;
+    return <Spinner />;
   }
 
   if (isError) {

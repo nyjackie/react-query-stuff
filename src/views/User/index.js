@@ -20,7 +20,7 @@ function Users({ history, location }) {
   };
 
   if (isLoading) {
-    return <Spinner fullPage={true} />;
+    return <Spinner />;
   }
 
   return (

@@ -22,7 +22,7 @@ function PrivateRoute({ component: Component, auth: { isAuthenticated, isLoading
             </Layout>
           );
         } else if (isLoading) {
-          return <Spinner fullPage={true} />;
+          return <Spinner />;
         } else {
           return (
             <Redirect

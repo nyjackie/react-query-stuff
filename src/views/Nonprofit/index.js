@@ -19,7 +19,7 @@ const Nonprofit = ({ addNotification }) => {
   const { isLoading, isError, data: selected, error } = useNonprofit(ein);
 
   if (isLoading) {
-    return <Spinner fullPage={true} />;
+    return <Spinner />;
   }
 
   if (!isError) {

@@ -89,7 +89,7 @@ const ClaimInfo = ({ addNotification, match, history }) => {
   };
 
   if (isLoading) {
-    return <Spinner fullPage={true} />;
+    return <Spinner />;
   }
 
   if (isError) {

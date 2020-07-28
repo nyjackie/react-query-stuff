@@ -11,7 +11,7 @@ function ClaimsPage() {
   const { isLoading, isError, data: claims, error } = useClaims();
 
   if (isLoading) {
-    return <Spinner fullPage={true} />;
+    return <Spinner />;
   }
 
   if (isError) {

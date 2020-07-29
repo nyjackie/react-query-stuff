@@ -7,3 +7,35 @@
   background-color: rgb(249, 77, 77);
   color: white;
 }
+
+.status {
+  padding: 3px 8px;
+  border-radius: 5px;
+}
+
+.waiting {
+  background-color: var(--warning);
+}
+
+.approved {
+  background-color: var(--success);
+  color: white;
+}
+
+.denied {
+  background-color: var(--danger);
+  color: white;
+}
+
+.truncate {
+  width: 200px;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.statusRow {
+  background-color: var(--white);
+  padding: 20px;
+}

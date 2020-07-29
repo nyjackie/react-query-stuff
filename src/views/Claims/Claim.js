@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Moment from 'react-moment';
+import styles from './Claim.module.scss';
 
 const Claim = ({ claim, note }) => {
   const { id, created_at, first_name, last_name, email, phone, nonprofit } = claim;
@@ -19,15 +20,16 @@ const Claim = ({ claim, note }) => {
       </td>
       <td>{email}</td>
       <td>{phone}</td>
-      {note ? (
-        <td>{note}</td>
-      ) : (
+      {note && (
         <td>
-          <Link to={`/claims/${id}`} className="btn btn-primary">
-            view claim
-          </Link>
+          <span className={styles.truncate}>{note}</span>
         </td>
       )}
+      <td>
+        <Link to={`/claims/${id}`} className="btn btn-primary">
+          view claim
+        </Link>
+      </td>
     </tr>
   );
 };

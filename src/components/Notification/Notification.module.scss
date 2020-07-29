@@ -7,7 +7,7 @@
 
 .toastContainer {
   position: relative;
-  min-height: 45px;
+  min-height: 75px;
 }
 
 .toastInner {
@@ -16,8 +16,13 @@
   right: 0;
 }
 
+.header {
+  min-height: 70px;
+}
+
 .toast {
-  min-width: 300px;
+  min-width: 400px;
+  font-size: 1rem;
 }
 
 .none {

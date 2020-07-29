@@ -1,6 +1,6 @@
 import { useQuery, useMutation, queryCache } from 'react-query';
 import { api } from 'gdd-components';
-import { updateCollection } from 'utils';
+import _merge from 'lodash/merge';
 
 /****************************************************************
  * Functions that perform api calls
@@ -32,10 +32,27 @@ export function useClaim(claimId) {
 
 export function useUpdateClaim() {
   return useMutation(updateClaim, {
-    onSuccess: (data, variables) => {
-      queryCache.setQueryData('claims', old => {
-        return updateCollection(old, 'id', data);
-      });
+    onMutate: claim => {
+      const id = claim.id.toString();
+      // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
+      queryCache.cancelQueries(['claim', id]);
+
+      // Snapshot the previous value
+      const previousClaim = queryCache.getQueryData(['claim', id]);
+
+      // Optimistically update to the new value
+      queryCache.setQueryData(['claim', id], _merge(previousClaim, claim));
+
+      // Return a rollback function
+      return () => queryCache.setQueryData(['claim', id], previousClaim);
+    },
+    // If the mutation fails, use the rollback function we returned above
+    onError: (err, newTodo, rollback) => rollback(),
+
+    // Always refetch after error or success:
+    onSettled: claim => {
+      queryCache.invalidateQueries(['claim', claim.id.toString()]);
+      queryCache.invalidateQueries('claims');
     },
   });
 }

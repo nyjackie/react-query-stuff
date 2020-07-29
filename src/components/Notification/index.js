@@ -21,7 +21,7 @@ const Notification = ({ notification, onClose }) => {
           }}
           className={`${styles.toast} ${styles[notification.variant]}`}
         >
-          <Toast.Header>
+          <Toast.Header className={styles.header}>
             <strong className="mr-auto">{notification.msg}</strong>
           </Toast.Header>
         </Toast>

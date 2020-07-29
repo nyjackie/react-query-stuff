@@ -182,7 +182,7 @@ export function objectFilter(data, source) {
  */
 export function updateCollection(collection, key, newData) {
   return collection.map(item => {
-    if (item[key].toString() === newData[key].toString()) {
+    if (String(item[key]) === String(newData[key])) {
       return newData;
     }
     return item;

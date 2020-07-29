@@ -82,7 +82,7 @@ const Login = ({ login, isAuthenticated }) => {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.password}
-                isInvalid={!!formik.errors.password}
+                isInvalid={formik.touched.password && !!formik.errors.password}
                 isValid={formik.touched.password && !formik.errors.password}
               />
               <Form.Control.Feedback type="invalid">{formik.errors.password}</Form.Control.Feedback>

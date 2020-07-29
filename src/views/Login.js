@@ -3,27 +3,44 @@ import PropTypes from 'prop-types';
 import { Redirect, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Form, Button, Row, Col } from 'react-bootstrap';
+import { useFormik } from 'formik';
+import { object as yupObject, string as yupString } from 'yup';
 
 import { ReactComponent as Logo } from '../assets/good-deeds-logo-teal.svg';
 import { login } from 'actions/auth';
 import styles from './Login.module.scss';
 
+const emailMsg = 'Please enter a @gooddeedsdata.com email';
+const schema = yupObject({
+  email: yupString()
+    .trim()
+    // not sure if this is needed but it's good practice to limit input length
+    .max(250, 'email is too long (max: 250)')
+    .email(emailMsg)
+    .matches(/@gooddeedsdata.com$/, emailMsg)
+    .required(emailMsg),
+  password: yupString()
+    .max(250, 'password is too long (max: 250)')
+    .required('Password field is required'),
+});
+
 const Login = ({ login, isAuthenticated }) => {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  });
   const [loginError, setLoginError] = useState(null);
-  const { email, password } = formData;
-  const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
-  const onSubmit = e => {
-    e.preventDefault();
-    setLoginError(null); // clear error
-    login(email, password).catch(err => {
-      // console.error(err)
-      setLoginError(err.message);
-    });
-  };
+
+  // Pass the useFormik() hook initial form values and a submit function that will
+  // be called when the form is submitted
+  const formik = useFormik({
+    validationSchema: schema,
+    initialValues: {
+      email: '',
+      password: '',
+    },
+    onSubmit: values => {
+      login(values.email, values.password).catch(err => {
+        setLoginError(err.message);
+      });
+    },
+  });
 
   if (isAuthenticated) {
     // For now /claims is the default logged in home page after logging in
@@ -37,32 +54,38 @@ const Login = ({ login, isAuthenticated }) => {
         <Col md={4} className={styles.loginPage}>
           <Logo className={styles.logo} aria-hidden="true" />
           <h1 className="sr-only">Good Deeds Data admin portal</h1>
-          <Form onSubmit={onSubmit}>
-            <Form.Group controlId="loginEmail">
+          <Form noValidate onSubmit={formik.handleSubmit}>
+            <Form.Group controlId="email">
               <Form.Label className="sr-only">
                 <b>Email</b>
               </Form.Label>
               <Form.Control
-                type="email"
                 placeholder="Email"
+                type="email"
                 name="email"
-                onChange={e => onChange(e)}
-                value={email}
-                required
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.email}
+                isValid={formik.touched.email && !formik.errors.email}
+                isInvalid={!!formik.errors.email}
               />
+              <Form.Control.Feedback type="invalid">{formik.errors.email}</Form.Control.Feedback>
             </Form.Group>
-            <Form.Group controlId="loginPassword">
+            <Form.Group controlId="password">
               <Form.Label className="sr-only">
                 <b>Password</b>
               </Form.Label>
               <Form.Control
-                type="password"
                 placeholder="Password"
+                type="password"
                 name="password"
-                onChange={e => onChange(e)}
-                value={password}
-                required
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.password}
+                isInvalid={!!formik.errors.password}
+                isValid={formik.touched.password && !formik.errors.password}
               />
+              <Form.Control.Feedback type="invalid">{formik.errors.password}</Form.Control.Feedback>
             </Form.Group>
             <Button type="submit" variant="primary" block>
               Login

@@ -6,7 +6,6 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Navbar from 'react-bootstrap/Navbar';
 import SideNav from 'components/Nav';
-import Spinner from 'components/Spinner';
 import styles from './Layout.module.scss';
 import Notification from 'components/Notification';
 import { useLocation } from 'react-router-dom';
@@ -14,13 +13,12 @@ import { cn } from 'gdd-components/dist/utils';
 
 const noNav = ['/login'];
 
-const Layout = ({ children, drawerOpen, toggleDrawer, isLoading }) => {
+const Layout = ({ children, drawerOpen, toggleDrawer }) => {
   const location = useLocation();
 
   if (noNav.includes(location.pathname)) {
     return (
       <Fragment>
-        <Spinner show={isLoading} />
         <Notification />
         <Container fluid className="d-flex flex-column h-100">
           <Row className="h-100 position-relative">
@@ -33,12 +31,7 @@ const Layout = ({ children, drawerOpen, toggleDrawer, isLoading }) => {
     );
   }
 
-  const drawerCSS = cn(
-    'flex-fill',
-    styles.transition,
-    styles.drawer,
-    !drawerOpen && styles.closed
-  );
+  const drawerCSS = cn('flex-fill', styles.transition, styles.drawer, !drawerOpen && styles.closed);
   const contentCSS = cn(
     'flex-column',
     'd-flex',
@@ -49,8 +42,6 @@ const Layout = ({ children, drawerOpen, toggleDrawer, isLoading }) => {
 
   return (
     <Fragment>
-      <Spinner show={isLoading} />
-
       <Notification />
       <Container fluid className="d-flex flex-column h-100">
         <h1 className="sr-only">Good Deeds Data admin portal</h1>
@@ -75,7 +66,6 @@ const Layout = ({ children, drawerOpen, toggleDrawer, isLoading }) => {
 
 const mapStateToProps = state => ({
   drawerOpen: state.ui.drawerOpen,
-  isLoading: state.loading.isLoading,
 });
 
 export default connect(mapStateToProps, { toggleDrawer })(Layout);

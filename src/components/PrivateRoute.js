@@ -10,11 +10,21 @@ import Layout from 'components/Layout';
 
 // A wrapper for <Route> that redirects to the login
 // screen if you're not yet authenticated.
-function PrivateRoute({ component: Component, auth: { isAuthenticated, isLoading }, ...rest }) {
+function PrivateRoute({
+  component: Component,
+  error,
+  auth: { isAuthenticated, isLoading },
+  ...rest
+}) {
   return (
     <Route
       {...rest}
       render={props => {
+        if (props.location.pathname !== '/error' && error.error && !error.seen) {
+          // redirect to the error page only once per error
+          return <Redirect to="/error" />;
+        }
+
         if (isAuthenticated) {
           return (
             <Layout>
@@ -22,7 +32,7 @@ function PrivateRoute({ component: Component, auth: { isAuthenticated, isLoading
             </Layout>
           );
         } else if (isLoading) {
-          return <Spinner fullPage={true} />;
+          return <Spinner />;
         } else {
           return (
             <Redirect
@@ -45,6 +55,7 @@ PrivateRoute.propTypes = {
 
 const mapStateToProps = state => ({
   auth: state.auth,
+  error: state.error,
 });
 
 export default connect(mapStateToProps)(PrivateRoute);

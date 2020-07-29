@@ -1,23 +1,11 @@
-import React, { Fragment, useState, useEffect } from 'react';
-import { connect } from 'react-redux';
-import { useHistory, useLocation } from 'react-router-dom';
+import React, { Fragment, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Form, Button, Row, Col, Table } from 'react-bootstrap';
 import PageHeader from 'components/PageHeader';
-import { searchNonprofit } from 'actions/nonprofit';
-import { fromQueryString, fixedEncodeURIComponent } from 'utils';
+import { queryEncode, getSearchQuery } from 'utils';
 import { KEYCODES } from 'gdd-components/dist/utils';
-
-function queryEncode(str) {
-  return fixedEncodeURIComponent(str).replace(/%20/g, '+');
-}
-function queryDecode(str) {
-  try {
-    return decodeURIComponent(str.replace(/\+/g, '%20'));
-  } catch (err) {
-    console.error(err);
-    return '';
-  }
-}
+import { useNonprofitSearch } from 'hooks/useNonprofits';
+import Spinner from 'components/Spinner';
 
 const SingleResult = ({ result }) => {
   let history = useHistory();
@@ -65,42 +53,22 @@ const SearchResults = ({ results }) => {
   );
 };
 
-const NonprofitSearch = ({ results, searchNonprofit }) => {
-  const location = useLocation();
-  const history = useHistory();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [searchError, setSearchError] = useState(null);
+const NonprofitSearch = ({ history, location }) => {
+  const query = getSearchQuery(location);
+  const [searchTerm, setSearchTerm] = useState(query);
   const onChange = e => setSearchTerm(e.target.value);
+  const { isLoading, isError, data: results, error } = useNonprofitSearch(query);
 
   const onSubmit = e => {
     e.preventDefault();
-    setSearchError(null); // clear error
     if (searchTerm) {
       history.push(`${location.pathname}?query=${queryEncode(searchTerm.trim())}`);
     }
   };
 
-  useEffect(() => {
-    if (!location.search) {
-      setSearchTerm('');
-      return;
-    }
-    const { query } = fromQueryString(location.search);
-    if (query) {
-      const decoded = queryDecode(query);
-      if (!decoded) {
-        setSearchTerm('');
-        return;
-      }
-      setSearchTerm(decoded.trim());
-      setSearchError(null); // clear error
-      searchNonprofit(decoded).catch(err => {
-        setSearchError(err.message);
-      });
-      return;
-    }
-    setSearchTerm('');
-  }, [location, searchNonprofit]);
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <Fragment>
@@ -123,7 +91,7 @@ const NonprofitSearch = ({ results, searchNonprofit }) => {
             <Button type="submit" value="Search">
               Search
             </Button>
-            {searchError && <p className="mt-2 text-danger">{searchError}</p>}
+            {isError && <p className="mt-2 text-danger">{error.message}</p>}
           </Form>
           {location.search && <SearchResults results={results} />}
         </Col>
@@ -132,8 +100,4 @@ const NonprofitSearch = ({ results, searchNonprofit }) => {
   );
 };
 
-const mapStateToProps = state => ({
-  results: state.nonprofits.results,
-});
-
-export default connect(mapStateToProps, { searchNonprofit })(NonprofitSearch);
+export default NonprofitSearch;

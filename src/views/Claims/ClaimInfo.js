@@ -1,8 +1,11 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import Moment from 'react-moment';
+import { useClaim, useUpdateClaim } from 'hooks/useClaims';
+import Spinner from 'components/Spinner';
+import styles from './Claim.module.scss';
 import { connect } from 'react-redux';
-import { approveClaim, denyClaim, getClaim } from 'actions/claims';
 import { addNotification } from 'actions/notifications';
 import {
   Modal,
@@ -14,7 +17,6 @@ import {
   Container,
   Jumbotron,
 } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 
 const ConfirmationModal = ({ show, choice, onClose, onApprove, onDeny }) => {
   const [msg, setMsg] = useState({
@@ -30,23 +32,26 @@ const ConfirmationModal = ({ show, choice, onClose, onApprove, onDeny }) => {
       onDeny(msg);
     }
   };
+
+  const cn = choice === 'approve' ? styles.approve : styles.deny;
+  const action = choice === 'approve' ? 'Approval' : 'Denial';
+
   return (
     <Modal show={show} onHide={onClose}>
-      <Modal.Header closeButton onClick={onClose}>
-        <Modal.Title>Please Confirm</Modal.Title>
+      <Modal.Header closeButton onClick={onClose} className={cn}>
+        <Modal.Title>Please Confirm {action}</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
         <p>
           You are about to <strong>{choice}</strong> this claim.
         </p>
+        <p>Please leave a feedback comment that will be sent to the nonprofit.</p>
         <br />
         <InputGroup>
-          <InputGroup.Prepend>
-            <InputGroup.Text>Leave a comment</InputGroup.Text>
-          </InputGroup.Prepend>
           <FormControl
             as="textarea"
+            maxLength="2000"
             aria-label="Leave Comments"
             value={msg.note}
             onChange={onChange}
@@ -64,37 +69,34 @@ const ConfirmationModal = ({ show, choice, onClose, onApprove, onDeny }) => {
             claimChoice(choice);
           }}
         >
-          Save changes
+          Save {action}
         </Button>
       </Modal.Footer>
     </Modal>
   );
 };
 
-const ClaimInfo = ({
-  addNotification,
-  getClaim,
-  approveClaim,
-  denyClaim,
-  claim: { claim },
-  match,
-  history,
-}) => {
+const ClaimInfo = ({ addNotification, match, history }) => {
   const [show, setShow] = useState(false);
   const [choice, decision] = useState('');
 
-  useEffect(() => {
-    getClaim(match.params.id);
-  }, [getClaim, match.params.id]);
+  const { isLoading, isError, data: claim, error } = useClaim(match.params.id);
+  const [updateClaim, { status: claimUpdateStatus }] = useUpdateClaim();
 
   const openModal = e => {
     decision(e);
     setShow(true);
   };
 
-  return claim === null ? (
-    <div></div>
-  ) : (
+  if (isLoading) {
+    return <Spinner />;
+  }
+
+  if (isError) {
+    return <span>Error: {error.message}</span>;
+  }
+
+  return (
     <Fragment>
       <Jumbotron>
         <Container>
@@ -199,13 +201,16 @@ const ClaimInfo = ({
         show={show}
         choice={choice}
         onClose={() => setShow(false)}
+        status={claimUpdateStatus}
         onApprove={msg => {
-          approveClaim(claim.id, history, msg);
+          updateClaim({ id: claim.id, status: 'approve', note: msg.note });
           addNotification(`${claim.nonprofit.name} - Approved`, 'success');
+          history.push('/claims');
         }}
         onDeny={msg => {
-          denyClaim(claim.id, history, msg);
+          updateClaim({ id: claim.id, status: 'deny', note: msg.note });
           addNotification(`${claim.nonprofit.name} - Denied`, 'fail');
+          history.push('/claims');
         }}
       />
     </Fragment>
@@ -214,15 +219,6 @@ const ClaimInfo = ({
 
 ClaimInfo.propTypes = {
   addNotification: PropTypes.func.isRequired,
-  getClaim: PropTypes.func.isRequired,
-  approveClaim: PropTypes.func.isRequired,
-  denyClaim: PropTypes.func.isRequired,
-  claim: PropTypes.object.isRequired,
 };
-const mapStateToProps = state => ({
-  claim: state.claims,
-});
 
-export default connect(mapStateToProps, { addNotification, getClaim, approveClaim, denyClaim })(
-  ClaimInfo
-);
+export default connect(null, { addNotification })(ClaimInfo);

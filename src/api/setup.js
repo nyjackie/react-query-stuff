@@ -5,7 +5,7 @@ import tokenStore from 'gdd-components/dist/api/tokenStore';
 
 // local modules
 import store from '../store';
-import { LOGOUT, CLEAR_STATE, LOGIN_SUCCESS } from '../actions/types';
+import { LOGOUT, CLEAR_STATE, LOGIN_SUCCESS, ERROR } from '../actions/types';
 import errorHandler from 'utils/errorHandler';
 
 // required setting a IndexedDB database name
@@ -31,8 +31,14 @@ api.setupResponseInterceptor(
   },
   function onError(err) {
     errorHandler(err);
-    // logout on all other errors?
-    store.dispatch({ type: LOGOUT });
+    // this redicts to an error page
+    store.dispatch({
+      type: ERROR,
+      payload: {
+        error: err,
+        errorType: 'API',
+      },
+    });
   }
 );
 

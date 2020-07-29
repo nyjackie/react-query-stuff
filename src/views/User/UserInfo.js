@@ -1,13 +1,14 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-
 import { Modal, Button, Col, Row, Jumbotron, Form } from 'react-bootstrap';
-import PageHeader from 'components/PageHeader';
 import { connect } from 'react-redux';
-import { getUser } from 'actions/user';
-import styles from './User.module.scss';
+
+import PageHeader from 'components/PageHeader';
 import { addNotification } from 'actions/notifications';
+import { useGetUser } from 'hooks/useUsers';
+import styles from './User.module.scss';
+import Spinner from 'components/Spinner';
 
 const Confirm = ({ show, onBan, onClose }) => {
   return (
@@ -16,8 +17,8 @@ const Confirm = ({ show, onBan, onClose }) => {
         <Modal.Title>ARE YOU SURE?</Modal.Title>
       </Modal.Header>
       <Modal.Body>This is the last warning!</Modal.Body>
-      <Modal.Footer>
-        <Button variant="primary" onClick={onBan}>
+      <Modal.Footer className="justify-content-start">
+        <Button variant="danger" onClick={onBan}>
           Ban
         </Button>
         <Button variant="secondary" onClick={onClose}>
@@ -34,10 +35,10 @@ const BanModal = ({ show, onClose, user }) => {
   const banUser = e => {
     console.log('will ban this user', user);
     // close the confirmation modal
-    setConfirmation(false)
+    setConfirmation(false);
     // close this modal
     onClose();
-    
+
     // make post request here...
     // api.post request
     // handle result
@@ -49,9 +50,14 @@ const BanModal = ({ show, onClose, user }) => {
         <Modal.Header closeButton>
           <Modal.Title>Ban Current User</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Woohoo, you're about to ban this user!</Modal.Body>
+        <Modal.Body>
+          <p>You are about to ban this user, are you sure?</p>
+          <p>
+            <b>TODO: do we need to add a note for why they are being banned here?</b>
+          </p>
+        </Modal.Body>
         <Modal.Footer>
-          <Button variant="primary" onClick={() => setConfirmation(true)}>
+          <Button variant="danger" onClick={() => setConfirmation(true)}>
             Ban
           </Button>
           <Button variant="secondary" onClick={onClose}>
@@ -59,11 +65,7 @@ const BanModal = ({ show, onClose, user }) => {
           </Button>
         </Modal.Footer>
       </Modal>
-      <Confirm
-        show={confirmation}
-        onBan={banUser}
-        onClose={() => setConfirmation(false)}
-      />
+      <Confirm show={confirmation} onBan={banUser} onClose={() => setConfirmation(false)} />
     </Fragment>
   );
 };
@@ -81,32 +83,12 @@ const initialState = {
   modified_at: '',
 };
 
-const UserInfo = ({ getUser, match, user: { selected }, addNotification }) => {
+function UserInfo({ match, addNotification }) {
+  const { id } = match.params;
   const [show, setShow] = useState(false);
   const [edit, toggleEdit] = useState(true);
+  const { isLoading, isError, data, error } = useGetUser(id);
   const [formData, setFormData] = useState(initialState);
-
-  useEffect(() => {
-    getUser(match.params.id);
-  }, [getUser, match.params.id]);
-
-  useEffect(() => {
-    const userData = { ...initialState };
-    for (const el in selected) {
-      if (el in userData) userData[el] = selected[el];
-    }
-    setFormData(userData);
-  }, [selected]);
-
-  const {
-    first_name,
-    last_name,
-    contact_email,
-    contact_phone,
-    profile_status: { status, description },
-    created_at,
-    modified_at,
-  } = formData;
 
   const onChange = e => {
     if (e.target.name === 'status' || e.target.name === 'description') {
@@ -119,16 +101,38 @@ const UserInfo = ({ getUser, match, user: { selected }, addNotification }) => {
     }
   };
 
+  useEffect(() => {
+    if (data) {
+      setFormData(data);
+    }
+  }, [data]);
+
   const onSubmit = e => {
     e.preventDefault();
-    const time = moment().format();
+    const time = moment().utc().format();
     setFormData({ ...formData, modified_at: time });
     console.log('Form data', formData);
   };
 
-  return selected === null ? (
-    <div>Loading...</div>
-  ) : (
+  if (isLoading) {
+    return <Spinner />;
+  }
+
+  if (isError) {
+    return <p>{error.message}</p>;
+  }
+
+  const {
+    first_name,
+    last_name,
+    contact_email,
+    contact_phone,
+    profile_status: { status, description },
+    created_at,
+    modified_at,
+  } = formData;
+
+  return (
     <Fragment>
       <PageHeader className="text-primary" pageTitle="User Info" />
       <Jumbotron className={styles.jumbotron}>
@@ -144,10 +148,10 @@ const UserInfo = ({ getUser, match, user: { selected }, addNotification }) => {
           <Form.Row>
             <Col xl={6}>
               <Form.Group as={Row} controlId="create_at">
-                <Form.Label column xl="2">
+                <Form.Label column xl={3}>
                   Created at:
                 </Form.Label>
-                <Col xl="5">
+                <Col>
                   <Form.Control
                     plaintext
                     readOnly
@@ -158,10 +162,10 @@ const UserInfo = ({ getUser, match, user: { selected }, addNotification }) => {
             </Col>
             <Col xl={6}>
               <Form.Group as={Row} controlId="modified_at">
-                <Form.Label column xl="2">
+                <Form.Label column xl={3}>
                   Modified at:
                 </Form.Label>
-                <Col xl="5">
+                <Col>
                   <Form.Control
                     plaintext
                     readOnly
@@ -174,10 +178,10 @@ const UserInfo = ({ getUser, match, user: { selected }, addNotification }) => {
           <Form.Row>
             <Col xl={6}>
               <Form.Group as={Row} controlId="first_name">
-                <Form.Label column xl="2">
+                <Form.Label column xl={3}>
                   First Name:
                 </Form.Label>
-                <Col xl="9">
+                <Col>
                   <Form.Control
                     plaintext={edit}
                     readOnly={edit}
@@ -190,10 +194,10 @@ const UserInfo = ({ getUser, match, user: { selected }, addNotification }) => {
             </Col>
             <Col xl={6}>
               <Form.Group as={Row} controlId="last_name">
-                <Form.Label column xl="2">
+                <Form.Label column xl={3}>
                   Last Name:
                 </Form.Label>
-                <Col xl="9">
+                <Col>
                   <Form.Control
                     plaintext={edit}
                     readOnly={edit}
@@ -208,10 +212,10 @@ const UserInfo = ({ getUser, match, user: { selected }, addNotification }) => {
           <Form.Row>
             <Col xl={6}>
               <Form.Group as={Row} controlId="email">
-                <Form.Label column xl="2">
+                <Form.Label column xl={3}>
                   Email:
                 </Form.Label>
-                <Col xl="9">
+                <Col>
                   <Form.Control
                     plaintext={edit}
                     readOnly={edit}
@@ -225,10 +229,10 @@ const UserInfo = ({ getUser, match, user: { selected }, addNotification }) => {
             </Col>
             <Col xl={6}>
               <Form.Group as={Row} controlId="phone">
-                <Form.Label column xl="2">
+                <Form.Label column xl={3}>
                   Phone#:
                 </Form.Label>
-                <Col xl="9">
+                <Col>
                   <Form.Control
                     plaintext={edit}
                     readOnly={edit}
@@ -242,12 +246,12 @@ const UserInfo = ({ getUser, match, user: { selected }, addNotification }) => {
             </Col>
           </Form.Row>
           <Form.Row>
-            <Col xl={12}>
+            <Col xl={6}>
               <Form.Group as={Row} controlId="formGridStatus">
-                <Form.Label column xl="1">
+                <Form.Label column xl={3}>
                   Status:
                 </Form.Label>
-                <Col xl="3">
+                <Col>
                   <Form.Control
                     plaintext={edit}
                     readOnly={edit}
@@ -266,12 +270,12 @@ const UserInfo = ({ getUser, match, user: { selected }, addNotification }) => {
             </Col>
           </Form.Row>
           <Form.Row>
-            <Col xl={12}>
+            <Col>
               <Form.Group as={Row} controlId="formGridStatus">
-                <Form.Label column xl="1">
+                <Form.Label column xl={12}>
                   Description:
                 </Form.Label>
-                <Col xl="8">
+                <Col>
                   <Form.Control
                     rows="8"
                     plaintext={edit}
@@ -295,20 +299,14 @@ const UserInfo = ({ getUser, match, user: { selected }, addNotification }) => {
             </Col>
           </Row>
         </Form>
-        <BanModal show={show} onClose={() => setShow(false)} user={selected} />
+        <BanModal show={show} onClose={() => setShow(false)} user={data} />
       </Jumbotron>
     </Fragment>
   );
-};
+}
 
 UserInfo.propTypes = {
   addNotification: PropTypes.func.isRequired,
-  getUser: PropTypes.func.isRequired,
-  user: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = state => ({
-  user: state.users,
-});
-
-export default connect(mapStateToProps, { getUser, addNotification })(UserInfo);
+export default connect(null, { addNotification })(UserInfo);

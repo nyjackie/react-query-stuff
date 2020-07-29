@@ -18,11 +18,12 @@ function UpdatedTable({ claims }) {
           <th>Email</th>
           <th>Phone</th>
           <th>Note</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         {claims.map(claim => (
-          <Claim key={claim.id} claim={claim} note={claim.note} />
+          <Claim key={claim.id} claim={claim} note={claim.note || '[none provided]'} />
         ))}
       </tbody>
     </Table>

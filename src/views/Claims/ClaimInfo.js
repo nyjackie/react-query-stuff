@@ -7,6 +7,7 @@ import Spinner from 'components/Spinner';
 import styles from './Claim.module.scss';
 import { connect } from 'react-redux';
 import { addNotification } from 'actions/notifications';
+import { cn } from 'gdd-components/dist/utils';
 import {
   Modal,
   Button,
@@ -76,7 +77,7 @@ const ConfirmationModal = ({ show, choice, onClose, onApprove, onDeny }) => {
   );
 };
 
-const ClaimInfo = ({ addNotification, match, history }) => {
+const ClaimInfo = ({ addNotification, match }) => {
   const [show, setShow] = useState(false);
   const [choice, decision] = useState('');
 
@@ -89,7 +90,7 @@ const ClaimInfo = ({ addNotification, match, history }) => {
   };
 
   if (isLoading) {
-    return <Spinner />;
+    return <Spinner fullPage={true} />;
   }
 
   if (isError) {
@@ -98,6 +99,22 @@ const ClaimInfo = ({ addNotification, match, history }) => {
 
   return (
     <Fragment>
+      <Container>
+        <Row className={cn('mb-4', styles.statusRow)}>
+          <Col>
+            <h3>
+              Status:{' '}
+              <span className={cn(styles.status, styles[claim.status])}>{claim.status}</span>
+            </h3>
+            {claim.note && claim.note.length > 0 && (
+              <>
+                <h4>Note:</h4>
+                <p>{claim.note}</p>
+              </>
+            )}
+          </Col>
+        </Row>
+      </Container>
       <Jumbotron>
         <Container>
           <Row>
@@ -113,7 +130,6 @@ const ClaimInfo = ({ addNotification, match, history }) => {
               </p>
             </Col>
           </Row>
-
           <Row>
             <Col>
               <h3>Contact info</h3>
@@ -185,16 +201,16 @@ const ClaimInfo = ({ addNotification, match, history }) => {
               <p>Cummulated donation amount: $13200</p>
             </Col>
           </Row>
-
-          <div>
-            <Button className="mr-1" onClick={() => openModal('approve')} variant="success">
-              {' '}
-              Approve
-            </Button>
-            <Button onClick={() => openModal('deny')} variant="danger">
-              Deny
-            </Button>
-          </div>
+          {(!claim.status || claim.status === 'waiting') && (
+            <div>
+              <Button className="mr-1" onClick={() => openModal('approve')} variant="success">
+                Approve
+              </Button>
+              <Button onClick={() => openModal('deny')} variant="danger">
+                Deny
+              </Button>
+            </div>
+          )}
         </Container>
       </Jumbotron>
       <ConfirmationModal
@@ -205,12 +221,10 @@ const ClaimInfo = ({ addNotification, match, history }) => {
         onApprove={msg => {
           updateClaim({ id: claim.id, status: 'approve', note: msg.note });
           addNotification(`${claim.nonprofit.name} - Approved`, 'success');
-          history.push('/claims');
         }}
         onDeny={msg => {
           updateClaim({ id: claim.id, status: 'deny', note: msg.note });
           addNotification(`${claim.nonprofit.name} - Denied`, 'fail');
-          history.push('/claims');
         }}
       />
     </Fragment>

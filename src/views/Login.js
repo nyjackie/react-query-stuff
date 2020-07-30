@@ -5,20 +5,14 @@ import { connect } from 'react-redux';
 import { Form, Button, Row, Col } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import { object as yupObject, string as yupString } from 'yup';
+import validators from 'utils/schema';
 
 import { ReactComponent as Logo } from '../assets/good-deeds-logo-teal.svg';
 import { login } from 'actions/auth';
 import styles from './Login.module.scss';
 
-const emailMsg = 'Please enter a @gooddeedsdata.com email';
 const schema = yupObject({
-  email: yupString()
-    .trim()
-    // not sure if this is needed but it's good practice to limit input length
-    .max(250, 'email is too long (max: 250)')
-    .email(emailMsg)
-    .matches(/@gooddeedsdata.com$/, emailMsg)
-    .required(emailMsg),
+  email: validators.email,
   password: yupString()
     .max(250, 'password is too long (max: 250)')
     .required('Password field is required'),
@@ -27,8 +21,6 @@ const schema = yupObject({
 const Login = ({ login, isAuthenticated }) => {
   const [loginError, setLoginError] = useState(null);
 
-  // Pass the useFormik() hook initial form values and a submit function that will
-  // be called when the form is submitted
   const formik = useFormik({
     validationSchema: schema,
     initialValues: {

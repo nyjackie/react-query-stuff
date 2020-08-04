@@ -1,11 +1,12 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Form, Button, Row, Col, Table } from 'react-bootstrap';
-import PageHeader from 'components/PageHeader';
-import { queryEncode, getSearchQuery } from 'utils';
+import { Row, Col, Table } from 'react-bootstrap';
+
+import { getSearchQuery } from 'utils';
 import { KEYCODES } from 'gdd-components/dist/utils';
 import { useNonprofitSearch } from 'hooks/useNonprofits';
 import Spinner from 'components/Spinner';
+import SearchInput from 'components/SearchInput';
 
 const SingleResult = ({ result }) => {
   let history = useHistory();
@@ -54,17 +55,8 @@ const SearchResults = ({ results }) => {
 };
 
 const NonprofitSearch = ({ history, location }) => {
-  const query = getSearchQuery(location);
-  const [searchTerm, setSearchTerm] = useState(query);
-  const onChange = e => setSearchTerm(e.target.value);
+  const query = getSearchQuery('query');
   const { isLoading, isError, data: results, error } = useNonprofitSearch(query);
-
-  const onSubmit = e => {
-    e.preventDefault();
-    if (searchTerm) {
-      history.push(`${location.pathname}?query=${queryEncode(searchTerm.trim())}`);
-    }
-  };
 
   if (isLoading) {
     return <Spinner />;
@@ -72,27 +64,10 @@ const NonprofitSearch = ({ history, location }) => {
 
   return (
     <Fragment>
-      <PageHeader pageTitle="Search Nonprofits" />
       <Row>
         <Col>
-          <Form onSubmit={onSubmit}>
-            <Form.Group controlId="searchNP">
-              <Form.Label>
-                <b>Search Nonprofits</b>
-              </Form.Label>
-              <Form.Control
-                type="text"
-                name="searchTerm"
-                onChange={e => onChange(e)}
-                value={searchTerm}
-                required
-              />
-            </Form.Group>
-            <Button type="submit" value="Search">
-              Search
-            </Button>
-            {isError && <p className="mt-2 text-danger">{error.message}</p>}
-          </Form>
+          <SearchInput label="Search Nonprofits" location={location} history={history} />
+          {isError && <p className="mt-2 text-danger">{error.message}</p>}
           {location.search && <SearchResults results={results} />}
         </Col>
       </Row>

@@ -1,25 +1,31 @@
 // external libs
 import React, { useState, useRef } from 'react';
-import merge from 'lodash/merge';
 import { Col, Row, Button, Form, Alert } from 'react-bootstrap';
+import { useFormik } from 'formik';
+import { object as yupObject, string as yupString } from 'yup';
+import { max255 } from 'utils/schema';
 
 // styles
 import 'gdd-components/dist/styles/shared.scss';
 import styles from './NonProfitInfo.module.scss';
 
 // GDD Components
-import { ImageUpload } from 'gdd-components';
+import { ImageUpload, USStateSelect } from 'gdd-components';
 
 // GDD utils
 import { cn } from 'gdd-components/dist/utils';
 
-// our utils
-import { serialize } from 'utils';
+const schema = yupObject({
+  org_name: max255.required('This field is required'),
+  website_url: max255.url('invalid url'),
+  nonprofit_city: max255.required('This field is required'),
+  nonprofit_state: yupString().required('This field is required'),
+  mission: yupString().max(8000),
+});
 
 export default function Profile({ data, onSave }) {
-  const [validated, setValidated] = useState(false);
   const [saveError, setSaveError] = useState(null);
-  const formRef = useRef(null);
+
   const logoDropRef = useRef(null);
   const openLogoDrop = () => {
     if (logoDropRef.current) {
@@ -33,25 +39,27 @@ export default function Profile({ data, onSave }) {
     }
   };
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    const form = e.currentTarget;
-    if (form.checkValidity() === false) {
-      console.log('validation failed');
-    } else {
-      const obj = serialize(formRef.current, false);
-      console.log(obj);
-      const newData = merge({}, data, obj);
-      onSave(newData)
+  const formik = useFormik({
+    validationSchema: schema,
+    initialValues: {
+      hero_url: data.hero_url, // file
+      logo_url: data.logo_url, // file
+      org_name: data.name, // text
+      nonprofit_city: data.address.city, // text
+      nonprofit_state: data.address.state, // state select dropdown
+      website_url: data.website_url, // text
+      mission: data.mission, // textarea
+    },
+    onSubmit: values => {
+      onSave(values)
         .then(() => {
           setSaveError(null);
         })
         .catch(err => {
           setSaveError(err.message);
         });
-    }
-    setValidated(true);
-  }
+    },
+  });
 
   return (
     <Row>
@@ -59,9 +67,7 @@ export default function Profile({ data, onSave }) {
         <Form
           encType="multipart/form-data"
           noValidate
-          validated={validated}
-          ref={formRef}
-          onSubmit={handleSubmit}
+          onSubmit={formik.handleSubmit}
           className="container"
         >
           <input type="hidden" defaultValue={data.ein} name="ein" />
@@ -118,7 +124,7 @@ export default function Profile({ data, onSave }) {
                         height={128}
                         src={data.logo_url}
                         alt="logo"
-                        name="logo_url"
+                        name="file_logo"
                         maxSize={2000}
                         minWidth={300}
                         minHeight={300}
@@ -138,12 +144,12 @@ export default function Profile({ data, onSave }) {
                   <div className={styles.uploadBlock}>
                     <div className={cn(styles.uploadImg, styles.uploadImgCover)}>
                       <ImageUpload
-                        uploadText="Logo not yet customized"
+                        uploadText="Hero not yet customized"
                         width={256}
                         height={128}
                         src={data.hero_url}
                         alt="cover photo"
-                        name="hero_url"
+                        name="file_hero"
                         maxSize={3000}
                         minWidth={640}
                         minHeight={320}
@@ -169,23 +175,93 @@ export default function Profile({ data, onSave }) {
               </Row>
               <Row>
                 <Col xl>
-                  <Form.Group controlId="name">
+                  <Form.Group controlId="organization_name">
                     <Form.Label>Organization Name</Form.Label>
-                    <Form.Control defaultValue={data.name} />
+                    <Form.Control
+                      name="org_name"
+                      type="text"
+                      maxLength="255"
+                      required
+                      onChange={formik.handleChange}
+                      value={formik.values.org_name}
+                      isValid={formik.touched.org_name && !formik.errors.org_name}
+                      isInvalid={!!formik.errors.org_name}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      {formik.errors.org_name}
+                    </Form.Control.Feedback>
                   </Form.Group>
-                  <Form.Group controlId="name">
-                    <Form.Label>Location</Form.Label>
-                    <Form.Control defaultValue={data.name} />
-                  </Form.Group>
+
+                  <Row>
+                    <Col>
+                      <Form.Group controlId="nonprofit_city">
+                        <Form.Label>City</Form.Label>
+                        <Form.Control
+                          name="nonprofit_city"
+                          type="text"
+                          maxLength="255"
+                          required
+                          onChange={formik.handleChange}
+                          value={formik.values.nonprofit_city}
+                          isValid={formik.touched.nonprofit_city && !formik.errors.nonprofit_city}
+                          isInvalid={!!formik.errors.nonprofit_city}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          {formik.errors.nonprofit_city}
+                        </Form.Control.Feedback>
+                      </Form.Group>
+                    </Col>
+                    <Col sm={3}>
+                      <Form.Group controlId="nonprofit_state">
+                        <Form.Label>State</Form.Label>
+                        <USStateSelect
+                          includeTerritories
+                          sort
+                          name="nonprofit_state"
+                          required
+                          onChange={formik.handleChange}
+                          value={formik.values.nonprofit_state}
+                          isValid={formik.touched.nonprofit_state && !formik.errors.nonprofit_state}
+                          isInvalid={!!formik.errors.nonprofit_state}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          {formik.errors.nonprofit_state}
+                        </Form.Control.Feedback>
+                      </Form.Group>
+                    </Col>
+                  </Row>
+
                   <Form.Group controlId="website_url">
                     <Form.Label>Domain URL</Form.Label>
-                    <Form.Control defaultValue={data.website_url} />
+                    <Form.Control
+                      name="website_url"
+                      type="text"
+                      maxLength="255"
+                      onChange={formik.handleChange}
+                      value={formik.values.website_url}
+                      isValid={formik.touched.website_url && !formik.errors.website_url}
+                      isInvalid={!!formik.errors.website_url}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      {formik.errors.website_url}
+                    </Form.Control.Feedback>
                   </Form.Group>
                 </Col>
                 <Col>
                   <Form.Group controlId="mission">
                     <Form.Label>Mission</Form.Label>
-                    <Form.Control as="textarea" rows={8} defaultValue={data.mission} />
+                    <Form.Control
+                      name="mission"
+                      as="textarea"
+                      rows={8}
+                      onChange={formik.handleChange}
+                      value={formik.values.mission}
+                      isValid={formik.touched.mission && !formik.errors.mission}
+                      isInvalid={!!formik.errors.mission}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      {formik.errors.mission}
+                    </Form.Control.Feedback>
                   </Form.Group>
                 </Col>
               </Row>

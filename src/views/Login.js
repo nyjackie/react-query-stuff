@@ -4,18 +4,15 @@ import { Redirect, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Form, Button, Row, Col } from 'react-bootstrap';
 import { useFormik } from 'formik';
-import { object as yupObject, string as yupString } from 'yup';
-import validators from 'utils/schema';
+import { gddEmail, max255, createSchema } from 'utils/schema';
 
 import { ReactComponent as Logo } from '../assets/good-deeds-logo-teal.svg';
 import { login } from 'actions/auth';
 import styles from './Login.module.scss';
 
-const schema = yupObject({
-  email: validators.email,
-  password: yupString()
-    .max(250, 'password is too long (max: 250)')
-    .required('Password field is required'),
+const schema = createSchema({
+  email: gddEmail,
+  password: max255.required('Password field is required'),
 });
 
 const Login = ({ login, isAuthenticated }) => {

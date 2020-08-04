@@ -15,15 +15,14 @@
   top: 10px;
 }
 
-select {
+.select {
   text-transform: capitalize;
+  &:disabled {
+    opacity: 1;
+  }
 }
 
-select:disabled {
-  opacity: 1;
-}
-
-textarea {
+.textarea:disabled {
   resize: none;
 }
 

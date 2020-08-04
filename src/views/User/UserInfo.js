@@ -253,6 +253,7 @@ function UserInfo({ match, addNotification }) {
                 </Form.Label>
                 <Col>
                   <Form.Control
+                    className={styles.select}
                     plaintext={edit}
                     readOnly={edit}
                     disabled={edit}
@@ -277,6 +278,7 @@ function UserInfo({ match, addNotification }) {
                 </Form.Label>
                 <Col>
                   <Form.Control
+                    className={styles.textarea}
                     rows="8"
                     plaintext={edit}
                     readOnly={edit}

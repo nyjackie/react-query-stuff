@@ -33,7 +33,7 @@ export function useClaim(claimId) {
 export function useUpdateClaim() {
   return useMutation(updateClaim, {
     onMutate: claim => {
-      const id = claim.id.toString();
+      const id = String(claim.id);
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
       queryCache.cancelQueries(['claim', id]);
 
@@ -51,7 +51,7 @@ export function useUpdateClaim() {
 
     // Always refetch after error or success:
     onSettled: claim => {
-      queryCache.invalidateQueries(['claim', claim.id.toString()]);
+      queryCache.invalidateQueries(['claim', String(claim.id)]);
       queryCache.invalidateQueries('claims');
     },
   });

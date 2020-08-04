@@ -120,7 +120,8 @@ export function fixedEncodeURIComponent(str) {
 }
 
 export function queryEncode(str) {
-  return fixedEncodeURIComponent(str).replace(/%20/g, '+');
+  const param = new URLSearchParams({ query: str });
+  return param.toString();
 }
 
 export function queryDecode(str) {
@@ -132,18 +133,19 @@ export function queryDecode(str) {
   }
 }
 
-export function getSearchQuery(location) {
-  if (!location.search) {
+export function getSearchQuery(paramName) {
+  if (!window.location.search) {
     return '';
   }
-  const { query } = fromQueryString(location.search);
-  if (query) {
-    const decoded = queryDecode(query);
-    if (!decoded) {
-      return '';
+
+  const params = new URLSearchParams(window.location.search);
+  for (const [key, value] of params.entries()) {
+    if (key === paramName) {
+      return value;
     }
-    return decoded.trim();
   }
+
+  return '';
 }
 
 /**
@@ -182,7 +184,7 @@ export function objectFilter(data, source) {
  */
 export function updateCollection(collection, key, newData) {
   return collection.map(item => {
-    if (item[key].toString() === newData[key].toString()) {
+    if (String(item[key]) === String(newData[key])) {
       return newData;
     }
     return item;

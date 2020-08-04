@@ -122,3 +122,8 @@ body,
   line-height: (20/16);
   color: var(--dark);
 }
+
+// overriding the default invalid feedback styles to increase font-size
+.invalid-feedback {
+  font-size: 90%;
+}

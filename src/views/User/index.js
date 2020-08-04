@@ -1,23 +1,14 @@
-import React, { Fragment, useState } from 'react';
-import { Form, Button, Row, Col } from 'react-bootstrap';
-import PageHeader from 'components/PageHeader';
+import React, { Fragment } from 'react';
+import { Row, Col } from 'react-bootstrap';
 import UserSearchResult from './UserSearchResult';
 import { useSearchUsers } from 'hooks/useUsers';
-import { queryEncode, getSearchQuery } from 'utils';
+import { getSearchQuery } from 'utils';
 import Spinner from 'components/Spinner';
+import SearchInput from 'components/SearchInput';
 
 function Users({ history, location }) {
-  const query = getSearchQuery(location);
-  const [searchTerm, setSearchTerm] = useState(query);
-  const onChange = e => setSearchTerm(e.target.value);
+  const query = getSearchQuery('query');
   const { isLoading, isError, data, error } = useSearchUsers(query);
-
-  const onSubmit = e => {
-    e.preventDefault();
-    if (searchTerm) {
-      history.push(`${location.pathname}?query=${queryEncode(searchTerm.trim())}`);
-    }
-  };
 
   if (isLoading) {
     return <Spinner />;
@@ -25,24 +16,10 @@ function Users({ history, location }) {
 
   return (
     <Fragment>
-      <PageHeader pageTitle="Search by User" />
       <Row>
         <Col>
-          <Form onSubmit={onSubmit}>
-            <Form.Group controlId="search">
-              <Form.Control
-                type="text"
-                name="searchTerm"
-                onChange={e => onChange(e)}
-                value={searchTerm}
-                required
-              />
-            </Form.Group>
-            <Button type="submit" value="Search">
-              Search
-            </Button>
-            {isError && <p className="mt-2 text-danger">{error.message}</p>}
-          </Form>
+          <SearchInput label="Search Users" location={location} history={history} />
+          {isError && <p className="mt-2 text-danger">{error.message}</p>}
           <UserSearchResult results={data} />
         </Col>
       </Row>

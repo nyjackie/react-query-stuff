@@ -18,6 +18,7 @@ import { cn } from 'gdd-components/dist/utils';
 const schema = yupObject({
   org_name: max255.required('This field is required'),
   website_url: max255.url('invalid url'),
+  category: max255,
   nonprofit_city: max255.required('This field is required'),
   nonprofit_state: yupString().required('This field is required'),
   mission: yupString().max(8000),
@@ -45,7 +46,8 @@ export default function Profile({ data, onSave }) {
     initialValues: {
       hero_url: data.hero_url, // file
       logo_url: data.logo_url, // file
-      org_name: data.name, // text
+      name: data.name, // text
+      category: data.category,
       city: data.address.city, // text
       state: data.address.state, // state select dropdown
       website_url: data.website_url, // text

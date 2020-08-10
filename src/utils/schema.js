@@ -17,14 +17,14 @@ export const max255 = string()
   .trim()
   .max(255, 'Max 255 characters allowed for this field');
 
-const emailMsg = 'Please enter a valid @gooddeedsdata.com email';
+const emailMsg = 'Please enter a valid company email';
 /**
- * Validation for admin portal email which requires that users work for
- * gooddeedsdata.com
+ * Validation for admin portal email which requires that users work for the
+ * company or our consumer-edge
  */
 export const gddEmail = max255
   .email(emailMsg)
-  .matches(/@gooddeedsdata.com$/, emailMsg)
+  .matches(/@(gooddeedsdata|givegooddeeds|consumer-edge)\.com$/, emailMsg)
   .required(emailMsg);
 
 /**

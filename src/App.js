@@ -27,7 +27,12 @@ import store from 'store';
 import { autoLogin } from 'actions/auth';
 
 const queryConfig = {
-  queries: { refetchOnWindowFocus: false },
+  queries: {
+    /**
+     * This makes queries stale after 5 minutes instead of immediately
+     */
+    staleTime: 1000 * 60 * 5,
+  },
 };
 
 const App = () => {

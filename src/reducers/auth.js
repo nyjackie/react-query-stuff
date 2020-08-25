@@ -23,7 +23,7 @@ export default function (state = initialState, action) {
         ...state,
         isAuthenticated: isObj(payload.user),
         user: payload.user,
-        token: payload.accessToken,
+        token: payload.jwt,
         isLoading: false,
       };
     case AUTO_LOGIN_FAILED:
@@ -37,7 +37,7 @@ export default function (state = initialState, action) {
     case LOGIN_SUCCESS:
       return {
         ...state,
-        token: payload.accessToken,
+        token: payload.jwt,
         isAuthenticated: true,
         user: payload.user,
       };

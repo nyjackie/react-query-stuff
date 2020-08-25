@@ -5,12 +5,12 @@ import errorHandler from 'utils/errorHandler';
 const setAuthToken = token => {
   if (token) {
     api.setAuthHeader(token);
-    tokenStore.update({ accessToken: token }).catch(err => {
+    tokenStore.update({ jwt: token }).catch(err => {
       errorHandler('error storing new access token from refresh', err);
     });
   } else {
     api.removeAuthHeader();
-    tokenStore.update({ accessToken: void 0 }).catch(err => {
+    tokenStore.update({ jwt: void 0 }).catch(err => {
       errorHandler('error storing new access token from refresh', err);
     });
   }

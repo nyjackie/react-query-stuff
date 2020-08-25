@@ -51,7 +51,7 @@ api.setupRequestInterceptor(
   function onAccessToken(token) {
     // new token has already been set in the header so at this point we just
     // need to store it
-    tokenStore.update({ accessToken: token }).catch(err => {
+    tokenStore.update({ jwt: token }).catch(err => {
       errorHandler('Error storing new access token from refresh', err);
     });
 

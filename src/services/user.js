@@ -39,7 +39,7 @@ async function updateLocalStore(accessToken, refreshToken) {
  */
 export async function login(email, password) {
   try {
-    const res = await api.auth.login(email, password);
+    const res = await api.auth.login('internal', email, password);
 
     api.setAuthHeader(res.data.accessToken);
 

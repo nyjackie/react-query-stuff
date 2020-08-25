@@ -80,10 +80,11 @@ export function serialize(form, encode = true) {
   return data;
 }
 
+/**
+ * @param {object} data
+ */
 export function toQueryString(data) {
-  return Object.keys(data)
-    .map(key => `${key}=${data[key]}`)
-    .join('&');
+  return new URLSearchParams(data).toString();
 }
 
 /**

@@ -48,10 +48,10 @@ api.setupRequestInterceptor(
     // in indexeddb
     return tokenStore.get();
   },
-  function onAccessToken(token) {
+  function newTokens(tokens) {
     // new token has already been set in the header so at this point we just
     // need to store it
-    tokenStore.update({ jwt: token }).catch(err => {
+    tokenStore.update(tokens).catch(err => {
       errorHandler('Error storing new access token from refresh', err);
     });
 
@@ -59,7 +59,7 @@ api.setupRequestInterceptor(
     // TODO: should this be LOGIN_SUCCESS? maybe a NEW_ACCESS_TOKEN or something
     store.dispatch({
       type: LOGIN_SUCCESS,
-      payload: token,
+      payload: tokens.jwt,
     });
   },
   function onError(err) {

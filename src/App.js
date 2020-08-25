@@ -15,8 +15,8 @@ import NonprofitSearch from 'views/Nonprofit/Search';
 import Nonprofit from 'views/Nonprofit';
 import ResetPassword from 'views/ResetPassword';
 import Banlist from 'views/Banlist';
-import Users from 'views/User';
-import UserInfo from 'views/User/UserInfo';
+import Users from 'views/Users';
+import UserInfo from 'views/Users/UserInfo';
 import ErrorPage from 'views/Error';
 import NotFound from 'views/NotFound';
 

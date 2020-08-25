@@ -82,7 +82,7 @@ export async function loadUser() {
       return false;
     }
 
-    if (jwt && !user?.expires) {
+    if (jwt && !user?.exp) {
       // if user does not exist but we have an access tokenn we can extract it
       user = jwt_decode(jwt);
     }
@@ -92,7 +92,7 @@ export async function loadUser() {
       return false;
     }
 
-    const newTokens = await api.handleRefresh(user.expires, refresh_token, jwt);
+    const newTokens = await api.handleRefresh(user.exp, refresh_token, jwt);
     if (newTokens) {
       // new token success, store it and continue
       await updateLocalStore(newTokens.jwt, newTokens.refresh_token);

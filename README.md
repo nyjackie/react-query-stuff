@@ -15,8 +15,8 @@ Read more about how create-react-app handles env variables [here](https://create
 
 use `.env.development.local` or `.env.local` to override what's in `.env`. ([more info](https://create-react-app.dev/docs/adding-custom-environment-variables/#what-other-env-files-can-be-used))
 
-| variable                 | desc                                       |
-| ------------------------ | ------------------------------------------ |
+| variable            | desc                                       |
+| ------------------- | ------------------------------------------ |
 | `REACT_APP_API_URL` | set the base API url for all GDD api calls |
 
 ## CSS
@@ -48,6 +48,13 @@ import 'components/Header';
 import 'utils/my-utils';
 import 'components/Header.module.scss';
 ```
+
+## CORS Proxy
+
+To temporarily overcome any CORS issues you can setup a local proxy server:
+https://gist.github.com/francisco-gdd/ed24b2278a140fbb9afa1d42a5520649
+
+and switch your `REACT_APP_API_URL` to point to it
 
 ---
 

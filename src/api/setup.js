@@ -48,7 +48,7 @@ api.setupRequestInterceptor(
     // in indexeddb
     return tokenStore.get();
   },
-  function newTokens(tokens) {
+  function onNewTokens(tokens) {
     // new token has already been set in the header so at this point we just
     // need to store it
     tokenStore.update(tokens).catch(err => {

@@ -92,12 +92,12 @@ export async function loadUser() {
       return false;
     }
 
-    const newAccessToken = await api.handleRefresh(user.expires, refresh_token);
-    if (newAccessToken) {
+    const newTokens = await api.handleRefresh(user.expires, refresh_token, jwt);
+    if (newTokens) {
       // new token success, store it and continue
-      await updateLocalStore(newAccessToken, refresh_token);
-      api.setAuthHeader(newAccessToken);
-      tokensData.jwt = newAccessToken;
+      await updateLocalStore(newTokens.jwt, newTokens.refresh_token);
+      api.setAuthHeader(newTokens.jwt);
+      tokensData.jwt = newTokens.jwt;
       return tokensData;
     }
 

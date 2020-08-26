@@ -5,10 +5,10 @@ import { object as yupObject } from 'yup';
 
 import PageHeader from 'components/PageHeader';
 import userService from 'services/user';
-import { gddEmail } from 'utils/schema';
+import { gddEmailRequired } from 'utils/schema';
 
 const schema = yupObject({
-  email: gddEmail,
+  email: gddEmailRequired,
 });
 
 const ResetPassword = () => {

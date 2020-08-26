@@ -7,7 +7,6 @@ import {
   AUTO_LOGIN_SUCCESS,
   AUTO_LOGIN_FAILED,
 } from './types';
-import { wait } from 'utils';
 import errorHandler from 'utils/errorHandler';
 
 export const login = (email, password) => async dispatch => {
@@ -15,9 +14,7 @@ export const login = (email, password) => async dispatch => {
     type: LOGIN_REQUEST,
   });
 
-  // TODO: this is only during mock testing to show the spinner
-  await wait(1000);
-
+  // authData will include the user object
   const [err, authData] = await userService.login(email, password);
 
   if (authData) {

@@ -15,10 +15,11 @@ import NonprofitSearch from 'views/Nonprofit/Search';
 import Nonprofit from 'views/Nonprofit';
 import ResetPassword from 'views/ResetPassword';
 import Banlist from 'views/Banlist';
-import Users from 'views/User';
-import UserInfo from 'views/User/UserInfo';
+import Users from 'views/Users';
+import UserInfo from 'views/Users/UserInfo';
 import ErrorPage from 'views/Error';
 import NotFound from 'views/NotFound';
+import CreateUser from 'views/Account/CreateUser';
 
 // components|other
 import PublicRoute from 'components/PublicRoute';
@@ -64,6 +65,7 @@ const App = () => {
             <PrivateRoute exact path="/nonprofit/:ein" component={Nonprofit} />
             <PrivateRoute exact path="/users" component={Users} />
             <PrivateRoute exact path="/users/:id" component={UserInfo} />
+            <PrivateRoute exact path="/account/create" component={CreateUser} />
 
             {/* 404 */}
             <PublicRoute path="*">

@@ -22,9 +22,9 @@ const emailMsg = 'Please enter a valid company email';
  * Validation for admin portal email which requires that users work for the
  * company or our consumer-edge
  */
-export const gddEmail = max255
+export const gddEmailRequired = max255
   .email(emailMsg)
-  .matches(/@(gooddeedsdata|givegooddeeds|consumer-edge)\.com$/, emailMsg)
+  .matches(/@givegooddeeds\.com$/, emailMsg)
   .required(emailMsg);
 
 /**

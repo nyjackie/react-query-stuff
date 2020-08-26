@@ -20,7 +20,7 @@ export const wait = ms => {
  * @returns {boolean} true if timestamp is <= seconds
  */
 export function willExpire(timestamp, seconds) {
-  const expires = moment(timestamp);
+  const expires = moment(timestamp).utc();
   const now = moment(expires).diff(moment.utc());
   const diff = moment.duration(now).asSeconds();
   return diff <= seconds;

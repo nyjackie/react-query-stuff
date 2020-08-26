@@ -2,6 +2,7 @@ import jwt_decode from 'jwt-decode';
 import { api } from 'gdd-components';
 import errorHandler from 'utils/errorHandler';
 import tokenStore from 'gdd-components/dist/api/tokenStore';
+import { willExpire } from 'utils';
 
 /**
  * replace the IndexedDB auth object with new data. If for some reason the jwt
@@ -83,8 +84,9 @@ export async function loadUser() {
     }
 
     if (jwt && !user?.exp) {
-      // if user does not exist but we have an access tokenn we can extract it
+      // if user does not exist but we have an access token we can extract it
       user = jwt_decode(jwt);
+      tokensData.user = user;
     }
 
     if (!user) {
@@ -92,13 +94,16 @@ export async function loadUser() {
       return false;
     }
 
-    const newTokens = await api.handleRefresh(user.exp, refresh_token, jwt);
-    if (newTokens) {
-      // new token success, store it and continue
-      await updateLocalStore(newTokens.jwt, newTokens.refresh_token);
-      api.setAuthHeader(newTokens.jwt);
-      tokensData.jwt = newTokens.jwt;
-      return tokensData;
+    // check if token has expired
+    if (willExpire(user.exp, 30)) {
+      const newTokens = await api.handleRefresh(user.exp, refresh_token, jwt);
+      if (newTokens) {
+        // new token success, store it and continue
+        await updateLocalStore(newTokens.jwt, newTokens.refresh_token);
+        api.setAuthHeader(newTokens.jwt);
+        newTokens.user = jwt_decode(newTokens.jwt);
+        return newTokens;
+      }
     }
 
     // local jwt is still good
@@ -115,4 +120,5 @@ export default {
   logout,
   loadUser,
   resetPassword,
+  updateLocalStore,
 };

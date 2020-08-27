@@ -6,5 +6,15 @@ if [ -z "$1" ]; then
   exit 1
 fi
 
+buildForEnv () {
+  if [[ "$2" == "staging" ]]; then
+    echo "Building for staging"
+    yarn build:staging
+  else
+    echo "Building for production"
+    yarn build
+  fi  
+}
+
 yarn add "git+https://$1:x-oauth-basic@github.com/consumer-edge/gdd-components.git#master" && \
-yarn build
+buildForEnv "$@"

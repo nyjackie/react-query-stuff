@@ -13,7 +13,7 @@ import Claims from 'views/Claims';
 import ClaimInfo from 'views/Claims/ClaimInfo';
 import NonprofitSearch from 'views/Nonprofit/Search';
 import Nonprofit from 'views/Nonprofit';
-import ResetPassword from 'views/ResetPassword';
+import ForgotPassword from 'views/ForgotPassword';
 import Banlist from 'views/Banlist';
 import Users from 'views/Users';
 import UserInfo from 'views/Users/UserInfo';
@@ -33,6 +33,7 @@ const queryConfig = {
      * This makes queries stale after 5 minutes instead of immediately
      */
     staleTime: 1000 * 60 * 5,
+    retry: false,
   },
 };
 
@@ -53,7 +54,7 @@ const App = () => {
             {/* Public Routes */}
             <PublicRoute exact path="/" component={Landing} />
             <PublicRoute exact path="/login" component={Login} />
-            <PublicRoute exact path="/reset-password" component={ResetPassword} />
+            <PublicRoute exact path="/forgot-password" component={ForgotPassword} />
             <PublicRoute exact path="/error" component={ErrorPage} />
             <PublicRoute exact path="/notfound" component={NotFound} />
 
@@ -62,7 +63,7 @@ const App = () => {
             <PrivateRoute exact path="/claims" component={Claims} />
             <PrivateRoute exact path="/claims/:id" component={ClaimInfo} />
             <PrivateRoute exact path="/nonprofit" component={NonprofitSearch} />
-            <PrivateRoute exact path="/nonprofit/:ein" component={Nonprofit} />
+            <PrivateRoute exact path="/nonprofit/:id" component={Nonprofit} />
             <PrivateRoute exact path="/users" component={Users} />
             <PrivateRoute exact path="/users/:id" component={UserInfo} />
             <PrivateRoute exact path="/account/create" component={CreateUser} />

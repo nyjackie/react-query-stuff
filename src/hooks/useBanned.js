@@ -1,8 +1,8 @@
 import { useQuery } from 'react-query';
-import { api } from 'gdd-components';
+import api from 'gdd-api-lib';
 
 export function useBanned() {
   return useQuery('banned', () => {
-    return api.banned.getAll().then(res => res.data);
+    return api.getBanned().then(res => res.data);
   });
 }

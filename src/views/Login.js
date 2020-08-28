@@ -81,7 +81,7 @@ const Login = ({ login, isAuthenticated }) => {
           {loginError && <p className="mt-2 text-danger">{loginError}</p>}
         </Form>
         <p className="mt-3">
-          <Link to="/reset-password">Forgot Password?</Link>
+          <Link to="/forgot-password">Forgot Password?</Link>
         </p>
       </Col>
     </Row>

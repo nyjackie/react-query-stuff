@@ -1,15 +1,15 @@
 import { useQuery } from 'react-query';
-import { api } from 'gdd-components';
+import api from 'gdd-api-lib';
 
 /****************************************************************
  * Functions that perform api calls
  */
 function search(key, term) {
-  return api.nonprofit.search(term).then(res => res.data);
+  return api.searchNonprofits({ search_term: encodeURIComponent(term) }).then(res => res.data);
 }
 
 function fetchNp(key, id) {
-  return api.nonprofit.getSingle(id).then(res => res.data);
+  return api.getNonprofit(id).then(res => res.data);
 }
 
 /****************************************************************

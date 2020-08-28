@@ -16,7 +16,7 @@ import { ImageUpload, USStateSelect, PreviewModal } from 'gdd-components';
 import { cn } from 'gdd-components/dist/utils';
 
 const schema = yupObject({
-  org_name: max255.required('This field is required'),
+  name: max255.required('This field is required'),
   website_url: max255.url('invalid url'),
   category: max255,
   nonprofit_city: max255.required('This field is required'),
@@ -183,17 +183,17 @@ export default function Profile({ data, onSave }) {
                     <Form.Group controlId="organization_name">
                       <Form.Label>Organization Name</Form.Label>
                       <Form.Control
-                        name="org_name"
+                        name="name"
                         type="text"
                         maxLength="255"
                         required
                         onChange={formik.handleChange}
-                        value={formik.values.org_name}
-                        isValid={formik.touched.org_name && !formik.errors.org_name}
-                        isInvalid={!!formik.errors.org_name}
+                        value={formik.values.name}
+                        isValid={formik.touched.name && !formik.errors.name}
+                        isInvalid={!!formik.errors.name}
                       />
                       <Form.Control.Feedback type="invalid">
-                        {formik.errors.org_name}
+                        {formik.errors.name}
                       </Form.Control.Feedback>
                     </Form.Group>
 

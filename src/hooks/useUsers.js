@@ -1,5 +1,6 @@
 import { useQuery } from 'react-query';
-import { api } from 'gdd-components';
+// import { api } from 'gdd-components';
+import api from 'gdd-api-lib';
 
 /****************************************************************
  * Functions that perform api calls

@@ -19,12 +19,14 @@ import Users from 'views/User';
 import UserInfo from 'views/User/UserInfo';
 import ErrorPage from 'views/Error';
 import NotFound from 'views/NotFound';
+import Brands from 'views/Brands';
 
 // components|other
 import PublicRoute from 'components/PublicRoute';
 import PrivateRoute from 'components/PrivateRoute';
 import store from 'store';
 import { autoLogin } from 'actions/auth';
+import BrandInfo from 'views/Brands/BrandInfo';
 
 const queryConfig = {
   queries: {
@@ -62,6 +64,8 @@ const App = () => {
             <PrivateRoute exact path="/claims/:id" component={ClaimInfo} />
             <PrivateRoute exact path="/nonprofit" component={NonprofitSearch} />
             <PrivateRoute exact path="/nonprofit/:ein" component={Nonprofit} />
+            <PrivateRoute exact path="/brands/" component={Brands} />
+            <PrivateRoute exact path="/brands/:ein" component={BrandInfo} />
             <PrivateRoute exact path="/users" component={Users} />
             <PrivateRoute exact path="/users/:id" component={UserInfo} />
 

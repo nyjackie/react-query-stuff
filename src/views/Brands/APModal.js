@@ -9,20 +9,6 @@ import {
   boolean as yupBoolean,
 } from 'yup';
 
-// const initialState = {
-//   base_consumer_payout: '',
-//   begins_at: '',
-//   ends_at: '',
-//   commission: '',
-//   commission_type: '',
-//   disclaimer: '',
-//   is_disabled: '',
-//   is_groomed: '',
-//   offer_guid: '',
-//   offer_type: '',
-//   supported_nonprofit_id: '',
-// };
-
 const schema = yupObject({
   begins_at: yupString().required('Begins at date cannot be empty.'),
   ends_at: yupString().required('Ends at date cannot be empty.'),
@@ -232,7 +218,7 @@ const APModal = ({ show, handleClose, offer }) => {
                     <Col className="text-right">
                       <Button variant="secondary" onClick={handleClose}>
                         Close
-                      </Button>
+                      </Button>{' '}
                       <Button variant="primary" type="submit">
                         Save Changes
                       </Button>

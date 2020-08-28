@@ -2,29 +2,30 @@ import jwt_decode from 'jwt-decode';
 import { api } from 'gdd-components';
 import errorHandler from 'utils/errorHandler';
 import tokenStore from 'gdd-components/dist/api/tokenStore';
+import { willExpire } from 'utils';
 
 /**
- * replace the IndexedDB auth object with new data. If for some reason the accessToken
- * is bad and does not decode properly then it will only store the refreshToken
- * @param {string} accessToken
- * @param {string} refreshToken
+ * replace the IndexedDB auth object with new data. If for some reason the jwt
+ * is bad and does not decode properly then it will only store the refresh_token
+ * @param {string} jwt
+ * @param {string} refresh_token
  */
-async function updateLocalStore(accessToken, refreshToken) {
+async function updateLocalStore(jwt, refresh_token) {
   const authData = {
-    refreshToken,
+    refresh_token,
   };
 
   let user;
   try {
-    user = jwt_decode(accessToken);
+    user = jwt_decode(jwt);
   } catch (e) {
-    // failed to decode, accessToken is bad
+    // failed to decode, jwt is bad
   }
 
-  if (user && user.expires) {
+  if (user) {
     // access token is good so we can store user and token
     authData.user = user;
-    authData.accessToken = accessToken;
+    authData.jwt = jwt;
   }
 
   await tokenStore.set(authData);
@@ -41,9 +42,9 @@ export async function login(email, password) {
   try {
     const res = await api.auth.login('internal', email, password);
 
-    api.setAuthHeader(res.data.accessToken);
+    api.setAuthHeader(res.data.jwt);
 
-    const authData = await updateLocalStore(res.data.accessToken, res.data.refreshToken);
+    const authData = await updateLocalStore(res.data.jwt, res.data.refresh_token);
 
     return [null, authData];
   } catch (err) {
@@ -56,7 +57,7 @@ export async function login(email, password) {
  */
 export async function logout() {
   const tokensData = await tokenStore.get();
-  api.auth.logout(tokensData?.refreshToken);
+  api.auth.logout(tokensData?.refresh_token);
   tokenStore.remove();
   api.removeAuthHeader();
 }
@@ -73,18 +74,19 @@ export async function resetPassword(email) {
 export async function loadUser() {
   try {
     const tokensData = await tokenStore.get();
-    let { user, accessToken, refreshToken } = tokensData || {};
+    let { user, jwt, refresh_token } = tokensData || {};
 
-    if (!refreshToken) {
+    if (!refresh_token) {
       // if user has no refresh token for some reason we should just assume they are logged out
       // because it's not worth letting them do anything for the rest of the 5min left in their
       // access token because we cant refresh it
       return false;
     }
 
-    if (accessToken && !user?.expires) {
-      // if user does not exist but we have an access tokenn we can extract it
-      user = jwt_decode(accessToken);
+    if (jwt && !user?.exp) {
+      // if user does not exist but we have an access token we can extract it
+      user = jwt_decode(jwt);
+      tokensData.user = user;
     }
 
     if (!user) {
@@ -92,17 +94,20 @@ export async function loadUser() {
       return false;
     }
 
-    const newAccessToken = await api.handleRefresh(user.expires, refreshToken);
-    if (newAccessToken) {
-      // new token success, store it and continue
-      await updateLocalStore(newAccessToken, refreshToken);
-      api.setAuthHeader(newAccessToken);
-      tokensData.accessToken = newAccessToken;
-      return tokensData;
+    // check if token has expired
+    if (willExpire(user.exp, 30)) {
+      const newTokens = await api.handleRefresh(user.exp, refresh_token, jwt);
+      if (newTokens) {
+        // new token success, store it and continue
+        await updateLocalStore(newTokens.jwt, newTokens.refresh_token);
+        api.setAuthHeader(newTokens.jwt);
+        newTokens.user = jwt_decode(newTokens.jwt);
+        return newTokens;
+      }
     }
 
-    // local accessToken is still good
-    api.setAuthHeader(accessToken);
+    // local jwt is still good
+    api.setAuthHeader(jwt);
     return tokensData;
   } catch (err) {
     errorHandler('Error occured on initial page load user', err);
@@ -115,4 +120,5 @@ export default {
   logout,
   loadUser,
   resetPassword,
+  updateLocalStore,
 };

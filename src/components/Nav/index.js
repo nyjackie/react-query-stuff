@@ -62,6 +62,9 @@ const SideNav = ({ isAuthenticated, logout, closeDrawer }) => {
       <NavLink className="js-closeDrawer mb-2" to="/banlist" exact={true}>
         Ban List
       </NavLink>
+      <NavLink className="js-closeDrawer mb-2" to="/account/create" exact={true}>
+        Account &gt; Create user
+      </NavLink>
       <button onClick={doLogout} className="js-closeDrawer mt-5 btn btn-secondary">
         Logout
       </button>

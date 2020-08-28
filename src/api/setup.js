@@ -7,13 +7,14 @@ import tokenStore from 'gdd-components/dist/api/tokenStore';
 import store from '../store';
 import { LOGOUT, CLEAR_STATE, LOGIN_SUCCESS, ERROR } from '../actions/types';
 import errorHandler from 'utils/errorHandler';
+import userService from 'services/user';
 
 // required setting a IndexedDB database name
 tokenStore.openDB('gdd-admin-db');
 
 // TODO: remove this mock once API is completed
 // setting the refresh tokens only last 60 minutes
-api.provideMock(mock, 60);
+api.provideMock(mock, 60, false);
 
 /**
  * Set up the response inteceptor which will automatically handle logging out
@@ -48,18 +49,20 @@ api.setupRequestInterceptor(
     // in indexeddb
     return tokenStore.get();
   },
-  function onAccessToken(token) {
-    // new token has already been set in the header so at this point we just
-    // need to store it
-    tokenStore.update({ accessToken: token }).catch(err => {
+  async function onNewTokens(tokens) {
+    let authData = tokens;
+
+    try {
+      authData = await userService.updateLocalStore(tokens.jwt, tokens.refresh_token);
+    } catch (err) {
       errorHandler('Error storing new access token from refresh', err);
-    });
+    }
 
     // we should maybe update user in memory too
     // TODO: should this be LOGIN_SUCCESS? maybe a NEW_ACCESS_TOKEN or something
     store.dispatch({
       type: LOGIN_SUCCESS,
-      payload: token,
+      payload: authData,
     });
   },
   function onError(err) {

@@ -36,7 +36,7 @@ const schema = yupObject({
 });
 
 const APModal = ({ show, handleClose, offer }) => {
-  const [formData, setFormData] = useState(initialState);
+  // const [formData, setFormData] = useState(initialState);
 
   // useEffect(() => {
   //   if (offer) {
@@ -48,13 +48,13 @@ const APModal = ({ show, handleClose, offer }) => {
     validationSchema: schema,
     initialValues: offer,
     onSubmit: values => {
-      const time = moment().utc().format();
-      setFormData({ ...values, modified_at: time });
+      // const time = moment().utc().format();
+      // setFormData({ ...values, modified_at: time });
       console.log(values);
     },
   });
 
-  const { offer_guid, offer_type } = formData;
+  // const { offer_guid, offer_type } = formData;
 
   if (offer) {
     return (

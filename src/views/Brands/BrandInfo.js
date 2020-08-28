@@ -103,7 +103,9 @@ const schema = yupObject({
   name: yupString().required('Brand name cannot be empty.'),
   is_disabled: yupBoolean().required('Visibility cannot be empty.'),
   is_groomed: yupBoolean().required('Groomed status cannot be empty.'),
-  brand_category_id: yupNumber().required('Category ID cannot be empty.'),
+  brand_category_id: yupNumber()
+    .typeError('Brand Category ID must be a number')
+    .required('Category ID cannot be empty.'),
 });
 
 const BrandInfo = () => {

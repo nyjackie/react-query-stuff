@@ -7,15 +7,15 @@ import styles from './Brands.module.scss';
 const Brand = ({ brand }) => {
   const {
     id,
-    brand_category_id,
-    master_merchant_id,
-    logo_url,
-    hero_url,
+    // brand_category_id,
+    // master_merchant_id,
+    // logo_url,
+    // hero_url,
     name,
     created_at,
-    modified_at,
-    is_disabled,
-    is_groomed,
+    // modified_at,
+    // is_disabled,
+    // is_groomed,
   } = brand;
 
   return (

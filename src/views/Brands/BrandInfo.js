@@ -17,9 +17,9 @@ import { useBrand, useOffers } from 'hooks/useBrands';
 import Spinner from 'components/Spinner';
 
 const schema = yupObject({
-  logo_url: yupString().ensure().trim().url('invalid url'),
-  hero_url: yupString().ensure().trim().url('invalid url'),
-  name: yupString().required('Brand name cannot be empty.'),
+  logo_url: yupString().ensure().trim().url('invalid url').max(255, 'max 255 characters'),
+  hero_url: yupString().ensure().trim().url('invalid url').max(255, 'max 255 characters'),
+  name: yupString().required('Brand name cannot be empty.').max(255, 'max 255 characters'),
   is_disabled: yupBoolean().required('Visibility cannot be empty.'),
   is_groomed: yupBoolean().required('Groomed status cannot be empty.'),
   brand_category_id: yupNumber()
@@ -292,7 +292,7 @@ const BrandInfo = ({ match }) => {
               </Formik>
             </Col>
           </Row>
-          <Table hover variant="light">
+          <Table responsive hover variant="light">
             <thead className="text-right">
               <tr>
                 <th>Start Date</th>

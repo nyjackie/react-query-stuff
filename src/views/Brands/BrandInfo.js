@@ -16,75 +16,6 @@ import {
 import { useBrand, useOffers } from 'hooks/useBrands';
 import Spinner from 'components/Spinner';
 
-// offers
-// const offers = [
-//   {
-//     base_consumer_payout: 5,
-//     begins_at: moment().utc().format(),
-//     ends_at: moment().utc().format(),
-//     commission: 10,
-//     commission_type: 'commission_type',
-//     disclaimer: 'disclaimer',
-//     is_disabled: false,
-//     is_groomed: false,
-//     offer_guid: 'offer_guid',
-//     offer_type: 'offer_type',
-//     supported_nonprofit_id: 16156,
-//   },
-//   {
-//     base_consumer_payout: 5,
-//     begins_at: moment().utc().format(),
-//     ends_at: moment().utc().format(),
-//     commission: 10,
-//     commission_type: 'commission_type2',
-//     disclaimer: 'disclaimer2',
-//     is_disabled: false,
-//     is_groomed: false,
-//     offer_guid: 'offer_guid2',
-//     offer_type: 'offer_type2',
-//     supported_nonprofit_id: 16156,
-//   },
-//   {
-//     base_consumer_payout: 5,
-//     begins_at: moment().utc().format(),
-//     ends_at: moment().utc().format(),
-//     commission: 10,
-//     commission_type: 'commission_type3',
-//     disclaimer: 'disclaimer3',
-//     is_disabled: false,
-//     is_groomed: false,
-//     offer_guid: 'offer_guid3',
-//     offer_type: 'offer_type3',
-//     supported_nonprofit_id: 16156,
-//   },
-//   {
-//     base_consumer_payout: 5,
-//     begins_at: moment().utc().format(),
-//     ends_at: moment().utc().format(),
-//     commission: 10,
-//     commission_type: 'commission_type4',
-//     disclaimer: 'disclaimer4',
-//     is_disabled: false,
-//     is_groomed: false,
-//     offer_guid: 'offer_guid4',
-//     offer_type: 'offer_type4',
-//     supported_nonprofit_id: 16156,
-//   },
-//   {
-//     base_consumer_payout: 5,
-//     begins_at: new Date(),
-//     ends_at: new Date(),
-//     commission: 10,
-//     commission_type: 'commission_type5',
-//     disclaimer: 'disclaimer5',
-//     is_disabled: false,
-//     is_groomed: false,
-//     offer_guid: 'offer_guid5',
-//     offer_type: 'offer_type5',
-//     supported_nonprofit_id: 16156,
-//   },
-// ];
-
 const schema = yupObject({
   logo_url: yupString().ensure().trim().url('invalid url'),
   hero_url: yupString().ensure().trim().url('invalid url'),
@@ -96,16 +27,12 @@ const schema = yupObject({
     .required('Category ID cannot be empty.'),
 });
 
-const BrandInfo = () => {
-  const { isLoading: brandLoading, isError: brandError, data: brand = {} } = useBrand();
-  const { isLoading: offerLoading, isError: offerError, data: offers = {} } = useOffers();
+const BrandInfo = ({ match }) => {
   const [edit, toggleEdit] = useState(true);
   const [show, setShow] = useState(false);
   const [offer, setOffer] = useState();
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
-  const { id, master_merchant_id, logo_url, hero_url, created_at, modified_at } = brand;
 
   const logoDropRef = useRef(null);
   const openLogoDrop = () => {
@@ -119,6 +46,15 @@ const BrandInfo = () => {
       coverDropRef.current.open();
     }
   };
+  const { isLoading: brandLoading, isError: brandError, data: { brand = [] } = {} } = useBrand(
+    match.params.ein
+  );
+  const { id, master_merchant_id, logo_url, hero_url, created_at, modified_at } = brand[0] || {};
+  const {
+    isLoading: offerLoading,
+    isError: offerError,
+    data: { affiliate_programs } = {},
+  } = useOffers(id);
   if (brandLoading || offerLoading) {
     return <Spinner />;
   }
@@ -144,10 +80,10 @@ const BrandInfo = () => {
           <Row className="mt-3 mb-3">
             <Col>
               <Formik
-                initialValues={brand}
+                initialValues={brand[0]}
                 validationSchema={schema}
                 onSubmit={(values, { setSubmitting }) => {
-                  console.log(values);
+                  console.log('data', values);
                 }}
               >
                 {props => {
@@ -278,6 +214,7 @@ const BrandInfo = () => {
                                 uploadText="Logo not yet customized"
                                 width={128}
                                 height={128}
+                                disabled={edit}
                                 src={logo_url}
                                 alt="logo"
                                 name="file_logo"
@@ -290,7 +227,7 @@ const BrandInfo = () => {
                             <div className={styles.uploadContent}>
                               <h3 className="h3">Organization Logo</h3>
                               <p>Image should be at least 300*300 px</p>
-                              <Button variant="primary" onClick={openLogoDrop}>
+                              <Button variant="primary" onClick={openLogoDrop} disabled={edit}>
                                 Upload
                               </Button>
                             </div>
@@ -310,16 +247,38 @@ const BrandInfo = () => {
                                 minWidth={640}
                                 minHeight={320}
                                 ref={coverDropRef}
+                                disabled={edit}
                               />
                             </div>
                             <div className={styles.uploadContent}>
                               <h3 className="h3">Cover Photo</h3>
                               <p>Image should be at least 640*320 px</p>
-                              <Button variant="primary" onClick={openCoverDrop}>
+                              <Button variant="primary" onClick={openCoverDrop} disabled={edit}>
                                 Upload
                               </Button>
                             </div>
                           </div>
+                        </Col>
+                      </Form.Row>
+                      <Form.Row>
+                        <Col>
+                          <Form.Group>
+                            <Form.Label>
+                              <b>Description:</b>
+                            </Form.Label>
+                            <Form.Control
+                              plaintext={edit}
+                              readOnly={edit}
+                              name="description"
+                              value={values.description}
+                              onChange={handleChange}
+                              id="description"
+                              aria-describedby="description"
+                              isInvalid={!!errors.description}
+                              as="textarea"
+                              rows="3"
+                            />
+                          </Form.Group>
                         </Col>
                       </Form.Row>
                       <Form.Row>
@@ -334,55 +293,53 @@ const BrandInfo = () => {
             </Col>
           </Row>
           <Table hover variant="light">
-            <thead>
+            <thead className="text-right">
               <tr>
                 <th>Start Date</th>
                 <th>End Date</th>
-                <th>Base Consumer Payout</th>
+                <th>Program ID</th>
                 <th>Offer ID</th>
                 <th>Offer Type</th>
+                <th>Consumer Payout</th>
                 <th>Commision</th>
                 <th>Commission Type</th>
                 <th>External Visibility</th>
                 <th>Groomed Status</th>
-                <th>Disclaimer</th>
-                <th>Supported Nonprofit</th>
               </tr>
             </thead>
             <tbody>
-              {offers.map(offer => {
+              {affiliate_programs.map(affiliate_program => {
                 const {
                   base_consumer_payout,
                   begins_at,
                   ends_at,
                   commission,
                   commission_type,
-                  disclaimer,
                   is_disabled,
                   is_groomed,
                   offer_guid,
                   offer_type,
-                  supported_nonprofit_id,
-                } = offer;
+                  program_id,
+                } = affiliate_program;
                 return (
                   <tr
                     onClick={() => {
-                      setOffer(offer);
+                      setOffer(affiliate_program);
                       handleShow();
                     }}
                     key={offer_guid}
+                    className="text-right"
                   >
-                    <td>{moment(begins_at).format('MM/DD/YYYY')}</td>
-                    <td>{moment(ends_at).format('MM/DD/YYYY')}</td>
+                    <td>{begins_at ? moment(begins_at).format('MM/DD/YY') : 'N/A'}</td>
+                    <td>{ends_at ? moment(ends_at).format('MM/DD/YY') : 'N/A'}</td>
+                    <td>{program_id}</td>
+                    <td>{offer_guid.substring(0, 11) + '...'}</td>
+                    <td>{offer_type.substring(0, 11) + '...'}</td>
                     <td>{base_consumer_payout}</td>
-                    <td>{offer_guid}</td>
-                    <td>{offer_type}</td>
                     <td>{commission}</td>
                     <td>{commission_type}</td>
                     <td>{is_disabled ? 'Enabled' : 'Disabled'}</td>
                     <td>{is_groomed ? 'Complete' : 'Incomplete'}</td>
-                    <td>{disclaimer}</td>
-                    <td>{supported_nonprofit_id}</td>
                   </tr>
                 );
               })}

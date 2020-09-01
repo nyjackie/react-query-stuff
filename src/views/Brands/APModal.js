@@ -11,7 +11,6 @@ import {
 
 const schema = yupObject({
   begins_at: yupString().required('Begins at date cannot be empty.'),
-  ends_at: yupString().required('Ends at date cannot be empty.'),
   base_consumer_payout: yupNumber()
     .typeError('Consumer Payout must be a number')
     .required('Consumer Payout cannot be empty.'),
@@ -19,27 +18,32 @@ const schema = yupObject({
     .typeError('Commission must be a number')
     .required('Commission cannot be empty.'),
   commission_type: yupString().required('Commission Type cannot be empty.'),
-  disclaimer: yupString().required('Disclaimer cannot be empty.'),
+  disclaimer: yupString().nullable(),
   is_disabled: yupBoolean().required('Visibility cannot be empty.'),
   is_groomed: yupBoolean().required('Groomed status cannot be empty.'),
   supported_nonprofit_id: yupNumber()
     .typeError('Supported Nonprofit ID must be a number')
-    .required('Supported Nonprofit ID cannot be empty.'),
+    .nullable(),
 });
 
 const APModal = ({ show, handleClose, offer }) => {
   if (offer) {
+    console.log(offer);
     return (
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>{offer.offer_guid}</Modal.Title>
+          <Modal.Title>
+            Program ID: {offer.program_id}
+            <br />
+            {offer.created_at ? `(Created ${moment(offer.created_at).format('MM/DD/YY')})` : ''}
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Formik
             initialValues={offer}
             validationSchema={schema}
             onSubmit={(values, { setSubmitting }) => {
-              console.log(values);
+              console.log('outpput', values);
             }}
           >
             {props => {
@@ -67,13 +71,30 @@ const APModal = ({ show, handleClose, offer }) => {
                       </Form.Label>
                       <Form.Control
                         name="supported_nonprofit_id"
-                        value={values.supported_nonprofit_id}
+                        value={values.supported_nonprofit_id ?? ''}
                         aria-describedby="supported_nonprofit_id"
                         onChange={handleChange}
                         isInvalid={!!errors.supported_nonprofit_id}
                       />
                       <Form.Control.Feedback type="invalid">
                         {errors.supported_nonprofit_id}
+                      </Form.Control.Feedback>
+                    </Form.Group>
+                  </Form.Row>
+                  <Form.Row>
+                    <Form.Group as={Col}>
+                      <Form.Label>
+                        <b>Shop URL: </b>
+                      </Form.Label>
+                      <Form.Control
+                        name="shop_url"
+                        value={values.shop_url}
+                        aria-describedby="shop_url"
+                        onChange={handleChange}
+                        isInvalid={!!errors.shop_url}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.shop_url}
                       </Form.Control.Feedback>
                     </Form.Group>
                   </Form.Row>
@@ -114,7 +135,7 @@ const APModal = ({ show, handleClose, offer }) => {
                         <b>Commission:</b>
                       </Form.Label>
                       <Form.Control
-                        value={values.commission}
+                        value={values.commission ?? ''}
                         id="commission"
                         aria-describedby="commission"
                         onChange={handleChange}
@@ -129,7 +150,7 @@ const APModal = ({ show, handleClose, offer }) => {
                         <b>Commission Type:</b>
                       </Form.Label>
                       <Form.Control
-                        value={values.commission_type}
+                        value={values.commission_type ?? ''}
                         id="commission_type"
                         aria-describedby="commission_type"
                         onChange={handleChange}
@@ -147,7 +168,7 @@ const APModal = ({ show, handleClose, offer }) => {
                         <b>Consumer Payout:</b>
                       </Form.Label>
                       <Form.Control
-                        value={values.base_consumer_payout}
+                        value={values.base_consumer_payout ?? ''}
                         id="base_consumer_payout"
                         aria-describedby="base_consumer_payout"
                         isInvalid={!!errors.base_consumer_payout}
@@ -162,7 +183,7 @@ const APModal = ({ show, handleClose, offer }) => {
                         <b>Disclaimer:</b>
                       </Form.Label>
                       <Form.Control
-                        value={values.disclaimer}
+                        value={values.disclaimer ?? ''}
                         id="disclaimer"
                         aria-describedby="disclaimer"
                         isInvalid={!!errors.disclaimer}
@@ -202,7 +223,7 @@ const APModal = ({ show, handleClose, offer }) => {
                         custom
                         as="select"
                         name="is_groomed"
-                        defaultValue={values.is_groomed}
+                        defaultValue={values.is_groomed ?? ''}
                         aria-describedby="is_groomed"
                         onChange={handleChange}
                       >

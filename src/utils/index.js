@@ -134,19 +134,19 @@ export function queryDecode(str) {
   }
 }
 
-export function getSearchQuery(paramName) {
+export function getSearchQuery() {
   if (!window.location.search) {
-    return '';
+    return {};
   }
+
+  const query = {};
 
   const params = new URLSearchParams(window.location.search);
   for (const [key, value] of params.entries()) {
-    if (key === paramName) {
-      return value;
-    }
+    query[key] = value;
   }
 
-  return '';
+  return query;
 }
 
 /**

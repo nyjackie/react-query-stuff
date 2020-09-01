@@ -65,7 +65,7 @@ const App = () => {
             <PrivateRoute exact path="/nonprofit" component={NonprofitSearch} />
             <PrivateRoute exact path="/nonprofit/:id" component={Nonprofit} />
             <PrivateRoute exact path="/users" component={Users} />
-            <PrivateRoute exact path="/users/:id" component={UserInfo} />
+            <PrivateRoute exact path="/users/:type/:id" component={UserInfo} />
             <PrivateRoute exact path="/account/create" component={CreateUser} />
 
             {/* 404 */}

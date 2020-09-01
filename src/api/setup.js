@@ -13,11 +13,7 @@ import userService from 'services/user';
 tokenStore.openDB('gdd-admin-db');
 
 // TODO: remove this mock once API is completed
-api.provideMock(mock, [
-  PRIVATE_ROUTES.GET_USERS,
-  PRIVATE_ROUTES.SEARCH_NONPROFITS,
-  PRIVATE_ROUTES.GET_NONPROFIT,
-]);
+api.provideMock(mock, [PRIVATE_ROUTES.SEARCH_NONPROFITS, PRIVATE_ROUTES.GET_NONPROFIT]);
 
 /**
  * Set up the response inteceptor which will automatically handle logging out

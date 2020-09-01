@@ -6,7 +6,7 @@ import { useBrands } from 'hooks/useBrands';
 import Spinner from 'components/Spinner';
 
 const Brands = () => {
-  const { isLoading, isError, data: { brands } = {} } = useBrands();
+  const { isLoading, isError, data: { brands = [] } = {} } = useBrands();
 
   if (isLoading) {
     return <Spinner />;

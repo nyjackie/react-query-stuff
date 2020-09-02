@@ -10,8 +10,7 @@ function search(key, query) {
 }
 
 function fetchConsumerProfile(key, id) {
-  const num = parseInt(id, 10);
-  return api.getSpecifiedConsumerProfile(num).then(res => res.data);
+  return api.getSpecifiedConsumerProfile(id).then(res => res.data);
 }
 
 /****************************************************************
@@ -25,13 +24,13 @@ export function useSearchUsers(query) {
 }
 
 export function useGetUser(id, type) {
-  let fetcher = fetchConsumerProfile;
+  let queryFn = fetchConsumerProfile;
   if (type === 'nonprofit') {
-    // fetcher = fetchNonprofitUser;
+    // queryFn = fetchNonprofitUser;
   } else if (type === 'internal') {
-    // fetcher = fetchInternalUser
+    // queryFn = fetchInternalUser
   } else if (type === 'brand') {
-    // fetcher = fetchBrandUser
+    // queryFn = fetchBrandUser
   }
-  return useQuery(['get_user', id], fetcher, { enabled: id });
+  return useQuery(['get_user', id], queryFn, { enabled: id });
 }

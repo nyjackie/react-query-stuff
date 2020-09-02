@@ -87,13 +87,25 @@ function UserInfo({ match, addNotification }) {
   if (type === 'consumer') {
     return (
       <>
-        <PageHeader pageTitle="User info" />
+        <PageHeader pageTitle="Consumer user info" />
         <ConsumerUser data={data} />
       </>
     );
+  } else if (type === 'brand') {
+    return (
+      <>
+        <PageHeader pageTitle="Brand user info" />
+      </>
+    );
+  } else if (type === 'internal') {
+    return (
+      <>
+        <PageHeader pageTitle="Internal user info" />
+      </>
+    );
+  } else {
+    return <p>type: {type} not supported yet</p>;
   }
-
-  return <p>type: {type} not supported yet</p>;
 }
 
 UserInfo.propTypes = {

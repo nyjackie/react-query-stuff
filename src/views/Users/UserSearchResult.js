@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table } from 'react-bootstrap';
-import { useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const SingleResult = ({
   result: {
@@ -14,19 +14,18 @@ const SingleResult = ({
     user_type,
   },
 }) => {
-  let history = useHistory();
-
-  function onClick() {
-    history.push(`/users/${user_type}/${user_id}`);
-  }
-
   return (
-    <tr className="pointer" onClick={onClick}>
+    <tr className="pointer">
       <td>{first_name}</td>
       <td>{last_name}</td>
       <td>{phone_number}</td>
       <td>{email}</td>
       <td>{user_type}</td>
+      <td>
+        <Link className="btn btn-primary" to={`/users/${user_type}/${user_id}`}>
+          View
+        </Link>
+      </td>
     </tr>
   );
 };
@@ -45,6 +44,7 @@ function UserSearchResult({ results }) {
           <th>Phone#</th>
           <th>Email</th>
           <th>User type</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>

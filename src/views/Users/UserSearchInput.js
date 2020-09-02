@@ -21,7 +21,7 @@ const SearchInput = ({ history, location }) => {
       user_type: query.user_type || '',
     },
     onSubmit: ({ email, phone_number }) => {
-      const phone = phone_number ? phone_number.replace(/[^0-9]+/g, '') : phone_number;
+      const phone = phone_number.replace(/[^0-9]+/g, '');
       if (email || phone) {
         const param = new URLSearchParams({ email, phone_number: phone });
         history.push(`${location.pathname}?${param.toString()}`);

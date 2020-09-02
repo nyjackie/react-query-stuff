@@ -33,6 +33,10 @@ const queryConfig = {
      * This makes queries stale after 5 minutes instead of immediately
      */
     staleTime: 1000 * 60 * 5,
+
+    /**
+     * our default should be no retries.
+     */
     retry: false,
   },
 };

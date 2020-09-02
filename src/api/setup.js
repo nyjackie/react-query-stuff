@@ -32,13 +32,13 @@ api.setupResponseInterceptor(
   function onError(err) {
     errorHandler(err);
     // this redicts to an error page
-    store.dispatch({
-      type: ERROR,
-      payload: {
-        error: err,
-        errorType: 'API',
-      },
-    });
+    // store.dispatch({
+    //   type: ERROR,
+    //   payload: {
+    //     error: err,
+    //     errorType: 'API',
+    //   },
+    // });
   }
 );
 

@@ -1,4 +1,3 @@
-import moment from 'moment';
 import errorHandler from './errorHandler';
 
 /**
@@ -14,16 +13,24 @@ export const wait = ms => {
 };
 
 /**
+ * get UTC unix epoch timestamp in seconds
+ */
+export function getNow() {
+  // our tokens expiry use Unix Epoch UTC Timestamps in seconds
+  return Math.floor(new Date().getTime() / 1000);
+}
+
+/**
  * checks whether the timestamp provide is within <given seconds> of right now
- * @param {string} timestamp UTC time stamp to check against
- * @param {number} seconds set how many seconds before expire to check
+ * @param {string} expiry unix epoch timestamp in seconds from jwt.user.exp
+ * @param {number} [seconds=30] set how many seconds before expire to check
+ * @param {boolean} [debug=false] turn on console log
  * @returns {boolean} true if timestamp is <= seconds
  */
-export function willExpire(timestamp, seconds) {
-  const expires = moment(timestamp).utc();
-  const now = moment(expires).diff(moment.utc());
-  const diff = moment.duration(now).asSeconds();
-  return diff <= seconds;
+export function willExpire(expiry, seconds = 30) {
+  const now = getNow();
+  if (!expiry) return true;
+  return now > expiry - seconds;
 }
 
 export const decryptBasicAuth = encrypted => {

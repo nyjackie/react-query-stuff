@@ -1,4 +1,4 @@
-import { useQuery } from 'react-query';
+import { useQuery, useMutation } from 'react-query';
 // import { api } from 'gdd-components';
 import api from 'gdd-api-lib';
 
@@ -11,6 +11,10 @@ function search(key, query) {
 
 function fetchConsumerProfile(key, id) {
   return api.getSpecifiedConsumerProfile(id).then(res => res.data);
+}
+
+function updateUserProfile({ id, body }) {
+  return api.setSpecifiedConsumerProfileInformation(id, body).then(res => res.data);
 }
 
 /****************************************************************
@@ -33,4 +37,8 @@ export function useGetUser(id, type) {
     // queryFn = fetchBrandUser
   }
   return useQuery(['get_user', id], queryFn, { enabled: id });
+}
+
+export function useUpdateUser() {
+  return useMutation(updateUserProfile);
 }

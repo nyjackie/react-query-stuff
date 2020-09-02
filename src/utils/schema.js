@@ -1,4 +1,4 @@
-import { string, object } from 'yup';
+import { string, object, date } from 'yup';
 
 // simple function so we don't have to import yup in both places
 export function createSchema(obj) {
@@ -45,3 +45,27 @@ export const phone = max255.test(
     return digits.length >= 10 && digits.length <= 11;
   }
 );
+
+/**
+ * US Zip code validation
+ */
+export const zipcode = max255.test('zipcode', 'Please enter a valid US zip code', value => {
+  if (!value) return true;
+  return /^\d{5}(?:[-\s]\d{4})?$/.test(value);
+});
+
+/**
+ * Date of birth Schema handles validating that it is a valid date in the past
+ * the range is 1900 - 2020
+ */
+const pastDate = date()
+  .min(new Date('1900'), 'Doubt user is over 120 years old, try again')
+  .max(new Date(), 'Date of birth must be in the past');
+
+export const dob = string()
+  .ensure()
+  .trim()
+  .test('Date of birth', 'Date is invalid or out of range', value => {
+    if (value === '') return true; // date is not required
+    return pastDate.isValid(value);
+  });

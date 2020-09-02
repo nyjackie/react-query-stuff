@@ -198,3 +198,28 @@ export function updateCollection(collection, key, newData) {
     return item;
   });
 }
+
+export function nullToEmpty(obj) {
+  return Object.keys(obj).reduce((acc, key) => {
+    const val = obj[key];
+    acc[key] = val === null ? '' : val;
+    return acc;
+  }, {});
+}
+
+/**
+ * compares newObj to source and filters out duplicate properties
+ * @param {object} source source object to compare to
+ * @param {object} newObj new object to check against source
+ */
+export function dedupeObj(source, newObj) {
+  const finalObj = {};
+  for (const key in newObj) {
+    const val1 = source[key];
+    const val2 = newObj[key];
+    if (val1 !== val2) {
+      finalObj[key] = val2;
+    }
+  }
+  return finalObj;
+}

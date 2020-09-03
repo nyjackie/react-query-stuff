@@ -6,10 +6,9 @@ import { object as yupObject, string as yupString } from 'yup';
 import { max255 } from 'utils/schema';
 import 'gdd-components/dist/styles/shared.scss';
 import styles from './NonProfitInfo.module.scss';
-import { ImageUpload, USStateSelect, PreviewModal } from 'gdd-components';
+import { ImageUpload, USStateSelect, PreviewModal, MultiSelect } from 'gdd-components';
 import { cn } from 'gdd-components/dist/utils';
 import { useNpCategories } from 'hooks/useNonprofits';
-import Select from 'react-select';
 
 /**
  * @typedef {object} NonProfit
@@ -212,8 +211,7 @@ export default function Profile({ data, onSave }) {
 
                     <Form.Group>
                       <Form.Label>Categories</Form.Label>
-                      <Select
-                        isMulti
+                      <MultiSelect
                         defaultValue={formik.values.categories}
                         options={options}
                         getOptionLabel={option => option.name}

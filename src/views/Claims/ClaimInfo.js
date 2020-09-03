@@ -167,16 +167,9 @@ const ClaimInfo = ({ addNotification, match }) => {
                 </a>
               </p>
               <p>
-                <b>Address: </b>
+                <b>Location: </b>
               </p>
-              <p>
-                {claim.nonprofit.address.address_line_1}
-                <br />
-                {claim.nonprofit.address.address_line_2}
-                <br />
-                {claim.nonprofit.address.city}, {claim.nonprofit.address.state},{' '}
-                {claim.nonprofit.address.zip}
-              </p>
+              <p>{claim.nonprofit.location}</p>
             </Col>
           </Row>
 

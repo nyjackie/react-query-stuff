@@ -33,7 +33,7 @@ const SingleResult = ({ result }) => {
 
 const SearchResults = ({ results }) => {
   if (!results || results.length === 0) {
-    return null;
+    return <p>no results found</p>;
   }
 
   return (

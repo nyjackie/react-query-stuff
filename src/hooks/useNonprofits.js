@@ -15,6 +15,10 @@ function fetchNp(key, id) {
   return api.getNonprofit(id).then(res => res.data);
 }
 
+function getCategories() {
+  return api.getNonprofitCategories().then(res => res.data);
+}
+
 /****************************************************************
  * Hooks
  */
@@ -28,4 +32,13 @@ export function useNonprofitSearch(query) {
 
 export function useNonprofit(id) {
   return useQuery(['np_profile', id], fetchNp, { enabled: id });
+}
+
+export function useNpCategories() {
+  return useQuery('np_categories', getCategories, {
+    // these should never go stale because they will barely ever change. We
+    // should definitely cache them throughout the whole session
+    staleTime: Infinity,
+    cacheTime: Infinity,
+  });
 }

@@ -17,7 +17,7 @@ const SearchInput = ({ history, location, limit, offset }) => {
       search_term: query.search_term || '',
     },
     onSubmit: ({ search_term }) => {
-      if (search_term) {
+      if (search_term && search_term.length > 2) {
         const param = new URLSearchParams({ search_term, limit, offset });
         history.push(`${location.pathname}?${param.toString()}`);
       }

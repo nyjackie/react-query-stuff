@@ -4,16 +4,27 @@ import { Col, Row, Button, Form, Alert } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import { object as yupObject, string as yupString } from 'yup';
 import { max255 } from 'utils/schema';
-
-// styles
 import 'gdd-components/dist/styles/shared.scss';
 import styles from './NonProfitInfo.module.scss';
-
-// GDD Components
 import { ImageUpload, USStateSelect, PreviewModal } from 'gdd-components';
-
-// GDD utils
 import { cn } from 'gdd-components/dist/utils';
+import { useNpCategories } from 'hooks/useNonprofits';
+import Select from 'react-select';
+
+/**
+ * @typedef {object} NonProfit
+ * @property {number} id
+ * @property {string} name
+ * @property {string} website_url
+ * @property {string} location
+ * @property {string} mission
+ * @property {string} logo_url
+ * @property {string} hero_url
+ * @property {array} categories
+ * @property {string} supported_since
+ * @property {number} amount_raised
+ * @property {boolean} active
+ */
 
 const schema = yupObject({
   name: max255.required('This field is required'),
@@ -27,6 +38,7 @@ const schema = yupObject({
 export default function Profile({ data, onSave }) {
   const [saveError, setSaveError] = useState(null);
   const [showPreview, setShowPreview] = useState(false);
+  const { data: options } = useNpCategories();
 
   const logoDropRef = useRef(null);
   const openLogoDrop = () => {
@@ -44,23 +56,24 @@ export default function Profile({ data, onSave }) {
   const formik = useFormik({
     validationSchema: schema,
     initialValues: {
-      hero_url: data.hero_url, // file
-      logo_url: data.logo_url, // file
-      name: data.name, // text
-      category: data.category,
-      city: data.address.city, // text
-      state: data.address.state, // state select dropdown
-      website_url: data.website_url, // text
-      mission: data.mission, // textarea
+      hero_url: data.hero_url || '', // file
+      logo_url: data.logo_url || '', // file
+      name: data.name || '', // text
+      categories: data.categories || [],
+      city: '', // text
+      state: '', // state select dropdown
+      website_url: data.website_url || '', // text
+      mission: data.mission || '', // textarea
     },
     onSubmit: values => {
-      onSave(values)
-        .then(() => {
-          setSaveError(null);
-        })
-        .catch(err => {
-          setSaveError(err.message);
-        });
+      console.log(values);
+      // onSave(values)
+      //   .then(() => {
+      //     setSaveError(null);
+      //   })
+      //   .catch(err => {
+      //     setSaveError(err.message);
+      //   });
     },
   });
 
@@ -99,7 +112,7 @@ export default function Profile({ data, onSave }) {
                       e.preventDefault();
                     }}
                   >
-                    Ban User
+                    Ban
                   </Button>
                 </div>
               </header>
@@ -195,6 +208,17 @@ export default function Profile({ data, onSave }) {
                       <Form.Control.Feedback type="invalid">
                         {formik.errors.name}
                       </Form.Control.Feedback>
+                    </Form.Group>
+
+                    <Form.Group>
+                      <Form.Label>Categories</Form.Label>
+                      <Select
+                        isMulti
+                        defaultValue={formik.values.categories}
+                        options={options}
+                        getOptionLabel={option => option.name}
+                        getOptionValue={option => option.id}
+                      />
                     </Form.Group>
 
                     <Row>

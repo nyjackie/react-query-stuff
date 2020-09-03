@@ -1,7 +1,7 @@
 import api from 'gdd-api-lib';
 import tokenStore from 'gdd-api-lib/dist/tokenStore';
 import mock from 'gdd-api-lib/dist/mocks/index';
-import { PRIVATE_ROUTES } from 'gdd-api-lib/dist/routes';
+// import { PRIVATE_ROUTES } from 'gdd-api-lib/dist/routes';
 
 // local modules
 import store from '../store';
@@ -13,7 +13,7 @@ import userService from 'services/user';
 tokenStore.openDB('gdd-admin-db');
 
 // TODO: remove this mock once API is completed
-api.provideMock(mock, [PRIVATE_ROUTES.GET_NONPROFIT]);
+api.provideMock(mock);
 
 /**
  * Set up the response inteceptor which will automatically handle logging out
@@ -32,13 +32,13 @@ api.setupResponseInterceptor(
   function onError(err) {
     errorHandler(err);
     // this redicts to an error page
-    // store.dispatch({
-    //   type: ERROR,
-    //   payload: {
-    //     error: err,
-    //     errorType: 'API',
-    //   },
-    // });
+    store.dispatch({
+      type: ERROR,
+      payload: {
+        error: err,
+        errorType: 'API',
+      },
+    });
   }
 );
 

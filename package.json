@@ -39,11 +39,13 @@
     "redux": "^4.0.5",
     "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0",
+    "source-map-explorer": "^2.5.0",
     "uuid": "^8.3.0",
     "yup": "^0.29.2"
   },
   "scripts": {
     "start": "react-scripts start",
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
     "build": "react-scripts build",
     "build:staging": "env-cmd -f .env.staging react-scripts build",
     "test": "react-scripts test",

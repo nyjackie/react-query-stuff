@@ -4,8 +4,11 @@ import api from 'gdd-api-lib';
 /****************************************************************
  * Functions that perform api calls
  */
-function search(key, term) {
-  return api.searchNonprofits({ search_term: encodeURIComponent(term) }).then(res => res.data);
+function search(key, query) {
+  if (query.search_term) {
+    query.search_term = window.btoa(query.search_term);
+  }
+  return api.searchNonprofits(query).then(res => res.data);
 }
 
 function fetchNp(key, id) {
@@ -16,8 +19,11 @@ function fetchNp(key, id) {
  * Hooks
  */
 
-export function useNonprofitSearch(term) {
-  return useQuery(['np_search', term], search, { enabled: term });
+export function useNonprofitSearch(query) {
+  return useQuery(['np_search', query], search, {
+    enabled: query.search_term,
+    refetchOnWindowFocus: false,
+  });
 }
 
 export function useNonprofit(id) {

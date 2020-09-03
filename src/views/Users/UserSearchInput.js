@@ -56,7 +56,7 @@ const SearchInput = ({ history, location }) => {
         />
         <Form.Control.Feedback type="invalid">{formik.errors.phone_number}</Form.Control.Feedback>
       </Form.Group>
-      <Form.Group controlId="searchForm">
+      <Form.Group controlId="userType">
         <Form.Label>User type</Form.Label>
         <Form.Control
           as="select"

@@ -10,8 +10,6 @@ import Spinner from 'components/Spinner';
 
 /**
  * Nonprofit profile
- * If a `selected` item lives in redux state it will use that to populate the
- * date, if not it will search our api using the ein in the url parameter
  */
 const Nonprofit = ({ addNotification }) => {
   const { id } = useParams();

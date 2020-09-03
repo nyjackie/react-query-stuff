@@ -79,18 +79,9 @@ function ConsumerUser({ data, addNotification }) {
 
   return (
     <Jumbotron className={cn(styles.jumbotron, styles.userEdit)}>
-      <Button
-        className={styles.edit}
-        onClick={e => {
-          e.preventDefault();
-          toggleEdit(!edit);
-        }}
-      >
-        Edit
-      </Button>
       <Form noValidate onSubmit={formik.handleSubmit} className="mb-2">
         <Form.Group as={Row} controlId="first_name">
-          <Form.Label column xl={2}>
+          <Form.Label column xl={3}>
             First Name:
           </Form.Label>
           <Col>
@@ -99,7 +90,6 @@ function ConsumerUser({ data, addNotification }) {
               name="first_name"
               value={formik.values.first_name || ''}
               onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
               isInvalid={formik.touched.first_name && formik.errors.first_name}
               isValid={formik.touched.first_name && !formik.errors.first_name}
             />
@@ -108,7 +98,7 @@ function ConsumerUser({ data, addNotification }) {
         </Form.Group>
 
         <Form.Group as={Row} controlId="last_name">
-          <Form.Label column xl={2}>
+          <Form.Label column xl={3}>
             Last Name:
           </Form.Label>
           <Col>
@@ -117,7 +107,6 @@ function ConsumerUser({ data, addNotification }) {
               name="last_name"
               value={formik.values.last_name || ''}
               onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
               isInvalid={formik.touched.last_name && formik.errors.last_name}
               isValid={formik.touched.last_name && !formik.errors.last_name}
             />
@@ -126,7 +115,7 @@ function ConsumerUser({ data, addNotification }) {
         </Form.Group>
 
         <Form.Group as={Row} controlId="email">
-          <Form.Label column xl={2}>
+          <Form.Label column xl={3}>
             Email:
           </Form.Label>
           <Col>
@@ -136,7 +125,6 @@ function ConsumerUser({ data, addNotification }) {
               name="email"
               value={formik.values.email || ''}
               onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
               isInvalid={formik.touched.email && formik.errors.email}
               isValid={formik.touched.email && !formik.errors.email}
             />
@@ -145,7 +133,7 @@ function ConsumerUser({ data, addNotification }) {
         </Form.Group>
 
         <Form.Group as={Row} controlId="phone">
-          <Form.Label column xl={2}>
+          <Form.Label column xl={3}>
             Phone:
           </Form.Label>
           <Col>
@@ -157,7 +145,6 @@ function ConsumerUser({ data, addNotification }) {
               name="phone_number"
               value={formik.values.phone_number || ''}
               onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
               isInvalid={formik.touched.phone_number && formik.errors.phone_number}
               isValid={formik.touched.phone_number && !formik.errors.phone_number}
             />
@@ -168,7 +155,7 @@ function ConsumerUser({ data, addNotification }) {
         </Form.Group>
 
         <Form.Group as={Row} controlId="dob">
-          <Form.Label column xl={2}>
+          <Form.Label column xl={3}>
             Date of birth:
           </Form.Label>
           <Col>
@@ -177,7 +164,6 @@ function ConsumerUser({ data, addNotification }) {
               name="dob"
               value={formik.values.dob || ''}
               onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
               isInvalid={formik.touched.dob && formik.errors.dob}
               isValid={formik.touched.dob && !formik.errors.dob}
               errorMsg={formik.errors.dob}
@@ -186,7 +172,7 @@ function ConsumerUser({ data, addNotification }) {
         </Form.Group>
 
         <Form.Group as={Row} controlId="zip">
-          <Form.Label column xl={2}>
+          <Form.Label column xl={3}>
             Zip code:
           </Form.Label>
           <Col>
@@ -196,7 +182,6 @@ function ConsumerUser({ data, addNotification }) {
               name="zip_code"
               value={formik.values.zip_code || ''}
               onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
               isInvalid={formik.touched.zip_code && formik.errors.zip_code}
               isValid={formik.touched.zip_code && !formik.errors.zip_code}
             />
@@ -205,7 +190,7 @@ function ConsumerUser({ data, addNotification }) {
         </Form.Group>
 
         <Form.Group as={Row} controlId="pronoun">
-          <Form.Label column xl={2}>
+          <Form.Label column xl={3}>
             Pronoun:
           </Form.Label>
           <Col>
@@ -236,7 +221,7 @@ function ConsumerUser({ data, addNotification }) {
         </Form.Group>
 
         <Form.Group as={Row} controlId="income_range">
-          <Form.Label column xl={2}>
+          <Form.Label column xl={3}>
             Income range:
           </Form.Label>
           <Col>
@@ -266,9 +251,30 @@ function ConsumerUser({ data, addNotification }) {
           </Col>
         </Form.Group>
 
-        {edit && (
-          <Button type="submit" variant="success">
-            Save
+        {edit ? (
+          <>
+            <Button
+              variant="outline-primary mr-2"
+              onClick={e => {
+                e.preventDefault();
+                toggleEdit(false);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button type="submit" variant="success">
+              Save
+            </Button>
+          </>
+        ) : (
+          <Button
+            className={styles.edit}
+            onClick={e => {
+              e.preventDefault();
+              toggleEdit(true);
+            }}
+          >
+            Edit
           </Button>
         )}
       </Form>

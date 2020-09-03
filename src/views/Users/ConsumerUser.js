@@ -62,9 +62,9 @@ function ConsumerUser({ data, addNotification }) {
       // remove all non-numbers from phone_number
       values.phone_number = values.phone_number.replace(/[^0-9]+/g, '');
 
-      // we dont post the ID
+      // we dont need to send the post ID
       delete values.id;
-      console.log(values);
+
       updateUser({ id: data.id, body: dedupeObj(data, values) })
         .then(() => {
           addNotification('Saves successful', 'success');
@@ -153,7 +153,7 @@ function ConsumerUser({ data, addNotification }) {
               readOnly={!edit}
               type="tel"
               as={InputMask}
-              mask="+1 (999) 999-9999"
+              mask="(999) 999-9999"
               name="phone_number"
               value={formik.values.phone_number || ''}
               onChange={formik.handleChange}

@@ -58,14 +58,14 @@ export default function Profile({ data, onSave }) {
       hero_url: data.hero_url || '', // file
       logo_url: data.logo_url || '', // file
       name: data.name || '', // text
-      categories: data.categories || [],
+      categories: data.categories || [], // multiselect
       city: '', // text
       state: '', // state select dropdown
       website_url: data.website_url || '', // text
       mission: data.mission || '', // textarea
     },
     onSubmit: values => {
-      console.log(values);
+      console.log('onSubmit values', values);
       // onSave(values)
       //   .then(() => {
       //     setSaveError(null);
@@ -75,6 +75,8 @@ export default function Profile({ data, onSave }) {
       //   });
     },
   });
+
+  console.log('errors', formik.errors);
 
   return (
     <>

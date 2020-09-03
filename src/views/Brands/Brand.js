@@ -21,8 +21,8 @@ const Brand = ({ brand }) => {
   );
 };
 
-export default Brand;
-
 Brand.propTypes = {
   brand: PropTypes.object.isRequired,
 };
+
+export default Brand;

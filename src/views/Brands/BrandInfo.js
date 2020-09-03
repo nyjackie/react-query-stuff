@@ -1,19 +1,17 @@
 import React, { Fragment, useState, useRef } from 'react';
 import { Col, Row, Table, Jumbotron, Form, Button } from 'react-bootstrap';
 import APModal from './APModal';
+import PropTypes from 'prop-types';
 import PageHeader from 'components/PageHeader';
 import moment from 'moment';
 import { ImageUpload } from 'gdd-components';
 import { cn } from 'gdd-components/dist/utils';
 import styles from './Brands.module.scss';
 import { Formik } from 'formik';
-import {
-  object as yupObject,
-  number as yupNumber,
-  string as yupString,
-  boolean as yupBoolean,
-} from 'yup';
-import { useBrand, useOffers } from 'hooks/useBrands';
+import { object as yupObject, string as yupString, boolean as yupBoolean } from 'yup';
+import { useBrand, useOffers, useUpdateBrand } from 'hooks/useBrands';
+import { connect } from 'react-redux';
+import { addNotification } from 'actions/notifications';
 import Spinner from 'components/Spinner';
 
 const schema = yupObject({
@@ -22,12 +20,10 @@ const schema = yupObject({
   name: yupString().required('Brand name cannot be empty.').max(255, 'max 255 characters'),
   is_disabled: yupBoolean().required('Visibility cannot be empty.'),
   is_groomed: yupBoolean().required('Groomed status cannot be empty.'),
-  brand_category_id: yupNumber()
-    .typeError('Brand Category ID must be a number')
-    .required('Category ID cannot be empty.'),
+  website_url: yupString().ensure().trim().url('invalid url').max(255, 'max 255 characters'),
 });
 
-const BrandInfo = ({ match }) => {
+const BrandInfo = ({ addNotification, match }) => {
   const [edit, toggleEdit] = useState(true);
   const [show, setShow] = useState(false);
   const [offer, setOffer] = useState();
@@ -49,12 +45,15 @@ const BrandInfo = ({ match }) => {
   const { isLoading: brandLoading, isError: brandError, data: { brand = [] } = {} } = useBrand(
     match.params.ein
   );
-  const { id, master_merchant_id, logo_url, hero_url, created_at, modified_at } = brand[0] || {};
+  const { id, brand_category_id, master_merchant_id, logo_url, hero_url, created_at, modified_at } =
+    brand[0] || {};
   const {
     isLoading: offerLoading,
     isError: offerError,
     data: { affiliate_programs } = {},
   } = useOffers(id);
+  const [updateBrand] = useUpdateBrand();
+
   if (brandLoading || offerLoading) {
     return <Spinner />;
   }
@@ -82,8 +81,36 @@ const BrandInfo = ({ match }) => {
               <Formik
                 initialValues={brand[0]}
                 validationSchema={schema}
-                onSubmit={(values, { setSubmitting }) => {
-                  console.log('data', values);
+                onSubmit={({
+                  id,
+                  logo_url,
+                  hero_url,
+                  website_url,
+                  description,
+                  name,
+                  is_disabled,
+                  is_groomed,
+                }) => {
+                  const form = {
+                    logo_url,
+                    hero_url,
+                    website_url,
+                    description,
+                    name,
+                    is_disabled,
+                    is_groomed,
+                  };
+                  updateBrand({ id, form })
+                    .then(() => {
+                      addNotification(`${name} - Brand Update Success`, 'success');
+                      toggleEdit(!edit);
+                    })
+                    .catch(() => {
+                      addNotification(
+                        `${name} - Brand Update Failed. Soemthing went wrong.`,
+                        'fail'
+                      );
+                    });
                 }}
               >
                 {props => {
@@ -188,24 +215,30 @@ const BrandInfo = ({ match }) => {
                         </Form.Group>
                         <Form.Group as={Col}>
                           <Form.Label>
-                            <b>Category: </b>
+                            <b>Website Url:</b>
                           </Form.Label>
                           <Form.Control
                             plaintext={edit}
                             readOnly={edit}
-                            name="brand_category_id"
-                            value={values.brand_category_id}
+                            name="website_url"
+                            value={values.website_url}
                             onChange={handleChange}
-                            id="brand_category_id"
-                            aria-describedby="brand_category_id"
-                            isInvalid={!!errors.brand_category_id}
+                            aria-describedby="website_url"
+                            isInvalid={!!errors.website_url}
                           />
                           <Form.Control.Feedback type="invalid">
-                            {errors.brand_category_id}
+                            {errors.website_url}
                           </Form.Control.Feedback>
                         </Form.Group>
                       </Form.Row>
-
+                      <Row className="form-row">
+                        <Col className="form-col">
+                          <p>
+                            <b>Category:</b>
+                          </p>
+                          <p>{brand_category_id}</p>
+                        </Col>
+                      </Row>
                       <Form.Row>
                         <Col xl>
                           <div className={styles.uploadBlock}>
@@ -352,4 +385,8 @@ const BrandInfo = ({ match }) => {
   );
 };
 
-export default BrandInfo;
+BrandInfo.propTypes = {
+  addNotification: PropTypes.func.isRequired,
+};
+
+export default connect(null, { addNotification })(BrandInfo);

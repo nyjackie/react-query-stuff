@@ -1,9 +1,17 @@
-import { useQuery } from 'react-query';
+import { useQuery, useMutation, queryCache } from 'react-query';
 import { api } from 'gdd-components';
 
 /****************************************************************
  * Hooks
  */
+
+function updateBrand({ id, form }) {
+  return api.offers.updateBrand(id, form).then(res => res.data);
+  // console.log('put data', id, form);
+  // return {};
+}
+
+// GET
 
 export function useBrands() {
   return useQuery('brands', () => {
@@ -27,4 +35,10 @@ export function useOffers(id) {
       enabled: id,
     }
   );
+}
+
+// PUT
+
+export function useUpdateBrand() {
+  return useMutation(updateBrand);
 }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Col, Row, Jumbotron, Form, Alert } from 'react-bootstrap';
+import { Button, Col, Row, Jumbotron, Form } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import { createSchema, max255, phone, zipcode, dob } from 'utils/schema';
 import styles from './User.module.scss';
@@ -8,6 +8,10 @@ import { useUpdateUser } from 'hooks/useUsers';
 import { cn } from 'gdd-components/dist/utils';
 import DateInput, { dateFmt } from 'components/DateInput';
 import { dedupeObj } from 'utils';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { addNotification } from 'actions/notifications';
+import InputMask from 'react-input-mask';
 
 const schema = createSchema({
   first_name: max255.required('This field is required'),
@@ -35,25 +39,41 @@ const schema = createSchema({
  * @param {object} props
  * @param {UserProfile} props.data
  */
-function ConsumerUser({ data }) {
+function ConsumerUser({ data, addNotification }) {
   const [edit, toggleEdit] = useState(false);
   const { data: options } = usePronounIncomeOptions();
-  const [updateUser, { isSuccess, isError, error }] = useUpdateUser();
+  const [updateUser] = useUpdateUser();
 
   const formik = useFormik({
     initialValues: data,
     validationSchema: schema,
     onSubmit: values => {
+      // handle properly formatting date from the fallback date input for
+      // browsers that dont have a native datepicker (Safari!)
       if (values.dob && dateFmt.test(values.dob)) {
         const [m, d, y] = values.dob.split('/');
         values.dob = `${y}-${m.length === 1 ? '0' + m : m}-${d.length === 1 ? '0' + d : d}`;
       }
+
+      // the api does not like empty string so we convert them to nulls
       if (values.income_range_id === '') values.income_range_id = null;
       if (values.pronouns_id === '') values.pronouns_id = null;
 
+      // remove all non-numbers from phone_number
+      values.phone_number = values.phone_number.replace(/[^0-9]+/g, '');
+
+      // we dont post the ID
       delete values.id;
       console.log(values);
-      updateUser({ id: data.id, body: dedupeObj(data, values) });
+      updateUser({ id: data.id, body: dedupeObj(data, values) })
+        .then(() => {
+          addNotification('Saves successful', 'success');
+          toggleEdit(false);
+        })
+        .catch(e => {
+          addNotification(e.message, 'danger');
+          toggleEdit(false);
+        });
     },
   });
 
@@ -79,9 +99,11 @@ function ConsumerUser({ data }) {
               name="first_name"
               value={formik.values.first_name || ''}
               onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               isInvalid={formik.touched.first_name && formik.errors.first_name}
               isValid={formik.touched.first_name && !formik.errors.first_name}
             />
+            <Form.Control.Feedback type="invalid">{formik.errors.first_name}</Form.Control.Feedback>
           </Col>
         </Form.Group>
 
@@ -95,9 +117,11 @@ function ConsumerUser({ data }) {
               name="last_name"
               value={formik.values.last_name || ''}
               onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               isInvalid={formik.touched.last_name && formik.errors.last_name}
               isValid={formik.touched.last_name && !formik.errors.last_name}
             />
+            <Form.Control.Feedback type="invalid">{formik.errors.last_name}</Form.Control.Feedback>
           </Col>
         </Form.Group>
 
@@ -112,9 +136,11 @@ function ConsumerUser({ data }) {
               name="email"
               value={formik.values.email || ''}
               onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               isInvalid={formik.touched.email && formik.errors.email}
               isValid={formik.touched.email && !formik.errors.email}
             />
+            <Form.Control.Feedback type="invalid">{formik.errors.email}</Form.Control.Feedback>
           </Col>
         </Form.Group>
 
@@ -126,12 +152,18 @@ function ConsumerUser({ data }) {
             <Form.Control
               readOnly={!edit}
               type="tel"
+              as={InputMask}
+              mask="+1 (999) 999-9999"
               name="phone_number"
               value={formik.values.phone_number || ''}
               onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               isInvalid={formik.touched.phone_number && formik.errors.phone_number}
               isValid={formik.touched.phone_number && !formik.errors.phone_number}
             />
+            <Form.Control.Feedback type="invalid">
+              {formik.errors.phone_number}
+            </Form.Control.Feedback>
           </Col>
         </Form.Group>
 
@@ -145,6 +177,7 @@ function ConsumerUser({ data }) {
               name="dob"
               value={formik.values.dob || ''}
               onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               isInvalid={formik.touched.dob && formik.errors.dob}
               isValid={formik.touched.dob && !formik.errors.dob}
               errorMsg={formik.errors.dob}
@@ -163,9 +196,11 @@ function ConsumerUser({ data }) {
               name="zip_code"
               value={formik.values.zip_code || ''}
               onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               isInvalid={formik.touched.zip_code && formik.errors.zip_code}
               isValid={formik.touched.zip_code && !formik.errors.zip_code}
             />
+            <Form.Control.Feedback type="invalid">{formik.errors.zip_code}</Form.Control.Feedback>
           </Col>
         </Form.Group>
 
@@ -184,7 +219,10 @@ function ConsumerUser({ data }) {
               isInvalid={formik.touched.pronouns_id && formik.errors.pronouns_id}
               isValid={formik.touched.pronouns_id && !formik.errors.pronouns_id}
             >
-              <option value="">Select a pronoun options</option>
+              {/* we only show the empty option if the initial data was null  */}
+              {options && !options.pronoun_options && (
+                <option value="">Select a pronoun options</option>
+              )}
               {options &&
                 options.pronoun_options.map(opt => {
                   return (
@@ -212,7 +250,10 @@ function ConsumerUser({ data }) {
               isInvalid={formik.touched.income_range_id && formik.errors.income_range_id}
               isValid={formik.touched.income_range_id && !formik.errors.income_range_id}
             >
-              <option value="">Select an income range</option>
+              {/* we only show the empty option if the initial data was null  */}
+              {options && !options.income_range_options && (
+                <option value="">Select an income range</option>
+              )}
               {options &&
                 options.income_range_options.map(opt => {
                   return (
@@ -231,10 +272,14 @@ function ConsumerUser({ data }) {
           </Button>
         )}
       </Form>
-      {isSuccess && <Alert variant="success">Successfully updated user!</Alert>}
-      {isError && <Alert variant="danger">{error.message}</Alert>}
+      {/* {isSuccess && <Alert variant="success">Successfully updated user!</Alert>}
+      {isError && <Alert variant="danger">{error.message}</Alert>} */}
     </Jumbotron>
   );
 }
 
-export default ConsumerUser;
+ConsumerUser.propTypes = {
+  addNotification: PropTypes.func.isRequired,
+};
+
+export default connect(null, { addNotification })(ConsumerUser);

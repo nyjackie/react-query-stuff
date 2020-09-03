@@ -56,7 +56,7 @@ export const zipcode = max255.test('zipcode', 'Please enter a valid US zip code'
 
 /**
  * Date of birth Schema handles validating that it is a valid date in the past
- * the range is 1900 - 2020
+ * the range is Dec 31, 1899 - Today's date
  */
 const pastDate = date()
   .min(new Date('1900'), 'Doubt user is over 120 years old, try again')

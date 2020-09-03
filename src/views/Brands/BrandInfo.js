@@ -9,7 +9,7 @@ import { cn } from 'gdd-components/dist/utils';
 import styles from './Brands.module.scss';
 import { Formik } from 'formik';
 import { object as yupObject, string as yupString, boolean as yupBoolean } from 'yup';
-import { useBrand, useOffers, useUpdateBrand } from 'hooks/useBrands';
+import { useBrand, useCategories, useOffers, useUpdateBrand } from 'hooks/useBrands';
 import { connect } from 'react-redux';
 import { addNotification } from 'actions/notifications';
 import Spinner from 'components/Spinner';
@@ -22,6 +22,13 @@ const schema = yupObject({
   is_groomed: yupBoolean().required('Groomed status cannot be empty.'),
   website_url: yupString().ensure().trim().url('invalid url').max(255, 'max 255 characters'),
 });
+
+const getCategories = (brand_category, categories) => {
+  const res = categories.find(category => {
+    return category.category_id === brand_category;
+  });
+  return res.title;
+};
 
 const BrandInfo = ({ addNotification, match }) => {
   const [edit, toggleEdit] = useState(true);
@@ -45,23 +52,27 @@ const BrandInfo = ({ addNotification, match }) => {
   const { isLoading: brandLoading, isError: brandError, data: { brand = [] } = {} } = useBrand(
     match.params.ein
   );
+  const { isLoading: catLoading, isError: catError, data: categories = [] } = useCategories();
+
   const { id, brand_category_id, master_merchant_id, logo_url, hero_url, created_at, modified_at } =
     brand[0] || {};
   const {
     isLoading: offerLoading,
     isError: offerError,
-    data: { affiliate_programs } = {},
+    data: { affiliate_programs = [] } = {},
   } = useOffers(id);
   const [updateBrand] = useUpdateBrand();
 
-  if (brandLoading || offerLoading) {
+  if (brandLoading || offerLoading || catLoading) {
     return <Spinner />;
   }
-  if (brandError || offerError) {
+  if (brandError || offerError || catError) {
     return <div>Oooops something went wrong. Please try again later! </div>;
   }
   return (
-    brand && (
+    brand &&
+    categories &&
+    affiliate_programs && (
       <Fragment>
         <PageHeader className="text-primary" pageTitle="Brand Info" />
         <Jumbotron>
@@ -97,17 +108,17 @@ const BrandInfo = ({ addNotification, match }) => {
                     website_url,
                     description,
                     name,
-                    is_disabled,
-                    is_groomed,
+                    is_disabled: is_disabled === 'true',
+                    is_groomed: is_groomed === 'true',
                   };
                   updateBrand({ id, form })
                     .then(() => {
-                      addNotification(`${name} - Brand Update Success`, 'success');
+                      addNotification(`${name} - Brand update success`, 'success');
                       toggleEdit(!edit);
                     })
                     .catch(() => {
                       addNotification(
-                        `${name} - Brand Update Failed. Soemthing went wrong.`,
+                        `${name} - Brand update failed. Soemthing went wrong.`,
                         'fail'
                       );
                     });
@@ -236,7 +247,7 @@ const BrandInfo = ({ addNotification, match }) => {
                           <p>
                             <b>Category:</b>
                           </p>
-                          <p>{brand_category_id}</p>
+                          <p>{getCategories(brand_category_id, categories)}</p>
                         </Col>
                       </Row>
                       <Form.Row>
@@ -330,6 +341,7 @@ const BrandInfo = ({ addNotification, match }) => {
               <tr>
                 <th>Start Date</th>
                 <th>End Date</th>
+                <th>Supported Nonprofit ID</th>
                 <th>Program ID</th>
                 <th>Offer ID</th>
                 <th>Offer Type</th>
@@ -341,45 +353,48 @@ const BrandInfo = ({ addNotification, match }) => {
               </tr>
             </thead>
             <tbody>
-              {affiliate_programs.map(affiliate_program => {
-                const {
-                  base_consumer_payout,
-                  begins_at,
-                  ends_at,
-                  commission,
-                  commission_type,
-                  is_disabled,
-                  is_groomed,
-                  offer_guid,
-                  offer_type,
-                  program_id,
-                } = affiliate_program;
-                return (
-                  <tr
-                    onClick={() => {
-                      setOffer(affiliate_program);
-                      handleShow();
-                    }}
-                    key={offer_guid}
-                    className="text-right"
-                  >
-                    <td>{begins_at ? moment(begins_at).format('MM/DD/YY') : 'N/A'}</td>
-                    <td>{ends_at ? moment(ends_at).format('MM/DD/YY') : 'N/A'}</td>
-                    <td>{program_id}</td>
-                    <td>{offer_guid.substring(0, 11) + '...'}</td>
-                    <td>{offer_type.substring(0, 11) + '...'}</td>
-                    <td>{base_consumer_payout}</td>
-                    <td>{commission}</td>
-                    <td>{commission_type}</td>
-                    <td>{is_disabled ? 'Enabled' : 'Disabled'}</td>
-                    <td>{is_groomed ? 'Complete' : 'Incomplete'}</td>
-                  </tr>
-                );
-              })}
+              {affiliate_programs.length > 0 &&
+                affiliate_programs.map(affiliate_program => {
+                  const {
+                    base_consumer_payout,
+                    begins_at,
+                    supported_nonprofit_id,
+                    ends_at,
+                    commission,
+                    commission_type,
+                    is_disabled,
+                    is_groomed,
+                    offer_guid,
+                    offer_type,
+                    program_id,
+                  } = affiliate_program;
+                  return (
+                    <tr
+                      onClick={() => {
+                        setOffer(affiliate_program);
+                        handleShow();
+                      }}
+                      key={offer_guid}
+                      className="text-right"
+                    >
+                      <td>{begins_at ? moment(begins_at).format('MM/DD/YY') : 'N/A'}</td>
+                      <td>{ends_at ? moment(ends_at).format('MM/DD/YY') : 'N/A'}</td>
+                      <td>{supported_nonprofit_id}</td>
+                      <td>{program_id}</td>
+                      <td>{offer_guid.substring(0, 11) + '...'}</td>
+                      <td>{offer_type.substring(0, 11) + '...'}</td>
+                      <td>{base_consumer_payout}</td>
+                      <td>{commission}</td>
+                      <td>{commission_type}</td>
+                      <td>{is_disabled ? 'Enabled' : 'Disabled'}</td>
+                      <td>{is_groomed ? 'Complete' : 'Incomplete'}</td>
+                    </tr>
+                  );
+                })}
             </tbody>
           </Table>
         </Jumbotron>
-        {offer && <APModal show={show} offer={offer} handleClose={handleClose} />}
+        {offer && <APModal show={show} offer={offer} handleClose={handleClose} brand_id={id} />}
       </Fragment>
     )
   );

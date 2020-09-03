@@ -1,13 +1,19 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { api } from 'gdd-components';
 import { Modal, Button, Form, Col, Row } from 'react-bootstrap';
 import moment from 'moment';
 import { Formik } from 'formik';
+import { useUpdateOffer } from 'hooks/useBrands';
 import {
   object as yupObject,
   number as yupNumber,
   string as yupString,
   boolean as yupBoolean,
 } from 'yup';
+import { connect } from 'react-redux';
+import { addNotification } from 'actions/notifications';
+import AsyncSelect from 'react-select/async';
 
 const schema = yupObject({
   begins_at: yupString().required('Begins at date cannot be empty.'),
@@ -26,9 +32,18 @@ const schema = yupObject({
     .nullable(),
 });
 
-const APModal = ({ show, handleClose, offer }) => {
+const loadOptions = async inputValue => {
+  const res = await api.offers.searchNonprofits(inputValue);
+  const newRes = res.data.nonprofits.map(data => {
+    return { value: data.id, label: data.name };
+  });
+  return newRes;
+};
+
+const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
+  const [updateOffer] = useUpdateOffer();
+
   if (offer) {
-    console.log(offer);
     return (
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
@@ -42,8 +57,41 @@ const APModal = ({ show, handleClose, offer }) => {
           <Formik
             initialValues={offer}
             validationSchema={schema}
-            onSubmit={(values, { setSubmitting }) => {
-              console.log('outpput', values);
+            onSubmit={({
+              offer_type,
+              offer_guid,
+              supported_nonprofit_id,
+              disclaimer,
+              commission,
+              commission_type,
+              is_disabled,
+              is_groomed,
+              base_consumer_payout,
+              begins_at,
+              ends_at,
+            }) => {
+              const form = {
+                offer_type,
+                offer_guid,
+                supported_nonprofit_id: parseInt(supported_nonprofit_id),
+                disclaimer,
+                commission,
+                commission_type,
+                is_disabled: is_disabled === 'true',
+                is_groomed: is_groomed === 'true',
+                base_consumer_payout,
+                begins_at,
+                ends_at,
+              };
+
+              updateOffer({ form })
+                .then(() => {
+                  addNotification(`Offer update success`, 'success');
+                  handleClose();
+                })
+                .catch(() => {
+                  addNotification(`Offer update failed. Something went wrong.`, 'fail');
+                });
             }}
           >
             {props => {
@@ -64,40 +112,33 @@ const APModal = ({ show, handleClose, offer }) => {
                       <p>{offer.offer_type}</p>
                     </Col>
                   </Row>
+                  <Row className="form-col">
+                    <Col className="form-col">
+                      <p>
+                        <b>Shop URL: </b>
+                      </p>
+                      <p>{offer.shop_url}</p>
+                    </Col>
+                  </Row>
                   <Form.Row>
                     <Form.Group as={Col}>
                       <Form.Label>
                         <b>Supported Nonprofit ID: </b>
                       </Form.Label>
-                      <Form.Control
-                        name="supported_nonprofit_id"
-                        value={values.supported_nonprofit_id ?? ''}
-                        aria-describedby="supported_nonprofit_id"
-                        onChange={handleChange}
-                        isInvalid={!!errors.supported_nonprofit_id}
+                      <AsyncSelect
+                        cacheOptions
+                        loadOptions={loadOptions}
+                        isSearchable={true}
+                        onChange={e => {
+                          values.supported_nonprofit_id = e.value;
+                        }}
                       />
                       <Form.Control.Feedback type="invalid">
                         {errors.supported_nonprofit_id}
                       </Form.Control.Feedback>
                     </Form.Group>
                   </Form.Row>
-                  <Form.Row>
-                    <Form.Group as={Col}>
-                      <Form.Label>
-                        <b>Shop URL: </b>
-                      </Form.Label>
-                      <Form.Control
-                        name="shop_url"
-                        value={values.shop_url}
-                        aria-describedby="shop_url"
-                        onChange={handleChange}
-                        isInvalid={!!errors.shop_url}
-                      />
-                      <Form.Control.Feedback type="invalid">
-                        {errors.shop_url}
-                      </Form.Control.Feedback>
-                    </Form.Group>
-                  </Form.Row>
+
                   <Form.Row>
                     <Form.Group as={Col}>
                       <Form.Label>
@@ -258,4 +299,8 @@ const APModal = ({ show, handleClose, offer }) => {
   return null;
 };
 
-export default APModal;
+APModal.propTypes = {
+  addNotification: PropTypes.func.isRequired,
+};
+
+export default connect(null, { addNotification })(APModal);

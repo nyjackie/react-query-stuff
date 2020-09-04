@@ -100,7 +100,7 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
                 commission_type,
                 is_disabled: is_disabled === 'true',
                 is_groomed: is_groomed === 'true',
-                base_consumer_payout,
+                base_consumer_payout: commission_type === 'PERCENT' ? commission / 100 : commission,
                 begins_at,
                 ends_at,
               };
@@ -251,8 +251,9 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
                             value={showPecentage(values.commission) + '%'}
                             id="base_consumer_payout"
                             aria-describedby="base_consumer_payout"
+                            name="base_consumer_payout"
                             isInvalid={!!errors.base_consumer_payout}
-                            // onChange={handleChange}
+                            onChange={handleChange}
                           />
                           <Form.Control.Feedback type="invalid">
                             {errors.base_consumer_payout}
@@ -295,6 +296,7 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
                             plaintext
                             value={'$' + values.commission}
                             id="base_consumer_payout"
+                            name="base_consumer_payout"
                             aria-describedby="base_consumer_payout"
                             isInvalid={!!errors.base_consumer_payout}
                             onChange={handleChange}

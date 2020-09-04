@@ -1,0 +1,54 @@
+@import '../../styles/mixins.scss';
+
+.table {
+  &Date {
+    width: 20%;
+  }
+  &Brand {
+    width: 45%;
+  }
+  &Offer {
+    width: 20%;
+  }
+  &Action {
+    width: 15%;
+  }
+}
+
+.select {
+  text-transform: capitalize;
+  &:disabled {
+    opacity: 1;
+  }
+}
+
+.uploadBlock {
+  @include from-bp('lg') {
+    display: flex;
+    flex-direction: row;
+  }
+  margin-bottom: 1.5em;
+}
+
+.uploadImg {
+  width: 128px;
+  margin-right: 24px;
+  @include to-bp('lg') {
+    margin-bottom: 1em;
+  }
+}
+
+.uploadImgCover {
+  width: 256px;
+}
+
+.uploadContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+
+  button {
+    align-self: flex-start;
+  }
+}

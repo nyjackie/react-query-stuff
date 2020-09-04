@@ -311,7 +311,7 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
                   <Form.Row>
                     <Form.Group as={Col}>
                       <Form.Label>
-                        <b>External Visibility:</b>
+                        <b>Is Disabled:</b>
                       </Form.Label>
                       <Form.Control
                         custom
@@ -322,8 +322,8 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
                         onChange={handleChange}
                         isInvalid={!!errors.is_disabled}
                       >
-                        <option value={true}>Disabled</option>
-                        <option value={false}>Enabled</option>
+                        <option value={true}>True</option>
+                        <option value={false}>False</option>
                       </Form.Control>
                       <Form.Control.Feedback type="invalid">
                         {errors.disclaimer}

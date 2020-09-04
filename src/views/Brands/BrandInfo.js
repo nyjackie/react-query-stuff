@@ -159,7 +159,7 @@ const BrandInfo = ({ addNotification, match }) => {
                       <Form.Row>
                         <Form.Group as={Col}>
                           <Form.Label>
-                            <b>External Visibility:</b>
+                            <b>Is Disabled:</b>
                           </Form.Label>
                           <Form.Control
                             custom
@@ -174,8 +174,8 @@ const BrandInfo = ({ addNotification, match }) => {
                             onChange={handleChange}
                             isInvalid={!!errors.is_disabled}
                           >
-                            <option value={false}>Enabled</option>
-                            <option value={true}>Disabled</option>
+                            <option value={true}>True</option>
+                            <option value={false}>False</option>
                           </Form.Control>
                           <Form.Control.Feedback type="invalid">
                             {errors.is_disabled}
@@ -348,7 +348,7 @@ const BrandInfo = ({ addNotification, match }) => {
                 <th>Consumer Payout</th>
                 <th>Commision</th>
                 <th>Commission Type</th>
-                <th>External Visibility</th>
+                <th>Is Disabled</th>
                 <th>Grooming Status</th>
               </tr>
             </thead>

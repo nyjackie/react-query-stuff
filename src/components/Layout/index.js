@@ -50,7 +50,7 @@ const Layout = ({ children, drawerOpen, toggleDrawer }) => {
             <SideNav />
           </Col>
           <Col className={contentCSS}>
-            <Navbar bg="light" expand="md" className="p-0 pt-2">
+            <Navbar bg="light" expand="lg" className="p-0 pt-2">
               <Navbar.Toggle aria-controls="drawer" onClick={toggleDrawer} />
             </Navbar>
             <main className="flex-fill container-fluid">{children}</main>

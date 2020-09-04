@@ -9,14 +9,14 @@
   top: 0;
   left: 0;
   border-right: 1px solid black;
-  background-color: #F4FAF9;
+  background-color: #f4faf9;
 }
 
 .content {
   margin-left: 250px;
 }
 
-@include to-bp('md') {
+@include to-bp('lg') {
   .drawer {
     transform: translateX(0);
   }

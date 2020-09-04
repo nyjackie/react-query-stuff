@@ -5,7 +5,7 @@ import { createSchema, max255 } from 'utils/schema';
 import { getSearchQuery } from 'utils';
 
 const schema = createSchema({
-  search_term: max255.required(),
+  search_term: max255.required().min(2, 'please enter more than one character'),
 });
 
 const SearchInput = ({ history, location, limit, offset }) => {
@@ -17,7 +17,7 @@ const SearchInput = ({ history, location, limit, offset }) => {
       search_term: query.search_term || '',
     },
     onSubmit: ({ search_term }) => {
-      if (search_term && search_term.length > 2) {
+      if (search_term && search_term.length > 1) {
         const param = new URLSearchParams({ search_term, limit, offset });
         history.push(`${location.pathname}?${param.toString()}`);
       }

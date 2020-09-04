@@ -341,7 +341,7 @@ const BrandInfo = ({ addNotification, match }) => {
               <tr>
                 <th>Start Date</th>
                 <th>End Date</th>
-                <th>Supported Nonprofit ID</th>
+                <th>Supported Nonprofit</th>
                 <th>Program ID</th>
                 <th>Offer ID</th>
                 <th>Offer Type</th>
@@ -358,7 +358,6 @@ const BrandInfo = ({ addNotification, match }) => {
                   const {
                     base_consumer_payout,
                     begins_at,
-                    supported_nonprofit_id,
                     ends_at,
                     commission,
                     commission_type,
@@ -381,7 +380,11 @@ const BrandInfo = ({ addNotification, match }) => {
                     >
                       <td>{begins_at ? moment(begins_at).format('MM/DD/YY') : 'N/A'}</td>
                       <td>{ends_at ? moment(ends_at).format('MM/DD/YY') : 'N/A'}</td>
-                      <td>{supported_nonprofit_id}</td>
+                      <td>
+                        {affiliate_program.supported_nonprofit
+                          ? affiliate_program.supported_nonprofit.name
+                          : 'N/A'}
+                      </td>
                       <td>{program_id}</td>
                       <td>{offer_guid.substring(0, 11) + '...'}</td>
                       <td>{offer_type.substring(0, 11) + '...'}</td>

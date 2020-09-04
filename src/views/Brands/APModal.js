@@ -123,7 +123,7 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
                   <Form.Row>
                     <Form.Group as={Col}>
                       <Form.Label>
-                        <b>Supported Nonprofit ID: </b>
+                        <b>Supported Nonprofit: </b>
                       </Form.Label>
                       <AsyncSelect
                         defaultInputValue={

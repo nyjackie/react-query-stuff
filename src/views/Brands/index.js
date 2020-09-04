@@ -12,12 +12,10 @@ const Brands = () => {
   );
   const prevPage = () => {
     setPage(page => Math.max(page - 1, 1));
-    console.log(page);
   };
 
   const nextPage = () => {
     setPage(page => (!latestData || latestData.brands.length === 0 ? page : page + 1));
-    console.log(page);
   };
   if (isLoading) {
     return <Spinner />;

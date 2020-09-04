@@ -52,15 +52,16 @@ export default function Profile({ data, onSave }) {
     }
   };
 
+  const [city, state] = data.location.split(', ');
   const formik = useFormik({
     validationSchema: schema,
     initialValues: {
-      hero_url: data.hero_url || '', // file
-      logo_url: data.logo_url || '', // file
+      hero_url: data.hero_url, // file
+      logo_url: data.logo_url, // file
       name: data.name || '', // text
       categories: data.categories || [], // multiselect
-      city: '', // text
-      state: '', // state select dropdown
+      city: city || '', // text
+      state: state || '', // state select dropdown
       website_url: data.website_url || '', // text
       mission: data.mission || '', // textarea
     },
@@ -75,8 +76,6 @@ export default function Profile({ data, onSave }) {
       //   });
     },
   });
-
-  console.log('errors', formik.errors);
 
   return (
     <>

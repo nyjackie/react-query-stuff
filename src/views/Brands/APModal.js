@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { api } from 'gdd-components';
 import { Modal, Button, Form, Col, Row } from 'react-bootstrap';
@@ -14,6 +14,9 @@ import {
 import { connect } from 'react-redux';
 import { addNotification } from 'actions/notifications';
 import AsyncSelect from 'react-select/async';
+import NumberFormat from 'react-number-format';
+import NumericInput from 'react-numeric-input';
+import InputMask from 'react-input-mask';
 
 const schema = yupObject({
   begins_at: yupString().required('Begins at date cannot be empty.'),
@@ -21,6 +24,7 @@ const schema = yupObject({
     .typeError('Consumer Payout must be a number')
     .required('Consumer Payout cannot be empty.'),
   commission: yupNumber()
+    .positive('Comission has to be greater than 0')
     .typeError('Commission must be a number')
     .required('Commission cannot be empty.'),
   commission_type: yupString().required('Commission Type cannot be empty.'),
@@ -31,6 +35,16 @@ const schema = yupObject({
     .typeError('Supported Nonprofit ID must be a number')
     .nullable(),
 });
+
+const showPecentage = num => {
+  if (isNaN(num) || null) {
+    return 0;
+  }
+  if (Number.isInteger(num)) {
+    return num;
+  }
+  return num * 100;
+};
 
 const loadOptions = async inputValue => {
   const res = await api.offers.searchNonprofits(inputValue);
@@ -79,7 +93,7 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
                 commission_type,
                 is_disabled: is_disabled === 'true',
                 is_groomed: is_groomed === 'true',
-                base_consumer_payout,
+                base_consumer_payout: commission,
                 begins_at,
                 ends_at,
               };
@@ -176,68 +190,103 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
                   <Form.Row>
                     <Form.Group as={Col}>
                       <Form.Label>
-                        <b>Commission:</b>
-                      </Form.Label>
-                      <Form.Control
-                        value={values.commission ?? ''}
-                        id="commission"
-                        aria-describedby="commission"
-                        onChange={handleChange}
-                        isInvalid={!!errors.commission}
-                      />
-                      <Form.Control.Feedback type="invalid">
-                        {errors.commission}
-                      </Form.Control.Feedback>
-                    </Form.Group>
-                    <Form.Group as={Col}>
-                      <Form.Label>
                         <b>Commission Type:</b>
                       </Form.Label>
                       <Form.Control
+                        as="select"
                         value={values.commission_type ?? ''}
                         id="commission_type"
                         aria-describedby="commission_type"
                         onChange={handleChange}
                         isInvalid={!!errors.commission_type}
-                      />
+                      >
+                        <option value="PERCENT">PERCENT</option>
+                        <option value="FLAT">FLAT</option>
+                      </Form.Control>
                       <Form.Control.Feedback type="invalid">
                         {errors.commission_type}
                       </Form.Control.Feedback>
                     </Form.Group>
                   </Form.Row>
-
-                  <Form.Row>
-                    <Form.Group as={Col}>
-                      <Form.Label>
-                        <b>Consumer Payout:</b>
-                      </Form.Label>
-                      <Form.Control
-                        value={values.base_consumer_payout ?? ''}
-                        id="base_consumer_payout"
-                        aria-describedby="base_consumer_payout"
-                        isInvalid={!!errors.base_consumer_payout}
-                        onChange={handleChange}
-                      />
-                      <Form.Control.Feedback type="invalid">
-                        {errors.base_consumer_payout}
-                      </Form.Control.Feedback>
-                    </Form.Group>
-                    <Form.Group as={Col}>
-                      <Form.Label>
-                        <b>Disclaimer:</b>
-                      </Form.Label>
-                      <Form.Control
-                        value={values.disclaimer ?? ''}
-                        id="disclaimer"
-                        aria-describedby="disclaimer"
-                        isInvalid={!!errors.disclaimer}
-                        onChange={handleChange}
-                      />
-                      <Form.Control.Feedback type="invalid">
-                        {errors.disclaimer}
-                      </Form.Control.Feedback>
-                    </Form.Group>
-                  </Form.Row>
+                  {values.commission_type === 'PERCENT' && (
+                    <>
+                      <Form.Row>
+                        <Form.Group as={Col}>
+                          <Form.Label>
+                            <b>Commission:</b>
+                          </Form.Label>
+                          <Form.Control
+                            as={InputMask}
+                            value={showPecentage(values.commission)}
+                            id="commission"
+                            mask="9%"
+                            // suffix={'%'}
+                            aria-describedby="commission"
+                            onChange={handleChange}
+                            isInvalid={!!errors.commission}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.commission}
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                        <Form.Group as={Col}>
+                          <Form.Label>
+                            <b>Consumer Payout:</b>
+                          </Form.Label>
+                          <Form.Control
+                            disabled
+                            plaintext
+                            value={values.commission}
+                            id="base_consumer_payout"
+                            aria-describedby="base_consumer_payout"
+                            isInvalid={!!errors.base_consumer_payout}
+                            // onChange={handleChange}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.base_consumer_payout}
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                      </Form.Row>
+                    </>
+                  )}
+                  {values.commission_type === 'FLAT' && (
+                    <>
+                      <Form.Row>
+                        <Form.Group as={Col}>
+                          <Form.Label>
+                            <b>Commission:</b>
+                          </Form.Label>
+                          <Form.Control
+                            value={values.commission || 0}
+                            id="commission"
+                            aria-describedby="commission"
+                            onChange={handleChange}
+                            isInvalid={!!errors.commission}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.commission}
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                        <Form.Group as={Col}>
+                          <Form.Label>
+                            <b>Consumer Payout:</b>
+                          </Form.Label>
+                          <Form.Control
+                            disabled
+                            plaintext
+                            value={values.commission || 0}
+                            id="base_consumer_payout"
+                            aria-describedby="base_consumer_payout"
+                            isInvalid={!!errors.base_consumer_payout}
+                            onChange={handleChange}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.base_consumer_payout}
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                      </Form.Row>
+                    </>
+                  )}
                   <Form.Row>
                     <Form.Group as={Col}>
                       <Form.Label>
@@ -276,6 +325,24 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
                       </Form.Control>
                       <Form.Control.Feedback type="invalid">
                         {errors.is_groomed}
+                      </Form.Control.Feedback>
+                    </Form.Group>
+                  </Form.Row>
+                  <Form.Row>
+                    <Form.Group as={Col}>
+                      <Form.Label>
+                        <b>Disclaimer:</b>
+                      </Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        value={values.disclaimer ?? ''}
+                        id="disclaimer"
+                        aria-describedby="disclaimer"
+                        isInvalid={!!errors.disclaimer}
+                        onChange={handleChange}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.disclaimer}
                       </Form.Control.Feedback>
                     </Form.Group>
                   </Form.Row>

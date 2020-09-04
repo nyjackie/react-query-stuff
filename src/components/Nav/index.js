@@ -57,7 +57,7 @@ const SideNav = ({ isAuthenticated, logout, closeDrawer }) => {
         Claims
       </NavLink>
       <NavLink className="js-closeDrawer mb-2" to="/brands" exact={true}>
-        Brand Offers
+        Brand Grooming Queue
       </NavLink>
       <NavLink className="js-closeDrawer mb-2" to="/banlist" exact={true}>
         Ban List

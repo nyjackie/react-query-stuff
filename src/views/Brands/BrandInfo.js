@@ -137,7 +137,7 @@ const BrandInfo = ({ addNotification, match }) => {
                         </Col>
                         <Col className="form-col">
                           <p>
-                            <b>Created Date: </b>
+                            <b>Modified Date: </b>
                           </p>
                           <p>{moment(modified_at).format('MM/DD/YYYY')}</p>
                         </Col>
@@ -349,7 +349,7 @@ const BrandInfo = ({ addNotification, match }) => {
                 <th>Commision</th>
                 <th>Commission Type</th>
                 <th>External Visibility</th>
-                <th>Groomed Status</th>
+                <th>Grooming Status</th>
               </tr>
             </thead>
             <tbody>

@@ -371,8 +371,10 @@ const BrandInfo = ({ addNotification, match }) => {
                   return (
                     <tr
                       onClick={() => {
-                        setOffer(affiliate_program);
-                        handleShow();
+                        if (show !== true) {
+                          setOffer(affiliate_program);
+                          handleShow();
+                        }
                       }}
                       key={offer_guid}
                       className="text-right"

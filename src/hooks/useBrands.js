@@ -1,4 +1,4 @@
-import { useQuery, useMutation, queryCache } from 'react-query';
+import { usePaginatedQuery, useQuery, useMutation, queryCache } from 'react-query';
 import { api } from 'gdd-components';
 
 /****************************************************************
@@ -6,13 +6,10 @@ import { api } from 'gdd-components';
  */
 
 function updateBrand({ id, form }) {
-  console.log(form);
-
   return api.offers.updateBrand(id, form).then(res => res.data);
 }
 
 function updateOffer({ form }) {
-  console.log('formdata', form);
   return api.offers.updateOffer(form).then(res => {
     return res.data;
   });
@@ -25,9 +22,9 @@ export function useCategories() {
   });
 }
 
-export function useBrands() {
-  return useQuery('brands', () => {
-    return api.offers.getBrands().then(res => res.data);
+export function useBrands(offset = 0) {
+  return usePaginatedQuery(['brands', offset], () => {
+    return api.offers.getBrands(offset).then(res => res.data);
   });
 }
 

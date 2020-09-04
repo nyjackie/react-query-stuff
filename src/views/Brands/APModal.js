@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { api } from 'gdd-components';
 import { Modal, Button, Form, Col, Row } from 'react-bootstrap';
@@ -84,7 +84,7 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
                 ends_at,
               };
 
-              updateOffer({ form })
+              updateOffer({ form, brand_id })
                 .then(() => {
                   addNotification(`Offer update success`, 'success');
                   handleClose();
@@ -126,6 +126,9 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
                         <b>Supported Nonprofit ID: </b>
                       </Form.Label>
                       <AsyncSelect
+                        defaultInputValue={
+                          offer.supported_nonprofit !== null ? offer.supported_nonprofit.name : ''
+                        }
                         cacheOptions
                         loadOptions={loadOptions}
                         isSearchable={true}

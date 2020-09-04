@@ -89,8 +89,12 @@ const NonprofitSearch = ({ history, location }) => {
               defaultValue={limit}
               onChange={e => {
                 e.preventDefault();
-                const param = new URLSearchParams({ search_term, offset });
-                param.set('limit', e.target.value);
+                const query = { offset, limit: e.target.value };
+                if (search_term) {
+                  query.search_term = search_term;
+                }
+                const param = new URLSearchParams(query);
+
                 history.push(`${location.pathname}?${param.toString()}`);
               }}
             >

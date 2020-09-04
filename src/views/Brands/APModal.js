@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { api } from 'gdd-components';
-import { Modal, Button, Form, Col, Row } from 'react-bootstrap';
+import { Modal, Button, Form, Col, Row, InputGroup } from 'react-bootstrap';
 import moment from 'moment';
 import { Formik } from 'formik';
 import { useUpdateOffer } from 'hooks/useBrands';
@@ -14,9 +14,6 @@ import {
 import { connect } from 'react-redux';
 import { addNotification } from 'actions/notifications';
 import AsyncSelect from 'react-select/async';
-import NumberFormat from 'react-number-format';
-import NumericInput from 'react-numeric-input';
-import InputMask from 'react-input-mask';
 
 const schema = yupObject({
   begins_at: yupString().required('Begins at date cannot be empty.'),
@@ -36,13 +33,23 @@ const schema = yupObject({
     .nullable(),
 });
 
-const showPecentage = num => {
-  if (isNaN(num) || null) {
+const showPecentage = (numStr, type) => {
+  if (!numStr) return 0;
+
+  const num = parseFloat(numStr);
+
+  if (isNaN(num)) {
     return 0;
   }
+
+  if (type === 'FLAT') {
+    return num;
+  }
+
   if (Number.isInteger(num)) {
     return num;
   }
+
   return num * 100;
 };
 
@@ -89,11 +96,11 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
                 offer_guid,
                 supported_nonprofit_id: parseInt(supported_nonprofit_id),
                 disclaimer,
-                commission,
+                commission: commission_type === 'PERCENT' ? commission / 100 : commission,
                 commission_type,
                 is_disabled: is_disabled === 'true',
                 is_groomed: is_groomed === 'true',
-                base_consumer_payout: commission,
+                base_consumer_payout,
                 begins_at,
                 ends_at,
               };
@@ -110,6 +117,7 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
           >
             {props => {
               const { values, errors, handleSubmit, handleChange } = props;
+
               return (
                 <Form onSubmit={handleSubmit}>
                   <Row className="form-row">
@@ -211,24 +219,28 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
                   {values.commission_type === 'PERCENT' && (
                     <>
                       <Form.Row>
-                        <Form.Group as={Col}>
-                          <Form.Label>
+                        <Col>
+                          <Form.Label htmlFor="commission">
                             <b>Commission:</b>
                           </Form.Label>
-                          <Form.Control
-                            as={InputMask}
-                            value={showPecentage(values.commission)}
-                            id="commission"
-                            mask="9%"
-                            // suffix={'%'}
-                            aria-describedby="commission"
-                            onChange={handleChange}
-                            isInvalid={!!errors.commission}
-                          />
+                          <InputGroup>
+                            <Form.Control
+                              type="number"
+                              step="1"
+                              value={showPecentage(values.commission)}
+                              id="commission"
+                              aria-describedby="commission"
+                              onChange={handleChange}
+                              isInvalid={!!errors.commission}
+                            />
+                            <InputGroup.Append>
+                              <InputGroup.Text>%</InputGroup.Text>
+                            </InputGroup.Append>
+                          </InputGroup>
                           <Form.Control.Feedback type="invalid">
                             {errors.commission}
                           </Form.Control.Feedback>
-                        </Form.Group>
+                        </Col>
                         <Form.Group as={Col}>
                           <Form.Label>
                             <b>Consumer Payout:</b>
@@ -236,7 +248,7 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
                           <Form.Control
                             disabled
                             plaintext
-                            value={values.commission}
+                            value={showPecentage(values.commission) + '%'}
                             id="base_consumer_payout"
                             aria-describedby="base_consumer_payout"
                             isInvalid={!!errors.base_consumer_payout}
@@ -252,21 +264,28 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
                   {values.commission_type === 'FLAT' && (
                     <>
                       <Form.Row>
-                        <Form.Group as={Col}>
-                          <Form.Label>
+                        <Col>
+                          <Form.Label htmlFor="commission">
                             <b>Commission:</b>
                           </Form.Label>
-                          <Form.Control
-                            value={values.commission || 0}
-                            id="commission"
-                            aria-describedby="commission"
-                            onChange={handleChange}
-                            isInvalid={!!errors.commission}
-                          />
-                          <Form.Control.Feedback type="invalid">
-                            {errors.commission}
-                          </Form.Control.Feedback>
-                        </Form.Group>
+                          <InputGroup>
+                            <InputGroup.Prepend>
+                              <InputGroup.Text>$</InputGroup.Text>
+                            </InputGroup.Prepend>
+                            <Form.Control
+                              type="number"
+                              step="1"
+                              value={values.commission || 0}
+                              id="commission"
+                              aria-describedby="commission"
+                              onChange={handleChange}
+                              isInvalid={!!errors.commission}
+                            />
+                            <Form.Control.Feedback type="invalid">
+                              {errors.commission}
+                            </Form.Control.Feedback>
+                          </InputGroup>
+                        </Col>
                         <Form.Group as={Col}>
                           <Form.Label>
                             <b>Consumer Payout:</b>
@@ -274,7 +293,7 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
                           <Form.Control
                             disabled
                             plaintext
-                            value={values.commission || 0}
+                            value={'$' + values.commission}
                             id="base_consumer_payout"
                             aria-describedby="base_consumer_payout"
                             isInvalid={!!errors.base_consumer_payout}

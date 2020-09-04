@@ -143,7 +143,7 @@ function ConsumerUser({ data, addNotification }) {
               as={InputMask}
               mask="(999) 999-9999"
               name="phone_number"
-              value={formik.values.phone_number || ''}
+              value={formik.values.phone_number.replace(/^\+1/, '') || ''}
               onChange={formik.handleChange}
               isInvalid={formik.touched.phone_number && formik.errors.phone_number}
               isValid={formik.touched.phone_number && !formik.errors.phone_number}

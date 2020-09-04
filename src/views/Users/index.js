@@ -4,10 +4,10 @@ import UserSearchResult from './UserSearchResult';
 import { useSearchUsers } from 'hooks/useUsers';
 import { getSearchQuery } from 'utils';
 import Spinner from 'components/Spinner';
-import SearchInput from 'components/SearchInput';
+import UserSearchInput from './UserSearchInput';
 
 function Users({ history, location }) {
-  const query = getSearchQuery('query');
+  const query = getSearchQuery();
   const { isLoading, isError, data, error } = useSearchUsers(query);
 
   if (isLoading) {
@@ -18,9 +18,10 @@ function Users({ history, location }) {
     <Fragment>
       <Row>
         <Col>
-          <SearchInput label="Search Users" location={location} history={history} />
+          <h2>Search Users</h2>
+          <UserSearchInput location={location} history={history} />
           {isError && <p className="mt-2 text-danger">{error.message}</p>}
-          <UserSearchResult results={data} />
+          {data && <UserSearchResult results={data.users} />}
         </Col>
       </Row>
     </Fragment>

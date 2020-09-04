@@ -3,7 +3,7 @@ import Container from 'react-bootstrap/Container';
 import Table from 'react-bootstrap/Table';
 import Alert from 'react-bootstrap/Alert';
 import PageHeader from 'components/PageHeader';
-import Claim from './Claim';
+import ClaimRow from './ClaimRow';
 import { useClaims } from 'hooks/useClaims';
 import Spinner from 'components/Spinner';
 
@@ -23,7 +23,7 @@ function UpdatedTable({ claims }) {
       </thead>
       <tbody>
         {claims.map(claim => (
-          <Claim key={claim.id} claim={claim} note={claim.note || '[none provided]'} />
+          <ClaimRow key={claim.id} claim={claim} note={claim.note || '[none provided]'} />
         ))}
       </tbody>
     </Table>
@@ -59,7 +59,7 @@ function ClaimsPage() {
         </thead>
         <tbody>
           {waiting.map(claim => (
-            <Claim key={claim.id} claim={claim} />
+            <ClaimRow key={claim.id} claim={claim} />
           ))}
         </tbody>
       </Table>

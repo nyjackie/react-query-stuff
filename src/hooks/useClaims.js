@@ -1,19 +1,19 @@
 import { useQuery, useMutation, queryCache } from 'react-query';
-import { api } from 'gdd-components';
+import api from 'gdd-api-lib';
 import _merge from 'lodash/merge';
 
 /****************************************************************
  * Functions that perform api calls
  */
 function fetchClaim(key, claimId) {
-  return api.claims.getSingle(claimId).then(res => res.data);
+  return api.getClaim(claimId).then(res => res.data);
 }
 
 function updateClaim({ id, status, note }) {
   if (status === 'approve') {
-    return api.claims.approve(id, note).then(res => res.data);
+    return api.approveClaim(id, note).then(res => res.data);
   }
-  return api.claims.deny(id, note).then(res => res.data);
+  return api.denyClaim(id, note).then(res => res.data);
 }
 
 /****************************************************************
@@ -21,13 +21,19 @@ function updateClaim({ id, status, note }) {
  */
 
 export function useClaims() {
-  return useQuery('claims', () => {
-    return api.claims.getAll().then(res => res.data);
-  });
+  return useQuery(
+    'claims',
+    () => {
+      return api.getClaims().then(res => res.data);
+    },
+    {
+      retry: false,
+    }
+  );
 }
 
 export function useClaim(claimId) {
-  return useQuery(['claim', claimId], fetchClaim, { enabled: claimId });
+  return useQuery(['claim', claimId], fetchClaim, { enabled: claimId, retry: false });
 }
 
 export function useUpdateClaim() {

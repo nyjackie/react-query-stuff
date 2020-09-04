@@ -2,7 +2,7 @@
 steps:
   - name: node:10.15.1
     entrypoint: yarn
-    args: ["remove", "gdd-components"]
+    args: ["remove", "gdd-components", "gdd-api-lib"]
   - name: node:10.15.1
     entrypoint: yarn
     args: ["add", "firebase-tools"]

@@ -17,4 +17,5 @@ buildForEnv () {
 }
 
 yarn add "git+https://$1:x-oauth-basic@github.com/consumer-edge/gdd-components.git#master" && \
+yarn add "git+https://$1:x-oauth-basic@github.com/consumer-edge/gdd-api-lib.git#master" && \
 buildForEnv "$@"

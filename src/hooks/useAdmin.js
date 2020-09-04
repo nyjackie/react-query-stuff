@@ -1,12 +1,12 @@
 import { useMutation } from 'react-query';
-import { api } from 'gdd-components';
+import api from 'gdd-api-lib';
 
 /****************************************************************
  * Functions that perform api calls
  */
 
 function postUser(body) {
-  return api.admin.createAdminUser(body).then(res => res.data);
+  return api.createInternalUser(body).then(res => res.data);
 }
 
 /****************************************************************

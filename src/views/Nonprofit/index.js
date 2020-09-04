@@ -10,13 +10,11 @@ import Spinner from 'components/Spinner';
 
 /**
  * Nonprofit profile
- * If a `selected` item lives in redux state it will use that to populate the
- * date, if not it will search our api using the ein in the url parameter
  */
 const Nonprofit = ({ addNotification }) => {
-  const { ein } = useParams();
+  const { id } = useParams();
 
-  const { isLoading, isError, data: selected, error } = useNonprofit(ein);
+  const { isLoading, isError, data: selected, error } = useNonprofit(id);
 
   if (isLoading) {
     return <Spinner />;
@@ -28,7 +26,7 @@ const Nonprofit = ({ addNotification }) => {
         <PageHeader pageTitle="Nonprofit Profile" />
         <Row>
           <Col>
-            <p>A profile for {ein} could not be found.</p>
+            <p>A profile for {id} could not be found.</p>
             <p>{error.message}</p>
             <p>
               <Link to="/nonprofit">Try searching again</Link>

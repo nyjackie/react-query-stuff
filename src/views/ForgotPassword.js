@@ -11,7 +11,7 @@ const schema = yupObject({
   email: gddEmailRequired,
 });
 
-const ResetPassword = () => {
+const ForgotPassword = () => {
   const [completed, setCompleted] = useState(false);
   const [formError, setFormError] = useState(null);
 
@@ -21,7 +21,7 @@ const ResetPassword = () => {
       email: '',
     },
     onSubmit: async values => {
-      const [err, result] = await userService.resetPassword(values.email);
+      const [err, result] = await userService.forgotPassword(values.email);
 
       if (err) {
         setFormError(err.message);
@@ -72,4 +72,4 @@ const ResetPassword = () => {
   );
 };
 
-export default ResetPassword;
+export default ForgotPassword;

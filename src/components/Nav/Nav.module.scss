@@ -5,3 +5,39 @@
   height: auto;
   margin: 0 auto;
 }
+
+$pad: 20px;
+
+.nav {
+  h2 {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    margin: 0;
+    background-color: rgba(43, 194, 189, 0.2);
+    padding: 5px $pad;
+  }
+
+  :global(.active) {
+    font-weight: bolder;
+    text-decoration: underline;
+  }
+}
+
+// the top level UL
+.navUL {
+  list-style-type: none;
+  padding: 0;
+}
+
+.noSub {
+  padding: 5px $pad;
+}
+
+.navSection {
+  margin: 20px 0;
+}
+
+.navSubSection {
+  list-style-type: none;
+  padding: 5px $pad;
+}

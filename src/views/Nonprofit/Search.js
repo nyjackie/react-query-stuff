@@ -1,33 +1,23 @@
 import React, { Fragment } from 'react';
-import { useHistory } from 'react-router-dom';
-import { Row, Col, Table, Form } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import { Row, Col, Form } from 'react-bootstrap';
 
 import { getSearchQuery } from 'utils';
-import { KEYCODES } from 'gdd-components/dist/utils';
+import { Paginator } from 'gdd-components';
+
 import { useNonprofitSearch } from 'hooks/useNonprofits';
 import Spinner from 'components/Spinner';
 import SearchInput from './NPSearchInput';
+import styles from './NonProfitInfo.module.scss';
 
 const SingleResult = ({ result }) => {
-  let history = useHistory();
-
-  function handleClick() {
-    history.push(`/nonprofit/${result.id}`);
-  }
-
-  function handleKeyboardSelect(evt) {
-    const key = evt.which || evt.keyCode;
-    if (key === KEYCODES.RETURN || key === KEYCODES.SPACE) {
-      evt.preventDefault();
-      history.push(`/nonprofit/${result.id}`);
-    }
-  }
-
   return (
-    <tr tabIndex="0" className="pointer" onKeyDown={handleKeyboardSelect} onClick={handleClick}>
-      <td>{result.name}</td>
-      <td>{result.mission}</td>
-    </tr>
+    <li className="pointer">
+      <Link to={`/nonprofit/${result.id}`}>
+        <h3>{result.name}</h3>
+      </Link>
+      <p>{result.mission}</p>
+    </li>
   );
 };
 
@@ -37,19 +27,11 @@ const SearchResults = ({ results }) => {
   }
 
   return (
-    <Table borderless hover responsive>
-      <thead>
-        <tr>
-          <th style={{ minWidth: '200px' }}>Name</th>
-          <th>Mission</th>
-        </tr>
-      </thead>
-      <tbody>
-        {results.map((item, i) => (
-          <SingleResult result={item} key={item.id} />
-        ))}
-      </tbody>
-    </Table>
+    <ul className={styles.results}>
+      {results.map(item => (
+        <SingleResult result={item} key={item.id} />
+      ))}
+    </ul>
   );
 };
 
@@ -63,6 +45,16 @@ const NonprofitSearch = ({ history, location }) => {
 
   if (isLoading) {
     return <Spinner />;
+  }
+
+  function updateUrl(o = offset, l = limit) {
+    const query = { offset: o, limit: l };
+    if (search_term) {
+      query.search_term = search_term;
+    }
+    const param = new URLSearchParams(query);
+
+    history.push(`${location.pathname}?${param.toString()}`);
   }
 
   return (
@@ -80,64 +72,47 @@ const NonprofitSearch = ({ history, location }) => {
           {results && <SearchResults results={results.nonprofits} />}
         </Col>
       </Row>
-      <Row className="mt-4 justify-content-end">
-        <Col sm={6} md={3}>
-          <Form.Group>
-            <Form.Label>limit:</Form.Label>
-            <Form.Control
-              as="select"
-              defaultValue={limit}
-              onChange={e => {
-                e.preventDefault();
-                const query = { offset, limit: e.target.value };
-                if (search_term) {
-                  query.search_term = search_term;
-                }
-                const param = new URLSearchParams(query);
-
-                history.push(`${location.pathname}?${param.toString()}`);
+      <Row className="mt-4 justify-content-between">
+        <Col xs={12} lg="auto">
+          {results?.total_results && (
+            <Paginator
+              total={results?.total_results}
+              limit={limit}
+              offset={offset}
+              onPage={newOffset => {
+                updateUrl(newOffset);
               }}
-            >
-              <option value="10">10</option>
-              <option value="20">20</option>
-              <option value="30">30</option>
-              <option value="40">40</option>
-              <option value="50">50</option>
-              <option value="60">60</option>
-              <option value="70">70</option>
-              <option value="80">80</option>
-              <option value="90">90</option>
-              <option value="100">100</option>
-            </Form.Control>
-          </Form.Group>
+            />
+          )}
         </Col>
-        {results?.total_results && results?.total_results > limit && (
-          <Col sm={6} md={3}>
-            <Form.Group>
-              <Form.Label>Page:</Form.Label>
+        <Col xs={12} lg="auto">
+          <Form.Group as={Row} controlId="perPage">
+            <Form.Label as={Col} xs={12} lg="auto" className="text-right">
+              Resutls per page:
+            </Form.Label>
+            <Col xs={12} lg="auto">
               <Form.Control
                 as="select"
-                defaultValue={offset}
+                defaultValue={limit}
                 onChange={e => {
                   e.preventDefault();
-                  const param = new URLSearchParams({ search_term, limit });
-                  param.set('offset', e.target.value);
-                  history.push(`${location.pathname}?${param.toString()}`);
+                  updateUrl(offset, e.target.value);
                 }}
               >
-                {Array(Math.ceil(results.total_results / limit))
-                  .fill(0)
-                  .map((_, i) => {
-                    return (
-                      <option key={'page-select-' + i * limit} value={i * limit}>
-                        {i + 1}
-                      </option>
-                    );
-                  })}
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="30">30</option>
+                <option value="40">40</option>
+                <option value="50">50</option>
+                <option value="60">60</option>
+                <option value="70">70</option>
+                <option value="80">80</option>
+                <option value="90">90</option>
+                <option value="100">100</option>
               </Form.Control>
-            </Form.Group>
-          </Col>
-        )}
+            </Col>
+          </Form.Group>
+        </Col>
       </Row>
     </Fragment>
   );

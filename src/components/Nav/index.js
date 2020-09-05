@@ -8,7 +8,7 @@ import { ReactComponent as Logo } from 'assets/good-deeds-logo-teal.svg';
 import styles from './Nav.module.scss';
 
 const Title = () => (
-  <a aria-hidden="true" href="/" className="mb-3">
+  <a aria-hidden="true" href="/" className="mb-sm-2 mb-md-3 d-block">
     <Logo className={styles.logo} />
   </a>
 );
@@ -42,32 +42,79 @@ const SideNav = ({ isAuthenticated, logout, closeDrawer }) => {
   }
 
   return (
-    <Nav className="flex-column h-100 p-3" onClick={onNavClick}>
+    <Nav
+      role="navigation"
+      aria-label="Main"
+      id="nav"
+      className={`flex-column h-100 ${styles.nav}`}
+      onClick={onNavClick}
+    >
       <Title />
-      <NavLink className="js-closeDrawer mb-2" to="/" exact={true}>
-        Home
-      </NavLink>
-      <NavLink className="js-closeDrawer mb-2" to="/nonprofit" exact={true}>
-        Search Nonprofits
-      </NavLink>
-      <NavLink className="js-closeDrawer mb-2" to="/users" exact={true}>
-        Search Users
-      </NavLink>
-      <NavLink className="js-closeDrawer mb-2" to="/claims" exact={true}>
-        Claims
-      </NavLink>
-      <NavLink className="js-closeDrawer mb-2" to="/brands" exact={true}>
-        Brand Grooming Queue
-      </NavLink>
-      <NavLink className="js-closeDrawer mb-2" to="/banlist" exact={true}>
-        Ban List
-      </NavLink>
-      <NavLink className="js-closeDrawer mb-2" to="/account/create" exact={true}>
-        Account &gt; Create user
-      </NavLink>
-      <button onClick={doLogout} className="js-closeDrawer mt-5 btn btn-secondary">
-        Logout
-      </button>
+      <ul className={styles.navUL}>
+        <li className={`${styles.navSection} ${styles.noSub}`}>
+          <NavLink className="js-closeDrawer mb-2" to="/" exact={true}>
+            Home
+          </NavLink>
+        </li>
+        <li className={styles.navSection}>
+          <h2>Nonprofits</h2>
+          <ul className={styles.navSubSection}>
+            <li>
+              <NavLink className="js-closeDrawer mb-2" to="/nonprofit" exact={true}>
+                Search
+              </NavLink>
+            </li>
+            <li>
+              <NavLink className="js-closeDrawer mb-2" to="/claims" exact={true}>
+                Claims
+              </NavLink>
+            </li>
+            <li>
+              <NavLink className="js-closeDrawer mb-2" to="/banlist" exact={true}>
+                Ban List
+              </NavLink>
+            </li>
+          </ul>
+        </li>
+        <li className={styles.navSection}>
+          <h2>Users</h2>
+          <ul className={styles.navSubSection}>
+            <li>
+              <NavLink className="js-closeDrawer mb-2" to="/users" exact={true}>
+                Search
+              </NavLink>
+            </li>
+          </ul>
+        </li>
+
+        <li className={styles.navSection}>
+          <h2>Brands</h2>
+          <ul className={styles.navSubSection}>
+            <li>
+              <NavLink className="js-closeDrawer mb-2" to="/brands" exact={true}>
+                Grooming Queue
+              </NavLink>
+            </li>
+          </ul>
+        </li>
+
+        <li className={styles.navSection}>
+          <h2>Accounts</h2>
+          <ul className={styles.navSubSection}>
+            <li>
+              <NavLink className="js-closeDrawer mb-2" to="/account/create" exact={true}>
+                Create user
+              </NavLink>
+            </li>
+          </ul>
+        </li>
+
+        <li className={`${styles.navSection} ${styles.noSub}`}>
+          <button onClick={doLogout} className="js-closeDrawer mt-5 btn btn-secondary">
+            Logout
+          </button>
+        </li>
+      </ul>
     </Nav>
   );
 };

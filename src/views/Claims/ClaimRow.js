@@ -13,7 +13,7 @@ const Claim = ({ claim, note }) => {
         <Moment format="YYYY/MM/DD">{created_at}</Moment>
       </td>
       <td>
-        <Link to={`/nonprofit/${nonprofit.ein}`}>{nonprofit.name}</Link>
+        <Link to={`/nonprofit/${nonprofit.id}`}>{nonprofit.name}</Link>
       </td>
       <td>
         {first_name} {last_name}

@@ -1,25 +1,44 @@
 import { useQuery } from 'react-query';
-import { api } from 'gdd-components';
+import api from 'gdd-api-lib';
 
 /****************************************************************
  * Functions that perform api calls
  */
-function search(key, term) {
-  return api.nonprofit.search(term).then(res => res.data);
+function search(key, query) {
+  if (query.search_term) {
+    query.search_term = window.btoa(query.search_term);
+  }
+  return api.searchNonprofits(query).then(res => res.data);
 }
 
 function fetchNp(key, id) {
-  return api.nonprofit.getSingle(id).then(res => res.data);
+  return api.getNonprofit(id).then(res => res.data);
+}
+
+function getCategories() {
+  return api.getNonprofitCategories().then(res => res.data);
 }
 
 /****************************************************************
  * Hooks
  */
 
-export function useNonprofitSearch(term) {
-  return useQuery(['np_search', term], search, { enabled: term });
+export function useNonprofitSearch(query) {
+  return useQuery(['np_search', query], search, {
+    enabled: query.search_term,
+    refetchOnWindowFocus: false,
+  });
 }
 
 export function useNonprofit(id) {
   return useQuery(['np_profile', id], fetchNp, { enabled: id });
+}
+
+export function useNpCategories() {
+  return useQuery('np_categories', getCategories, {
+    // these should never go stale because they will barely ever change. We
+    // should definitely cache them throughout the whole session
+    staleTime: Infinity,
+    cacheTime: Infinity,
+  });
 }

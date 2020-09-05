@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Redirect, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -81,7 +81,7 @@ const Login = ({ login, isAuthenticated }) => {
           {loginError && <p className="mt-2 text-danger">{loginError}</p>}
         </Form>
         <p className="mt-3">
-          <Link to="/reset-password">Forgot Password?</Link>
+          <Link to="/forgot-password">Forgot Password?</Link>
         </p>
       </Col>
     </Row>

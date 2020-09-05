@@ -4,19 +4,12 @@ import Brand from './Brand';
 import styles from './Brands.module.scss';
 import { useBrands } from 'hooks/useBrands';
 import Spinner from 'components/Spinner';
+import { Paginator } from 'gdd-components';
 
 const Brands = () => {
-  const [page, setPage] = useState(1);
-  const { resolvedData: { brands = [] } = {}, latestData, isError, isLoading } = useBrands(
-    page - 1
-  );
-  const prevPage = () => {
-    setPage(page => Math.max(page - 1, 1));
-  };
+  const [offset, setOffset] = useState(0);
+  const { resolvedData: { brands = [] } = {}, latestData, isError, isLoading } = useBrands(offset);
 
-  const nextPage = () => {
-    setPage(page => (!latestData || latestData.brands.length === 0 ? page : page + 1));
-  };
   if (isLoading) {
     return <Spinner />;
   }
@@ -46,14 +39,14 @@ const Brands = () => {
       </Row>
       <Row>
         <Col className="d-flex justify-content-center">
-          <Pagination>
-            <Pagination.Prev onClick={() => prevPage()} disabled={page === 1} />
-            <Pagination.Item>{page}</Pagination.Item>
-            <Pagination.Next
-              onClick={() => nextPage()}
-              disabled={!latestData || latestData.brands.length === 0}
-            />
-          </Pagination>
+          {/* TODO: replace 500 with "total_results" */}
+          <Paginator
+            total={latestData?.total_results || 500}
+            offset={0}
+            onPage={newOffset => {
+              setOffset(newOffset);
+            }}
+          />
         </Col>
       </Row>
     </Fragment>

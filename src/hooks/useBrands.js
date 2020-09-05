@@ -1,36 +1,42 @@
 import { usePaginatedQuery, useQuery, useMutation, queryCache } from 'react-query';
-import { api } from 'gdd-components';
+import api from 'gdd-api-lib';
 
 /****************************************************************
  * Hooks
  */
 
 function updateBrand({ id, form }) {
-  return api.offers.updateBrand(id, form).then(res => res.data);
+  return api.editBrand(id, form).then(res => res.data);
 }
 
 function updateOffer({ form }) {
-  return api.offers.updateOffer(form).then(res => {
+  return api.editBrandOffer(form).then(res => {
     return res.data;
   });
 }
 
 // GET
 export function useCategories() {
-  return useQuery('categories', () => {
-    return api.offers.getCategories().then(res => res.data);
-  });
+  return useQuery(
+    'categories',
+    () => {
+      return api.getBrandCategories().then(res => res.data);
+    },
+    {
+      cacheTime: Infinity,
+    }
+  );
 }
 
 export function useBrands(offset = 0) {
   return usePaginatedQuery(['brands', offset], () => {
-    return api.offers.getBrands(offset).then(res => res.data);
+    return api.getRawBrands({ offset, limit: 10 }).then(res => res.data);
   });
 }
 
 export function useBrand(id) {
   return useQuery(['brand', id], () => {
-    return api.offers.getBrand(id).then(res => res.data);
+    return api.getBrand(id).then(res => res.data);
   });
 }
 
@@ -38,18 +44,7 @@ export function useOffers(id) {
   return useQuery(
     ['offers', id],
     () => {
-      return api.offers.getOffers(id).then(res => res.data);
-    },
-    {
-      enabled: id,
-    }
-  );
-}
-export function useNonprofitName(id) {
-  return useQuery(
-    ['nonprofitName', id],
-    () => {
-      return api.offers.searchNonprofit(id);
+      return api.getBrandOffer(id).then(res => res.data);
     },
     {
       enabled: id,
@@ -58,7 +53,6 @@ export function useNonprofitName(id) {
 }
 
 // PUT
-
 export function useUpdateBrand() {
   return useMutation(updateBrand);
 }

@@ -54,7 +54,7 @@ const App = () => {
         <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
         <Router>
           <Helmet>
-            <title>Good Deeds Data | Admin Portal</title>
+            <title>Give Good Deeds</title>
           </Helmet>
           <Switch>
             {/* Public Routes */}

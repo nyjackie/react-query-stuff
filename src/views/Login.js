@@ -39,7 +39,7 @@ const Login = ({ login, isAuthenticated }) => {
 
   return (
     <Row className="justify-content-md-center">
-      <Col md={4} className={styles.loginPage}>
+      <Col md={4} className={`${styles.loginPage} block shadow-sm`}>
         <Logo className={styles.logo} aria-hidden="true" />
         <h1 className="sr-only">Good Deeds Data admin portal</h1>
         <Form noValidate onSubmit={formik.handleSubmit}>

@@ -87,7 +87,6 @@ function UserInfo({ match, addNotification }) {
   if (type === 'consumer') {
     return (
       <>
-        <PageHeader pageTitle="Consumer user info" />
         <ConsumerUser data={data} />
       </>
     );

@@ -1,8 +1,7 @@
 import React, { Fragment, useState, useRef } from 'react';
-import { Col, Row, Table, Jumbotron, Form, Button } from 'react-bootstrap';
+import { Col, Row, Table, Container, Form, Button } from 'react-bootstrap';
 import APModal from './APModal';
 import PropTypes from 'prop-types';
-import PageHeader from 'components/PageHeader';
 import moment from 'moment';
 import { ImageUpload } from 'gdd-components';
 import { cn } from 'gdd-components/dist/utils';
@@ -74,8 +73,7 @@ const BrandInfo = ({ addNotification, match }) => {
     categories &&
     affiliate_programs && (
       <Fragment>
-        <PageHeader className="text-primary" pageTitle="Brand Info" />
-        <Jumbotron>
+        <Container className="block shadow-sm">
           <Row>
             <Col>
               <Button
@@ -398,7 +396,7 @@ const BrandInfo = ({ addNotification, match }) => {
                 })}
             </tbody>
           </Table>
-        </Jumbotron>
+        </Container>
         {offer && <APModal show={show} offer={offer} handleClose={handleClose} brand_id={id} />}
       </Fragment>
     )

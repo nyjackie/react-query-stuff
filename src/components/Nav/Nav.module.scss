@@ -9,17 +9,20 @@
 $pad: 20px;
 
 .nav {
+  color: #fff;
+
   h2 {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     text-transform: uppercase;
     margin: 0;
-    background-color: rgba(43, 194, 189, 0.2);
+    // background-color: rgba(43, 194, 189, 0.2);
     padding: 5px $pad;
+    font-weight: bold;
   }
 
   :global(.active) {
     font-weight: bolder;
-    background-color: rgba(100, 100, 100, 0.1);
+    background-color: rgba(255, 255, 255, 0.2);
     position: relative;
     &::before {
       position: absolute;
@@ -29,7 +32,7 @@ $pad: 20px;
       width: 6px;
       height: 100%;
       content: '';
-      background-color: var(--secondary);
+      background-color: var(--primary);
     }
   }
 }
@@ -45,6 +48,10 @@ $pad: 20px;
   a {
     padding: 5px $pad;
     display: block;
+  }
+  button {
+    margin: 5px $pad;
+    // display: block;
   }
 }
 
@@ -66,7 +73,7 @@ $pad: 20px;
 
     &:hover,
     &:active {
-      background-color: rgba(100, 100, 100, 0.1);
+      background-color: rgba(255, 255, 255, 0.2);
     }
   }
 }

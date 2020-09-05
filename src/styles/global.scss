@@ -41,6 +41,7 @@ body {
   margin: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #e0e0e0;
 }
 
 html,
@@ -126,4 +127,10 @@ body,
 // overriding the default invalid feedback styles to increase font-size
 .invalid-feedback {
   font-size: 90%;
+}
+
+.block {
+  background-color: #fff;
+  padding: 2rem 1rem;
+  margin: 2rem 0;
 }

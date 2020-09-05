@@ -43,14 +43,14 @@ const Layout = ({ children, drawerOpen, toggleDrawer }) => {
   return (
     <Fragment>
       <Notification />
-      <Container fluid className="d-flex flex-column h-100">
+      <Container fluid className="d-flex flex-column h-100 p-0">
         <h1 className="sr-only">Good Deeds Data admin portal</h1>
         <Row className="h-100 position-relative no-gutters">
           <Col id="drawer" className={drawerCSS}>
             <SideNav />
           </Col>
           <Col className={contentCSS}>
-            <Navbar bg="light" expand="lg" className="p-0 pt-2">
+            <Navbar bg="light" expand="lg" className="p-0">
               <Navbar.Toggle aria-controls="drawer" onClick={toggleDrawer} />
             </Navbar>
             <main className="flex-fill container-fluid">{children}</main>

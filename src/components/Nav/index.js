@@ -31,10 +31,10 @@ const SideNav = ({ isAuthenticated, logout, closeDrawer }) => {
     return (
       <Nav className="flex-column h-100 p-3" onClick={onNavClick}>
         <Title />
-        <NavLink className="js-closeDrawer mb-2" to="/" exact={true}>
+        <NavLink className="js-closeDrawer" to="/" exact={true}>
           Home
         </NavLink>
-        <NavLink to="/login" className="js-closeDrawer mb-2">
+        <NavLink to="/login" className="js-closeDrawer">
           Login
         </NavLink>
       </Nav>
@@ -52,7 +52,7 @@ const SideNav = ({ isAuthenticated, logout, closeDrawer }) => {
       <Title />
       <ul className={styles.navUL}>
         <li className={`${styles.navSection} ${styles.noSub}`}>
-          <NavLink className="js-closeDrawer mb-2" to="/" exact={true}>
+          <NavLink className="js-closeDrawer" to="/" exact={true}>
             Home
           </NavLink>
         </li>
@@ -60,17 +60,17 @@ const SideNav = ({ isAuthenticated, logout, closeDrawer }) => {
           <h2>Nonprofits</h2>
           <ul className={styles.navSubSection}>
             <li>
-              <NavLink className="js-closeDrawer mb-2" to="/nonprofit" exact={true}>
+              <NavLink className="js-closeDrawer" to="/nonprofit" exact={true}>
                 Search
               </NavLink>
             </li>
             <li>
-              <NavLink className="js-closeDrawer mb-2" to="/claims" exact={true}>
+              <NavLink className="js-closeDrawer" to="/claims" exact={true}>
                 Claims
               </NavLink>
             </li>
             <li>
-              <NavLink className="js-closeDrawer mb-2" to="/banlist" exact={true}>
+              <NavLink className="js-closeDrawer" to="/banlist" exact={true}>
                 Ban List
               </NavLink>
             </li>
@@ -80,7 +80,7 @@ const SideNav = ({ isAuthenticated, logout, closeDrawer }) => {
           <h2>Users</h2>
           <ul className={styles.navSubSection}>
             <li>
-              <NavLink className="js-closeDrawer mb-2" to="/users" exact={true}>
+              <NavLink className="js-closeDrawer" to="/users" exact={true}>
                 Search
               </NavLink>
             </li>
@@ -91,7 +91,7 @@ const SideNav = ({ isAuthenticated, logout, closeDrawer }) => {
           <h2>Brands</h2>
           <ul className={styles.navSubSection}>
             <li>
-              <NavLink className="js-closeDrawer mb-2" to="/brands" exact={true}>
+              <NavLink className="js-closeDrawer" to="/brands" exact={true}>
                 Grooming Queue
               </NavLink>
             </li>
@@ -102,7 +102,7 @@ const SideNav = ({ isAuthenticated, logout, closeDrawer }) => {
           <h2>Accounts</h2>
           <ul className={styles.navSubSection}>
             <li>
-              <NavLink className="js-closeDrawer mb-2" to="/account/create" exact={true}>
+              <NavLink className="js-closeDrawer" to="/account/create" exact={true}>
                 Create user
               </NavLink>
             </li>

@@ -19,7 +19,18 @@ $pad: 20px;
 
   :global(.active) {
     font-weight: bolder;
-    text-decoration: underline;
+    background-color: rgba(100, 100, 100, 0.1);
+    position: relative;
+    &::before {
+      position: absolute;
+      left: 0;
+      top: 0;
+      display: block;
+      width: 6px;
+      height: 100%;
+      content: '';
+      background-color: var(--secondary);
+    }
   }
 }
 
@@ -30,7 +41,11 @@ $pad: 20px;
 }
 
 .noSub {
-  padding: 5px $pad;
+  margin: 0;
+  a {
+    padding: 5px $pad;
+    display: block;
+  }
 }
 
 .navSection {
@@ -39,5 +54,19 @@ $pad: 20px;
 
 .navSubSection {
   list-style-type: none;
-  padding: 5px $pad;
+  padding: 0;
+
+  li {
+    margin: 0;
+  }
+
+  li a {
+    display: block;
+    padding: 5px $pad;
+
+    &:hover,
+    &:active {
+      background-color: rgba(100, 100, 100, 0.1);
+    }
+  }
 }

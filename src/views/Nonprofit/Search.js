@@ -1,6 +1,9 @@
 import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
-import { Row, Col, Form } from 'react-bootstrap';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
+import InputGroup from 'react-bootstrap/InputGroup';
 
 import { getSearchQuery } from 'utils';
 import { Paginator } from 'gdd-components';
@@ -72,9 +75,9 @@ const NonprofitSearch = ({ history, location }) => {
           {results && <SearchResults results={results.nonprofits} />}
         </Col>
       </Row>
-      <Row className="mt-4 justify-content-between">
-        <Col xs={12} lg="auto">
-          {results?.total_results && (
+      <Row className="mt-4">
+        {results?.total_results && (
+          <Col xs={12} lg="auto">
             <Paginator
               total={results?.total_results}
               limit={limit}
@@ -83,35 +86,33 @@ const NonprofitSearch = ({ history, location }) => {
                 updateUrl(newOffset);
               }}
             />
-          )}
-        </Col>
+          </Col>
+        )}
         <Col xs={12} lg="auto">
-          <Form.Group as={Row} controlId="perPage">
-            <Form.Label as={Col} xs={12} lg="auto" className="text-right">
-              Resutls per page:
-            </Form.Label>
-            <Col xs={12} lg="auto">
-              <Form.Control
-                as="select"
-                defaultValue={limit}
-                onChange={e => {
-                  e.preventDefault();
-                  updateUrl(offset, e.target.value);
-                }}
-              >
-                <option value="10">10</option>
-                <option value="20">20</option>
-                <option value="30">30</option>
-                <option value="40">40</option>
-                <option value="50">50</option>
-                <option value="60">60</option>
-                <option value="70">70</option>
-                <option value="80">80</option>
-                <option value="90">90</option>
-                <option value="100">100</option>
-              </Form.Control>
-            </Col>
-          </Form.Group>
+          <InputGroup>
+            <InputGroup.Prepend>
+              <InputGroup.Text id="basic-addon1">Resutls per page</InputGroup.Text>
+            </InputGroup.Prepend>
+            <Form.Control
+              as="select"
+              defaultValue={limit}
+              onChange={e => {
+                e.preventDefault();
+                updateUrl(offset, e.target.value);
+              }}
+            >
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="30">30</option>
+              <option value="40">40</option>
+              <option value="50">50</option>
+              <option value="60">60</option>
+              <option value="70">70</option>
+              <option value="80">80</option>
+              <option value="90">90</option>
+              <option value="100">100</option>
+            </Form.Control>
+          </InputGroup>
         </Col>
       </Row>
     </Fragment>

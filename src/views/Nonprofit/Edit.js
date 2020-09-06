@@ -1,6 +1,13 @@
 // external libs
 import React, { useState, useRef } from 'react';
-import { Col, Row, Button, Form, Alert } from 'react-bootstrap';
+
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Alert from 'react-bootstrap/Alert';
+import Container from 'react-bootstrap/Container';
+
 import { useFormik } from 'formik';
 import { object as yupObject, string as yupString } from 'yup';
 import { max255 } from 'utils/schema';
@@ -78,9 +85,9 @@ export default function Profile({ data, onSave }) {
   });
 
   return (
-    <>
+    <Container className="block shadow-sm">
       <Row>
-        <Col lg={10}>
+        <Col>
           <Form
             encType="multipart/form-data"
             noValidate
@@ -91,7 +98,7 @@ export default function Profile({ data, onSave }) {
 
             <article className={styles.profile}>
               <header className={styles.header}>
-                <h2 className="h2">Profile</h2>
+                <h2 className="h2">{data.name}</h2>
                 <div className="controls">
                   <Button
                     onClick={e => {
@@ -116,7 +123,6 @@ export default function Profile({ data, onSave }) {
                   </Button>
                 </div>
               </header>
-              <h3 className="mb-5 h3">{data.name}</h3>
 
               {saveError && (
                 <Row>
@@ -299,6 +305,6 @@ export default function Profile({ data, onSave }) {
         </Col>
       </Row>
       <PreviewModal show={showPreview} data={formik.values} onHide={() => setShowPreview(false)} />
-    </>
+    </Container>
   );
 }

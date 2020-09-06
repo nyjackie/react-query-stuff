@@ -4,7 +4,7 @@ import { NavLink, useHistory } from 'react-router-dom';
 import { logout } from 'actions/auth';
 import Nav from 'react-bootstrap/Nav';
 import { closeDrawer } from 'actions/ui';
-import { ReactComponent as Logo } from 'assets/good-deeds-logo-teal.svg';
+import { ReactComponent as Logo } from 'assets/good-deeds-logo-white.svg';
 import styles from './Nav.module.scss';
 
 const Title = () => (
@@ -71,7 +71,7 @@ const SideNav = ({ isAuthenticated, logout, closeDrawer }) => {
             </li>
             <li>
               <NavLink className="js-closeDrawer" to="/banlist" exact={true}>
-                Ban List
+                Banned
               </NavLink>
             </li>
           </ul>
@@ -110,7 +110,7 @@ const SideNav = ({ isAuthenticated, logout, closeDrawer }) => {
         </li>
 
         <li className={`${styles.navSection} ${styles.noSub}`}>
-          <button onClick={doLogout} className="js-closeDrawer mt-5 btn btn-secondary">
+          <button onClick={doLogout} className="js-closeDrawer btn btn-primary">
             Logout
           </button>
         </li>

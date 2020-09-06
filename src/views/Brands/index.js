@@ -1,5 +1,8 @@
-import React, { Fragment, useState } from 'react';
-import { Col, Row, Table, Pagination } from 'react-bootstrap';
+import React, { useState } from 'react';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Table from 'react-bootstrap/Table';
+import Container from 'react-bootstrap/Container';
 import Brand from './Brand';
 import styles from './Brands.module.scss';
 import { useBrands } from 'hooks/useBrands';
@@ -18,9 +21,10 @@ const Brands = () => {
   }
 
   return (
-    <Fragment>
+    <Container className="block shadow-sm">
       <Row>
         <Col>
+          <h2>Brands Grooming Queue</h2>
           <Table striped bordered hover>
             <thead>
               <tr>
@@ -49,7 +53,7 @@ const Brands = () => {
           />
         </Col>
       </Row>
-    </Fragment>
+    </Container>
   );
 };
 

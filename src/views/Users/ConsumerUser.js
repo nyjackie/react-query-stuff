@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Col, Row, Jumbotron, Form } from 'react-bootstrap';
+import { Button, Col, Row, Container, Form } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import { createSchema, max255, phone, zipcode, dob } from 'utils/schema';
 import styles from './User.module.scss';
@@ -78,7 +78,12 @@ function ConsumerUser({ data, addNotification }) {
   });
 
   return (
-    <Jumbotron className={cn(styles.jumbotron, styles.userEdit)}>
+    <Container className={cn(`block shadow-sm`, styles.userEdit)}>
+      <Row>
+        <Col>
+          <h2>Consumer Profile edit</h2>
+        </Col>
+      </Row>
       <Form noValidate onSubmit={formik.handleSubmit} className="mb-2">
         <Form.Group as={Row} controlId="first_name">
           <Form.Label column xl={3}>
@@ -280,7 +285,7 @@ function ConsumerUser({ data, addNotification }) {
       </Form>
       {/* {isSuccess && <Alert variant="success">Successfully updated user!</Alert>}
       {isError && <Alert variant="danger">{error.message}</Alert>} */}
-    </Jumbotron>
+    </Container>
   );
 }
 

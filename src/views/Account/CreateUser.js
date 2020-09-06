@@ -1,8 +1,12 @@
 import React from 'react';
-import { Container, Row, Form, Col, Button, Spinner } from 'react-bootstrap';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Form from 'react-bootstrap/Form';
+import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
+import Spinner from 'react-bootstrap/Spinner';
 import { useFormik } from 'formik';
 import { max255, gddEmailRequired, createSchema, phone } from 'utils/schema';
-import PageHeader from 'components/PageHeader';
 import { useCreateUser } from 'hooks/useAdmin';
 
 const schema = createSchema({
@@ -32,11 +36,10 @@ function CreateUser() {
   });
 
   return (
-    <Container>
+    <Container className="block shadow-sm">
       <Row>
-        <Col lg={6}>
-          <PageHeader pageTitle="Create new admin user" />
-
+        <Col>
+          <h2>Create new admin user</h2>
           <Form noValidate onSubmit={formik.handleSubmit}>
             <Form.Group controlId="email">
               <Form.Label className="sr-only">

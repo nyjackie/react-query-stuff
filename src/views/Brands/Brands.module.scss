@@ -52,3 +52,25 @@
     align-self: flex-start;
   }
 }
+
+.offerRow {
+  cursor: pointer;
+  padding: 5px 0;
+  border-top: 1px solid gray;
+  &:first-child {
+    border-top: none;
+  }
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  p {
+    margin: 0;
+
+    span {
+      display: inline-block;
+      margin-left: 10px;
+      margin-left: 1ch;
+    }
+  }
+}

@@ -1,8 +1,7 @@
 import React, { Fragment, useState, useRef } from 'react';
-import { Col, Row, Table, Jumbotron, Form, Button } from 'react-bootstrap';
+import { Col, Row, Table, Container, Form, Button } from 'react-bootstrap';
 import APModal from './APModal';
 import PropTypes from 'prop-types';
-import PageHeader from 'components/PageHeader';
 import moment from 'moment';
 import { ImageUpload } from 'gdd-components';
 import { cn } from 'gdd-components/dist/utils';
@@ -29,6 +28,75 @@ const getCategories = (brand_category, categories) => {
   });
   return res.title;
 };
+
+function OfferRow({ affiliate_program, onClick }) {
+  const {
+    base_consumer_payout,
+    begins_at,
+    ends_at,
+    commission,
+    commission_type,
+    is_disabled,
+    is_groomed,
+    offer_guid,
+    offer_type,
+    program_id,
+  } = affiliate_program;
+  return (
+    <Row onClick={onClick} className={styles.offerRow}>
+      <Col>
+        <p>
+          <b>Begins:</b> <span>{begins_at ? moment(begins_at).format('MM/DD/YY') : 'N/A'}</span>
+        </p>
+        <p>
+          <b>Ends:</b> <span>{ends_at ? moment(ends_at).format('MM/DD/YY') : 'N/A'}</span>
+        </p>
+        <p>
+          <b>Supported Nonprofit:</b>
+          <span>
+            {affiliate_program.supported_nonprofit
+              ? affiliate_program.supported_nonprofit.name
+              : 'N/A'}
+          </span>
+        </p>
+        <p>
+          <b>Program ID:</b>
+          <span>{program_id}</span>
+        </p>
+        <p>
+          <b>Offer ID:</b>
+          <span>{offer_guid}</span>
+        </p>
+        <p>
+          <b>Offer Type:</b>
+          <span>{offer_type}</span>
+        </p>
+      </Col>
+      <Col>
+        <p>
+          <b>Consumer Payout:</b>
+          <span>{base_consumer_payout}</span>
+        </p>
+        <p>
+          <b>Commission:</b>
+          <span>{commission}</span>
+        </p>
+        <p>
+          <b>Commission Type:</b>
+          <span>{commission_type}</span>
+        </p>
+        <p>
+          <b>Is Disabled:</b>
+          <span>{is_disabled ? 'Enabled' : 'Disabled'}</span>
+        </p>
+        <p>
+          <b>Grooming Status:</b>
+          <span>{is_groomed ? 'Complete' : 'Incomplete'}</span>
+        </p>
+      </Col>
+    </Row>
+  );
+}
 
 const BrandInfo = ({ addNotification, match }) => {
   const [edit, toggleEdit] = useState(true);
@@ -74,8 +142,7 @@ const BrandInfo = ({ addNotification, match }) => {
     categories &&
     affiliate_programs && (
       <Fragment>
-        <PageHeader className="text-primary" pageTitle="Brand Info" />
-        <Jumbotron>
+        <Container className="block shadow-sm">
           <Row>
             <Col>
               <Button
@@ -87,7 +154,7 @@ const BrandInfo = ({ addNotification, match }) => {
               </Button>
             </Col>
           </Row>
-          <Row className="mt-3 mb-3">
+          <Row>
             <Col>
               <Formik
                 initialValues={brand[0]}
@@ -336,69 +403,31 @@ const BrandInfo = ({ addNotification, match }) => {
               </Formik>
             </Col>
           </Row>
-          <Table responsive hover variant="light">
-            <thead className="text-right">
-              <tr>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Supported Nonprofit</th>
-                <th>Program ID</th>
-                <th>Offer ID</th>
-                <th>Offer Type</th>
-                <th>Consumer Payout</th>
-                <th>Commision</th>
-                <th>Commission Type</th>
-                <th>Is Disabled</th>
-                <th>Grooming Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {affiliate_programs.length > 0 &&
-                affiliate_programs.map(affiliate_program => {
-                  const {
-                    base_consumer_payout,
-                    begins_at,
-                    ends_at,
-                    commission,
-                    commission_type,
-                    is_disabled,
-                    is_groomed,
-                    offer_guid,
-                    offer_type,
-                    program_id,
-                  } = affiliate_program;
-                  return (
-                    <tr
-                      onClick={() => {
-                        if (show !== true) {
-                          setOffer(affiliate_program);
-                          handleShow();
-                        }
-                      }}
-                      key={offer_guid}
-                      className="text-right"
-                    >
-                      <td>{begins_at ? moment(begins_at).format('MM/DD/YY') : 'N/A'}</td>
-                      <td>{ends_at ? moment(ends_at).format('MM/DD/YY') : 'N/A'}</td>
-                      <td>
-                        {affiliate_program.supported_nonprofit
-                          ? affiliate_program.supported_nonprofit.name
-                          : 'N/A'}
-                      </td>
-                      <td>{program_id}</td>
-                      <td>{offer_guid.substring(0, 11) + '...'}</td>
-                      <td>{offer_type.substring(0, 11) + '...'}</td>
-                      <td>{base_consumer_payout}</td>
-                      <td>{commission}</td>
-                      <td>{commission_type}</td>
-                      <td>{is_disabled ? 'Enabled' : 'Disabled'}</td>
-                      <td>{is_groomed ? 'Complete' : 'Incomplete'}</td>
-                    </tr>
-                  );
-                })}
-            </tbody>
-          </Table>
-        </Jumbotron>
+
+          {affiliate_programs.length > 0 && (
+            <Container>
+              <Row>
+                <Col>
+                  <h3>Offers</h3>
+                </Col>
+              </Row>
+              {affiliate_programs.map(affiliate_program => {
+                return (
+                  <OfferRow
+                    key={affiliate_program.offer_guid}
+                    affiliate_program={affiliate_program}
+                    onClick={() => {
+                      if (show !== true) {
+                        setOffer(affiliate_program);
+                        handleShow();
+                      }
+                    }}
+                  />
+                );
+              })}
+            </Container>
+          )}
+        </Container>
         {offer && <APModal show={show} offer={offer} handleClose={handleClose} brand_id={id} />}
       </Fragment>
     )

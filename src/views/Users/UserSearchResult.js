@@ -22,9 +22,15 @@ const SingleResult = ({
       <td>{email}</td>
       <td>{user_type}</td>
       <td>
-        <Link className="btn btn-primary" to={`/users/${user_type}/${user_id}`}>
-          View
-        </Link>
+        {user_type === 'consumer' ? (
+          <Link className="btn btn-primary" to={`/users/${user_type}/${user_id}`}>
+            View
+          </Link>
+        ) : (
+          <span>
+            API for get <code>{user_type}</code> user profile not ready yet
+          </span>
+        )}
       </td>
     </tr>
   );

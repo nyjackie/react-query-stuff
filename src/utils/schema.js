@@ -22,9 +22,9 @@ export const max255 = string()
  * company or our consumer-edge
  */
 export const gddEmailRequired = max255
+  .required('This field is required')
   .email('Please enter a valid email')
-  .matches(/@givegooddeeds\.com$/, 'email must be a valid Give Good Deeds email')
-  .required('This field is required');
+  .matches(/@givegooddeeds\.com$/, 'Invalid email');
 
 /**
  * Validate a phone number

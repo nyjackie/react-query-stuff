@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Redirect, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Form, Button, Row, Col } from 'react-bootstrap';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import { useFormik } from 'formik';
 import { gddEmailRequired, max255, createSchema } from 'utils/schema';
 
@@ -39,9 +42,9 @@ const Login = ({ login, isAuthenticated }) => {
 
   return (
     <Row className="justify-content-md-center">
-      <Col md={4} className={`${styles.loginPage} block shadow-sm`}>
+      <Col md={6} lg={4} className={`${styles.loginPage} block shadow-sm`}>
         <Logo className={styles.logo} aria-hidden="true" />
-        <h1 className="sr-only">Good Deeds Data admin portal</h1>
+        <h1 className="sr-only">Give Good Deeds</h1>
         <Form noValidate onSubmit={formik.handleSubmit}>
           <Form.Group controlId="email">
             <Form.Label className="sr-only">

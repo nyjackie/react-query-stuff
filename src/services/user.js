@@ -67,7 +67,7 @@ export async function logout() {
 
 export async function forgotPassword(email) {
   try {
-    const res = await api.forgotPassword({ email: encodeURIComponent(email) });
+    const res = await api.forgotPassword({ email: window.btoa(email) });
     return [null, res.data];
   } catch (err) {
     return [err, null];

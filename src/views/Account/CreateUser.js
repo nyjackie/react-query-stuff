@@ -41,7 +41,6 @@ function CreateUser() {
       phone_number: '',
     },
     onSubmit: values => {
-      console.dir(values);
       postUser(values);
     },
   });

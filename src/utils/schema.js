@@ -69,3 +69,25 @@ export const dob = string()
     if (value === '') return true; // date is not required
     return pastDate.isValid(value);
   });
+
+export const specialRegex = new RegExp('[ !"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~]+', 'g');
+
+/**
+ * 8+ characters
+ * at least one Uppercase
+ * at least one lowercase
+ * at least one Number
+ * at least one Special character: https://owasp.org/www-community/password-special-characters
+ */
+export const password = max255
+  .required('Password field is required')
+  .min(8, 'Password must have a minimum of 8 characters')
+  .test('password numbers', 'Password contain at least one number', value => /[0-9]/g.test(value))
+  .test(
+    'password cases',
+    'Password contain at least one uppercase and one lowercase letter',
+    value => /[A-Z]+/g.test(value) && /[a-z]+/g.test(value)
+  )
+  .test('password special', 'Password contains at least one special character', value =>
+    specialRegex.test(value)
+  );

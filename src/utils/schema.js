@@ -70,7 +70,7 @@ export const dob = string()
     return pastDate.isValid(value);
   });
 
-export const specialRegex = new RegExp('[ !"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~]+', 'g');
+export const specialRegex = new RegExp('[ !"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~]+');
 
 /**
  * 8+ characters
@@ -79,14 +79,17 @@ export const specialRegex = new RegExp('[ !"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~]+',
  * at least one Number
  * at least one Special character: https://owasp.org/www-community/password-special-characters
  */
-export const password = max255
-  .required('Password field is required')
+export const password = string()
+  .ensure()
+  .trim()
+  .required('Password can not be blank')
   .min(8, 'Password must have a minimum of 8 characters')
-  .test('password numbers', 'Password contain at least one number', value => /[0-9]/g.test(value))
+  .max(255, 'Max 255 characters allowed')
+  .test('password numbers', 'Password contain at least one number', value => /[0-9]+/.test(value))
   .test(
     'password cases',
     'Password contain at least one uppercase and one lowercase letter',
-    value => /[A-Z]+/g.test(value) && /[a-z]+/g.test(value)
+    value => /[A-Z]+/.test(value) && /[a-z]+/.test(value)
   )
   .test('password special', 'Password contains at least one special character', value =>
     specialRegex.test(value)

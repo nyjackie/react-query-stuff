@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { NavLink, useHistory } from 'react-router-dom';
-import { logout } from 'actions/auth';
 import Nav from 'react-bootstrap/Nav';
 import { closeDrawer } from 'actions/ui';
 import { ReactComponent as Logo } from 'assets/good-deeds-logo-white.svg';
 import styles from './Nav.module.scss';
+import { useAuthState } from 'contexts/auth-context';
 
 const Title = () => (
   <a aria-hidden="true" href="/" className="mb-sm-2 mb-md-3 d-block">
@@ -13,7 +13,8 @@ const Title = () => (
   </a>
 );
 
-const SideNav = ({ isAuthenticated, logout, closeDrawer }) => {
+const SideNav = ({ closeDrawer }) => {
+  const { isAuthenticated, logout } = useAuthState();
   let history = useHistory();
 
   function onNavClick(e) {
@@ -54,6 +55,11 @@ const SideNav = ({ isAuthenticated, logout, closeDrawer }) => {
         <li className={`${styles.navSection} ${styles.noSub}`}>
           <NavLink className="js-closeDrawer" to="/" exact={true}>
             Home
+          </NavLink>
+        </li>
+        <li className={`${styles.navSection} ${styles.noSub}`}>
+          <NavLink className="js-closeDrawer" to="/settings" exact={true}>
+            <i className="fa fa-gear" /> Settings
           </NavLink>
         </li>
         <li className={styles.navSection}>
@@ -119,8 +125,4 @@ const SideNav = ({ isAuthenticated, logout, closeDrawer }) => {
   );
 };
 
-const mapStateToProps = state => ({
-  isAuthenticated: state.auth.isAuthenticated,
-});
-
-export default connect(mapStateToProps, { logout, closeDrawer })(SideNav);
+export default connect(null, { closeDrawer })(SideNav);

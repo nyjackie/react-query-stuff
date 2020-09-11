@@ -21,6 +21,7 @@ import ErrorPage from 'views/Error';
 import NotFound from 'views/NotFound';
 import Brands from 'views/Brands';
 import CreateUser from 'views/Account/CreateUser';
+import Settings from 'views/Settings';
 
 // components|other
 import PublicRoute from 'components/PublicRoute';
@@ -75,6 +76,7 @@ const App = () => {
             <PrivateRoute exact path="/users" component={Users} />
             <PrivateRoute exact path="/users/:type/:id" component={UserInfo} />
             <PrivateRoute exact path="/account/create" component={CreateUser} />
+            <PrivateRoute exact path="/settings" component={Settings} />
 
             {/* 404 */}
             <PublicRoute path="*">

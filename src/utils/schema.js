@@ -22,9 +22,9 @@ export const max255 = string()
  * company or our consumer-edge
  */
 export const gddEmailRequired = max255
+  .required('This field is required')
   .email('Please enter a valid email')
-  .matches(/@givegooddeeds\.com$/, 'email must be a valid Give Good Deeds email')
-  .required('This field is required');
+  .matches(/@givegooddeeds\.com$/, 'Invalid email');
 
 /**
  * Validate a phone number
@@ -69,3 +69,28 @@ export const dob = string()
     if (value === '') return true; // date is not required
     return pastDate.isValid(value);
   });
+
+export const specialRegex = new RegExp('[ !"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~]+');
+
+/**
+ * 8+ characters
+ * at least one Uppercase
+ * at least one lowercase
+ * at least one Number
+ * at least one Special character: https://owasp.org/www-community/password-special-characters
+ */
+export const password = string()
+  .ensure()
+  .trim()
+  .required('Password can not be blank')
+  .min(8, 'Password must have a minimum of 8 characters')
+  .max(255, 'Max 255 characters allowed')
+  .test('password numbers', 'Password contain at least one number', value => /[0-9]+/.test(value))
+  .test(
+    'password cases',
+    'Password contain at least one uppercase and one lowercase letter',
+    value => /[A-Z]+/.test(value) && /[a-z]+/.test(value)
+  )
+  .test('password special', 'Password contains at least one special character', value =>
+    specialRegex.test(value)
+  );

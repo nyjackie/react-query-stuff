@@ -6,14 +6,15 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
 import { useFormik } from 'formik';
-import { max255, gddEmailRequired, createSchema, phone } from 'utils/schema';
+import { max255, gddEmailRequired, createSchema, phone, password } from 'utils/schema';
 import { useCreateUser } from 'hooks/useAdmin';
+import Password from 'components/Password';
 
 const schema = createSchema({
   email: gddEmailRequired,
   first_name: max255.required('This field is required'),
   last_name: max255.required('This field is required'),
-  password: max255.required('Password field is required'),
+  password: password,
   phone_number: phone.required('This field is required'),
 });
 
@@ -30,7 +31,6 @@ function CreateUser() {
       phone_number: '',
     },
     onSubmit: values => {
-      console.dir(values);
       postUser(values);
     },
   });
@@ -96,22 +96,16 @@ function CreateUser() {
               </Form.Control.Feedback>
             </Form.Group>
 
-            <Form.Group controlId="password">
-              <Form.Label className="sr-only">
-                <b>Password</b>
-              </Form.Label>
-              <Form.Control
-                placeholder="Password"
-                type="password"
-                name="password"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.password}
-                isValid={formik.touched.password && !formik.errors.password}
-                isInvalid={formik.touched.password && !!formik.errors.password}
-              />
-              <Form.Control.Feedback type="invalid">{formik.errors.password}</Form.Control.Feedback>
-            </Form.Group>
+            <Password
+              placeholder="Password"
+              name="password"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.password}
+              isValid={formik.touched.password && !formik.errors.password}
+              isInvalid={formik.touched.password && !!formik.errors.password}
+              error={formik.errors.password}
+            />
 
             <Form.Group controlId="phoneNumber">
               <Form.Label className="sr-only">
@@ -132,7 +126,7 @@ function CreateUser() {
               </Form.Control.Feedback>
             </Form.Group>
 
-            <Button type="submit" variant="primary" block>
+            <Button type="submit" variant="primary">
               Submit
             </Button>
             {isError && (

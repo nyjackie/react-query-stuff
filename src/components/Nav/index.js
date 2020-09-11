@@ -56,6 +56,11 @@ const SideNav = ({ isAuthenticated, logout, closeDrawer }) => {
             Home
           </NavLink>
         </li>
+        <li className={`${styles.navSection} ${styles.noSub}`}>
+          <NavLink className="js-closeDrawer" to="/settings" exact={true}>
+            <i className="fa fa-gear" /> Settings
+          </NavLink>
+        </li>
         <li className={styles.navSection}>
           <h2>Nonprofits</h2>
           <ul className={styles.navSubSection}>

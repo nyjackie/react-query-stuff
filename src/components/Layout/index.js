@@ -11,7 +11,7 @@ import Notification from 'components/Notification';
 import { useLocation } from 'react-router-dom';
 import { cn } from 'gdd-components/dist/utils';
 
-const noNav = ['/login'];
+const noNav = ['/login', '/forgot-password'];
 
 const Layout = ({ children, drawerOpen, toggleDrawer }) => {
   const location = useLocation();

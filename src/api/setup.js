@@ -5,7 +5,7 @@ import mock from 'gdd-api-lib/dist/mocks/index';
 
 // local modules
 import store from '../store';
-import { LOGOUT, CLEAR_STATE, LOGIN_SUCCESS, ERROR } from '../actions/types';
+import { LOGOUT, CLEAR_STATE, LOGIN_SUCCESS } from '../actions/types';
 import errorHandler from 'utils/errorHandler';
 import userService from 'services/user';
 
@@ -31,14 +31,6 @@ api.setupResponseInterceptor(
   },
   function onError(err) {
     errorHandler(err);
-    // this redicts to an error page
-    store.dispatch({
-      type: ERROR,
-      payload: {
-        error: err,
-        errorType: 'API',
-      },
-    });
   }
 );
 

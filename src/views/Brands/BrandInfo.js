@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useRef } from 'react';
-import { Col, Row, Table, Container, Form, Button } from 'react-bootstrap';
+import { Col, Row, Container, Form, Button } from 'react-bootstrap';
 import APModal from './APModal';
 import PropTypes from 'prop-types';
 import moment from 'moment';
@@ -43,7 +43,17 @@ function OfferRow({ affiliate_program, onClick }) {
     program_id,
   } = affiliate_program;
   return (
-    <Row onClick={onClick} className={styles.offerRow}>
+    <Row
+      onClick={onClick}
+      onKeyUp={e => {
+        if (e.key === ' ' || e.key === 'Enter') {
+          e.preventDefault();
+          onClick(e);
+        }
+      }}
+      className={styles.offerRow}
+      tabIndex="0"
+    >
       <Col>
         <p>
           <b>Begins:</b> <span>{begins_at ? moment(begins_at).format('MM/DD/YY') : 'N/A'}</span>

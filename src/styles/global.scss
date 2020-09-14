@@ -132,5 +132,9 @@ body,
 .block {
   background-color: #fff;
   padding: 2rem 1rem;
-  margin: 2rem 0;
+  margin: 2rem auto;
+}
+
+[tabindex='0']:focus {
+  appearance: button;
 }

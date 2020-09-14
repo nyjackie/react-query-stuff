@@ -4,12 +4,13 @@ import React, { useState, useRef } from 'react';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Form from 'react-bootstrap/Form';
 import Alert from 'react-bootstrap/Alert';
 import Container from 'react-bootstrap/Container';
 
 import { useFormik } from 'formik';
-import { object as yupObject, string as yupString } from 'yup';
+import { object as yupObject, string as yupString, array as yupArray } from 'yup';
 import { max255 } from 'utils/schema';
 import 'gdd-components/dist/styles/shared.scss';
 import styles from './NonProfitInfo.module.scss';
@@ -35,10 +36,10 @@ import { useNpCategories } from 'hooks/useNonprofits';
 const schema = yupObject({
   name: max255.required('This field is required'),
   website_url: max255.url('invalid url'),
-  category: max255,
-  nonprofit_city: max255.required('This field is required'),
-  nonprofit_state: yupString().required('This field is required'),
-  mission: yupString().max(8000),
+  city: max255.required('This field is required'),
+  state: yupString().required('This field is required'),
+  mission: yupString().max(8000, 'max 8000 characters'),
+  categories: yupArray().ensure().min(1, 'Please select at least one category'),
 });
 
 export default function Profile({ data, onSave }) {
@@ -73,6 +74,7 @@ export default function Profile({ data, onSave }) {
       mission: data.mission || '', // textarea
     },
     onSubmit: values => {
+      values.location = `${values.city}, ${values.state}`;
       console.log('onSubmit values', values);
       // onSave(values)
       //   .then(() => {
@@ -97,32 +99,37 @@ export default function Profile({ data, onSave }) {
             <input type="hidden" defaultValue={data.ein} name="ein" />
 
             <article className={styles.profile}>
-              <header className={styles.header}>
-                <h2 className="h2">{data.name}</h2>
-                <div className="controls">
-                  <Button
-                    onClick={e => {
-                      e.preventDefault();
-                      setShowPreview(!showPreview);
-                    }}
-                    variant="outline-primary"
-                  >
-                    Preview
-                  </Button>
-                  <Button type="submit" variant="success" className="ml-3">
-                    Publish
-                  </Button>
-                  <Button
-                    variant="danger"
-                    className="ml-5"
-                    onClick={e => {
-                      e.preventDefault();
-                    }}
-                  >
-                    Ban
-                  </Button>
-                </div>
-              </header>
+              <Row className={styles.header}>
+                <Col sm={12} lg={8}>
+                  <h2 className="h2">{data.name}</h2>
+                </Col>
+                <Col sm={12} lg={{ span: 3, offset: 1 }}>
+                  <ButtonGroup aria-label="profile actions">
+                    <Button
+                      onClick={e => {
+                        e.preventDefault();
+                        setShowPreview(!showPreview);
+                      }}
+                      variant="outline-primary"
+                    >
+                      Preview
+                    </Button>
+
+                    <Button type="submit" variant="success">
+                      Publish
+                    </Button>
+
+                    <Button
+                      variant="danger"
+                      onClick={e => {
+                        e.preventDefault();
+                      }}
+                    >
+                      Ban
+                    </Button>
+                  </ButtonGroup>
+                </Col>
+              </Row>
 
               {saveError && (
                 <Row>
@@ -133,7 +140,7 @@ export default function Profile({ data, onSave }) {
               )}
 
               <section>
-                <Row className="mb-4">
+                <Row className="mb-4 mt-4">
                   <Col>
                     <h3 className="h3">Profile Image</h3>
                   </Col>
@@ -209,21 +216,32 @@ export default function Profile({ data, onSave }) {
                         onChange={formik.handleChange}
                         value={formik.values.name}
                         isValid={formik.touched.name && !formik.errors.name}
-                        isInvalid={!!formik.errors.name}
+                        isInvalid={formik.touched.name && formik.errors.name}
                       />
                       <Form.Control.Feedback type="invalid">
                         {formik.errors.name}
                       </Form.Control.Feedback>
                     </Form.Group>
 
-                    <Form.Group>
+                    <Form.Group controlId="np_category">
                       <Form.Label>Categories</Form.Label>
                       <MultiSelect
-                        defaultValue={formik.values.categories}
+                        inputId="np_category"
+                        name="categories"
+                        value={formik.values.categories}
+                        onChange={options => {
+                          formik.setFieldValue('categories', options);
+                        }}
                         options={options}
                         getOptionLabel={option => option.name}
                         getOptionValue={option => option.id}
                       />
+                      <Form.Control.Feedback
+                        type="invalid"
+                        className={cn(formik.errors.categories && 'd-block')}
+                      >
+                        {formik.errors.categories}
+                      </Form.Control.Feedback>
                     </Form.Group>
 
                     <Row>
@@ -231,14 +249,14 @@ export default function Profile({ data, onSave }) {
                         <Form.Group controlId="nonprofit_city">
                           <Form.Label>City</Form.Label>
                           <Form.Control
-                            name="nonprofit_city"
+                            name="city"
                             type="text"
                             maxLength="255"
                             required
                             onChange={formik.handleChange}
                             value={formik.values.city}
                             isValid={formik.touched.city && !formik.errors.city}
-                            isInvalid={!!formik.errors.city}
+                            isInvalid={formik.touched.city && formik.errors.city}
                           />
                           <Form.Control.Feedback type="invalid">
                             {formik.errors.city}
@@ -251,12 +269,12 @@ export default function Profile({ data, onSave }) {
                           <USStateSelect
                             includeTerritories
                             sort
-                            name="nonprofit_state"
+                            name="state"
                             required
                             onChange={formik.handleChange}
                             value={formik.values.state}
                             isValid={formik.touched.state && !formik.errors.state}
-                            isInvalid={!!formik.errors.state}
+                            isInvalid={formik.touched.state && formik.errors.state}
                           />
                           <Form.Control.Feedback type="invalid">
                             {formik.errors.state}
@@ -274,7 +292,7 @@ export default function Profile({ data, onSave }) {
                         onChange={formik.handleChange}
                         value={formik.values.website_url}
                         isValid={formik.touched.website_url && !formik.errors.website_url}
-                        isInvalid={!!formik.errors.website_url}
+                        isInvalid={formik.touched.website_url && formik.errors.website_url}
                       />
                       <Form.Control.Feedback type="invalid">
                         {formik.errors.website_url}
@@ -291,7 +309,7 @@ export default function Profile({ data, onSave }) {
                         onChange={formik.handleChange}
                         value={formik.values.mission}
                         isValid={formik.touched.mission && !formik.errors.mission}
-                        isInvalid={!!formik.errors.mission}
+                        isInvalid={formik.touched.mission && formik.errors.mission}
                       />
                       <Form.Control.Feedback type="invalid">
                         {formik.errors.mission}

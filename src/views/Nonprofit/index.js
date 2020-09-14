@@ -38,7 +38,7 @@ const Nonprofit = ({ addNotification }) => {
   }
 
   if (selected) {
-    return <Profile onSave={data => console.log('perform save', data)} data={selected} />;
+    return <Profile data={selected} />;
   }
 
   return (

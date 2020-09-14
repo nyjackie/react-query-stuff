@@ -4,6 +4,7 @@ import React, { useState, useRef } from 'react';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Form from 'react-bootstrap/Form';
 import Alert from 'react-bootstrap/Alert';
 import Container from 'react-bootstrap/Container';
@@ -73,6 +74,7 @@ export default function Profile({ data, onSave }) {
       mission: data.mission || '', // textarea
     },
     onSubmit: values => {
+      values.location = `${values.city}, ${values.state}`;
       console.log('onSubmit values', values);
       // onSave(values)
       //   .then(() => {
@@ -97,32 +99,37 @@ export default function Profile({ data, onSave }) {
             <input type="hidden" defaultValue={data.ein} name="ein" />
 
             <article className={styles.profile}>
-              <header className={styles.header}>
-                <h2 className="h2">{data.name}</h2>
-                <div className="controls">
-                  <Button
-                    onClick={e => {
-                      e.preventDefault();
-                      setShowPreview(!showPreview);
-                    }}
-                    variant="outline-primary"
-                  >
-                    Preview
-                  </Button>
-                  <Button type="submit" variant="success" className="ml-3">
-                    Publish
-                  </Button>
-                  <Button
-                    variant="danger"
-                    className="ml-5"
-                    onClick={e => {
-                      e.preventDefault();
-                    }}
-                  >
-                    Ban
-                  </Button>
-                </div>
-              </header>
+              <Row className={styles.header}>
+                <Col sm={12} lg={8}>
+                  <h2 className="h2">{data.name}</h2>
+                </Col>
+                <Col sm={12} lg={{ span: 3, offset: 1 }}>
+                  <ButtonGroup aria-label="profile actions">
+                    <Button
+                      onClick={e => {
+                        e.preventDefault();
+                        setShowPreview(!showPreview);
+                      }}
+                      variant="outline-primary"
+                    >
+                      Preview
+                    </Button>
+
+                    <Button type="submit" variant="success">
+                      Publish
+                    </Button>
+
+                    <Button
+                      variant="danger"
+                      onClick={e => {
+                        e.preventDefault();
+                      }}
+                    >
+                      Ban
+                    </Button>
+                  </ButtonGroup>
+                </Col>
+              </Row>
 
               {saveError && (
                 <Row>
@@ -133,7 +140,7 @@ export default function Profile({ data, onSave }) {
               )}
 
               <section>
-                <Row className="mb-4">
+                <Row className="mb-4 mt-4">
                   <Col>
                     <h3 className="h3">Profile Image</h3>
                   </Col>

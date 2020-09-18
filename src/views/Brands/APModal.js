@@ -149,7 +149,7 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
                       </Form.Label>
                       <AsyncSelect
                         defaultInputValue={
-                          offer.supported_nonprofit !== null ? offer.supported_nonprofit.name : ''
+                          offer.supported_nonprofit_id !== null ? offer.supported_nonprofit_id : ''
                         }
                         cacheOptions
                         loadOptions={loadOptions}

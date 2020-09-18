@@ -30,6 +30,7 @@ const getCategories = (brand_category, categories) => {
 };
 
 function OfferRow({ affiliate_program, onClick }) {
+  console.log(affiliate_program);
   const {
     base_consumer_payout,
     begins_at,
@@ -62,10 +63,10 @@ function OfferRow({ affiliate_program, onClick }) {
           <b>Ends:</b> <span>{ends_at ? moment(ends_at).format('MM/DD/YY') : 'N/A'}</span>
         </p>
         <p>
-          <b>Supported Nonprofit:</b>
+          <b>Supported Nonprofit Id:</b>
           <span>
-            {affiliate_program.supported_nonprofit
-              ? affiliate_program.supported_nonprofit.name
+            {affiliate_program.supported_nonprofit_id
+              ? affiliate_program.supported_nonprofit_id
               : 'N/A'}
           </span>
         </p>
@@ -111,7 +112,7 @@ function OfferRow({ affiliate_program, onClick }) {
 const BrandInfo = ({ addNotification, match }) => {
   const [edit, toggleEdit] = useState(true);
   const [show, setShow] = useState(false);
-  const [offer, setOffer] = useState();
+  const [offer, setOffer] = useState(null);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -121,32 +122,46 @@ const BrandInfo = ({ addNotification, match }) => {
       logoDropRef.current.open();
     }
   };
+
   const coverDropRef = useRef(null);
   const openCoverDrop = () => {
     if (coverDropRef.current) {
       coverDropRef.current.open();
     }
   };
-  const { isLoading: brandLoading, isError: brandError, data: { brand = [] } = {} } = useBrand(
-    match.params.ein
+
+  const { isLoading: brandLoading, isError: brandError, data: brand = {} } = useBrand(
+    match.params.id
   );
+
   const { isLoading: catLoading, isError: catError, data: categories = [] } = useCategories();
 
-  const { id, brand_category_id, master_merchant_id, logo_url, hero_url, created_at, modified_at } =
-    brand[0] || {};
+  const {
+    id,
+    brand_category_id,
+    master_merchant_id,
+    logo_url,
+    hero_url,
+    created_at,
+    modified_at,
+  } = brand;
+
   const {
     isLoading: offerLoading,
     isError: offerError,
     data: { affiliate_programs = [] } = {},
   } = useOffers(id);
+
   const [updateBrand] = useUpdateBrand();
 
   if (brandLoading || offerLoading || catLoading) {
     return <Spinner />;
   }
+
   if (brandError || offerError || catError) {
     return <div>Oooops something went wrong. Please try again later! </div>;
   }
+
   return (
     brand &&
     categories &&
@@ -167,7 +182,7 @@ const BrandInfo = ({ addNotification, match }) => {
           <Row>
             <Col>
               <Formik
-                initialValues={brand[0]}
+                initialValues={brand}
                 validationSchema={schema}
                 onSubmit={({
                   id,
@@ -427,7 +442,7 @@ const BrandInfo = ({ addNotification, match }) => {
                     key={affiliate_program.offer_guid}
                     affiliate_program={affiliate_program}
                     onClick={() => {
-                      if (show !== true) {
+                      if (!show) {
                         setOffer(affiliate_program);
                         handleShow();
                       }

@@ -54,9 +54,6 @@ const Layout = ({ children, drawerOpen, toggleDrawer }) => {
               <Navbar.Toggle aria-controls="drawer" onClick={toggleDrawer} />
             </Navbar>
             <main className="flex-fill container-fluid">{children}</main>
-            <footer>
-              <p>&copy; {new Date().getFullYear()} Give Good Deeds</p>
-            </footer>
           </Col>
         </Row>
       </Container>

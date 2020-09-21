@@ -138,3 +138,9 @@ body,
 [tabindex='0']:focus {
   appearance: button;
 }
+
+.v-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}

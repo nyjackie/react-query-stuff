@@ -35,26 +35,6 @@ const schema = yupObject({
     .nullable(),
 });
 
-const showPecentage = (numStr, type) => {
-  if (!numStr) return 0;
-
-  const num = parseFloat(numStr);
-
-  if (isNaN(num)) {
-    return 0;
-  }
-
-  if (type === 'FLAT') {
-    return num;
-  }
-
-  if (Number.isInteger(num)) {
-    return num;
-  }
-
-  return num * 100;
-};
-
 const loadOptions = async inputValue => {
   const res = await api.searchNonprofits({ search_term: window.btoa(inputValue) });
   const newRes = res.data.nonprofits.map(data => {
@@ -108,7 +88,6 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
               begins_at,
               ends_at,
             };
-
             updateOffer({ form, brand_id })
               .then(() => {
                 addNotification(`Offer update success`, 'success');
@@ -121,9 +100,8 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
         >
           {props => {
             const { values, errors, touched, handleSubmit, handleChange } = props;
-
             return (
-              <Form onSubmit={handleSubmit}>
+              <Form noValidate onSubmit={handleSubmit}>
                 <Row className="form-row">
                   <Col className="form-col">
                     <p>
@@ -225,20 +203,22 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
                         <InputGroup>
                           <Form.Control
                             type="number"
-                            step="1"
-                            value={showPecentage(values.commission)}
+                            defaultValue={values.commission * 100}
+                            value={values.commission}
                             id="commission"
+                            name="commission"
                             aria-describedby="commission"
                             onChange={handleChange}
-                            isInvalid={!!errors.commission}
+                            isInvalid={errors.commission}
                           />
+
                           <InputGroup.Append>
                             <InputGroup.Text>%</InputGroup.Text>
                           </InputGroup.Append>
+                          <Form.Control.Feedback type="invalid">
+                            {errors.commission}
+                          </Form.Control.Feedback>
                         </InputGroup>
-                        <Form.Control.Feedback type="invalid">
-                          {errors.commission}
-                        </Form.Control.Feedback>
                       </Col>
                       <Form.Group as={Col}>
                         <Form.Label>
@@ -247,7 +227,8 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
                         <Form.Control
                           disabled
                           plaintext
-                          value={showPecentage(values.commission) + '%'}
+                          defaultValue={values.commission * 100 + '%'}
+                          value={values.commission + '%'}
                           id="base_consumer_payout"
                           aria-describedby="base_consumer_payout"
                           name="base_consumer_payout"
@@ -274,12 +255,11 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
                           </InputGroup.Prepend>
                           <Form.Control
                             type="number"
-                            step="1"
-                            value={values.commission || 0}
+                            defaultValue={values.commission || 0}
                             id="commission"
                             aria-describedby="commission"
                             onChange={handleChange}
-                            isInvalid={!!errors.commission}
+                            isInvalid={errors.commission}
                           />
                           <Form.Control.Feedback type="invalid">
                             {errors.commission}

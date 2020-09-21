@@ -1,5 +1,6 @@
 import React, { Fragment, useState, useRef } from 'react';
 import { Col, Row, Container, Form, Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import APModal from './APModal';
 import PropTypes from 'prop-types';
 import moment from 'moment';
@@ -12,6 +13,7 @@ import { useBrand, useCategories, useOffers, useUpdateBrand } from 'hooks/useBra
 import { connect } from 'react-redux';
 import { addNotification } from 'actions/notifications';
 import Spinner from 'components/Spinner';
+import { useNonprofit } from 'hooks/useNonprofits';
 
 const schema = yupObject({
   logo_url: yupString().ensure().trim().url('invalid url').max(255, 'max 255 characters'),
@@ -30,7 +32,6 @@ const getCategories = (brand_category, categories) => {
 };
 
 function OfferRow({ affiliate_program, onClick }) {
-  console.log(affiliate_program);
   const {
     base_consumer_payout,
     begins_at,
@@ -42,19 +43,13 @@ function OfferRow({ affiliate_program, onClick }) {
     offer_guid,
     offer_type,
     program_id,
+    supported_nonprofit_id,
   } = affiliate_program;
+
+  const { data: supportedNP } = useNonprofit(supported_nonprofit_id);
+
   return (
-    <Row
-      onClick={onClick}
-      onKeyUp={e => {
-        if (e.key === ' ' || e.key === 'Enter') {
-          e.preventDefault();
-          onClick(e);
-        }
-      }}
-      className={styles.offerRow}
-      tabIndex="0"
-    >
+    <Row className={styles.offerRow}>
       <Col>
         <p>
           <b>Begins:</b> <span>{begins_at ? moment(begins_at).format('MM/DD/YY') : 'N/A'}</span>
@@ -65,9 +60,13 @@ function OfferRow({ affiliate_program, onClick }) {
         <p>
           <b>Supported Nonprofit Id:</b>
           <span>
-            {affiliate_program.supported_nonprofit_id
-              ? affiliate_program.supported_nonprofit_id
-              : 'N/A'}
+            {supported_nonprofit_id && supportedNP ? (
+              <Link target="_blank" to={`/nonprofit/${supportedNP.id}`}>
+                {supportedNP.name}
+              </Link>
+            ) : (
+              'N/A'
+            )}
           </span>
         </p>
         <p>
@@ -104,6 +103,11 @@ function OfferRow({ affiliate_program, onClick }) {
           <b>Grooming Status:</b>
           <span>{is_groomed ? 'Complete' : 'Incomplete'}</span>
         </p>
+      </Col>
+      <Col className="v-center" md={2}>
+        <Button variant="primary" onClick={onClick}>
+          View Offer
+        </Button>
       </Col>
     </Row>
   );

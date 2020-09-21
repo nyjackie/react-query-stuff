@@ -26,10 +26,10 @@ const schema = yupObject({
   name: yupString().required('Brand name cannot be empty.').max(255, 'max 255 characters'),
   is_disabled: yupBoolean().required('Visibility cannot be empty.'),
   is_groomed: yupBoolean().required('Groomed status cannot be empty.'),
-  website_url: yupString().ensure().trim().url('invalid url').max(255, 'max 255 characters'),
-  ce_brand_id: yupNumber().nullable(),
-  ce_industry_id: yupNumber().nullable(),
-  ce_subindustry_id: yupNumber().nullable(),
+  website_url: yupString().ensure().trim().url('Invalid url').max(255, 'max 255 characters'),
+  ce_brand_id: yupNumber().nullable().typeError('ID has to be numbers'),
+  ce_industry_id: yupNumber().nullable().typeError('ID has to be numbers'),
+  ce_subindustry_id: yupNumber().nullable().typeError('ID has to be numbers'),
 });
 
 const getCategories = (brand_category, categories) => {
@@ -223,17 +223,17 @@ const BrandInfo = ({ addNotification, match }) => {
                     ce_subindustry_id,
                   };
                   console.log(form);
-                  updateBrand({ id, form })
-                    .then(() => {
-                      addNotification(`${name} - Brand update success`, 'success');
-                      toggleEdit(!edit);
-                    })
-                    .catch(() => {
-                      addNotification(
-                        `${name} - Brand update failed. Soemthing went wrong.`,
-                        'fail'
-                      );
-                    });
+                  // updateBrand({ id, form })
+                  //   .then(() => {
+                  //     addNotification(`${name} - Brand update success`, 'success');
+                  //     toggleEdit(!edit);
+                  //   })
+                  //   .catch(() => {
+                  //     addNotification(
+                  //       `${name} - Brand update failed. Soemthing went wrong.`,
+                  //       'fail'
+                  //     );
+                  //   });
                 }}
               >
                 {props => {
@@ -267,8 +267,8 @@ const BrandInfo = ({ addNotification, match }) => {
                             <b>CE Brand ID:</b>
                           </Form.Label>
                           <Form.Control
-                            plaintext
-                            readOnly
+                            plaintext={edit}
+                            readOnly={edit}
                             name="ce_brand_id"
                             value={values.ce_brand_id ?? ''}
                             onChange={handleChange}
@@ -286,8 +286,8 @@ const BrandInfo = ({ addNotification, match }) => {
                             <b>CE Industry ID:</b>
                           </Form.Label>
                           <Form.Control
-                            plaintext
-                            readOnly
+                            plaintext={edit}
+                            readOnly={edit}
                             name="ce_industry_id"
                             value={values.ce_industry_id ?? ''}
                             onChange={handleChange}
@@ -303,8 +303,8 @@ const BrandInfo = ({ addNotification, match }) => {
                             <b>CE Sub Industry ID:</b>
                           </Form.Label>
                           <Form.Control
-                            plaintext
-                            readOnly
+                            plaintext={edit}
+                            readOnly={edit}
                             name="ce_subindustry_id"
                             value={values.ce_subindustry_id ?? ''}
                             onChange={handleChange}

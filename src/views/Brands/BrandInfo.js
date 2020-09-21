@@ -222,18 +222,17 @@ const BrandInfo = ({ addNotification, match }) => {
                     ce_industry_id,
                     ce_subindustry_id,
                   };
-                  console.log(form);
-                  // updateBrand({ id, form })
-                  //   .then(() => {
-                  //     addNotification(`${name} - Brand update success`, 'success');
-                  //     toggleEdit(!edit);
-                  //   })
-                  //   .catch(() => {
-                  //     addNotification(
-                  //       `${name} - Brand update failed. Soemthing went wrong.`,
-                  //       'fail'
-                  //     );
-                  //   });
+                  updateBrand({ id, form })
+                    .then(() => {
+                      addNotification(`${name} - Brand update success`, 'success');
+                      toggleEdit(!edit);
+                    })
+                    .catch(() => {
+                      addNotification(
+                        `${name} - Brand update failed. Soemthing went wrong.`,
+                        'fail'
+                      );
+                    });
                 }}
               >
                 {props => {

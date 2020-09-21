@@ -1,5 +1,6 @@
 import React, { Fragment, useState, useRef } from 'react';
 import { Col, Row, Container, Form, Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import APModal from './APModal';
 import PropTypes from 'prop-types';
 import moment from 'moment';
@@ -12,6 +13,7 @@ import { useBrand, useCategories, useOffers, useUpdateBrand } from 'hooks/useBra
 import { connect } from 'react-redux';
 import { addNotification } from 'actions/notifications';
 import Spinner from 'components/Spinner';
+import { useNonprofit } from 'hooks/useNonprofits';
 
 const schema = yupObject({
   logo_url: yupString().ensure().trim().url('invalid url').max(255, 'max 255 characters'),
@@ -41,19 +43,13 @@ function OfferRow({ affiliate_program, onClick }) {
     offer_guid,
     offer_type,
     program_id,
+    supported_nonprofit_id,
   } = affiliate_program;
+
+  const { data: supportedNP } = useNonprofit(supported_nonprofit_id);
+
   return (
-    <Row
-      onClick={onClick}
-      onKeyUp={e => {
-        if (e.key === ' ' || e.key === 'Enter') {
-          e.preventDefault();
-          onClick(e);
-        }
-      }}
-      className={styles.offerRow}
-      tabIndex="0"
-    >
+    <Row className={styles.offerRow}>
       <Col>
         <p>
           <b>Begins:</b> <span>{begins_at ? moment(begins_at).format('MM/DD/YY') : 'N/A'}</span>
@@ -62,11 +58,15 @@ function OfferRow({ affiliate_program, onClick }) {
           <b>Ends:</b> <span>{ends_at ? moment(ends_at).format('MM/DD/YY') : 'N/A'}</span>
         </p>
         <p>
-          <b>Supported Nonprofit:</b>
+          <b>Supported Nonprofit Id:</b>
           <span>
-            {affiliate_program.supported_nonprofit
-              ? affiliate_program.supported_nonprofit.name
-              : 'N/A'}
+            {supported_nonprofit_id && supportedNP ? (
+              <Link target="_blank" to={`/nonprofit/${supportedNP.id}`}>
+                {supportedNP.name}
+              </Link>
+            ) : (
+              'N/A'
+            )}
           </span>
         </p>
         <p>
@@ -104,6 +104,11 @@ function OfferRow({ affiliate_program, onClick }) {
           <span>{is_groomed ? 'Complete' : 'Incomplete'}</span>
         </p>
       </Col>
+      <Col className="v-center" md={2}>
+        <Button variant="primary" onClick={onClick}>
+          View Offer
+        </Button>
+      </Col>
     </Row>
   );
 }
@@ -111,7 +116,7 @@ function OfferRow({ affiliate_program, onClick }) {
 const BrandInfo = ({ addNotification, match }) => {
   const [edit, toggleEdit] = useState(true);
   const [show, setShow] = useState(false);
-  const [offer, setOffer] = useState();
+  const [offer, setOffer] = useState(null);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -121,32 +126,46 @@ const BrandInfo = ({ addNotification, match }) => {
       logoDropRef.current.open();
     }
   };
+
   const coverDropRef = useRef(null);
   const openCoverDrop = () => {
     if (coverDropRef.current) {
       coverDropRef.current.open();
     }
   };
-  const { isLoading: brandLoading, isError: brandError, data: { brand = [] } = {} } = useBrand(
-    match.params.ein
+
+  const { isLoading: brandLoading, isError: brandError, data: brand = {} } = useBrand(
+    match.params.id
   );
+
   const { isLoading: catLoading, isError: catError, data: categories = [] } = useCategories();
 
-  const { id, brand_category_id, master_merchant_id, logo_url, hero_url, created_at, modified_at } =
-    brand[0] || {};
+  const {
+    id,
+    brand_category_id,
+    master_merchant_id,
+    logo_url,
+    hero_url,
+    created_at,
+    modified_at,
+  } = brand;
+
   const {
     isLoading: offerLoading,
     isError: offerError,
     data: { affiliate_programs = [] } = {},
   } = useOffers(id);
+
   const [updateBrand] = useUpdateBrand();
 
   if (brandLoading || offerLoading || catLoading) {
     return <Spinner />;
   }
+
   if (brandError || offerError || catError) {
     return <div>Oooops something went wrong. Please try again later! </div>;
   }
+
   return (
     brand &&
     categories &&
@@ -167,7 +186,7 @@ const BrandInfo = ({ addNotification, match }) => {
           <Row>
             <Col>
               <Formik
-                initialValues={brand[0]}
+                initialValues={brand}
                 validationSchema={schema}
                 onSubmit={({
                   id,
@@ -427,7 +446,7 @@ const BrandInfo = ({ addNotification, match }) => {
                     key={affiliate_program.offer_guid}
                     affiliate_program={affiliate_program}
                     onClick={() => {
-                      if (show !== true) {
+                      if (!show) {
                         setOffer(affiliate_program);
                         handleShow();
                       }

@@ -6,7 +6,7 @@ import api from 'gdd-api-lib';
  */
 
 function updateBrand({ id, form }) {
-  return api.editBrand(id, form).then(res => res.data);
+  return api.editInternalBrandInformation(id, form).then(res => res.data);
 }
 
 function updateOffer({ form }) {
@@ -30,21 +30,27 @@ export function useCategories() {
 
 export function useBrands(offset = 0) {
   return usePaginatedQuery(['brands', offset], () => {
-    return api.getRawBrands({ offset, limit: 10 }).then(res => res.data);
+    return api.getQueuedBrands({ offset, limit: 10 }).then(res => res.data);
   });
 }
 
 export function useBrand(id) {
-  return useQuery(['brand', id], () => {
-    return api.getBrand(id).then(res => res.data);
-  });
+  return useQuery(
+    ['brand', id],
+    () => {
+      return api.getInternalBrandInformation(id).then(res => res.data);
+    },
+    {
+      enabled: id,
+    }
+  );
 }
 
 export function useOffers(id) {
   return useQuery(
     ['offers', id],
     () => {
-      return api.getBrandOffer(id).then(res => res.data);
+      return api.getAllBrandsOffers(id).then(res => res.data);
     },
     {
       enabled: id,

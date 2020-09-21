@@ -22,8 +22,12 @@ const schema = yupObject({
   base_consumer_payout: yupNumber()
     .typeError('Consumer Payout must be a number')
     .required('Consumer Payout cannot be empty.'),
-  commission: yupNumber()
-    .positive('Comission has to be greater than 0')
+  commission_percent: yupNumber()
+    .moreThan(-1, 'Must be a positive number or 0')
+    .typeError('Commission must be a number')
+    .required('Commission cannot be empty.'),
+  commission_flat: yupNumber()
+    .moreThan(-1, 'Must be a positive number or 0')
     .typeError('Commission must be a number')
     .required('Commission cannot be empty.'),
   commission_type: yupString().required('Commission Type cannot be empty.'),
@@ -49,6 +53,14 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
 
   if (!offer) return null;
 
+  if (offer.commission_type === 'PERCENT') {
+    offer.commission_percent = offer.commission * 100;
+    offer.commission_flat = 0;
+  } else {
+    offer.commission_flat = offer.commission || 0;
+    offer.commission_percent = 0;
+  }
+
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
@@ -67,11 +79,11 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
             offer_guid,
             supported_nonprofit_id,
             disclaimer,
-            commission,
+            commission_percent,
+            commission_flat,
             commission_type,
             is_disabled,
             is_groomed,
-            base_consumer_payout,
             begins_at,
             ends_at,
           }) => {
@@ -80,11 +92,13 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
               offer_guid,
               supported_nonprofit_id: parseInt(supported_nonprofit_id),
               disclaimer,
-              commission: commission_type === 'PERCENT' ? commission / 100 : commission,
+              commission:
+                commission_type === 'PERCENT' ? commission_percent / 100 : commission_flat,
+              base_consumer_payout:
+                commission_type === 'PERCENT' ? commission_percent / 100 : commission_flat,
               commission_type,
               is_disabled: is_disabled === 'true',
               is_groomed: is_groomed === 'true',
-              base_consumer_payout: commission_type === 'PERCENT' ? commission / 100 : commission,
               begins_at,
               ends_at,
             };
@@ -203,41 +217,33 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
                         <InputGroup>
                           <Form.Control
                             type="number"
-                            defaultValue={values.commission * 100}
-                            value={values.commission}
+                            value={values.commission_percent}
                             id="commission"
-                            name="commission"
+                            name="commission_percent"
                             aria-describedby="commission"
                             onChange={handleChange}
-                            isInvalid={errors.commission}
+                            isInvalid={errors.commission_percent}
                           />
 
                           <InputGroup.Append>
                             <InputGroup.Text>%</InputGroup.Text>
                           </InputGroup.Append>
                           <Form.Control.Feedback type="invalid">
-                            {errors.commission}
+                            {errors.commission_percent}
                           </Form.Control.Feedback>
                         </InputGroup>
                       </Col>
-                      <Form.Group as={Col}>
+                      <Form.Group as={Col} controlId="base_consumer_payout">
                         <Form.Label>
                           <b>Consumer Payout:</b>
                         </Form.Label>
                         <Form.Control
                           disabled
                           plaintext
-                          defaultValue={values.commission * 100 + '%'}
-                          value={values.commission + '%'}
-                          id="base_consumer_payout"
-                          aria-describedby="base_consumer_payout"
-                          name="base_consumer_payout"
-                          isInvalid={!!errors.base_consumer_payout}
+                          value={(values.commission_percent || '0') + '%'}
                           onChange={handleChange}
+                          name="base_consumer_payout"
                         />
-                        <Form.Control.Feedback type="invalid">
-                          {errors.base_consumer_payout}
-                        </Form.Control.Feedback>
                       </Form.Group>
                     </Form.Row>
                   </>
@@ -255,14 +261,15 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
                           </InputGroup.Prepend>
                           <Form.Control
                             type="number"
-                            defaultValue={values.commission || 0}
-                            id="commission"
+                            defaultValue={values.commission_flat || 0}
+                            name="commission_flat"
+                            id="commission_flat"
                             aria-describedby="commission"
                             onChange={handleChange}
-                            isInvalid={errors.commission}
+                            isInvalid={errors.commission_flat}
                           />
                           <Form.Control.Feedback type="invalid">
-                            {errors.commission}
+                            {errors.commission_flat}
                           </Form.Control.Feedback>
                         </InputGroup>
                       </Col>
@@ -273,16 +280,12 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
                         <Form.Control
                           disabled
                           plaintext
-                          value={'$' + values.commission}
+                          value={'$' + (values.commission_flat || 0)}
+                          onChange={handleChange}
                           id="base_consumer_payout"
                           name="base_consumer_payout"
                           aria-describedby="base_consumer_payout"
-                          isInvalid={!!errors.base_consumer_payout}
-                          onChange={handleChange}
                         />
-                        <Form.Control.Feedback type="invalid">
-                          {errors.base_consumer_payout}
-                        </Form.Control.Feedback>
                       </Form.Group>
                     </Form.Row>
                   </>

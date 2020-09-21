@@ -8,7 +8,12 @@ import { ImageUpload } from 'gdd-components';
 import { cn } from 'gdd-components/dist/utils';
 import styles from './Brands.module.scss';
 import { Formik } from 'formik';
-import { object as yupObject, string as yupString, boolean as yupBoolean } from 'yup';
+import {
+  object as yupObject,
+  string as yupString,
+  boolean as yupBoolean,
+  number as yupNumber,
+} from 'yup';
 import { useBrand, useCategories, useOffers, useUpdateBrand } from 'hooks/useBrands';
 import { connect } from 'react-redux';
 import { addNotification } from 'actions/notifications';
@@ -21,7 +26,10 @@ const schema = yupObject({
   name: yupString().required('Brand name cannot be empty.').max(255, 'max 255 characters'),
   is_disabled: yupBoolean().required('Visibility cannot be empty.'),
   is_groomed: yupBoolean().required('Groomed status cannot be empty.'),
-  website_url: yupString().ensure().trim().url('invalid url').max(255, 'max 255 characters'),
+  website_url: yupString().ensure().trim().url('Invalid url').max(255, 'max 255 characters'),
+  ce_brand_id: yupNumber().nullable().typeError('ID has to be numbers'),
+  ce_industry_id: yupNumber().nullable().typeError('ID has to be numbers'),
+  ce_subindustry_id: yupNumber().nullable().typeError('ID has to be numbers'),
 });
 
 const getCategories = (brand_category, categories) => {
@@ -143,11 +151,12 @@ const BrandInfo = ({ addNotification, match }) => {
   const {
     id,
     brand_category_id,
-    master_merchant_id,
     logo_url,
     hero_url,
     created_at,
     modified_at,
+    fmtc_master_merchant_id,
+    fmtc_merchant_id,
   } = brand;
 
   const {
@@ -197,6 +206,9 @@ const BrandInfo = ({ addNotification, match }) => {
                   name,
                   is_disabled,
                   is_groomed,
+                  ce_brand_id,
+                  ce_industry_id,
+                  ce_subindustry_id,
                 }) => {
                   const form = {
                     logo_url,
@@ -206,6 +218,9 @@ const BrandInfo = ({ addNotification, match }) => {
                     name,
                     is_disabled: is_disabled === 'true',
                     is_groomed: is_groomed === 'true',
+                    ce_brand_id,
+                    ce_industry_id,
+                    ce_subindustry_id,
                   };
                   updateBrand({ id, form })
                     .then(() => {
@@ -245,11 +260,73 @@ const BrandInfo = ({ addNotification, match }) => {
                           </p>
                           <p>{id}</p>
                         </Col>
+
+                        <Form.Group as={Col}>
+                          <Form.Label>
+                            <b>CE Brand ID:</b>
+                          </Form.Label>
+                          <Form.Control
+                            plaintext={edit}
+                            readOnly={edit}
+                            name="ce_brand_id"
+                            value={values.ce_brand_id ?? ''}
+                            onChange={handleChange}
+                            aria-describedby="ce_brand_id"
+                            isInvalid={!!errors.ce_brand_id}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.ce_brand_id}
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                      </Row>
+                      <Row className="form-row">
+                        <Form.Group as={Col}>
+                          <Form.Label>
+                            <b>CE Industry ID:</b>
+                          </Form.Label>
+                          <Form.Control
+                            plaintext={edit}
+                            readOnly={edit}
+                            name="ce_industry_id"
+                            value={values.ce_industry_id ?? ''}
+                            onChange={handleChange}
+                            aria-describedby="ce_industry_id"
+                            isInvalid={!!errors.ce_industry_id}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.ce_industry_id}
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                        <Form.Group as={Col}>
+                          <Form.Label>
+                            <b>CE Sub Industry ID:</b>
+                          </Form.Label>
+                          <Form.Control
+                            plaintext={edit}
+                            readOnly={edit}
+                            name="ce_subindustry_id"
+                            value={values.ce_subindustry_id ?? ''}
+                            onChange={handleChange}
+                            aria-describedby="ce_subindustry_id"
+                            isInvalid={!!errors.ce_subindustry_id}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.ce_subindustry_id}
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                      </Row>
+                      <Row className="form-row">
                         <Col className="form-col">
                           <p>
-                            <b>Merchant ID:</b>
+                            <b>FMTC Master Merchant ID:</b>
                           </p>
-                          <p>{master_merchant_id}</p>
+                          <p>{fmtc_master_merchant_id}</p>
+                        </Col>
+                        <Col className="form-col">
+                          <p>
+                            <b>FMTC Merchant ID:</b>
+                          </p>
+                          <p>{fmtc_merchant_id}</p>
                         </Col>
                       </Row>
                       <Form.Row>

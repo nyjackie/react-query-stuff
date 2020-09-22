@@ -35,7 +35,6 @@ const schema = yupObject({
   ce_brand_id: yupNumber().nullable().typeError('ID has to be numbers'),
   ce_industry_id: yupNumber().nullable().typeError('ID has to be numbers'),
   ce_subindustry_id: yupNumber().nullable().typeError('ID has to be numbers'),
-  category: yupNumber().required('Please select a category'),
 });
 
 function BrandInfo({ addNotification, match }) {
@@ -351,7 +350,7 @@ const BrandForm = ({ brand, categories, values, errors, handleChange, edit, hand
           <div className={styles.uploadBlock}>
             <div className={styles.uploadImg}>
               <ImageUpload
-                uploadText="Logo not yet customized"
+                uploadText="Upload new logo"
                 width={128}
                 height={128}
                 disabled={edit}
@@ -376,7 +375,7 @@ const BrandForm = ({ brand, categories, values, errors, handleChange, edit, hand
           <div className={styles.uploadBlock}>
             <div className={cn(styles.uploadImg, styles.uploadImgCover)}>
               <ImageUpload
-                uploadText="Hero not yet customized"
+                uploadText="Upload new hero"
                 width={375}
                 height={240}
                 src={hero_url}

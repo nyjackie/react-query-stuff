@@ -96,7 +96,12 @@ const SideNav = ({ isAuthenticated, logout, closeDrawer }) => {
           <h2>Brands</h2>
           <ul className={styles.navSubSection}>
             <li>
-              <NavLink className="js-closeDrawer" to="/brands" exact={true}>
+              <NavLink className="js-closeDrawer" to="/brands/search" exact={true}>
+                Search
+              </NavLink>
+            </li>
+            <li>
+              <NavLink className="js-closeDrawer" to="/brands/grooming" exact={true}>
                 Grooming Queue
               </NavLink>
             </li>

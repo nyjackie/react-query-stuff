@@ -3,19 +3,22 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Table from 'react-bootstrap/Table';
 import Container from 'react-bootstrap/Container';
-import Brand from './Brand';
-import styles from './Brands.module.scss';
-import { useBrands } from 'hooks/useBrands';
-import Spinner from 'components/Spinner';
-import { Paginator } from 'gdd-components';
 
-const Brands = () => {
+import { Paginator } from 'gdd-components';
+import { useBrands } from 'hooks/useBrands';
+
+import Spinner from 'components/Spinner';
+import GroomingQueueRow from './GroomingQueueRow';
+import styles from './Brands.module.scss';
+
+const GroomingQueue = () => {
   const [offset, setOffset] = useState(0);
   const { resolvedData: { brands = [] } = {}, latestData, isError, isLoading } = useBrands(offset);
 
   if (isLoading) {
     return <Spinner />;
   }
+
   if (isError) {
     return <div>Oooops something went wrong. Please try again later! </div>;
   }
@@ -35,7 +38,7 @@ const Brands = () => {
             </thead>
             <tbody>
               {brands.map(brand => (
-                <Brand key={brand.id} brand={brand} />
+                <GroomingQueueRow key={brand.id} brand={brand} />
               ))}
             </tbody>
           </Table>
@@ -57,4 +60,4 @@ const Brands = () => {
   );
 };
 
-export default Brands;
+export default GroomingQueue;

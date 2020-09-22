@@ -70,3 +70,17 @@ export function useUpdateOffer() {
     },
   });
 }
+
+function search(key, query) {
+  if (query.search_term) {
+    query.search_term = window.btoa(query.search_term);
+  }
+  return api.searchBrands(query).then(res => res.data);
+}
+
+export function useBrandSearch(query) {
+  return useQuery(['brand_search', query], search, {
+    enabled: query.search_term,
+    refetchOnWindowFocus: false,
+  });
+}

@@ -1,5 +1,9 @@
 @import '../../styles/mixins.scss';
 
+/**************************************************
+ * Grooming Queue
+ */
+
 .table {
   &Date {
     width: 20%;
@@ -15,6 +19,10 @@
   }
 }
 
+/**************************************************
+ *  brands/:id  - viewing single brand
+ */
+
 .select {
   text-transform: capitalize;
   &:disabled {
@@ -23,16 +31,20 @@
 }
 
 .uploadBlock {
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 20px;
+
   @include from-bp('lg') {
     display: flex;
     flex-direction: row;
   }
-  margin-bottom: 1.5em;
+  margin-bottom: 3em;
 }
 
 .uploadImg {
   width: 128px;
   margin-right: 24px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
   @include to-bp('lg') {
     margin-bottom: 1em;
   }
@@ -71,5 +83,30 @@
       margin-left: 10px;
       margin-left: 1ch;
     }
+  }
+}
+
+/**************************************************
+ * Brand search
+ */
+.results {
+  list-style-type: none;
+  padding: 0;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  column-gap: 30px;
+  row-gap: 30px;
+}
+
+.resultItem {
+  img {
+    display: block;
+    width: 100%;
+    border-radius: 10px;
+  }
+
+  p {
+    word-wrap: break-word;
   }
 }

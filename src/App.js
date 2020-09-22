@@ -19,9 +19,10 @@ import Users from 'views/Users';
 import UserInfo from 'views/Users/UserInfo';
 import ErrorPage from 'views/Error';
 import NotFound from 'views/NotFound';
-import Brands from 'views/Brands';
+import BrandsGrooming from 'views/Brands/Grooming';
 import CreateUser from 'views/Account/CreateUser';
 import Settings from 'views/Settings';
+import BrandsSearch from 'views/Brands/Search';
 
 // components|other
 import PublicRoute from 'components/PublicRoute';
@@ -71,7 +72,8 @@ const App = () => {
             <PrivateRoute exact path="/claims/:id" component={ClaimInfo} />
             <PrivateRoute exact path="/nonprofit" component={NonprofitSearch} />
             <PrivateRoute exact path="/nonprofit/:id" component={Nonprofit} />
-            <PrivateRoute exact path="/brands/" component={Brands} />
+            <PrivateRoute exact path="/brands/search" component={BrandsSearch} />
+            <PrivateRoute exact path="/brands/grooming" component={BrandsGrooming} />
             <PrivateRoute exact path="/brands/:id" component={BrandInfo} />
             <PrivateRoute exact path="/users" component={Users} />
             <PrivateRoute exact path="/users/:type/:id" component={UserInfo} />

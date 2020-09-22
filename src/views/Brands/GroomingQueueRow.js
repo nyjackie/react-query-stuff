@@ -3,7 +3,10 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Moment from 'react-moment';
 
-const Brand = ({ brand }) => {
+/**
+ * This is a component for each row of the Grooming Queue
+ */
+const GroomingQueueRow = ({ brand }) => {
   const { id, name, created_at } = brand;
 
   return (
@@ -21,8 +24,8 @@ const Brand = ({ brand }) => {
   );
 };
 
-Brand.propTypes = {
+GroomingQueueRow.propTypes = {
   brand: PropTypes.object.isRequired,
 };
 
-export default Brand;
+export default GroomingQueueRow;

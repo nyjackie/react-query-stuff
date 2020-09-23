@@ -1,6 +1,6 @@
 // third party
 import React, { Fragment, useState, useRef } from 'react';
-import { Col, Row, Container, Form, Button, FormControl } from 'react-bootstrap';
+import { Col, Row, Container, Form, Button, FormControl, Accordion } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import moment from 'moment';
@@ -101,48 +101,67 @@ function BrandInfo({ addNotification, match }) {
         </Row>
       </Container>
       <Container className="block shadow-sm">
-        <Row className="mb-4">
-          <Col>
-            <Button
-              onClick={() => {
-                toggleEdit(!edit);
-              }}
-            >
-              Edit
-            </Button>
-          </Col>
-        </Row>
+        <Accordion defaultActiveKey="0">
+          <Row className="mb-4">
+            <Col>
+              <Button
+                onClick={() => {
+                  toggleEdit(!edit);
+                }}
+              >
+                Edit
+              </Button>
+            </Col>
+            <Col sm={1} className="justify-self-end">
+              <Accordion.Toggle
+                as={Button}
+                variant="outline-primary"
+                eventKey="0"
+                onClick={e => {
+                  e.target.textContent =
+                    e.target.textContent === 'collapse' ? 'expand' : 'collapse';
+                }}
+              >
+                collapse
+              </Accordion.Toggle>
+            </Col>
+          </Row>
 
-        <Row>
-          <Col>
-            <Formik
-              initialValues={brand}
-              validationSchema={schema}
-              onSubmit={values => {
-                const form = {
-                  ...values,
-                  is_disabled: values.is_disabled === 'true',
-                  is_groomed: values.is_groomed === 'true',
-                };
-                updateBrand({ id: brand.id, form })
-                  .then(() => {
-                    addNotification(`${brand.name} - Brand update success`, 'success');
-                    toggleEdit(!edit);
-                  })
-                  .catch(() => {
-                    addNotification(
-                      `${brand.name} - Brand update failed. Soemthing went wrong.`,
-                      'fail'
+          <Accordion.Collapse eventKey="0">
+            <Row>
+              <Col>
+                <Formik
+                  initialValues={brand}
+                  validationSchema={schema}
+                  onSubmit={values => {
+                    const form = {
+                      ...values,
+                      is_disabled: values.is_disabled === 'true',
+                      is_groomed: values.is_groomed === 'true',
+                    };
+                    updateBrand({ id: brand.id, form })
+                      .then(() => {
+                        addNotification(`${brand.name} - Brand update success`, 'success');
+                        toggleEdit(!edit);
+                      })
+                      .catch(() => {
+                        addNotification(
+                          `${brand.name} - Brand update failed. Soemthing went wrong.`,
+                          'fail'
+                        );
+                      });
+                  }}
+                >
+                  {props => {
+                    return (
+                      <BrandForm brand={brand} edit={edit} categories={categories} {...props} />
                     );
-                  });
-              }}
-            >
-              {props => {
-                return <BrandForm brand={brand} edit={edit} categories={categories} {...props} />;
-              }}
-            </Formik>
-          </Col>
-        </Row>
+                  }}
+                </Formik>
+              </Col>
+            </Row>
+          </Accordion.Collapse>
+        </Accordion>
       </Container>
 
       {affiliate_programs.length > 0 && (
@@ -189,11 +208,15 @@ const BrandForm = ({ brand, categories, values, errors, handleChange, edit, hand
     }
   };
 
-  let { brand_category_id, logo_url, hero_url } = brand;
+  let { logo_url, hero_url } = brand;
 
-  // TODO: temp rewrite of the hero to make it nicer
-  logo_url = `https://picsum.photos/seed/${brand.id * 5}/300/300`;
-  hero_url = `https://picsum.photos/seed/${brand.id}/750/480`;
+  // TODO: temp rewrite images, rewrite when image upload works
+  if (logo_url.includes('picsum')) {
+    logo_url = `https://picsum.photos/seed/${brand.id * 5}/200/200`;
+  }
+  if (hero_url.includes('picsum')) {
+    hero_url = `https://picsum.photos/seed/${brand.id}/750/480`;
+  }
 
   return (
     <Form onSubmit={handleSubmit}>
@@ -325,15 +348,15 @@ const BrandForm = ({ brand, categories, values, errors, handleChange, edit, hand
               <b>Category </b>
             </Form.Label>
             <FormControl
-              name="category"
+              name="brand_category_id"
               as="select"
               custom
               className={`${styles.select} form-control-plaintext`}
               readOnly={edit}
               disabled={edit}
-              value={brand_category_id}
+              value={values.brand_category_id}
               onChange={handleChange}
-              isInvalid={errors.category}
+              isInvalid={errors.brand_category_id}
             >
               <option hidden>No category</option>
               {categories.map(cat => (
@@ -358,14 +381,14 @@ const BrandForm = ({ brand, categories, values, errors, handleChange, edit, hand
                 alt="logo"
                 name="file_logo"
                 maxSize={2000}
-                minWidth={300}
-                minHeight={300}
+                minWidth={400}
+                minHeight={400}
                 ref={logoDropRef}
               />
             </div>
             <div className={styles.uploadContent}>
               <h3 className="h3">Organization Logo</h3>
-              <p>Image should be at least 300 x 300 px</p>
+              <p>Image should be square and at least 400x400 px</p>
               <Button variant="primary" onClick={openLogoDrop} disabled={edit}>
                 Upload
               </Button>
@@ -382,15 +405,17 @@ const BrandForm = ({ brand, categories, values, errors, handleChange, edit, hand
                 alt="cover photo"
                 name="file_hero"
                 maxSize={3000}
-                minWidth={750}
-                minHeight={480}
+                minWidth={375 * 4}
+                minHeight={240 * 4}
                 ref={coverDropRef}
                 disabled={edit}
               />
             </div>
             <div className={styles.uploadContent}>
               <h3 className="h3">Cover Photo</h3>
-              <p>Image should be at least 750 x 480 px</p>
+              <p>
+                Image should be at least {375 * 4}x{240 * 4} px
+              </p>
               <Button variant="primary" onClick={openCoverDrop} disabled={edit}>
                 Upload
               </Button>

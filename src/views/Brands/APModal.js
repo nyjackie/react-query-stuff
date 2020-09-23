@@ -138,6 +138,14 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
                     <p>{offer.shop_url}</p>
                   </Col>
                 </Row>
+                <Row className="form-col">
+                  <Col className="form-col">
+                    <p>
+                      <b>Affiliate Network Name: </b>
+                    </p>
+                    <p>{offer.affiliate_network_name}</p>
+                  </Col>
+                </Row>
                 <Form.Row>
                   <Form.Group as={Col}>
                     <Form.Label>

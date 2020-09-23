@@ -7,7 +7,7 @@ import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
 import { useFormik } from 'formik';
 import { max255, gddEmailRequired, createSchema, phone, password } from 'utils/schema';
-import { useCreateUser } from 'hooks/useAdmin';
+import { useCreateUser, USER_TYPES, useUniqueEmail, useUniquePhone } from 'hooks/useAdmin';
 import Password from 'components/Password';
 
 const schema = createSchema({
@@ -20,6 +20,17 @@ const schema = createSchema({
 
 function CreateUser() {
   const [postUser, { isLoading, isSuccess, isError, error }] = useCreateUser();
+  const [
+    checkUniqueEmail,
+    { isLoading: ueLoading, isSuccess: ueSuccess, data: ueResult },
+  ] = useUniqueEmail();
+  const [
+    checkUniquePhone,
+    { isLoading: upLoading, isSuccess: upSuccess, data: upResult },
+  ] = useUniquePhone();
+
+  const notUniqueEmail = ueSuccess && ueResult === false;
+  const notUniquePhone = upSuccess && upResult === false;
 
   const formik = useFormik({
     validationSchema: schema,
@@ -31,7 +42,9 @@ function CreateUser() {
       phone_number: '',
     },
     onSubmit: values => {
-      postUser(values);
+      if (!notUniqueEmail && !notUniquePhone) {
+        postUser(values);
+      }
     },
   });
 
@@ -50,12 +63,24 @@ function CreateUser() {
                 type="email"
                 name="email"
                 onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
+                onBlur={e => {
+                  formik.handleBlur(e);
+                  if (!formik.errors.email) {
+                    checkUniqueEmail({
+                      email: formik.values.email,
+                      user_type: USER_TYPES.INTERNAL,
+                    });
+                  }
+                }}
                 value={formik.values.email}
                 isValid={formik.touched.email && !formik.errors.email}
-                isInvalid={formik.touched.email && !!formik.errors.email}
+                isInvalid={(formik.touched.email && !!formik.errors.email) || notUniqueEmail}
               />
-              <Form.Control.Feedback type="invalid">{formik.errors.email}</Form.Control.Feedback>
+              {ueLoading && <Spinner animation="border" />}
+              <Form.Control.Feedback type="invalid">
+                {formik.errors.email}
+                {notUniqueEmail && `internal user with email ${formik.values.email} already exists`}
+              </Form.Control.Feedback>
             </Form.Group>
 
             <Form.Group controlId="firstName">
@@ -116,13 +141,26 @@ function CreateUser() {
                 type="phone_number"
                 name="phone_number"
                 onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
+                onBlur={e => {
+                  formik.handleBlur(e);
+                  if (!formik.errors.phone_number) {
+                    checkUniquePhone({
+                      phone_number: formik.values.phone_number.replace(/\D/g, ''),
+                      user_type: USER_TYPES.INTERNAL,
+                    });
+                  }
+                }}
                 value={formik.values.phone_number}
                 isValid={formik.touched.phone_number && !formik.errors.phone_number}
-                isInvalid={formik.touched.phone_number && !!formik.errors.phone_number}
+                isInvalid={
+                  (formik.touched.phone_number && !!formik.errors.phone_number) || notUniquePhone
+                }
               />
+              {upLoading && <Spinner animation="border" />}
               <Form.Control.Feedback type="invalid">
                 {formik.errors.phone_number}
+                {notUniquePhone &&
+                  `internal user with phone number ${formik.values.phone_number} already exists`}
               </Form.Control.Feedback>
             </Form.Group>
 

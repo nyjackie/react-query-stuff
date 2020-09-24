@@ -75,7 +75,7 @@ function search(key, query) {
   if (query.search_term) {
     query.search_term = window.btoa(query.search_term);
   }
-  return api.searchBrands(query).then(res => res.data);
+  return api.internalSearchBrands(query).then(res => res.data);
 }
 
 export function useBrandSearch(query) {

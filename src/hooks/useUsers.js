@@ -17,6 +17,10 @@ function updateUserProfile({ id, body }) {
   return api.setSpecifiedConsumerProfileInformation(id, body).then(res => res.data);
 }
 
+function postNewBrandUser(body) {
+  return api.createBrandUser(body).then(res => res.data);
+}
+
 /****************************************************************
  * Hooks
  */
@@ -41,4 +45,8 @@ export function useGetUser(id, type) {
 
 export function useUpdateUser() {
   return useMutation(updateUserProfile);
+}
+
+export function useCreateBrandUser() {
+  return useMutation(postNewBrandUser);
 }

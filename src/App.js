@@ -20,7 +20,8 @@ import UserInfo from 'views/Users/UserInfo';
 import ErrorPage from 'views/Error';
 import NotFound from 'views/NotFound';
 import BrandsGrooming from 'views/Brands/Grooming';
-import CreateUser from 'views/Account/CreateUser';
+import CreateAdminUser from 'views/Users/CreateAdminUser';
+import CreateBrandUser from 'views/Users/CreateBrandUser';
 import Settings from 'views/Settings';
 import BrandsSearch from 'views/Brands/Search';
 
@@ -77,7 +78,8 @@ const App = () => {
             <PrivateRoute exact path="/brands/:id" component={BrandInfo} />
             <PrivateRoute exact path="/users" component={Users} />
             <PrivateRoute exact path="/users/:type/:id" component={UserInfo} />
-            <PrivateRoute exact path="/account/create" component={CreateUser} />
+            <PrivateRoute exact path="/users/admin" component={CreateAdminUser} />
+            <PrivateRoute exact path="/users/brands" component={CreateBrandUser} />
             <PrivateRoute exact path="/settings" component={Settings} />
 
             {/* 404 */}

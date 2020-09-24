@@ -112,7 +112,7 @@ function BrandInfo({ addNotification, match }) {
                 Edit
               </Button>
             </Col>
-            <Col sm={1} className="justify-self-end">
+            <Col className="d-flex justify-content-end">
               <Accordion.Toggle
                 as={Button}
                 variant="outline-primary"

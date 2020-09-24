@@ -40,7 +40,7 @@ function uniquePhone(body) {
  * Hooks
  */
 
-export function useCreateUser() {
+export function useCreateAdminUser() {
   return useMutation(postUser);
 }
 

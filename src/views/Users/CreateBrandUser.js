@@ -7,7 +7,8 @@ import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
 import { useFormik } from 'formik';
 import { max255, gddEmailRequired, createSchema, phone, password } from 'utils/schema';
-import { useCreateUser, USER_TYPES, useUniqueEmail, useUniquePhone } from 'hooks/useAdmin';
+import { USER_TYPES, useUniqueEmail, useUniquePhone } from 'hooks/useAdmin';
+import { useCreateBrandUser } from 'hooks/useUsers';
 import Password from 'components/Password';
 
 const schema = createSchema({
@@ -16,10 +17,11 @@ const schema = createSchema({
   last_name: max255.required('This field is required'),
   password: password,
   phone_number: phone.required('This field is required'),
+  brand_id: max255.required('This field is required'),
 });
 
 function CreateUser() {
-  const [postUser, { isLoading, isSuccess, isError, error }] = useCreateUser();
+  const [postUser, { isLoading, isSuccess, isError, error }] = useCreateBrandUser();
   const [
     checkUniqueEmail,
     { isLoading: ueLoading, isSuccess: ueSuccess, data: ueResult },
@@ -40,6 +42,7 @@ function CreateUser() {
       last_name: '',
       password: '',
       phone_number: '',
+      brand_id: '',
     },
     onSubmit: values => {
       if (!notUniqueEmail && !notUniquePhone) {
@@ -52,8 +55,31 @@ function CreateUser() {
     <Container className="block shadow-sm">
       <Row>
         <Col>
-          <h2>Create new admin user</h2>
+          <h2>
+            Create new{' '}
+            <b>
+              <u>Brand</u>
+            </b>{' '}
+            user
+          </h2>
           <Form noValidate onSubmit={formik.handleSubmit}>
+            <Form.Group controlId="brandID">
+              <Form.Label className="sr-only">
+                <b>Brand ID</b>
+              </Form.Label>
+              <Form.Control
+                placeholder="Brand ID"
+                type="text"
+                name="brand_id"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.brand_id}
+                isValid={formik.touched.brand_id && !formik.errors.brand_id}
+                isInvalid={formik.touched.brand_id && !!formik.errors.brand_id}
+              />
+              <Form.Control.Feedback type="invalid">{formik.errors.brand_id}</Form.Control.Feedback>
+            </Form.Group>
+
             <Form.Group controlId="email">
               <Form.Label className="sr-only">
                 <b>Email</b>
@@ -68,7 +94,7 @@ function CreateUser() {
                   if (!formik.errors.email) {
                     checkUniqueEmail({
                       email: formik.values.email,
-                      user_type: USER_TYPES.INTERNAL,
+                      user_type: USER_TYPES.BRAND,
                     });
                   }
                 }}
@@ -89,7 +115,7 @@ function CreateUser() {
               </Form.Label>
               <Form.Control
                 placeholder="First name"
-                type="first_name"
+                type="text"
                 name="first_name"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -108,7 +134,7 @@ function CreateUser() {
               </Form.Label>
               <Form.Control
                 placeholder="Last name"
-                type="last_name"
+                type="text"
                 name="last_name"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -138,7 +164,7 @@ function CreateUser() {
               </Form.Label>
               <Form.Control
                 placeholder="Phone number"
-                type="phone_number"
+                type="text"
                 name="phone_number"
                 onChange={formik.handleChange}
                 onBlur={e => {
@@ -146,7 +172,7 @@ function CreateUser() {
                   if (!formik.errors.phone_number) {
                     checkUniquePhone({
                       phone_number: formik.values.phone_number.replace(/\D/g, ''),
-                      user_type: USER_TYPES.INTERNAL,
+                      user_type: USER_TYPES.BRAND,
                     });
                   }
                 }}

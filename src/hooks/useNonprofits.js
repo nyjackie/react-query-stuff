@@ -8,7 +8,8 @@ function search(key, query) {
   if (query.search_term) {
     query.search_term = window.btoa(query.search_term);
   }
-  return api.searchNonprofits(query).then(res => res.data);
+
+  return api.internalSearchNonprofits(query).then(res => res.data);
 }
 
 function fetchNp(key, id) {

@@ -89,6 +89,16 @@ const SideNav = ({ isAuthenticated, logout, closeDrawer }) => {
                 Search
               </NavLink>
             </li>
+            <li>
+              <NavLink className="js-closeDrawer" to="/users/brands" exact={true}>
+                Create Brand User
+              </NavLink>
+            </li>
+            <li>
+              <NavLink className="js-closeDrawer" to="/users/admin" exact={true}>
+                Create Admin user
+              </NavLink>
+            </li>
           </ul>
         </li>
 
@@ -103,17 +113,6 @@ const SideNav = ({ isAuthenticated, logout, closeDrawer }) => {
             <li>
               <NavLink className="js-closeDrawer" to="/brands/grooming" exact={true}>
                 Grooming Queue
-              </NavLink>
-            </li>
-          </ul>
-        </li>
-
-        <li className={styles.navSection}>
-          <h2>Accounts</h2>
-          <ul className={styles.navSubSection}>
-            <li>
-              <NavLink className="js-closeDrawer" to="/account/create" exact={true}>
-                Create user
               </NavLink>
             </li>
           </ul>

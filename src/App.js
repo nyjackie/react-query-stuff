@@ -24,6 +24,7 @@ import CreateAdminUser from 'views/Users/CreateAdminUser';
 import CreateBrandUser from 'views/Users/CreateBrandUser';
 import Settings from 'views/Settings';
 import BrandsSearch from 'views/Brands/Search';
+import DeleteUser from 'views/Users/DeleteUser';
 
 // components|other
 import PublicRoute from 'components/PublicRoute';
@@ -81,6 +82,7 @@ const App = () => {
             <PrivateRoute exact path="/users/admin" component={CreateAdminUser} />
             <PrivateRoute exact path="/users/brands" component={CreateBrandUser} />
             <PrivateRoute exact path="/settings" component={Settings} />
+            <PrivateRoute exact path="/delete-user" component={DeleteUser} />
 
             {/* 404 */}
             <PublicRoute path="*">

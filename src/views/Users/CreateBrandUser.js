@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Form from 'react-bootstrap/Form';
@@ -6,13 +6,15 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
 import { useFormik } from 'formik';
-import { max255, gddEmailRequired, createSchema, phone, password } from 'utils/schema';
-import { USER_TYPES, useUniqueEmail, useUniquePhone } from 'hooks/useAdmin';
+import InputMask from 'react-input-mask';
+import { max255, createSchema, phone, password } from 'utils/schema';
+import { useUniqueEmail, useUniquePhone } from 'hooks/useAdmin';
+import { USER_TYPES } from 'utils/constants';
 import { useCreateBrandUser } from 'hooks/useUsers';
 import Password from 'components/Password';
 
 const schema = createSchema({
-  email: gddEmailRequired,
+  email: max255.required('This field is required').email('Please enter a valid email'),
   first_name: max255.required('This field is required'),
   last_name: max255.required('This field is required'),
   password: password,
@@ -22,17 +24,11 @@ const schema = createSchema({
 
 function CreateUser() {
   const [postUser, { isLoading, isSuccess, isError, error }] = useCreateBrandUser();
-  const [
-    checkUniqueEmail,
-    { isLoading: ueLoading, isSuccess: ueSuccess, data: ueResult },
-  ] = useUniqueEmail();
-  const [
-    checkUniquePhone,
-    { isLoading: upLoading, isSuccess: upSuccess, data: upResult },
-  ] = useUniquePhone();
+  const [checkUniqueEmail, { isLoading: ueLoading }] = useUniqueEmail();
+  const [checkUniquePhone, { isLoading: upLoading }] = useUniquePhone();
 
-  const notUniqueEmail = ueSuccess && ueResult === false;
-  const notUniquePhone = upSuccess && upResult === false;
+  const [isBadEmail, setIsBadEmail] = useState(false);
+  const [isBadPhone, setIsBadPhone] = useState(false);
 
   const formik = useFormik({
     validationSchema: schema,
@@ -45,9 +41,25 @@ function CreateUser() {
       brand_id: '',
     },
     onSubmit: values => {
-      if (!notUniqueEmail && !notUniquePhone) {
-        postUser(values);
-      }
+      values.phone_number = values.phone_number.replace(/\D/g, '');
+
+      Promise.all([
+        checkUniqueEmail({
+          email: values.email,
+          user_type: USER_TYPES.BRAND,
+        }),
+        checkUniquePhone({
+          phone_number: values.phone_number,
+          user_type: USER_TYPES.BRAND,
+        }),
+      ]).then(results => {
+        const [isUniqueEmail, isUniquePhone] = results;
+        setIsBadEmail(!isUniqueEmail);
+        setIsBadPhone(!isUniquePhone);
+        if (isUniqueEmail && isUniquePhone) {
+          postUser(values);
+        }
+      });
     },
   });
 
@@ -88,24 +100,18 @@ function CreateUser() {
                 placeholder="Email"
                 type="email"
                 name="email"
-                onChange={formik.handleChange}
-                onBlur={e => {
-                  formik.handleBlur(e);
-                  if (!formik.errors.email) {
-                    checkUniqueEmail({
-                      email: formik.values.email,
-                      user_type: USER_TYPES.BRAND,
-                    });
-                  }
+                onChange={e => {
+                  setIsBadEmail(false);
+                  formik.handleChange(e);
                 }}
+                onBlur={formik.handleBlur}
                 value={formik.values.email}
-                isValid={formik.touched.email && !formik.errors.email}
-                isInvalid={(formik.touched.email && !!formik.errors.email) || notUniqueEmail}
+                isInvalid={isBadEmail || (formik.touched.email && formik.errors.email)}
+                isValid={!isBadEmail && formik.touched.email && !formik.errors.email}
               />
-              {ueLoading && <Spinner animation="border" />}
               <Form.Control.Feedback type="invalid">
                 {formik.errors.email}
-                {notUniqueEmail && `internal user with email ${formik.values.email} already exists`}
+                {isBadEmail && `Brand user with email ${formik.values.email} already exists`}
               </Form.Control.Feedback>
             </Form.Group>
 
@@ -164,39 +170,39 @@ function CreateUser() {
               </Form.Label>
               <Form.Control
                 placeholder="Phone number"
-                type="text"
+                type="tel"
+                as={InputMask}
+                mask="(999) 999-9999"
                 name="phone_number"
-                onChange={formik.handleChange}
-                onBlur={e => {
-                  formik.handleBlur(e);
-                  if (!formik.errors.phone_number) {
-                    checkUniquePhone({
-                      phone_number: formik.values.phone_number.replace(/\D/g, ''),
-                      user_type: USER_TYPES.BRAND,
-                    });
-                  }
+                onChange={e => {
+                  setIsBadPhone(false);
+                  formik.handleChange(e);
                 }}
+                onBlur={formik.handleBlur}
                 value={formik.values.phone_number}
-                isValid={formik.touched.phone_number && !formik.errors.phone_number}
                 isInvalid={
-                  (formik.touched.phone_number && !!formik.errors.phone_number) || notUniquePhone
+                  isBadPhone || (formik.touched.phone_number && formik.errors.phone_number)
                 }
+                isValid={!isBadPhone && formik.touched.phone_number && !formik.errors.phone_number}
               />
-              {upLoading && <Spinner animation="border" />}
               <Form.Control.Feedback type="invalid">
                 {formik.errors.phone_number}
-                {notUniquePhone &&
-                  `internal user with phone number ${formik.values.phone_number} already exists`}
+                {isBadPhone && `Brand user with this phone number already exists`}
               </Form.Control.Feedback>
             </Form.Group>
 
-            <Button type="submit" variant="primary">
+            <Button type="submit" variant="primary" disabled={ueLoading || upLoading || isLoading}>
               Submit
             </Button>
             {isError && (
               <p className="mt-2 text-danger">{error?.message || 'An internal error occured!'}</p>
             )}
-            {isLoading && (
+            {isError && error.response.status === 409 && (
+              <p className="mt-2 text-danger">
+                A user already exists for this brand ID. Only one user per brand
+              </p>
+            )}
+            {(ueLoading || upLoading || isLoading) && (
               <Spinner as="span" size="md" animation="border" role="status" aria-hidden="true">
                 <span className="sr-only">Loading...</span>
               </Spinner>

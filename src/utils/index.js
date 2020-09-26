@@ -1,4 +1,5 @@
 import errorHandler from './errorHandler';
+import { dateFmt } from 'components/DateInput';
 
 /**
  * Wrapper around setTimeout to use within in an async function and have it wait
@@ -219,6 +220,54 @@ export function dedupeObj(source, newObj) {
     const val2 = newObj[key];
     if (val1 !== val2) {
       finalObj[key] = val2;
+    }
+  }
+  return finalObj;
+}
+
+/**
+ * Left pads a single 0 for things like dates days and months
+ * @param {number|string} n number to be left padded
+ * @returns {string}
+ */
+function leftPad(n) {
+  if (String(n).length === 1) {
+    return `0${n}`;
+  }
+  return n;
+}
+
+/**
+ * Same as dedupeObj above but specific for user profiles with phone numbers
+ * The returned object will contain the phone number in the final format for the post object
+ * @param {object} source
+ * @param {object} newValues this is the object we're filtering
+ */
+export function dedupeUser(source, newValues) {
+  const finalObj = {};
+  for (const key in newValues) {
+    const oldVal = source[key];
+    let newVal = newValues[key];
+
+    // if phone_number was updated it will be in the input masked format '(###) ###-####'
+    // otherwise it will be in its original format from the db '+1##########'
+    // in order to check equality we need to convert the input masked format to
+    // the database format
+    if (key === 'phone_number' && newVal.includes('(')) {
+      newVal = `+1${newVal.replace(/\D/g, '')}`;
+    }
+
+    // if dob was updated it will be in the input masked format MM/DD/YYYY
+    // otherwise it will be in its original format from the db YYYY-MM-DD
+    // in order to check equality we need to convert the input masked format to
+    // the database format
+    if (key === 'dob' && dateFmt.test(newVal)) {
+      const [m, d, y] = newVal.dob.split('/');
+      newVal.dob = `${y}-${leftPad(m)}-${leftPad(d)}`;
+    }
+
+    if (oldVal !== newVal) {
+      finalObj[key] = newVal;
     }
   }
   return finalObj;

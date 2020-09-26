@@ -46,11 +46,13 @@ const SideNav = ({ isAuthenticated, logout, closeDrawer }) => {
       role="navigation"
       aria-label="Main"
       id="nav"
-      className={`flex-column h-100 ${styles.nav}`}
+      className={`d-flex flex-column h-100 ${styles.nav}`}
       onClick={onNavClick}
     >
-      <Title />
       <ul className={styles.navUL}>
+        <li>
+          <Title />
+        </li>
         <li className={`${styles.navSection} ${styles.noSub}`}>
           <NavLink className="js-closeDrawer" to="/" exact={true}>
             Home
@@ -97,6 +99,11 @@ const SideNav = ({ isAuthenticated, logout, closeDrawer }) => {
             <li>
               <NavLink className="js-closeDrawer" to="/users/admin" exact={true}>
                 Create Admin user
+              </NavLink>
+            </li>
+            <li>
+              <NavLink className="js-closeDrawer" to="/delete-user" exact={true}>
+                Delete User <span className="fa fa-exclamation-triangle text-danger" />
               </NavLink>
             </li>
           </ul>

@@ -1,18 +1,15 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { Button, Col, Row, Container, Form } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import { useFormik } from 'formik';
 import InputMask from 'react-input-mask';
-
 import { cn } from 'gdd-components/dist/utils';
-
-import DateInput from 'components/DateInput';
 import { addNotification } from 'actions/notifications';
-import { usePronounIncomeOptions } from 'hooks/useOptions';
-import { useUpdateConsumerUser } from 'hooks/useUsers';
+import { createSchema, max255, phone } from 'utils/schema';
+import { useUpdateBrandUser } from 'hooks/useUsers';
 import { useUniqueEmail, useUniquePhone } from 'hooks/useAdmin';
-import { createSchema, max255, phone, zipcode, dob } from 'utils/schema';
 import { USER_TYPES } from 'utils/constants';
 import { dedupeUser } from 'utils';
 import styles from './User.module.scss';
@@ -22,31 +19,24 @@ const schema = createSchema({
   last_name: max255.required('This field is required'),
   email: max255.email('Invalid email format').required('This field is required'),
   phone_number: phone.required('This field is required'),
-  dob,
-  zip_code: zipcode,
 });
 
 /**
- * @typedef {object} UserProfile
- * @property {number} id User's id
+ * @typedef {object} BrandUserProfile
+ * @property {number} brand_id Brand ID
  * @property {string} first_name User's first name.
  * @property {string} last_name User's last name.
  * @property {string} email User's email.
  * @property {string} phone_number User's phone number.
- * @property {string} dob User's birthdate (YYYY-MM-DD)
- * @property {number} pronouns_id Pronoun selection ID
- * @property {string} zip_code User's zipcode
- * @property {number} income_range_id Income Range selection ID
  */
 
 /**
  * @param {object} props
  * @param {UserProfile} props.data
  */
-function ConsumerUser({ data, addNotification }) {
+function BrandUser({ data, addNotification }) {
   const [edit, toggleEdit] = useState(false);
-  const { data: options } = usePronounIncomeOptions();
-  const [updateUser] = useUpdateConsumerUser();
+  const [updateUser] = useUpdateBrandUser();
   const [checkUniqueEmail, { data: ueData }] = useUniqueEmail();
   const [checkUniquePhone, { data: upData }] = useUniquePhone();
 
@@ -54,7 +44,7 @@ function ConsumerUser({ data, addNotification }) {
   const badPhone = typeof upData === 'boolean' && upData === false;
 
   function doUpdateUser(changedValues) {
-    updateUser({ id: data.id, body: changedValues })
+    updateUser({ id: data.user_id, body: changedValues })
       .then(() => {
         addNotification('Saves successful', 'success');
         toggleEdit(false);
@@ -87,7 +77,7 @@ function ConsumerUser({ data, addNotification }) {
         uniquePromises.push(
           checkUniqueEmail({
             email: changedValues.email,
-            user_type: USER_TYPES.CONSUMER,
+            user_type: USER_TYPES.BRAND,
           })
         );
       }
@@ -96,7 +86,7 @@ function ConsumerUser({ data, addNotification }) {
         uniquePromises.push(
           checkUniquePhone({
             phone_number: changedValues.phone_number,
-            user_type: USER_TYPES.CONSUMER,
+            user_type: USER_TYPES.BRAND,
           })
         );
       }
@@ -131,7 +121,16 @@ function ConsumerUser({ data, addNotification }) {
     <Container className={cn(`block shadow-sm`, styles.userEdit)}>
       <Row>
         <Col>
-          <h2>Consumer Profile edit</h2>
+          <h2>Brand Profile edit</h2>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <p>
+            <Link to={`/brands/${data.brand_id}`}>
+              <u>Brand id: {data.brand_id}</u>
+            </Link>
+          </p>
         </Col>
       </Row>
       <Form noValidate onSubmit={formik.handleSubmit} className="mb-2">
@@ -209,98 +208,6 @@ function ConsumerUser({ data, addNotification }) {
           </Col>
         </Form.Group>
 
-        <Form.Group as={Row} controlId="dob">
-          <Form.Label column xl={3}>
-            Date of birth:
-          </Form.Label>
-          <Col>
-            <DateInput
-              disabled={!edit}
-              name="dob"
-              value={formik.values.dob || ''}
-              onChange={formik.handleChange}
-              isInvalid={formik.touched.dob && formik.errors.dob}
-              isValid={formik.touched.dob && !formik.errors.dob}
-              errorMsg={formik.errors.dob}
-            />
-          </Col>
-        </Form.Group>
-
-        <Form.Group as={Row} controlId="zip">
-          <Form.Label column xl={3}>
-            Zip code:
-          </Form.Label>
-          <Col>
-            <Form.Control
-              disabled={!edit}
-              type="text"
-              name="zip_code"
-              value={formik.values.zip_code || ''}
-              onChange={formik.handleChange}
-              isInvalid={formik.touched.zip_code && formik.errors.zip_code}
-              isValid={formik.touched.zip_code && !formik.errors.zip_code}
-            />
-            <Form.Control.Feedback type="invalid">{formik.errors.zip_code}</Form.Control.Feedback>
-          </Col>
-        </Form.Group>
-
-        <Form.Group as={Row} controlId="pronoun">
-          <Form.Label column xl={3}>
-            Pronoun:
-          </Form.Label>
-          <Col>
-            <Form.Control
-              disabled={!edit}
-              as="select"
-              name="pronouns_id"
-              value={formik.values.pronouns_id || ''}
-              onChange={formik.handleChange}
-              isInvalid={formik.touched.pronouns_id && formik.errors.pronouns_id}
-              isValid={formik.touched.pronouns_id && !formik.errors.pronouns_id}
-            >
-              <option hidden>Pronoun not set</option>
-              {options &&
-                options.pronoun_options.map(opt => {
-                  return (
-                    <option key={opt.id} value={opt.id}>
-                      {opt.name}
-                    </option>
-                  );
-                })}
-            </Form.Control>
-          </Col>
-        </Form.Group>
-
-        <Form.Group as={Row} controlId="income_range">
-          <Form.Label column xl={3}>
-            Income range:
-          </Form.Label>
-          <Col>
-            <Form.Control
-              disabled={!edit}
-              as="select"
-              name="income_range_id"
-              value={formik.values.income_range_id || ''}
-              onChange={formik.handleChange}
-              isInvalid={formik.touched.income_range_id && formik.errors.income_range_id}
-              isValid={formik.touched.income_range_id && !formik.errors.income_range_id}
-            >
-              {/* we only show the empty option if the initial data was null  */}
-              {options && !options.income_range_options && (
-                <option value="">Select an income range</option>
-              )}
-              {options &&
-                options.income_range_options.map(opt => {
-                  return (
-                    <option key={opt.id} value={opt.id}>
-                      {opt.name}
-                    </option>
-                  );
-                })}
-            </Form.Control>
-          </Col>
-        </Form.Group>
-
         {edit ? (
           <>
             <Button
@@ -334,8 +241,8 @@ function ConsumerUser({ data, addNotification }) {
   );
 }
 
-ConsumerUser.propTypes = {
+BrandUser.propTypes = {
   addNotification: PropTypes.func.isRequired,
 };
 
-export default connect(null, { addNotification })(ConsumerUser);
+export default connect(null, { addNotification })(BrandUser);

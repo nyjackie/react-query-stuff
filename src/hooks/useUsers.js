@@ -1,6 +1,8 @@
-import { useQuery, useMutation } from 'react-query';
-// import { api } from 'gdd-components';
+import { useQuery, useMutation, queryCache } from 'react-query';
 import api from 'gdd-api-lib';
+import { USER_TYPES } from 'utils/constants';
+import store from '../store';
+import { addNotification } from 'actions/notifications';
 
 /****************************************************************
  * Functions that perform api calls
@@ -17,8 +19,16 @@ function updateUserProfile({ id, body }) {
   return api.setSpecifiedConsumerProfileInformation(id, body).then(res => res.data);
 }
 
+function updateBrandUser({ id, body }) {
+  return api.updateBrandUserProfile(id, body).then(res => res.data);
+}
+
 function postNewBrandUser(body) {
   return api.createBrandUser(body).then(res => res.data);
+}
+
+function fetchBrandUserProfile(key, id) {
+  return api.getBrandUserProfile(id).then(res => res.data);
 }
 
 /****************************************************************
@@ -32,21 +42,56 @@ export function useSearchUsers(query) {
 }
 
 export function useGetUser(id, type) {
+  // default to consumer user
   let queryFn = fetchConsumerProfile;
-  if (type === 'nonprofit') {
+
+  if (type === USER_TYPES.NONPROFIT) {
     // queryFn = fetchNonprofitUser;
-  } else if (type === 'internal') {
+  } else if (type === USER_TYPES.INTERNAL) {
     // queryFn = fetchInternalUser
-  } else if (type === 'brand') {
-    // queryFn = fetchBrandUser
+  } else if (type === USER_TYPES.BRAND) {
+    queryFn = fetchBrandUserProfile;
   }
   return useQuery(['get_user', id], queryFn, { enabled: id });
 }
 
-export function useUpdateUser() {
-  return useMutation(updateUserProfile);
+export function useUpdateConsumerUser() {
+  return useMutation(updateUserProfile, {
+    onSuccess: (offer, variable) => {
+      queryCache.invalidateQueries(['get_user', variable.id]);
+    },
+  });
+}
+
+export function useUpdateBrandUser() {
+  return useMutation(updateBrandUser, {
+    onSuccess: (offer, variable) => {
+      queryCache.invalidateQueries(['get_user', variable.id]);
+    },
+  });
 }
 
 export function useCreateBrandUser() {
   return useMutation(postNewBrandUser);
+}
+
+export function useDeleteUser() {
+  return useMutation(
+    ({ id }) => {
+      return api.deleteUser(id);
+    },
+    {
+      onSuccess: (offer, variable) => {
+        queryCache.invalidateQueries(['get_user', variable.id]);
+        store.dispatch(addNotification('User successfully set for deletion in 30 days', 'success'));
+      },
+      onError: err => {
+        if (err.response.status === 404) {
+          store.dispatch(addNotification(`A user with that ID does not exist`, 'fail'));
+        } else {
+          store.dispatch(addNotification(`An Error occured: ${err.message} `, 'fail'));
+        }
+      },
+    }
+  );
 }

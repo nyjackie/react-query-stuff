@@ -1,4 +1,4 @@
-import { string, object, date } from 'yup';
+import { string, object, date, number } from 'yup';
 
 // simple function so we don't have to import yup in both places
 export function createSchema(obj) {
@@ -94,3 +94,8 @@ export const password = string()
   .test('password special', 'Password contains at least one special character', value =>
     specialRegex.test(value)
   );
+
+/**
+ * schema for a regular database ID
+ */
+export const dbID = number().integer().positive();

@@ -1,38 +1,52 @@
 import React from 'react';
-import { Table } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { USER_TYPES } from 'utils/constants';
+import styles from './User.module.scss';
 
 const SingleResult = ({
-  result: {
-    user_id,
-    first_name,
-    last_name,
-    phone_number,
-    email,
-    // created_at,
-    // modified_at,
-    user_type,
-  },
+  result: { user_id, first_name, last_name, phone_number, email, user_type },
 }) => {
   return (
-    <tr className="pointer">
-      <td>{first_name}</td>
-      <td>{last_name}</td>
-      <td>{phone_number}</td>
-      <td>{email}</td>
-      <td>{user_type}</td>
-      <td>
-        {user_type === 'consumer' ? (
-          <Link className="btn btn-primary" to={`/users/${user_type}/${user_id}`}>
-            View
-          </Link>
+    <li>
+      <p>
+        <b>user id:</b>
+      </p>
+      <p>{user_id}</p>
+      <p>
+        <b>first name:</b>
+      </p>
+      <p>{first_name}</p>
+      <p>
+        <b>last name:</b>
+      </p>
+      <p>{last_name}</p>
+      <p>
+        <b>phone:</b>
+      </p>
+      <p>{phone_number}</p>
+      <p>
+        <b>email:</b>
+      </p>
+      <p>{email}</p>
+      <p>
+        <b>user type:</b>
+      </p>
+      <p>
+        <span className={`${styles.label} ${styles[user_type]}`}>{user_type}</span>
+      </p>
+      <p>
+        <b>Profile:</b>
+      </p>
+      <p>
+        {user_type === USER_TYPES.CONSUMER || user_type === USER_TYPES.BRAND ? (
+          <Link to={`/users/${user_type}/${user_id}`}>{`/users/${user_type}/${user_id}`}</Link>
         ) : (
           <span>
-            API for get <code>{user_type}</code> user profile not ready yet
+            API for <code>{user_type}</code> user profile not ready yet
           </span>
         )}
-      </td>
-    </tr>
+      </p>
+    </li>
   );
 };
 
@@ -42,23 +56,11 @@ function UserSearchResult({ results }) {
   }
 
   return (
-    <Table striped bordered hover className="mt-4">
-      <thead>
-        <tr>
-          <th>First Name</th>
-          <th>Last Name</th>
-          <th>Phone#</th>
-          <th>Email</th>
-          <th>User type</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {results.map((item, i) => (
-          <SingleResult result={item} key={item.user_id} />
-        ))}
-      </tbody>
-    </Table>
+    <ul className={styles.userSearchResult}>
+      {results.map((item, i) => (
+        <SingleResult result={item} key={item.user_id} />
+      ))}
+    </ul>
   );
 }
 

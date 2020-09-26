@@ -32,7 +32,8 @@
   background-color: var(--success);
 }
 
-.fail {
+.fail,
+.danger {
   background-color: var(--danger);
 }
 

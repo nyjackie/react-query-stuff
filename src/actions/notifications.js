@@ -1,7 +1,13 @@
 import { SET_NOTIFICATION, REMOVE_NOTIFICATION } from './types';
 import { v4 as uuidv4 } from 'uuid';
 
-export const addNotification = (msg, variant = 'none', waitTime = 4000) => dispatch => {
+/**
+ *
+ * @param {string} msg the text for the notificatio
+ * @param {'success'|'fail'|'danger'|'warrning'} variant sets the color of the notification
+ * @param {number} waitTime how long in milliseconds the notification stays on screen
+ */
+export const addNotification = (msg, variant = 'none', waitTime = 10000) => dispatch => {
   dispatch({
     type: SET_NOTIFICATION,
     payload: { msg, id: uuidv4(), waitTime, variant },

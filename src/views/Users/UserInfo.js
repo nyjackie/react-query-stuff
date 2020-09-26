@@ -9,6 +9,7 @@ import { useGetUser } from 'hooks/useUsers';
 import styles from './User.module.scss';
 import Spinner from 'components/Spinner';
 import ConsumerUser from './ConsumerUser';
+import BrandUser from './BrandUser';
 
 const Confirm = ({ show, onBan, onClose }) => {
   return (
@@ -84,24 +85,14 @@ function UserInfo({ match, addNotification }) {
     return <p>{error.message}</p>;
   }
 
+  data.user_id = id;
+
   if (type === 'consumer') {
-    return (
-      <>
-        <ConsumerUser data={data} />
-      </>
-    );
+    return <ConsumerUser data={data} />;
   } else if (type === 'brand') {
-    return (
-      <>
-        <PageHeader pageTitle="Brand user info" />
-      </>
-    );
+    return <BrandUser data={data} />;
   } else if (type === 'internal') {
-    return (
-      <>
-        <PageHeader pageTitle="Internal user info" />
-      </>
-    );
+    return <PageHeader pageTitle="Internal user info" />;
   } else {
     return <p>type: {type} not supported yet</p>;
   }

@@ -27,3 +27,10 @@ export const MONTHS_SHORT = [
   'Nov',
   'Dec',
 ];
+
+export const USER_TYPES = {
+  CONSUMER: 'consumer',
+  NONPROFIT: 'nonprofit',
+  BRAND: 'brand',
+  INTERNAL: 'internal',
+};

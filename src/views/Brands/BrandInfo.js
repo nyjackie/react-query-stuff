@@ -97,7 +97,14 @@ function BrandInfo({ addNotification, match }) {
               {moment(brand.modified_at).format('MM/DD/YYYY')}
             </p>
           </Col>
-          <Col md={3}>{brand.is_groomed && <GreenCheck />}</Col>
+          <Col md={3}>
+            {brand.is_groomed && (
+              <>
+                <GreenCheck />
+                <p>Groomed</p>
+              </>
+            )}
+          </Col>
         </Row>
       </Container>
       <Container className="block shadow-sm">

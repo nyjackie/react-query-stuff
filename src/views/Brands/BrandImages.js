@@ -72,7 +72,7 @@ function BrandImages({ brand_id, logo_url, hero_url }) {
             ref={logoDropRef}
             onImageSelected={file => {
               setLogoError(null);
-              setLogoSrc(file.img.src);
+              setLogoSrc(file.preview);
             }}
             onError={err => {
               setLogoError(err.message);
@@ -114,7 +114,7 @@ function BrandImages({ brand_id, logo_url, hero_url }) {
             ref={coverDropRef}
             onImageSelected={file => {
               setCoverError(null);
-              setCoverSrc(file.img.src);
+              setCoverSrc(file.preview);
             }}
             onError={err => {
               setCoverError(err.message);

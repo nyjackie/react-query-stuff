@@ -1,5 +1,5 @@
 // third party
-import React, { Fragment, useState, useRef } from 'react';
+import React, { Fragment, useState } from 'react';
 import { Col, Row, Container, Form, Button, FormControl, Accordion } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -12,22 +12,17 @@ import {
   number as yupNumber,
 } from 'yup';
 
-// our external libraries
-import { ImageUpload } from 'gdd-components';
-import { cn } from 'gdd-components/dist/utils';
-
 // internal
 import { addNotification } from 'actions/notifications';
 import { useBrand, useCategories, useOffers, useUpdateBrand } from 'hooks/useBrands';
 import Spinner from 'components/Spinner';
 import OfferRow from './BrandOfferRow';
 import APModal from './APModal';
+import BrandImages from './BrandImages';
 import { ReactComponent as GreenCheck } from 'assets/green-check.svg';
 import styles from './Brands.module.scss';
 
 const schema = yupObject({
-  logo_url: yupString().ensure().trim().url('invalid url').max(255, 'max 255 characters'),
-  hero_url: yupString().ensure().trim().url('invalid url').max(255, 'max 255 characters'),
   name: yupString().required('Brand name cannot be empty.').max(255, 'max 255 characters'),
   is_disabled: yupBoolean().required('Visibility cannot be empty.'),
   is_groomed: yupBoolean().required('Groomed status cannot be empty.'),
@@ -107,18 +102,9 @@ function BrandInfo({ addNotification, match }) {
           </Col>
         </Row>
       </Container>
-      <Container className="block shadow-sm">
-        <Accordion defaultActiveKey="0">
-          <Row className="mb-4">
-            <Col>
-              <Button
-                onClick={() => {
-                  toggleEdit(!edit);
-                }}
-              >
-                Edit
-              </Button>
-            </Col>
+      <Accordion defaultActiveKey="0">
+        <Container>
+          <Row>
             <Col className="d-flex justify-content-end">
               <Accordion.Toggle
                 as={Button}
@@ -133,10 +119,20 @@ function BrandInfo({ addNotification, match }) {
               </Accordion.Toggle>
             </Col>
           </Row>
-
+        </Container>
+        <Container>
           <Accordion.Collapse eventKey="0">
             <Row>
-              <Col>
+              <Col xs={12} lg={5} className="block shadow-sm">
+                <Button
+                  className="mb-4"
+                  onClick={() => {
+                    toggleEdit(!edit);
+                  }}
+                  variant={!edit ? 'outline-primary' : 'primary'}
+                >
+                  {edit ? 'Edit' : 'Stop editing'}
+                </Button>
                 <Formik
                   initialValues={brand}
                   validationSchema={schema}
@@ -149,7 +145,7 @@ function BrandInfo({ addNotification, match }) {
                     updateBrand({ id: brand.id, form })
                       .then(() => {
                         addNotification(`${brand.name} - Brand update success`, 'success');
-                        toggleEdit(!edit);
+                        toggleEdit(false);
                       })
                       .catch(() => {
                         addNotification(
@@ -166,10 +162,17 @@ function BrandInfo({ addNotification, match }) {
                   }}
                 </Formik>
               </Col>
+              <Col xs={12} lg={{ span: 6, offset: 1 }} className="block shadow-sm">
+                <BrandImages
+                  brand_id={brand.id}
+                  logo_url={brand.logo_url}
+                  hero_url={brand.hero_url}
+                />
+              </Col>
             </Row>
           </Accordion.Collapse>
-        </Accordion>
-      </Container>
+        </Container>
+      </Accordion>
 
       {affiliate_programs.length > 0 && (
         <Container className="block shadow-sm">
@@ -201,30 +204,6 @@ function BrandInfo({ addNotification, match }) {
 }
 
 const BrandForm = ({ brand, categories, values, errors, handleChange, edit, handleSubmit }) => {
-  const logoDropRef = useRef(null);
-  const openLogoDrop = () => {
-    if (logoDropRef.current) {
-      logoDropRef.current.open();
-    }
-  };
-
-  const coverDropRef = useRef(null);
-  const openCoverDrop = () => {
-    if (coverDropRef.current) {
-      coverDropRef.current.open();
-    }
-  };
-
-  let { logo_url, hero_url } = brand;
-
-  // TODO: temp rewrite images, rewrite when image upload works
-  if (logo_url.includes('picsum')) {
-    logo_url = `https://picsum.photos/seed/${brand.id * 5}/200/200`;
-  }
-  if (hero_url.includes('picsum')) {
-    hero_url = `https://picsum.photos/seed/${brand.id}/750/480`;
-  }
-
   return (
     <Form onSubmit={handleSubmit}>
       <Form.Row>
@@ -243,10 +222,6 @@ const BrandForm = ({ brand, categories, values, errors, handleChange, edit, hand
             />
             <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
           </Form.Group>
-        </Col>
-      </Form.Row>
-      <Form.Row>
-        <Col sm={12} lg={5}>
           <Form.Group>
             <Form.Label>
               <b>CE Brand ID:</b>
@@ -376,59 +351,6 @@ const BrandForm = ({ brand, categories, values, errors, handleChange, edit, hand
             <Form.Control.Feedback type="invalid">{errors.category}</Form.Control.Feedback>
           </Form.Group>
         </Col>
-        <Col sm={12} lg={{ span: 5, offset: 1 }} className="pt-4">
-          <div className={styles.uploadBlock}>
-            <div className={styles.uploadImg}>
-              <ImageUpload
-                uploadText="Upload new logo"
-                width={128}
-                height={128}
-                disabled={edit}
-                src={logo_url}
-                alt="logo"
-                name="file_logo"
-                maxSize={2000}
-                minWidth={400}
-                minHeight={400}
-                ref={logoDropRef}
-              />
-            </div>
-            <div className={styles.uploadContent}>
-              <h3 className="h3">Organization Logo</h3>
-              <p>Image should be square and at least 400x400 px</p>
-              <Button variant="primary" onClick={openLogoDrop} disabled={edit}>
-                Upload
-              </Button>
-            </div>
-          </div>
-
-          <div className={styles.uploadBlock}>
-            <div className={cn(styles.uploadImg, styles.uploadImgCover)}>
-              <ImageUpload
-                uploadText="Upload new hero"
-                width={375}
-                height={240}
-                src={hero_url}
-                alt="cover photo"
-                name="file_hero"
-                maxSize={3000}
-                minWidth={375 * 4}
-                minHeight={240 * 4}
-                ref={coverDropRef}
-                disabled={edit}
-              />
-            </div>
-            <div className={styles.uploadContent}>
-              <h3 className="h3">Cover Photo</h3>
-              <p>
-                Image should be at least {375 * 4}x{240 * 4} px
-              </p>
-              <Button variant="primary" onClick={openCoverDrop} disabled={edit}>
-                Upload
-              </Button>
-            </div>
-          </div>
-        </Col>
       </Form.Row>
       <Form.Row>
         <Col>
@@ -439,7 +361,7 @@ const BrandForm = ({ brand, categories, values, errors, handleChange, edit, hand
             <Form.Control
               readOnly={edit}
               name="description"
-              value={values.description}
+              value={values.description || ''}
               onChange={handleChange}
               id="description"
               aria-describedby="description"

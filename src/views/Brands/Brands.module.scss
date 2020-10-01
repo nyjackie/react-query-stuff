@@ -37,8 +37,16 @@
   @include from-bp('lg') {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
   }
   margin-bottom: 3em;
+}
+
+.uploadError {
+  flex-basis: 100%;
+  color: red;
+  margin-bottom: 0;
+  margin-top: 1em;
 }
 
 .uploadImg {
@@ -57,12 +65,9 @@
 .uploadContent {
   display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
   justify-content: space-between;
   flex: 1;
-
-  button {
-    align-self: flex-start;
-  }
 }
 
 .offerRow {
@@ -86,23 +91,37 @@
   }
 }
 
+.previewWrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 40px;
+  background-color: rgb(200, 200, 200);
+  padding: 30px;
+}
+
 /**************************************************
  * Brand search
  */
 .results {
   list-style-type: none;
   padding: 0;
-
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  column-gap: 30px;
-  row-gap: 30px;
 }
 
 .resultItem {
+  margin-right: 30px;
+  margin-bottom: 30px;
+  display: inline-block;
+  max-width: 200px;
+
+  a {
+    display: block;
+  }
   img {
     display: block;
     width: 100%;
+    height: auto;
     border-radius: 10px;
   }
 

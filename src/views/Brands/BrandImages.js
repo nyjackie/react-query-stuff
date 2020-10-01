@@ -2,7 +2,7 @@
 import React, { useState, useRef } from 'react';
 import { Button } from 'react-bootstrap';
 // our external libraries
-import { ImageUpload } from 'gdd-components';
+import { ImageUpload, ProfilePreview } from 'gdd-components';
 import { cn } from 'gdd-components/dist/utils';
 
 // internal
@@ -10,13 +10,21 @@ import { useUpdateBrandHero, useUpdateBrandLogo } from 'hooks/useBrands';
 import Spinner from 'components/Spinner';
 import styles from './Brands.module.scss';
 
-function BrandImages({ brand_id, logo_url, hero_url }) {
+function BrandImages({ brand }) {
+  const { id: brand_id, logo_url, hero_url } = brand;
   const [uploadLogo, { isLoading: logoLoading }] = useUpdateBrandLogo();
   const [uploadHero, { isLoading: heroLoading }] = useUpdateBrandHero();
   const [logoError, setLogoError] = useState(null);
   const [coverError, setCoverError] = useState(null);
   const [logoSrc, setLogoSrc] = useState(null);
   const [coverSrc, setCoverSrc] = useState(null);
+
+  const preview = {
+    ...brand,
+    hero_url: coverSrc || hero_url,
+    logo_url: logoSrc || logo_url,
+  };
+  console.log(preview);
 
   const logoDropRef = useRef(null);
   const openLogoDrop = () => {
@@ -82,7 +90,7 @@ function BrandImages({ brand_id, logo_url, hero_url }) {
           <h3 className="h3">Organization Logo</h3>
           <p>
             Image must be square and at least 400x400 px <br />
-            Max file size: 4 MB
+            Max file size: 4.9 MB
           </p>
           <div className="d-flex justify-content-between">
             <Button variant="primary" onClick={openLogoDrop}>
@@ -123,7 +131,7 @@ function BrandImages({ brand_id, logo_url, hero_url }) {
           <h3 className="h3">Cover Photo</h3>
           <p>
             Image should be at least {375 * 3}x{240 * 3} px <br />
-            Max file size: 4 MB
+            Max file size: 4.9 MB
           </p>
           <div className="d-flex justify-content-between">
             <Button variant="primary" onClick={openCoverDrop}>
@@ -137,6 +145,9 @@ function BrandImages({ brand_id, logo_url, hero_url }) {
           </div>
         </div>
         {coverError && <p className={styles.uploadError}>{coverError}</p>}
+        <div className={styles.previewWrap}>
+          <ProfilePreview data={preview} cta="Shop Online" type="brand" />
+        </div>
       </div>
     </div>
   );

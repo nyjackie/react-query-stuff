@@ -122,54 +122,55 @@ function BrandInfo({ addNotification, match }) {
         </Container>
         <Container>
           <Accordion.Collapse eventKey="0">
-            <Row>
-              <Col xs={12} lg={5} className="block shadow-sm">
-                <Button
-                  className="mb-4"
-                  onClick={() => {
-                    toggleEdit(!edit);
-                  }}
-                  variant={!edit ? 'outline-primary' : 'primary'}
-                >
-                  {edit ? 'Edit' : 'Stop editing'}
-                </Button>
-                <Formik
-                  initialValues={brand}
-                  validationSchema={schema}
-                  onSubmit={values => {
-                    const form = {
-                      ...values,
-                      is_disabled: values.is_disabled === 'true',
-                      is_groomed: values.is_groomed === 'true',
-                    };
-                    updateBrand({ id: brand.id, form })
-                      .then(() => {
-                        addNotification(`${brand.name} - Brand update success`, 'success');
-                        toggleEdit(false);
-                      })
-                      .catch(() => {
-                        addNotification(
-                          `${brand.name} - Brand update failed. Soemthing went wrong.`,
-                          'fail'
-                        );
-                      });
-                  }}
-                >
-                  {props => {
-                    return (
-                      <BrandForm brand={brand} edit={edit} categories={categories} {...props} />
+            <Formik
+              initialValues={brand}
+              validationSchema={schema}
+              onSubmit={values => {
+                const form = {
+                  ...values,
+                  is_disabled: values.is_disabled === 'true',
+                  is_groomed: values.is_groomed === 'true',
+                };
+                updateBrand({ id: brand.id, form })
+                  .then(() => {
+                    addNotification(`${brand.name} - Brand update success`, 'success');
+                    toggleEdit(false);
+                  })
+                  .catch(() => {
+                    addNotification(
+                      `${brand.name} - Brand update failed. Soemthing went wrong.`,
+                      'fail'
                     );
-                  }}
-                </Formik>
-              </Col>
-              <Col xs={12} lg={{ span: 6, offset: 1 }} className="block shadow-sm">
-                <BrandImages
-                  brand_id={brand.id}
-                  logo_url={brand.logo_url}
-                  hero_url={brand.hero_url}
-                />
-              </Col>
-            </Row>
+                  });
+              }}
+            >
+              {props => {
+                return (
+                  <Row>
+                    <Col xs={12} lg={5} className="block shadow-sm">
+                      <Button
+                        className="mb-4"
+                        onClick={() => {
+                          toggleEdit(!edit);
+                        }}
+                        variant={!edit ? 'outline-primary' : 'primary'}
+                      >
+                        {edit ? 'Edit' : 'Stop editing'}
+                      </Button>
+                      <BrandForm brand={brand} edit={edit} categories={categories} {...props} />
+                    </Col>
+                    <Col xs={12} lg={{ span: 6, offset: 1 }} className="block shadow-sm">
+                      <BrandImages
+                        brand={{
+                          ...brand,
+                          ...props.values,
+                        }}
+                      />
+                    </Col>
+                  </Row>
+                );
+              }}
+            </Formik>
           </Accordion.Collapse>
         </Container>
       </Accordion>
@@ -235,21 +236,6 @@ const BrandForm = ({ brand, categories, values, errors, handleChange, edit, hand
               isInvalid={!!errors.ce_brand_id}
             />
             <Form.Control.Feedback type="invalid">{errors.ce_brand_id}</Form.Control.Feedback>
-          </Form.Group>
-
-          <Form.Group>
-            <Form.Label>
-              <b>CE Industry ID:</b>
-            </Form.Label>
-            <Form.Control
-              readOnly={edit}
-              name="ce_industry_id"
-              value={values.ce_industry_id ?? ''}
-              onChange={handleChange}
-              aria-describedby="ce_industry_id"
-              isInvalid={!!errors.ce_industry_id}
-            />
-            <Form.Control.Feedback type="invalid">{errors.ce_industry_id}</Form.Control.Feedback>
           </Form.Group>
 
           <Form.Group>

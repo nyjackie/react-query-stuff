@@ -91,6 +91,16 @@
   }
 }
 
+.previewWrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 40px;
+  background-color: rgb(200, 200, 200);
+  padding: 30px;
+}
+
 /**************************************************
  * Brand search
  */

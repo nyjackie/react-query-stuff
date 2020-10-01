@@ -77,8 +77,6 @@ function BrandImages({ brand }) {
             src={logo_url}
             alt="logo"
             name="file_logo"
-            minWidth={400}
-            minHeight={400}
             ref={logoDropRef}
             onImageSelected={file => {
               setLogoError(null);
@@ -92,7 +90,8 @@ function BrandImages({ brand }) {
         <div className={styles.uploadContent}>
           <h3 className="h3">Organization Logo</h3>
           <p>
-            Image must be square and at least 400x400 px <br />
+            Image must be square <br />
+            We recommend at least 400x400 px <br />
             Max file size: 4.9 MB
           </p>
           <div className="d-flex justify-content-between">
@@ -100,9 +99,20 @@ function BrandImages({ brand }) {
               Select image
             </Button>
             {logoSrc && (
-              <Button variant="success" onClick={saveLogo}>
-                save
-              </Button>
+              <>
+                {/* <Button
+                  variant="outline-primary"
+                  onClick={() => {
+                    setLogoError(null);
+                    setLogoSrc(null);
+                  }}
+                >
+                  reset
+                </Button> */}
+                <Button variant="success" onClick={saveLogo}>
+                  save
+                </Button>
+              </>
             )}
           </div>
         </div>
@@ -118,8 +128,6 @@ function BrandImages({ brand }) {
             src={hero_url}
             alt="cover photo"
             name="file_hero"
-            minWidth={375 * 4}
-            minHeight={240 * 4}
             ref={coverDropRef}
             onImageSelected={file => {
               setCoverError(null);
@@ -133,7 +141,7 @@ function BrandImages({ brand }) {
         <div className={styles.uploadContent}>
           <h3 className="h3">Cover Photo</h3>
           <p>
-            Image should be at least {375 * 4}x{240 * 4} px <br />
+            We recommend at least {375 * 4}x{240 * 4} px <br />
             Max file size: 4.9 MB
           </p>
           <div className="d-flex justify-content-between">
@@ -141,9 +149,20 @@ function BrandImages({ brand }) {
               Select image
             </Button>
             {coverSrc && (
-              <Button variant="success" onClick={saveCover}>
-                save
-              </Button>
+              <>
+                {/* <Button
+                  variant="outline-primary"
+                  onClick={() => {
+                    setCoverError(null);
+                    setCoverSrc(null);
+                  }}
+                >
+                  reset
+                </Button> */}
+                <Button variant="success" onClick={saveCover}>
+                  save
+                </Button>
+              </>
             )}
           </div>
         </div>

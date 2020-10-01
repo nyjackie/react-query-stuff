@@ -82,7 +82,8 @@ export function useUpdateBrand() {
 export function useUpdateOffer() {
   return useMutation(updateOffer, {
     onSuccess: (offer, variable) => {
-      queryCache.invalidateQueries(['offers', variable.id]);
+      console.log('useUpdateOffer', variable);
+      queryCache.invalidateQueries(['offers', variable.brand_id]);
     },
   });
 }

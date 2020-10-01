@@ -66,7 +66,6 @@ function BrandImages({ brand_id, logo_url, hero_url }) {
             src={logo_url}
             alt="logo"
             name="file_logo"
-            maxSize={2000}
             minWidth={400}
             minHeight={400}
             ref={logoDropRef}
@@ -108,7 +107,6 @@ function BrandImages({ brand_id, logo_url, hero_url }) {
             src={hero_url}
             alt="cover photo"
             name="file_hero"
-            maxSize={3000}
             minWidth={375 * 4}
             minHeight={240 * 4}
             ref={coverDropRef}

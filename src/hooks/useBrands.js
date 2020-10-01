@@ -28,6 +28,12 @@ export function useCategories() {
   );
 }
 
+export function useBuckets() {
+  return useQuery('buckets', () => {
+    return api.getOfferBuckets().then(res => res.data);
+  });
+}
+
 export function useBrands(offset = 0) {
   return usePaginatedQuery(['brands', offset], () => {
     return api.getQueuedBrands({ offset, limit: 10 }).then(res => res.data);

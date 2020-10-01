@@ -32,6 +32,7 @@ import PrivateRoute from 'components/PrivateRoute';
 import store from 'store';
 import { autoLogin } from 'actions/auth';
 import BrandInfo from 'views/Brands/BrandInfo';
+import Buckets from 'views/Brands/buckets/Buckets';
 
 const queryConfig = {
   queries: {
@@ -76,6 +77,7 @@ const App = () => {
             <PrivateRoute exact path="/nonprofit/:id" component={Nonprofit} />
             <PrivateRoute exact path="/brands/search" component={BrandsSearch} />
             <PrivateRoute exact path="/brands/grooming" component={BrandsGrooming} />
+            <PrivateRoute exact path="/brands/buckets" component={Buckets} />
             <PrivateRoute exact path="/brands/:id" component={BrandInfo} />
             <PrivateRoute exact path="/users" component={Users} />
             <PrivateRoute exact path="/users/:type/:id" component={UserInfo} />

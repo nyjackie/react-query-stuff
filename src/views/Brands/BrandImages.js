@@ -130,7 +130,7 @@ function BrandImages({ brand }) {
         <div className={styles.uploadContent}>
           <h3 className="h3">Cover Photo</h3>
           <p>
-            Image should be at least {375 * 3}x{240 * 3} px <br />
+            Image should be at least {375 * 4}x{240 * 4} px <br />
             Max file size: 4.9 MB
           </p>
           <div className="d-flex justify-content-between">

@@ -24,7 +24,6 @@ function BrandImages({ brand }) {
     hero_url: coverSrc || hero_url,
     logo_url: logoSrc || logo_url,
   };
-  console.log(preview);
 
   const logoDropRef = useRef(null);
   const openLogoDrop = () => {
@@ -44,17 +43,21 @@ function BrandImages({ brand }) {
     uploadLogo({
       id: brand_id,
       logo_image_bytestring: logoSrc.replace('data:image/png;base64,', ''),
-    }).then(() => {
-      setLogoSrc(null);
-    });
+    })
+      .then(() => {
+        setLogoSrc(null);
+      })
+      .catch(err => {});
   }
   function saveCover() {
     uploadHero({
       id: brand_id,
       hero_image_bytestring: coverSrc.replace('data:image/png;base64,', ''),
-    }).then(() => {
-      setCoverSrc(null);
-    });
+    })
+      .then(() => {
+        setCoverSrc(null);
+      })
+      .catch(err => {});
   }
 
   return (
@@ -145,9 +148,9 @@ function BrandImages({ brand }) {
           </div>
         </div>
         {coverError && <p className={styles.uploadError}>{coverError}</p>}
-        <div className={styles.previewWrap}>
-          <ProfilePreview data={preview} cta="Shop Online" type="brand" />
-        </div>
+      </div>
+      <div className={styles.previewWrap}>
+        <ProfilePreview data={preview} cta="Shop Online" type="brand" />
       </div>
     </div>
   );

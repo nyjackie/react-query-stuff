@@ -1,5 +1,5 @@
 .toasts {
-  position: absolute;
+  position: fixed;
   right: 3vh;
   top: 10vh;
   z-index: 999;
@@ -46,19 +46,19 @@
 }
 
 .notification-enter {
-  opacity: 0.01;
+  transform: translateX(300px);
 }
 
 .notification-enter.notification-enter-active {
-  opacity: 1;
-  transition: opacity 500ms ease-in;
+  transform: translateX(0);
+  transition: transform 300ms ease-in;
 }
 
 .notification-exit {
-  opacity: 1;
+  transform: translateX(0);
 }
 
 .notification-exit.notification-exit-active {
-  opacity: 0.01;
-  transition: opacity 300ms ease-in;
+  transform: translateX(300px);
+  transition: transform 300ms ease-in;
 }

@@ -32,7 +32,10 @@ export function useNonprofitSearch(query) {
 }
 
 export function useNonprofit(id) {
-  return useQuery(['np_profile', id], fetchNp, { enabled: id });
+  return useQuery(['np_profile', id], fetchNp, {
+    enabled: id,
+    refetchOnWindowFocus: false,
+  });
 }
 
 export function useNpCategories() {
@@ -41,5 +44,6 @@ export function useNpCategories() {
     // should definitely cache them throughout the whole session
     staleTime: Infinity,
     cacheTime: Infinity,
+    refetchOnWindowFocus: false,
   });
 }

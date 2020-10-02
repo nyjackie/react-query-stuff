@@ -74,6 +74,7 @@ function CreateUser() {
                 placeholder="Email"
                 type="email"
                 name="email"
+                autoFocus
                 onChange={e => {
                   setIsBadEmail(false);
                   formik.handleChange(e);

@@ -5,7 +5,7 @@ import Table from 'react-bootstrap/Table';
 import Container from 'react-bootstrap/Container';
 
 import { Paginator } from 'gdd-components';
-import { useBrands } from 'hooks/useBrands';
+import { useBrandGroomingQueue } from 'hooks/useBrands';
 
 import Spinner from 'components/Spinner';
 import GroomingQueueRow from './GroomingQueueRow';
@@ -13,7 +13,12 @@ import styles from './Brands.module.scss';
 
 const GroomingQueue = () => {
   const [offset, setOffset] = useState(0);
-  const { resolvedData: { brands = [] } = {}, latestData, isError, isLoading } = useBrands(offset);
+  const {
+    resolvedData: { brands = [] } = {},
+    latestData,
+    isError,
+    isLoading,
+  } = useBrandGroomingQueue(offset);
 
   if (isLoading) {
     return <Spinner />;

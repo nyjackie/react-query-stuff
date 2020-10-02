@@ -45,9 +45,11 @@ function BrandImages({ brand }) {
       logo_image_bytestring: logoSrc.replace('data:image/png;base64,', ''),
     })
       .then(() => {
-        setLogoSrc(null);
+        // setLogoSrc(null);
       })
-      .catch(err => {});
+      .catch(err => {
+        setLogoSrc(null);
+      });
   }
   function saveCover() {
     uploadHero({
@@ -55,9 +57,11 @@ function BrandImages({ brand }) {
       hero_image_bytestring: coverSrc.replace('data:image/png;base64,', ''),
     })
       .then(() => {
-        setCoverSrc(null);
+        // setCoverSrc(null);
       })
-      .catch(err => {});
+      .catch(err => {
+        setCoverSrc(null);
+      });
   }
 
   return (

@@ -55,6 +55,7 @@ function DeleteUser() {
                 <Form.Control
                   type="text"
                   name="user_id"
+                  autoFocus
                   autoComplete="off"
                   onChange={formik.handleChange}
                   value={formik.values.user_id}

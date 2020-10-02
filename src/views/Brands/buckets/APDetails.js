@@ -12,11 +12,13 @@ const APDetails = ({ offers }) => {
   };
   return (
     <div>
-      <span> Add Offer +</span>
-      {offers &&
-        offers.map(offer => {
-          return <AP ap_id={offer} key={offer} />;
-        })}
+      <span> Edit Offers +</span>
+      <div className="row">
+        {offers &&
+          offers.map(offer => {
+            return <AP ap_id={offer} key={offer} />;
+          })}
+      </div>
     </div>
   );
 };

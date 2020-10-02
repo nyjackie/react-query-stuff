@@ -7,7 +7,7 @@ const APIcon = ({ ap_id }) => {
     !isLoading &&
     !isError &&
     data && (
-      <div>
+      <div className="col-sm-auto p-1">
         <img width={70} src={data.offer_details.logo_url} alt="" />
       </div>
     )

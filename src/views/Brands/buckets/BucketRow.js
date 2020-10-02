@@ -143,13 +143,13 @@ const BucketRow = ({ bucket }) => {
                 </Form.Group>
               </Form.Row>
               <Accordion>
+                <Accordion.Collapse eventKey={id}>
+                  <APDetails offers={formik.values.affiliate_offers} key={id} />
+                </Accordion.Collapse>
                 <Accordion.Toggle as={Button} eventKey={id} className="mr-2">
                   View
                 </Accordion.Toggle>
                 <Button type="submit">Save</Button>
-                <Accordion.Collapse eventKey={id}>
-                  <APDetails offers={formik.values.affiliate_offers} key={id} />
-                </Accordion.Collapse>
               </Accordion>
             </Form>
           </Card.Body>

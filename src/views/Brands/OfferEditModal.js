@@ -1,21 +1,36 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import DateInput from 'components/DateInput';
+import AsyncSelect from 'react-select/async';
 import { Modal, Button, Form, Col, Row, InputGroup } from 'react-bootstrap';
 import moment from 'moment';
 import { Formik } from 'formik';
-import { useUpdateOffer } from 'hooks/useBrands';
-import {
-  object as yupObject,
-  number as yupNumber,
-  string as yupString,
-  boolean as yupBoolean,
-} from 'yup';
-import { connect } from 'react-redux';
-import { addNotification } from 'actions/notifications';
-import AsyncSelect from 'react-select/async';
+import { object as yupObject, number as yupNumber, string as yupString } from 'yup';
+
 import api from 'gdd-api-lib';
+
+import { addNotification } from 'actions/notifications';
+import { useUpdateOffer } from 'hooks/useBrands';
 import { useNonprofit } from 'hooks/useNonprofits';
+import DateInput from 'components/DateInput';
+import { stringToBool } from 'utils';
+import styles from './OfferEditModal.module.scss';
+
+/**
+ * @typedef BrandOffer
+ * @param {object} offer
+ * @param {string} offer.offer_type offer type
+ * @param {string} offer.offer_guid global offer guid
+ * @param {number} offer.supported_nonprofit_id reference to associated nonprofit if any
+ * @param {string} offer.disclaimer terms and conditions associated with the offer
+ * @param {number} offer.commission commission of brand's active affiliate program
+ * @param {string} offer.commission_type commission type of brand's active affiliate program
+ * @param {number} offer.base_consumer_payout base commission payout to consumer from a brand
+ * @param {string} offer.begins_at when the offer starts
+ * @param {string} offer.ends_at when the offer ends
+ * @param {boolean} offer.is_disabled determines if a brand is visible to external users
+ * @param {boolean} offer.is_groomed determines if a brand is ready for external use
+ */
 
 const schema = yupObject({
   begins_at: yupString().required('Begins at date cannot be empty.'),
@@ -30,10 +45,7 @@ const schema = yupObject({
     .moreThan(-1, 'Must be a positive number or 0')
     .typeError('Commission must be a number')
     .required('Commission cannot be empty.'),
-  commission_type: yupString().required('Commission Type cannot be empty.'),
   disclaimer: yupString().nullable(),
-  is_disabled: yupBoolean().required('Visibility cannot be empty.'),
-  is_groomed: yupBoolean().required('Groomed status cannot be empty.'),
   supported_nonprofit_id: yupNumber()
     .typeError('Supported Nonprofit ID must be a number')
     .nullable(),
@@ -62,7 +74,7 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
   }
 
   return (
-    <Modal show={show} onHide={handleClose}>
+    <Modal show={show} onHide={handleClose} dialogClassName={styles.modal}>
       <Modal.Header closeButton>
         <Modal.Title>
           Program ID: {offer.program_id}
@@ -87,6 +99,7 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
             begins_at,
             ends_at,
           }) => {
+            console.log(is_disabled, is_groomed);
             const form = {
               offer_type,
               offer_guid,
@@ -97,8 +110,8 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
               base_consumer_payout:
                 commission_type === 'PERCENT' ? commission_percent / 100 : commission_flat,
               commission_type,
-              is_disabled: is_disabled === 'true',
-              is_groomed: is_groomed === 'true',
+              is_disabled: stringToBool(is_disabled),
+              is_groomed: stringToBool(is_groomed),
               begins_at,
               ends_at,
             };
@@ -114,38 +127,26 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
         >
           {props => {
             const { values, errors, touched, handleSubmit, handleChange } = props;
+            console.log(values);
+
             return (
               <Form noValidate onSubmit={handleSubmit}>
-                <Row className="form-row">
-                  <Col className="form-col">
-                    <p>
-                      <b>Offer ID: </b>
-                    </p>
-                    <p>{offer.offer_guid}</p>
-                  </Col>
-                  <Col className="form-col">
-                    <p>
-                      <b>Offer Type: </b>
-                    </p>
-                    <p>{offer.offer_type}</p>
-                  </Col>
-                </Row>
-                <Row className="form-col">
-                  <Col className="form-col">
-                    <p>
-                      <b>Shop URL: </b>
-                    </p>
-                    <p>{offer.shop_url}</p>
-                  </Col>
-                </Row>
-                <Row className="form-col">
-                  <Col className="form-col">
-                    <p>
-                      <b>Affiliate Network Name: </b>
-                    </p>
-                    <p>{offer.affiliate_network_name}</p>
-                  </Col>
-                </Row>
+                {/* Meta info section - non-editbale  ******************/}
+                <Meta label="Offer GUID:" val={offer.offer_guid} />
+                <Meta label="Offer Type:" val={offer.offer_type} />
+                <Meta
+                  label="Shop URL:"
+                  val={
+                    <a href={offer.shop_url} target="_blank" rel="noopener noreferrer">
+                      {offer.shop_url}
+                    </a>
+                  }
+                />
+                <Meta label="Affiliate Network Name:" val={offer.affiliate_network_name} />
+
+                {/* Everything else below is editable  ***********************/}
+
+                {/* Select nonprofit, performs a search via our api **********/}
                 <Form.Row>
                   <Form.Group as={Col}>
                     <Form.Label>
@@ -156,8 +157,9 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
                       cacheOptions
                       loadOptions={loadOptions}
                       isSearchable={true}
+                      isClearable
                       onChange={e => {
-                        values.supported_nonprofit_id = e.value;
+                        values.supported_nonprofit_id = e?.value || null;
                       }}
                     />
                     <Form.Control.Feedback type="invalid">
@@ -196,20 +198,31 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
                 </Form.Row>
                 <Form.Row>
                   <Form.Group as={Col}>
-                    <Form.Label>
+                    <p id="offerModalCommisionType" className="d-inline mr-4">
                       <b>Commission Type:</b>
-                    </Form.Label>
-                    <Form.Control
-                      as="select"
-                      value={values.commission_type ?? ''}
-                      id="commission_type"
-                      aria-describedby="commission_type"
+                    </p>
+                    <Form.Check
+                      inline
+                      label="PERCENT"
+                      type="radio"
+                      name="commission_type"
+                      value="PERCENT"
+                      checked={values.commission_type === 'PERCENT'}
                       onChange={handleChange}
-                      isInvalid={!!errors.commission_type}
-                    >
-                      <option value="PERCENT">PERCENT</option>
-                      <option value="FLAT">FLAT</option>
-                    </Form.Control>
+                      aria-describedby="offerModalCommisionType"
+                      id="offerModalCommisionType-PERCENT"
+                    />
+                    <Form.Check
+                      inline
+                      label="FLAT"
+                      onChange={handleChange}
+                      type="radio"
+                      name="commission_type"
+                      value="FLAT"
+                      checked={values.commission_type === 'FLAT'}
+                      aria-describedby="offerModalCommisionType"
+                      id="offerModalCommisionType-FLAT"
+                    />
                     <Form.Control.Feedback type="invalid">
                       {errors.commission_type}
                     </Form.Control.Feedback>
@@ -300,43 +313,60 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
                 )}
                 <Form.Row>
                   <Form.Group as={Col}>
-                    <Form.Label>
+                    <p id="offerModalIsDisabled" className="d-inline mr-4">
                       <b>Is Disabled:</b>
-                    </Form.Label>
-                    <Form.Control
-                      custom
-                      as="select"
+                    </p>
+                    <Form.Check
+                      inline
+                      label="true"
+                      type="radio"
                       name="is_disabled"
-                      defaultValue={values.is_disabled}
-                      aria-describedby="is_disabled"
+                      value={true}
+                      checked={values.is_disabled === 'true' || values.is_disabled === true}
                       onChange={handleChange}
-                      isInvalid={!!errors.is_disabled}
-                    >
-                      <option value={true}>True</option>
-                      <option value={false}>False</option>
-                    </Form.Control>
-                    <Form.Control.Feedback type="invalid">
-                      {errors.disclaimer}
-                    </Form.Control.Feedback>
+                      aria-describedby="offerModalIsDisabled"
+                      id="offerModalIsDisabled-TRUE"
+                    />
+                    <Form.Check
+                      inline
+                      label="false"
+                      onChange={handleChange}
+                      type="radio"
+                      name="is_disabled"
+                      value={false}
+                      checked={values.is_disabled === 'false' || values.is_disabled === false}
+                      aria-describedby="offerModalIsDisabled"
+                      id="offerModalIsDisabled-FALSE"
+                    />
                   </Form.Group>
+                </Form.Row>
+                <Form.Row>
                   <Form.Group as={Col}>
-                    <Form.Label>
-                      <b>Is Groomed: </b>
-                    </Form.Label>
-                    <Form.Control
-                      custom
-                      as="select"
+                    <p id="offerModalIsGroomed" className="d-inline mr-4">
+                      <b>Is Groomed:</b>
+                    </p>
+                    <Form.Check
+                      inline
+                      label="true"
+                      type="radio"
                       name="is_groomed"
-                      defaultValue={values.is_groomed ?? ''}
-                      aria-describedby="is_groomed"
+                      value={true}
+                      checked={values.is_groomed === 'true' || values.is_groomed === true}
                       onChange={handleChange}
-                    >
-                      <option value={true}>true</option>
-                      <option value={false}>false</option>
-                    </Form.Control>
-                    <Form.Control.Feedback type="invalid">
-                      {errors.is_groomed}
-                    </Form.Control.Feedback>
+                      aria-describedby="offerModalIsGroomed"
+                      id="offerModalIsGroomed-TRUE"
+                    />
+                    <Form.Check
+                      inline
+                      label="false"
+                      onChange={handleChange}
+                      type="radio"
+                      name="is_groomed"
+                      value={false}
+                      checked={values.is_groomed === 'false' || values.is_groomed === false}
+                      aria-describedby="offerModalIsGroomed"
+                      id="offerModalIsGroomed-FALSE"
+                    />
                   </Form.Group>
                 </Form.Row>
                 <Form.Row>
@@ -377,6 +407,19 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
     </Modal>
   );
 };
+
+function Meta({ label, val, children }) {
+  return (
+    <Row className={styles.metaRow}>
+      <Col sm={12} md={3} className={styles.metaLabel}>
+        <p>{label}</p>
+      </Col>
+      <Col sm={12} md="auto" className={styles.metaVal}>
+        <p>{children || val}</p>
+      </Col>
+    </Row>
+  );
+}
 
 APModal.propTypes = {
   addNotification: PropTypes.func.isRequired,

@@ -42,10 +42,10 @@ function BrandOfferRow({ affiliate_program, onClick }) {
                 {supportedNP.name}
               </Link>
             ) : (
-              'N/A'
+              '--'
             )}
           </span>{' '}
-          (id: {supported_nonprofit_id})
+          {supported_nonprofit_id && <span>id: {supported_nonprofit_id}</span>}
         </p>
         <p>
           <b>Offer ID:</b>

@@ -17,8 +17,9 @@ import { addNotification } from 'actions/notifications';
 import { useBrand, useCategories, useOffers, useUpdateBrand } from 'hooks/useBrands';
 import Spinner from 'components/Spinner';
 import OfferRow from './BrandOfferRow';
-import APModal from './APModal';
+import OfferEditModal from './OfferEditModal';
 import BrandImages from './BrandImages';
+import { stringToBool } from 'utils';
 import { ReactComponent as GreenCheck } from 'assets/green-check.svg';
 import styles from './Brands.module.scss';
 
@@ -128,8 +129,8 @@ function BrandInfo({ addNotification, match }) {
               onSubmit={values => {
                 const form = {
                   ...values,
-                  is_disabled: values.is_disabled === 'true',
-                  is_groomed: values.is_groomed === 'true',
+                  is_disabled: stringToBool(values.is_disabled),
+                  is_groomed: stringToBool(values.is_groomed),
                 };
                 updateBrand({ id: brand.id, form })
                   .then(() => {
@@ -199,12 +200,14 @@ function BrandInfo({ addNotification, match }) {
         </Container>
       )}
 
-      {offer && <APModal show={show} offer={offer} handleClose={handleClose} brand_id={brand.id} />}
+      {offer && (
+        <OfferEditModal show={show} offer={offer} handleClose={handleClose} brand_id={brand.id} />
+      )}
     </Fragment>
   );
 }
 
-const BrandForm = ({ brand, categories, values, errors, handleChange, edit, handleSubmit }) => {
+const BrandForm = ({ categories, values, errors, handleChange, edit, handleSubmit }) => {
   return (
     <Form onSubmit={handleSubmit}>
       <Form.Row>
@@ -253,49 +256,69 @@ const BrandForm = ({ brand, categories, values, errors, handleChange, edit, hand
             <Form.Control.Feedback type="invalid">{errors.ce_subindustry_id}</Form.Control.Feedback>
           </Form.Group>
 
-          <Form.Group>
-            <Form.Label>
-              <b>Is Disabled:</b>
-            </Form.Label>
-            <Form.Control
-              custom
-              className={`${styles.select} form-control-plaintext`}
-              readOnly={edit}
-              disabled={edit}
-              as="select"
-              name="is_disabled"
-              defaultValue={values.is_disabled}
-              aria-describedby="is_disabled"
-              onChange={handleChange}
-              isInvalid={!!errors.is_disabled}
-            >
-              <option value={true}>True</option>
-              <option value={false}>False</option>
-            </Form.Control>
-            <Form.Control.Feedback type="invalid">{errors.is_disabled}</Form.Control.Feedback>
-          </Form.Group>
+          <Form.Row>
+            <Form.Group as={Col}>
+              <p id="brandIsDisabled" className="d-inline mr-4">
+                <b>Is Disabled:</b>
+              </p>
+              <Form.Check
+                disabled={edit}
+                inline
+                label="true"
+                type="radio"
+                name="is_disabled"
+                value={true}
+                checked={values.is_disabled === 'true' || values.is_disabled === true}
+                onChange={handleChange}
+                aria-describedby="brandIsDisabled"
+                id="brandIsDisabled-TRUE"
+              />
+              <Form.Check
+                disabled={edit}
+                inline
+                label="false"
+                onChange={handleChange}
+                type="radio"
+                name="is_disabled"
+                value={false}
+                checked={values.is_disabled === 'false' || values.is_disabled === false}
+                aria-describedby="brandIsDisabled"
+                id="brandIsDisabled-FALSE"
+              />
+            </Form.Group>
+          </Form.Row>
 
-          <Form.Group>
-            <Form.Label>
-              <b>Is Groomed: </b>
-            </Form.Label>
-            <Form.Control
-              custom
-              className={`${styles.select} form-control-plaintext`}
-              readOnly={edit}
-              disabled={edit}
-              as="select"
-              name="is_groomed"
-              defaultValue={values.is_groomed}
-              aria-describedby="is_groomed"
-              onChange={handleChange}
-              isInvalid={!!errors.is_groomed}
-            >
-              <option value={true}>True</option>
-              <option value={false}>False</option>
-            </Form.Control>
-            <Form.Control.Feedback type="invalid">{errors.is_groomed}</Form.Control.Feedback>
-          </Form.Group>
+          <Form.Row>
+            <Form.Group as={Col}>
+              <p id="brandIsGroomed" className="d-inline mr-4">
+                <b>Is Groomed:</b>
+              </p>
+              <Form.Check
+                disabled={edit}
+                inline
+                label="true"
+                type="radio"
+                name="is_groomed"
+                value={true}
+                checked={values.is_groomed === 'true' || values.is_groomed === true}
+                onChange={handleChange}
+                aria-describedby="brandIsGroomed"
+                id="brandIsGroomed-TRUE"
+              />
+              <Form.Check
+                disabled={edit}
+                inline
+                label="false"
+                onChange={handleChange}
+                type="radio"
+                name="is_groomed"
+                value={false}
+                checked={values.is_groomed === 'false' || values.is_groomed === false}
+                aria-describedby="brandIsGroomed"
+                id="brandIsGroomed-FALSE"
+              />
+            </Form.Group>
+          </Form.Row>
 
           <Form.Group>
             <Form.Label>

@@ -35,7 +35,7 @@ function BrandOfferRow({ affiliate_program, onClick }) {
           <b>Ends:</b> <span>{ends_at ? moment(ends_at).format('MM/DD/YY') : 'N/A'}</span>
         </p>
         <p>
-          <b>Supported Nonprofit Id:</b>
+          <b>Supported Nonprofit: </b>
           <span>
             {supported_nonprofit_id && supportedNP ? (
               <Link target="_blank" to={`/nonprofit/${supportedNP.id}`}>
@@ -44,15 +44,16 @@ function BrandOfferRow({ affiliate_program, onClick }) {
             ) : (
               'N/A'
             )}
-          </span>
-        </p>
-        <p>
-          <b>Program ID:</b>
-          <span>{program_id}</span>
+          </span>{' '}
+          (id: {supported_nonprofit_id})
         </p>
         <p>
           <b>Offer ID:</b>
           <span>{offer_guid}</span>
+        </p>
+        <p>
+          <b>Program ID:</b>
+          <span>{program_id}</span>
         </p>
         <p>
           <b>Offer Type:</b>

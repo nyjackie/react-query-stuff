@@ -321,7 +321,7 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
                   </Form.Group>
                   <Form.Group as={Col}>
                     <Form.Label>
-                      <b>Groomed Status: </b>
+                      <b>Is Groomed: </b>
                     </Form.Label>
                     <Form.Control
                       custom
@@ -331,8 +331,8 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
                       aria-describedby="is_groomed"
                       onChange={handleChange}
                     >
-                      <option value={true}>Complete</option>
-                      <option value={false}>Incomplete</option>
+                      <option value={true}>true</option>
+                      <option value={false}>false</option>
                     </Form.Control>
                     <Form.Control.Feedback type="invalid">
                       {errors.is_groomed}

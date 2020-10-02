@@ -43,8 +43,6 @@ function BrandInfo({ addNotification, match }) {
     match.params.id
   );
 
-  console.log(brand);
-
   const { isLoading: catLoading, isError: catError, data: categories = [] } = useCategories();
 
   const {
@@ -52,7 +50,6 @@ function BrandInfo({ addNotification, match }) {
     isError: offerError,
     data: { affiliate_programs = [] } = {},
   } = useOffers(brand.id);
-  // console.log(affiliate_programs[0]);
 
   const [updateBrand] = useUpdateBrand();
 
@@ -136,13 +133,13 @@ function BrandInfo({ addNotification, match }) {
                 };
                 updateBrand({ id: brand.id, form })
                   .then(() => {
-                    addNotification(`${brand.name} - Brand update success`, 'success');
+                    addNotification(`Brand update success`, 'success');
                     toggleEdit(false);
                   })
-                  .catch(() => {
+                  .catch(err => {
                     addNotification(
-                      `${brand.name} - Brand update failed. Soemthing went wrong.`,
-                      'fail'
+                      `Brand update failed. ${err?.response?.data?.message}`,
+                      'error'
                     );
                   });
               }}
@@ -280,7 +277,7 @@ const BrandForm = ({ brand, categories, values, errors, handleChange, edit, hand
 
           <Form.Group>
             <Form.Label>
-              <b>Groomed Status: </b>
+              <b>Is Groomed: </b>
             </Form.Label>
             <Form.Control
               custom
@@ -294,8 +291,8 @@ const BrandForm = ({ brand, categories, values, errors, handleChange, edit, hand
               onChange={handleChange}
               isInvalid={!!errors.is_groomed}
             >
-              <option value={true}>Complete</option>
-              <option value={false}>Incomplete</option>
+              <option value={true}>True</option>
+              <option value={false}>False</option>
             </Form.Control>
             <Form.Control.Feedback type="invalid">{errors.is_groomed}</Form.Control.Feedback>
           </Form.Group>

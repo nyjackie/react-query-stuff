@@ -17,7 +17,7 @@ import { addNotification } from 'actions/notifications';
 import { useBrand, useCategories, useOffers, useUpdateBrand } from 'hooks/useBrands';
 import Spinner from 'components/Spinner';
 import OfferRow from './BrandOfferRow';
-import APModal from './APModal';
+import OfferEditModal from './OfferEditModal';
 import BrandImages from './BrandImages';
 import { ReactComponent as GreenCheck } from 'assets/green-check.svg';
 import styles from './Brands.module.scss';
@@ -199,7 +199,9 @@ function BrandInfo({ addNotification, match }) {
         </Container>
       )}
 
-      {offer && <APModal show={show} offer={offer} handleClose={handleClose} brand_id={brand.id} />}
+      {offer && (
+        <OfferEditModal show={show} offer={offer} handleClose={handleClose} brand_id={brand.id} />
+      )}
     </Fragment>
   );
 }

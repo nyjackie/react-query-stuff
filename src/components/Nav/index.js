@@ -92,8 +92,13 @@ const SideNav = ({ isAuthenticated, logout, closeDrawer }) => {
               </NavLink>
             </li>
             <li>
-              <NavLink className="js-closeDrawer" to="/users/brands" exact={true}>
+              <NavLink className="js-closeDrawer" to="/users/brand" exact={true}>
                 Create Brand User
+              </NavLink>
+            </li>
+            <li>
+              <NavLink className="js-closeDrawer" to="/users/nonprofit" exact={true}>
+                Create Nonprofit User
               </NavLink>
             </li>
             <li>

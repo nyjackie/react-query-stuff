@@ -1,4 +1,4 @@
-import { useQuery } from 'react-query';
+import { useQuery, useMutation, queryCache } from 'react-query';
 import api from 'gdd-api-lib';
 
 /****************************************************************
@@ -18,6 +18,37 @@ function fetchNp(key, id) {
 
 function getCategories() {
   return api.getNonprofitCategories().then(res => res.data);
+}
+
+function postNewNonprofitUser(body) {
+  return api.createNonprofitUser(body).then(res => res.data);
+}
+
+/**
+ * @param {object} query url search/query parameters
+ * @param {string} query.email base64 encoded email
+ * @param {boolean} query.template template=new_nonprofit if using for new nonprofit user creation
+ */
+function sendForgotPassword(_, email, template = false) {
+  return api
+    .nonprofitForgotPassword({
+      email: window.btoa(email),
+      template,
+    })
+    .then(res => res.data);
+}
+
+/**
+ *
+ * @param {number} id  REQUIRED user_id to specify which nonprofit user profile to set.
+ * @param {object} body REQUIRED request body payload
+ * @param {string} body.first_name User's first name.
+ * @param {string} body.last_name User's last name.
+ * @param {string} body.email User's email.
+ * @param {string} body.phone_number User's phone number.
+ */
+function putUpdateUserProfile({ id, body }) {
+  return api.updateNonprofitUserProfile(id, body).then(res => res.data);
 }
 
 /****************************************************************
@@ -45,5 +76,28 @@ export function useNpCategories() {
     staleTime: Infinity,
     cacheTime: Infinity,
     refetchOnWindowFocus: false,
+  });
+}
+
+export function useCreateNoprofitUser() {
+  return useMutation(postNewNonprofitUser);
+}
+
+export function useNonprofitForgotPassword(email, sendEmail) {
+  return useQuery(['np_forgotPW', email], sendForgotPassword, {
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    cacheTime: 0,
+    staleTime: 0,
+    enabled: email,
+    retry: false,
+  });
+}
+
+export function useUpdateNonprofitUser() {
+  return useMutation(putUpdateUserProfile, {
+    onSuccess: (offer, variable) => {
+      queryCache.invalidateQueries(['get_user', variable.id]);
+    },
   });
 }

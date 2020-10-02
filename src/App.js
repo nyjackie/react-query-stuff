@@ -22,6 +22,7 @@ import NotFound from 'views/NotFound';
 import BrandsGrooming from 'views/Brands/Grooming';
 import CreateAdminUser from 'views/Users/CreateAdminUser';
 import CreateBrandUser from 'views/Users/CreateBrandUser';
+import CreateNonprofitUser from 'views/Users/CreateNonprofitUser';
 import Settings from 'views/Settings';
 import BrandsSearch from 'views/Brands/Search';
 import DeleteUser from 'views/Users/DeleteUser';
@@ -80,7 +81,8 @@ const App = () => {
             <PrivateRoute exact path="/users" component={Users} />
             <PrivateRoute exact path="/users/:type/:id" component={UserInfo} />
             <PrivateRoute exact path="/users/admin" component={CreateAdminUser} />
-            <PrivateRoute exact path="/users/brands" component={CreateBrandUser} />
+            <PrivateRoute exact path="/users/brand" component={CreateBrandUser} />
+            <PrivateRoute exact path="/users/nonprofit" component={CreateNonprofitUser} />
             <PrivateRoute exact path="/settings" component={Settings} />
             <PrivateRoute exact path="/delete-user" component={DeleteUser} />
 

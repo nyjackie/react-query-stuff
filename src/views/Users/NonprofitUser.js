@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Button, Col, Row, Container, Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useFormik } from 'formik';
 import InputMask from 'react-input-mask';
+
+import { Button, Col, Row, Container, Form } from 'react-bootstrap';
+
 import { cn } from 'gdd-components/dist/utils';
 import { addNotification } from 'actions/notifications';
 import { createSchema, max255, phone } from 'utils/schema';
-import { useUpdateBrandUser } from 'hooks/useUsers';
-import { useBrandForgotPassword } from 'hooks/useBrands';
+import { useUpdateNonprofitUser, useNonprofitForgotPassword } from 'hooks/useNonprofits';
 import { useUniqueEmail, useUniquePhone } from 'hooks/useAdmin';
 import { USER_TYPES } from 'utils/constants';
 import { dedupeUser } from 'utils';
@@ -24,8 +25,10 @@ const schema = createSchema({
 });
 
 /**
- * @typedef {object} BrandUserProfile
- * @property {number} brand_id Brand ID
+ * @typedef {object} NonprofitUserProfile
+ * @property {number} nonprofit_id Nonprofit ID
+ * @property {string} user_id
+ *
  * @property {string} first_name User's first name.
  * @property {string} last_name User's last name.
  * @property {string} email User's email.
@@ -34,11 +37,11 @@ const schema = createSchema({
 
 /**
  * @param {object} props
- * @param {UserProfile} props.data
+ * @param {NonprofitUserProfile} props.data
  */
-function BrandUser({ data, addNotification }) {
+function NonprofitUser({ data, addNotification }) {
   const [edit, toggleEdit] = useState(false);
-  const [updateUser] = useUpdateBrandUser();
+  const [updateUser] = useUpdateNonprofitUser();
   const [checkUniqueEmail, { data: ueData }] = useUniqueEmail();
   const [checkUniquePhone, { data: upData }] = useUniquePhone();
 
@@ -99,7 +102,7 @@ function BrandUser({ data, addNotification }) {
             results.forEach((r, i) => {
               if (r === false) {
                 addNotification(
-                  `A brand user with that ${promiseOrder[i]} already exist`,
+                  `A nonprofit user with that ${promiseOrder[i]} already exist`,
                   'danger',
                   10000
                 );
@@ -124,14 +127,14 @@ function BrandUser({ data, addNotification }) {
       <Container className={cn(`block shadow-sm`, styles.userEdit)}>
         <Row>
           <Col>
-            <h2>Brand Profile edit</h2>
+            <h2>Nonprofit Profile edit</h2>
           </Col>
         </Row>
         <Row>
           <Col>
             <p>
-              <Link to={`/brands/${data.brand_id}`}>
-                <u>Brand id: {data.brand_id}</u>
+              <Link to={`/nonprofit/${data.nonprofit_id}`}>
+                <u>Nonprofit id: {data.nonprofit_id}</u>
               </Link>
             </p>
           </Col>
@@ -243,13 +246,14 @@ function BrandUser({ data, addNotification }) {
           )}
         </Form>
       </Container>
-      <SendForgotPassword email={data.email} hook={useBrandForgotPassword} />
+
+      <SendForgotPassword email={data.email} hook={useNonprofitForgotPassword} />
     </>
   );
 }
 
-BrandUser.propTypes = {
+NonprofitUser.propTypes = {
   addNotification: PropTypes.func.isRequired,
 };
 
-export default connect(null, { addNotification })(BrandUser);
+export default connect(null, { addNotification })(NonprofitUser);

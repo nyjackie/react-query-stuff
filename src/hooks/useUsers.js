@@ -31,6 +31,15 @@ function fetchBrandUserProfile(key, id) {
   return api.getBrandUserProfile(id).then(res => res.data);
 }
 
+function fetchNonprofitUserProfile(key, id) {
+  return api.getNonprofitUserProfile(id).then(res => res.data);
+}
+
+function fetchInternalUser(key, id) {
+  // TODO: add when API is ready
+  return Promise.resolve({});
+}
+
 /****************************************************************
  * Hooks
  */
@@ -46,9 +55,9 @@ export function useGetUser(id, type) {
   let queryFn = fetchConsumerProfile;
 
   if (type === USER_TYPES.NONPROFIT) {
-    // queryFn = fetchNonprofitUser;
+    queryFn = fetchNonprofitUserProfile;
   } else if (type === USER_TYPES.INTERNAL) {
-    // queryFn = fetchInternalUser
+    queryFn = fetchInternalUser;
   } else if (type === USER_TYPES.BRAND) {
     queryFn = fetchBrandUserProfile;
   }

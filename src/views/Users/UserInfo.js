@@ -10,6 +10,8 @@ import styles from './User.module.scss';
 import Spinner from 'components/Spinner';
 import ConsumerUser from './ConsumerUser';
 import BrandUser from './BrandUser';
+import NonprofitUser from './NonprofitUser';
+import AdminUser from './AdminUser';
 
 const Confirm = ({ show, onBan, onClose }) => {
   return (
@@ -87,14 +89,17 @@ function UserInfo({ match, addNotification }) {
 
   data.user_id = id;
 
-  if (type === 'consumer') {
-    return <ConsumerUser data={data} />;
-  } else if (type === 'brand') {
-    return <BrandUser data={data} />;
-  } else if (type === 'internal') {
-    return <PageHeader pageTitle="Internal user info" />;
-  } else {
-    return <p>type: {type} not supported yet</p>;
+  switch (type) {
+    case 'consumer':
+      return <ConsumerUser data={data} />;
+    case 'brand':
+      return <BrandUser data={data} />;
+    case 'nonprofit':
+      return <NonprofitUser data={data} />;
+    case 'internal':
+      return <AdminUser data={data} />;
+    default:
+      return <p>type: {type} not supported yet</p>;
   }
 }
 

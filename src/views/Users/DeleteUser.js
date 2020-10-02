@@ -12,10 +12,6 @@ function DeleteUser() {
   const [check, setCheck] = useState(false);
   const [deleteUser] = useDeleteUser();
 
-  function finalDelete() {
-    deleteUser({ id: formik.values.user_id });
-  }
-
   useEffect(() => {
     if (check) {
       window.scrollTo(0, document.body.scrollHeight);
@@ -31,6 +27,13 @@ function DeleteUser() {
       setCheck(true);
     },
   });
+
+  function finalDelete() {
+    deleteUser({ id: formik.values.user_id }).then(() => {
+      setCheck(false);
+      formik.resetForm({ user_id: '' });
+    });
+  }
 
   return (
     <>

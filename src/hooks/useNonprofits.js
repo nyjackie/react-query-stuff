@@ -25,21 +25,6 @@ function postNewNonprofitUser(body) {
 }
 
 /**
- * @param {object} query url search/query parameters
- * @param {string} query.email base64 encoded email
- * @param {boolean} query.template template=new_nonprofit if using for new nonprofit user creation
- */
-function sendForgotPassword(_, { email, template = false }) {
-  console.log('sendForgotPassword', _, email, template);
-  return api
-    .nonprofitForgotPassword({
-      email: window.btoa(email),
-      template,
-    })
-    .then(res => res.data);
-}
-
-/**
  *
  * @param {number} id  REQUIRED user_id to specify which nonprofit user profile to set.
  * @param {object} body REQUIRED request body payload
@@ -86,16 +71,17 @@ export function useCreateNoprofitUser() {
 
 /**
  * @param {string} email base64 encoded email before sending
- * @param {boolean} template template=new_nonprofit if using for new nonprofit user creation
+ * @param {string?|boolean} template template=new_nonprofit if using for new nonprofit user creation
  */
 export function useNonprofitForgotPassword(email, template = false) {
   return useQuery(
     ['np_forgotPW', email],
     () => {
-      return api.nonprofitForgotPassword({
-        email: window.btoa(email),
-        template,
-      });
+      const query = { email: window.btoa(email) };
+      if (template) {
+        query.template = template;
+      }
+      return api.nonprofitForgotPassword(query);
     },
     {
       refetchOnMount: false,

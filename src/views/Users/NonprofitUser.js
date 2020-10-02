@@ -247,11 +247,7 @@ function NonprofitUser({ data, addNotification }) {
         </Form>
       </Container>
 
-      <SendForgotPassword
-        email={data.email}
-        hook={useNonprofitForgotPassword}
-        new_template={false}
-      />
+      <SendForgotPassword email={data.email} hook={useNonprofitForgotPassword} />
     </>
   );
 }

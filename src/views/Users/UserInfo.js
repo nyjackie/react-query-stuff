@@ -11,6 +11,7 @@ import Spinner from 'components/Spinner';
 import ConsumerUser from './ConsumerUser';
 import BrandUser from './BrandUser';
 import NonprofitUser from './NonprofitUser';
+import AdminUser from './AdminUser';
 
 const Confirm = ({ show, onBan, onClose }) => {
   return (
@@ -96,7 +97,7 @@ function UserInfo({ match, addNotification }) {
     case 'nonprofit':
       return <NonprofitUser data={data} />;
     case 'internal':
-      return <PageHeader pageTitle="Internal user info" />;
+      return <AdminUser data={data} />;
     default:
       return <p>type: {type} not supported yet</p>;
   }

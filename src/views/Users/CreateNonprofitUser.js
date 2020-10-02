@@ -13,7 +13,7 @@ import { max255, createSchema, phone, password } from 'utils/schema';
 import { USER_TYPES } from 'utils/constants';
 import { useUniqueEmail, useUniquePhone } from 'hooks/useAdmin';
 import { useCreateNoprofitUser, useNonprofitForgotPassword } from 'hooks/useNonprofits';
-import SendForgotPassword from 'views/Users/SendForgotPassword';
+import SendForgotPassword, { TEMPLATES } from 'views/Users/SendForgotPassword';
 import Password from 'components/Password';
 
 const schema = createSchema({
@@ -229,7 +229,7 @@ function CreateUser() {
         <SendForgotPassword
           email={formik.values.email}
           hook={useNonprofitForgotPassword}
-          new_template={true}
+          new_template={TEMPLATES.NEW_NONPROFIT}
         />
       )}
     </>

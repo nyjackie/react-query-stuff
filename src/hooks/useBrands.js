@@ -196,3 +196,29 @@ export function useUpdateBrandHero() {
     },
   });
 }
+
+/**
+ * @param {string} email base64 encoded email before sending
+ * @param {string?|boolean} template template=new_brand
+ */
+export function useBrandForgotPassword(email, template = false) {
+  return useQuery(
+    ['brand_forgotPW', email],
+    () => {
+      const query = { email: window.btoa(email) };
+      if (template) {
+        query.template = template;
+      }
+      return api.brandForgotPassword(query);
+    },
+    {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      cacheTime: 0,
+      staleTime: 0,
+      enabled: email,
+      retry: false,
+      onError: console.error,
+    }
+  );
+}

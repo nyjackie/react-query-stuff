@@ -9,9 +9,11 @@ import { cn } from 'gdd-components/dist/utils';
 import { addNotification } from 'actions/notifications';
 import { createSchema, max255, phone } from 'utils/schema';
 import { useUpdateBrandUser } from 'hooks/useUsers';
+import { useBrandForgotPassword } from 'hooks/useBrands';
 import { useUniqueEmail, useUniquePhone } from 'hooks/useAdmin';
 import { USER_TYPES } from 'utils/constants';
 import { dedupeUser } from 'utils';
+import SendForgotPassword from 'views/Users/SendForgotPassword';
 import styles from './User.module.scss';
 
 const schema = createSchema({
@@ -118,126 +120,131 @@ function BrandUser({ data, addNotification }) {
   });
 
   return (
-    <Container className={cn(`block shadow-sm`, styles.userEdit)}>
-      <Row>
-        <Col>
-          <h2>Brand Profile edit</h2>
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <p>
-            <Link to={`/brands/${data.brand_id}`}>
-              <u>Brand id: {data.brand_id}</u>
-            </Link>
-          </p>
-        </Col>
-      </Row>
-      <Form noValidate onSubmit={formik.handleSubmit} className="mb-2">
-        <Form.Group as={Row} controlId="first_name">
-          <Form.Label column xl={3}>
-            First Name:
-          </Form.Label>
+    <>
+      <Container className={cn(`block shadow-sm`, styles.userEdit)}>
+        <Row>
           <Col>
-            <Form.Control
-              disabled={!edit}
-              name="first_name"
-              value={formik.values.first_name || ''}
-              onChange={formik.handleChange}
-              isInvalid={formik.touched.first_name && formik.errors.first_name}
-              isValid={formik.touched.first_name && !formik.errors.first_name}
-            />
-            <Form.Control.Feedback type="invalid">{formik.errors.first_name}</Form.Control.Feedback>
+            <h2>Brand Profile edit</h2>
           </Col>
-        </Form.Group>
-
-        <Form.Group as={Row} controlId="last_name">
-          <Form.Label column xl={3}>
-            Last Name:
-          </Form.Label>
+        </Row>
+        <Row>
           <Col>
-            <Form.Control
-              disabled={!edit}
-              name="last_name"
-              value={formik.values.last_name || ''}
-              onChange={formik.handleChange}
-              isInvalid={formik.touched.last_name && formik.errors.last_name}
-              isValid={formik.touched.last_name && !formik.errors.last_name}
-            />
-            <Form.Control.Feedback type="invalid">{formik.errors.last_name}</Form.Control.Feedback>
+            <p>
+              <Link to={`/brands/${data.brand_id}`}>
+                <u>Brand id: {data.brand_id}</u>
+              </Link>
+            </p>
           </Col>
-        </Form.Group>
+        </Row>
+        <Form noValidate onSubmit={formik.handleSubmit} className="mb-2">
+          <Form.Group as={Row} controlId="first_name">
+            <Form.Label column xl={3}>
+              First Name:
+            </Form.Label>
+            <Col>
+              <Form.Control
+                disabled={!edit}
+                name="first_name"
+                value={formik.values.first_name || ''}
+                onChange={formik.handleChange}
+                isInvalid={formik.touched.first_name && formik.errors.first_name}
+                isValid={formik.touched.first_name && !formik.errors.first_name}
+              />
+              <Form.Control.Feedback type="invalid">
+                {formik.errors.first_name}
+              </Form.Control.Feedback>
+            </Col>
+          </Form.Group>
 
-        <Form.Group as={Row} controlId="email">
-          <Form.Label column xl={3}>
-            Email:
-          </Form.Label>
-          <Col>
-            <Form.Control
-              disabled={!edit}
-              type="email"
-              name="email"
-              value={formik.values.email || ''}
-              onChange={formik.handleChange}
-              isInvalid={badEmail || (formik.touched.email && formik.errors.email)}
-              isValid={!badEmail && formik.touched.email && !formik.errors.email}
-            />
-            <Form.Control.Feedback type="invalid">{formik.errors.email}</Form.Control.Feedback>
-          </Col>
-        </Form.Group>
+          <Form.Group as={Row} controlId="last_name">
+            <Form.Label column xl={3}>
+              Last Name:
+            </Form.Label>
+            <Col>
+              <Form.Control
+                disabled={!edit}
+                name="last_name"
+                value={formik.values.last_name || ''}
+                onChange={formik.handleChange}
+                isInvalid={formik.touched.last_name && formik.errors.last_name}
+                isValid={formik.touched.last_name && !formik.errors.last_name}
+              />
+              <Form.Control.Feedback type="invalid">
+                {formik.errors.last_name}
+              </Form.Control.Feedback>
+            </Col>
+          </Form.Group>
 
-        <Form.Group as={Row} controlId="phone">
-          <Form.Label column xl={3}>
-            Phone:
-          </Form.Label>
-          <Col>
-            <Form.Control
-              disabled={!edit}
-              type="tel"
-              as={InputMask}
-              mask="(999) 999-9999"
-              name="phone_number"
-              value={formik.values.phone_number.replace(/^\+1/, '') || ''}
-              onChange={formik.handleChange}
-              isInvalid={badPhone || (formik.touched.phone_number && formik.errors.phone_number)}
-              isValid={!badPhone && formik.touched.phone_number && !formik.errors.phone_number}
-            />
-            <Form.Control.Feedback type="invalid">
-              {formik.errors.phone_number}
-            </Form.Control.Feedback>
-          </Col>
-        </Form.Group>
+          <Form.Group as={Row} controlId="email">
+            <Form.Label column xl={3}>
+              Email:
+            </Form.Label>
+            <Col>
+              <Form.Control
+                disabled={!edit}
+                type="email"
+                name="email"
+                value={formik.values.email || ''}
+                onChange={formik.handleChange}
+                isInvalid={badEmail || (formik.touched.email && formik.errors.email)}
+                isValid={!badEmail && formik.touched.email && !formik.errors.email}
+              />
+              <Form.Control.Feedback type="invalid">{formik.errors.email}</Form.Control.Feedback>
+            </Col>
+          </Form.Group>
 
-        {edit ? (
-          <>
+          <Form.Group as={Row} controlId="phone">
+            <Form.Label column xl={3}>
+              Phone:
+            </Form.Label>
+            <Col>
+              <Form.Control
+                disabled={!edit}
+                type="tel"
+                as={InputMask}
+                mask="(999) 999-9999"
+                name="phone_number"
+                value={formik.values.phone_number.replace(/^\+1/, '') || ''}
+                onChange={formik.handleChange}
+                isInvalid={badPhone || (formik.touched.phone_number && formik.errors.phone_number)}
+                isValid={!badPhone && formik.touched.phone_number && !formik.errors.phone_number}
+              />
+              <Form.Control.Feedback type="invalid">
+                {formik.errors.phone_number}
+              </Form.Control.Feedback>
+            </Col>
+          </Form.Group>
+
+          {edit ? (
+            <>
+              <Button
+                variant="outline-primary mr-2"
+                onClick={e => {
+                  e.preventDefault();
+                  toggleEdit(false);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" variant="success">
+                Save
+              </Button>
+            </>
+          ) : (
             <Button
-              variant="outline-primary mr-2"
+              className={styles.edit}
               onClick={e => {
                 e.preventDefault();
-                toggleEdit(false);
+                toggleEdit(true);
               }}
             >
-              Cancel
+              Edit
             </Button>
-            <Button type="submit" variant="success">
-              Save
-            </Button>
-          </>
-        ) : (
-          <Button
-            className={styles.edit}
-            onClick={e => {
-              e.preventDefault();
-              toggleEdit(true);
-            }}
-          >
-            Edit
-          </Button>
-        )}
-      </Form>
-      {/* {isSuccess && <Alert variant="success">Successfully updated user!</Alert>}
-      {isError && <Alert variant="danger">{error.message}</Alert>} */}
-    </Container>
+          )}
+        </Form>
+      </Container>
+      <SendForgotPassword email={data.email} hook={useBrandForgotPassword} />
+    </>
   );
 }
 

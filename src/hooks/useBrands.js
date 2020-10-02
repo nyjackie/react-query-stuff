@@ -30,7 +30,13 @@ export function useCategories() {
 
 export function useBuckets() {
   return useQuery('buckets', () => {
-    return api.getOfferBuckets().then(res => res.data);
+    return api.getInternalOfferBuckets().then(res => res.data);
+  });
+}
+
+export function useBucket(id) {
+  return useQuery(['bucket', id], () => {
+    return api.getOffersByBucketId(id).then(res => res.data);
   });
 }
 

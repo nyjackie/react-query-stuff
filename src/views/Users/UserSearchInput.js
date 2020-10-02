@@ -39,6 +39,7 @@ const SearchInput = ({ history, location }) => {
         <Form.Control
           type="email"
           name="email"
+          autoFocus
           onChange={formik.handleChange}
           value={formik.values.email}
           isInvalid={formik.touched.email && formik.errors.email}

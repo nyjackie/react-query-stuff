@@ -43,6 +43,8 @@ function BrandInfo({ addNotification, match }) {
     match.params.id
   );
 
+  console.log(brand);
+
   const { isLoading: catLoading, isError: catError, data: categories = [] } = useCategories();
 
   const {
@@ -50,7 +52,7 @@ function BrandInfo({ addNotification, match }) {
     isError: offerError,
     data: { affiliate_programs = [] } = {},
   } = useOffers(brand.id);
-  console.log(affiliate_programs[0]);
+  // console.log(affiliate_programs[0]);
 
   const [updateBrand] = useUpdateBrand();
 

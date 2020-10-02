@@ -15,7 +15,10 @@ const Notification = ({ notification, removeNotification }) => {
       {notification !== null &&
         notification.length > 0 &&
         notification.map(toast => (
-          <FadeTransition key={toast.id} className={`notification notification-${toast.variant}`}>
+          <FadeTransition
+            key={toast.id}
+            className={`shadow-sm notification notification-${toast.variant}`}
+          >
             <div>
               <div className="flex-grow-1">{toast.msg}</div>
               <span

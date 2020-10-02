@@ -31,6 +31,7 @@ const SearchInput = ({ history, location, limit, offset }) => {
         <Form.Control
           type="search"
           name="search_term"
+          autoFocus
           onChange={formik.handleChange}
           value={formik.values.search_term}
           isInvalid={formik.touched.search_term && formik.errors.search_term}

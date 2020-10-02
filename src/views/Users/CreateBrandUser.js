@@ -83,6 +83,7 @@ function CreateUser() {
                 placeholder="Brand ID"
                 type="text"
                 name="brand_id"
+                autoFocus
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.brand_id}

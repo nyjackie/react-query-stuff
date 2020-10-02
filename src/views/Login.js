@@ -18,7 +18,7 @@ const schema = createSchema({
   password: max255.required('Password field is required'),
 });
 
-const Login = ({ login, isAuthenticated }) => {
+const Login = ({ login, isAuthenticated, location }) => {
   const [loginError, setLoginError] = useState(null);
 
   const formik = useFormik({
@@ -35,9 +35,8 @@ const Login = ({ login, isAuthenticated }) => {
   });
 
   if (isAuthenticated) {
-    // For now /claims is the default logged in home page after logging in
-    // this might change in the future
-    return <Redirect to="/claims" />;
+    const lastPage = location?.state?.from?.pathname;
+    return <Redirect to={lastPage || '/claims'} />;
   }
 
   return (
@@ -54,6 +53,7 @@ const Login = ({ login, isAuthenticated }) => {
               placeholder="Email"
               type="email"
               name="email"
+              autoFocus
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.email}

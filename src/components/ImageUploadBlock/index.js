@@ -7,8 +7,7 @@ import { cn } from 'gdd-components/dist/utils';
 import Spinner from 'components/Spinner';
 import styles from './ImageUpload.module.scss';
 
-function ImageUploadBlock({ update_id, updateHook, reco, title, ...props }) {
-  const [updateImage, { isLoading }] = updateHook();
+function ImageUploadBlock({ update_id, onSave, isLoading = false, reco, title, ...props }) {
   const [validationError, setValidationError] = useState(null);
   const [src, setSrc] = useState(null);
 
@@ -20,7 +19,7 @@ function ImageUploadBlock({ update_id, updateHook, reco, title, ...props }) {
   };
 
   function saveCover() {
-    updateImage({
+    onSave({
       id: update_id,
       bytestring: src.replace('data:image/png;base64,', ''),
     })
@@ -63,20 +62,9 @@ function ImageUploadBlock({ update_id, updateHook, reco, title, ...props }) {
               Select image
             </Button>
             {src && (
-              <>
-                {/* <Button
-                  variant="outline-primary"
-                  onClick={() => {
-                    setCoverError(null);
-                    setCoverSrc(null);
-                  }}
-                >
-                  reset
-                </Button> */}
-                <Button variant="success" onClick={saveCover}>
-                  save
-                </Button>
-              </>
+              <Button variant="success" onClick={saveCover}>
+                save
+              </Button>
             )}
           </div>
         </div>

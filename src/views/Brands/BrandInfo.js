@@ -50,7 +50,7 @@ function BrandInfo({ addNotification, match }) {
     isLoading: offerLoading,
     isError: offerError,
     data: { affiliate_programs = [] } = {},
-  } = useOffers(brand.id);
+  } = useOffers(brand?.id);
 
   const [updateBrand] = useUpdateBrand();
 

@@ -1,11 +1,10 @@
 // external libs
-import React, { useState, useRef } from 'react';
+import React from 'react';
 import { useFormik } from 'formik';
 import { object as yupObject, string as yupString, array as yupArray } from 'yup';
 
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Container from 'react-bootstrap/Container';
 
@@ -13,9 +12,9 @@ import { USStateSelect, MultiSelect, ProfilePreview } from 'gdd-components';
 import { cn } from 'gdd-components/dist/utils';
 import 'gdd-components/dist/styles/shared.scss';
 
-import ImageUpload from 'components/ImageUpload';
+import ImageUploadBlock from 'components/ImageUploadBlock';
 import { max255, url, zipcode } from 'utils/schema';
-import { useNpCategories } from 'hooks/useNonprofits';
+import { useNpCategories, useUpdateNPOLogo, useUpdateNPOHero } from 'hooks/useNonprofits';
 
 import styles from './NonProfitInfo.module.scss';
 
@@ -42,12 +41,8 @@ const schema = yupObject({
  */
 function Profile({ data, onSave }) {
   const { data: options } = useNpCategories();
-  const coverDropRef = useRef(null);
-  const openCoverDrop = () => {
-    if (coverDropRef.current) {
-      coverDropRef.current.open();
-    }
-  };
+  const [updateLogo, { isLoading: logoLoading }] = useUpdateNPOLogo();
+  const [updateHero, { isLoading: heroLoading }] = useUpdateNPOHero();
 
   const formik = useFormik({
     validationSchema: schema,
@@ -97,52 +92,46 @@ function Profile({ data, onSave }) {
               </Row>
 
               <section>
-                <Row className="mb-4 mt-4">
-                  <Col>
-                    <h3 className="h3">Profile Image</h3>
-                  </Col>
-                </Row>
                 <Row>
                   <Col xl>
-                    <ImageUpload
+                    <ImageUploadBlock
                       update_id={data.id}
                       uploadText="Logo not yet customized"
-                      width={128}
-                      height={128}
-                      image_url={data.logo_url}
+                      width={100}
+                      height={100}
+                      src={data.logo_url}
                       alt="logo"
                       name="file_logo"
-                      maxSize={2000}
+                      // exact
+                      sqaure
                       minWidth={300}
                       minHeight={300}
                       title="Organization Logo"
                       reco="Image should be at least 300*300 px"
+                      isLoading={logoLoading}
+                      onSave={data => {
+                        return updateLogo(data);
+                      }}
                     />
                   </Col>
                   <Col xl>
-                    <div className={styles.uploadBlock}>
-                      <div className={cn(styles.uploadImg, styles.uploadImgCover)}>
-                        <ImageUpload
-                          uploadText="Hero not yet customized"
-                          width={256}
-                          height={128}
-                          src={data.hero_url}
-                          alt="cover photo"
-                          name="file_hero"
-                          maxSize={3000}
-                          minWidth={640}
-                          minHeight={320}
-                          ref={coverDropRef}
-                        />
-                      </div>
-                      <div className={styles.uploadContent}>
-                        <h3 className="h3">Cover Photo</h3>
-                        <p>Image should be at least 640*320 px</p>
-                        <Button variant="primary" onClick={openCoverDrop}>
-                          Upload
-                        </Button>
-                      </div>
-                    </div>
+                    <ImageUploadBlock
+                      uploadText="Cover not yet customized"
+                      width={256}
+                      height={128}
+                      src={data.hero_url}
+                      alt="cover photo"
+                      name="file_hero"
+                      minWidth={375}
+                      minHeight={240}
+                      update_id={data.id}
+                      title="Cover Photo"
+                      reco="Image should be at least 375*240 px"
+                      isLoading={heroLoading}
+                      onSave={data => {
+                        return updateHero(data);
+                      }}
+                    />
                   </Col>
                 </Row>
               </section>

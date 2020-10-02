@@ -2,7 +2,7 @@
 @import '../../styles/mixins.scss';
 
 .uploadBlock {
-  background-color: rgba(0, 0, 0, 0.05);
+  // background-color: rgba(0, 0, 0, 0.05);
   padding: 20px;
 
   @include from-bp('lg') {

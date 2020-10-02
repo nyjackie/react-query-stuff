@@ -12,43 +12,6 @@
   }
 }
 
-.uploadBlock {
-  @include from-bp('lg') {
-    display: flex;
-    flex-direction: row;
-  }
-  margin-bottom: 1.5em;
-}
-
-.uploadImg {
-  width: 128px;
-  margin-right: 24px;
-  @include to-bp('lg') {
-    margin-bottom: 1em;
-  }
-}
-
-.uploadImgCover {
-  width: 256px;
-}
-
-.uploadContent {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  flex: 1;
-
-  h3 {
-  }
-
-  p {
-  }
-
-  button {
-    align-self: flex-start;
-  }
-}
-
 .donation-list {
   max-height: 315px;
   overflow: scroll;

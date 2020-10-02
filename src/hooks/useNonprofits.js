@@ -40,7 +40,7 @@ function putUpdateUserProfile({ id, body }) {
 }
 
 /**
- * API handler to update a single brand's logo
+ * API handler to update a single nonprofit's logo
  * @param {object} param0
  * @param {string} param0.id
  * @param {string} param0.bytestring
@@ -50,7 +50,7 @@ function updateNPOLogo({ id, bytestring }) {
 }
 
 /**
- * API handler to update a single brand's hero/cover image
+ * API handler to update a single nonprofit's hero/cover image
  * @param {object} param0
  * @param {string} param0.id
  * @param {string} param0.bytestring
@@ -126,9 +126,9 @@ export function useUpdateNonprofitUser() {
 }
 
 /**
- * Mutation: Update the brand logo
+ * Mutation: Update the nonprofit logo
  */
-export function useUpdateBrandLogo() {
+export function useUpdateNPOLogo() {
   return useMutation(updateNPOLogo, {
     throwOnError: true,
     onError: err => {
@@ -140,17 +140,17 @@ export function useUpdateBrandLogo() {
       );
     },
     onSuccess: (data, variable) => {
-      queryCache.invalidateQueries(['brand', variable.id]);
-      queryCache.refetchQueries(['brand', variable.id]);
+      queryCache.invalidateQueries(['np_profile', variable.id]);
+      queryCache.refetchQueries(['np_profile', variable.id]);
       store.dispatch(addNotification('Logo image uploaded.', 'success'));
     },
   });
 }
 
 /**
- * Mutation: Update the brand hero image
+ * Mutation: Update the nonprofit hero image
  */
-export function useUpdateBrandHero() {
+export function useUpdateNPOHero() {
   return useMutation(updateNPOHero, {
     throwOnError: true,
     onError: err => {
@@ -162,7 +162,7 @@ export function useUpdateBrandHero() {
       );
     },
     onSuccess: (data, variable) => {
-      queryCache.invalidateQueries(['brand', variable.id]);
+      queryCache.invalidateQueries(['np_profile', variable.id]);
       store.dispatch(addNotification('Hero image uploaded.', 'success'));
     },
   });

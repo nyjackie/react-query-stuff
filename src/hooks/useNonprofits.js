@@ -1,5 +1,7 @@
 import { useQuery, useMutation, queryCache } from 'react-query';
 import api from 'gdd-api-lib';
+import store from 'store';
+import { addNotification } from 'actions/notifications';
 
 /****************************************************************
  * Functions that perform api calls
@@ -13,7 +15,7 @@ function search(key, query) {
 }
 
 function fetchNp(key, id) {
-  return api.getNonprofit(id).then(res => res.data);
+  return api.getInternalNonprofitProfile(id).then(res => res.data);
 }
 
 function getCategories() {
@@ -35,6 +37,26 @@ function postNewNonprofitUser(body) {
  */
 function putUpdateUserProfile({ id, body }) {
   return api.updateNonprofitUserProfile(id, body).then(res => res.data);
+}
+
+/**
+ * API handler to update a single brand's logo
+ * @param {object} param0
+ * @param {string} param0.id
+ * @param {string} param0.bytestring
+ */
+function updateNPOLogo({ id, bytestring }) {
+  return api.setNonprofitLogo(id, { logo_image_bytestring: bytestring }).then(res => res.data);
+}
+
+/**
+ * API handler to update a single brand's hero/cover image
+ * @param {object} param0
+ * @param {string} param0.id
+ * @param {string} param0.bytestring
+ */
+function updateNPOHero({ id, bytestring }) {
+  return api.setNonprofitHero(id, { hero_image_bytestring: bytestring }).then(res => res.data);
 }
 
 /****************************************************************
@@ -99,6 +121,49 @@ export function useUpdateNonprofitUser() {
   return useMutation(putUpdateUserProfile, {
     onSuccess: (offer, variable) => {
       queryCache.invalidateQueries(['get_user', variable.id]);
+    },
+  });
+}
+
+/**
+ * Mutation: Update the brand logo
+ */
+export function useUpdateBrandLogo() {
+  return useMutation(updateNPOLogo, {
+    throwOnError: true,
+    onError: err => {
+      store.dispatch(
+        addNotification(
+          `Logo upload failed: ${err.message}: ${err.response?.data?.message}`,
+          'error'
+        )
+      );
+    },
+    onSuccess: (data, variable) => {
+      queryCache.invalidateQueries(['brand', variable.id]);
+      queryCache.refetchQueries(['brand', variable.id]);
+      store.dispatch(addNotification('Logo image uploaded.', 'success'));
+    },
+  });
+}
+
+/**
+ * Mutation: Update the brand hero image
+ */
+export function useUpdateBrandHero() {
+  return useMutation(updateNPOHero, {
+    throwOnError: true,
+    onError: err => {
+      store.dispatch(
+        addNotification(
+          `Cover upload failed: ${err.message}: ${err.response?.data?.message}`,
+          'error'
+        )
+      );
+    },
+    onSuccess: (data, variable) => {
+      queryCache.invalidateQueries(['brand', variable.id]);
+      store.dispatch(addNotification('Hero image uploaded.', 'success'));
     },
   });
 }

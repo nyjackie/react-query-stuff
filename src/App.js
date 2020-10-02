@@ -2,7 +2,6 @@
 import React, { useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Switch, Redirect } from 'react-router-dom';
-import { Helmet } from 'react-helmet';
 import { ReactQueryDevtools } from 'react-query-devtools';
 import { ReactQueryConfigProvider } from 'react-query';
 
@@ -48,6 +47,41 @@ const queryConfig = {
   },
 };
 
+/**
+ * Public routes are declared this way because we don't have a custom component
+ * for PublicRoutes, it's just the react-router-dom <Route /> component
+ */
+const publicRoutes = [
+  { path: '/', component: Landing },
+  { path: '/login', component: Login },
+  { path: '/forgot-password', component: ForgotPassword },
+  { path: '/error', component: ErrorPage },
+  { path: '/notfound', component: NotFound },
+];
+
+function PrivateRoutes() {
+  return (
+    <>
+      {/* Private Routes */}
+      <PrivateRoute exact path="/banlist" component={Banlist} />
+      <PrivateRoute exact path="/claims" component={Claims} />
+      <PrivateRoute exact path="/claims/:id" component={ClaimInfo} />
+      <PrivateRoute exact path="/nonprofit" component={NonprofitSearch} />
+      <PrivateRoute exact path="/nonprofit/:id" component={Nonprofit} />
+      <PrivateRoute exact path="/brands/search" component={BrandsSearch} />
+      <PrivateRoute exact path="/brands/grooming" component={BrandsGrooming} />
+      <PrivateRoute exact path="/brands/:id" component={BrandInfo} />
+      <PrivateRoute exact path="/users" component={Users} />
+      <PrivateRoute exact path="/users/:type/:id" component={UserInfo} />
+      <PrivateRoute exact path="/users/admin" component={CreateAdminUser} />
+      <PrivateRoute exact path="/users/brand" component={CreateBrandUser} />
+      <PrivateRoute exact path="/users/nonprofit" component={CreateNonprofitUser} />
+      <PrivateRoute exact path="/settings" component={Settings} />
+      <PrivateRoute exact path="/delete-user" component={DeleteUser} />
+    </>
+  );
+}
+
 const App = () => {
   useEffect(() => {
     store.dispatch(autoLogin());
@@ -58,34 +92,11 @@ const App = () => {
       <Provider store={store}>
         <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
         <Router>
-          <Helmet>
-            <title>Give Good Deeds</title>
-          </Helmet>
           <Switch>
-            {/* Public Routes */}
-            <PublicRoute exact path="/" component={Landing} />
-            <PublicRoute exact path="/login" component={Login} />
-            <PublicRoute exact path="/forgot-password" component={ForgotPassword} />
-            <PublicRoute exact path="/error" component={ErrorPage} />
-            <PublicRoute exact path="/notfound" component={NotFound} />
-
-            {/* Private Routes */}
-            <PrivateRoute exact path="/banlist" component={Banlist} />
-            <PrivateRoute exact path="/claims" component={Claims} />
-            <PrivateRoute exact path="/claims/:id" component={ClaimInfo} />
-            <PrivateRoute exact path="/nonprofit" component={NonprofitSearch} />
-            <PrivateRoute exact path="/nonprofit/:id" component={Nonprofit} />
-            <PrivateRoute exact path="/brands/search" component={BrandsSearch} />
-            <PrivateRoute exact path="/brands/grooming" component={BrandsGrooming} />
-            <PrivateRoute exact path="/brands/:id" component={BrandInfo} />
-            <PrivateRoute exact path="/users" component={Users} />
-            <PrivateRoute exact path="/users/:type/:id" component={UserInfo} />
-            <PrivateRoute exact path="/users/admin" component={CreateAdminUser} />
-            <PrivateRoute exact path="/users/brand" component={CreateBrandUser} />
-            <PrivateRoute exact path="/users/nonprofit" component={CreateNonprofitUser} />
-            <PrivateRoute exact path="/settings" component={Settings} />
-            <PrivateRoute exact path="/delete-user" component={DeleteUser} />
-
+            {publicRoutes.map(route => (
+              <PublicRoute key={route.path} exact path={route.path} component={route.component} />
+            ))}
+            <PrivateRoutes />
             {/* 404 */}
             <PublicRoute path="*">
               <Redirect to="/notfound" />

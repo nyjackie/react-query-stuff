@@ -1,0 +1,42 @@
+@import '../../styles/theme.scss';
+@import '../../styles/mixins.scss';
+
+.uploadBlock {
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 20px;
+
+  @include from-bp('lg') {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  margin-bottom: 3em;
+}
+
+.uploadError {
+  flex-basis: 100%;
+  color: red;
+  margin-bottom: 0;
+  margin-top: 1em;
+}
+
+.uploadImg {
+  width: 128px;
+  margin-right: 24px;
+  // border: 1px solid rgba(0, 0, 0, 0.1);
+  @include to-bp('lg') {
+    margin-bottom: 1em;
+  }
+}
+
+.uploadImgCover {
+  width: 256px;
+}
+
+.uploadContent {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  flex: 1;
+}

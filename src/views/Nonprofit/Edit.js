@@ -1,58 +1,47 @@
 // external libs
 import React, { useState, useRef } from 'react';
+import { useFormik } from 'formik';
+import { object as yupObject, string as yupString, array as yupArray } from 'yup';
 
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Form from 'react-bootstrap/Form';
-import Alert from 'react-bootstrap/Alert';
 import Container from 'react-bootstrap/Container';
 
-import { useFormik } from 'formik';
-import { object as yupObject, string as yupString, array as yupArray } from 'yup';
-import { max255 } from 'utils/schema';
-import 'gdd-components/dist/styles/shared.scss';
-import styles from './NonProfitInfo.module.scss';
-import { ImageUpload, USStateSelect, PreviewModal, MultiSelect } from 'gdd-components';
+import { USStateSelect, MultiSelect, ProfilePreview } from 'gdd-components';
 import { cn } from 'gdd-components/dist/utils';
+import 'gdd-components/dist/styles/shared.scss';
+
+import ImageUpload from 'components/ImageUpload';
+import { max255, url, zipcode } from 'utils/schema';
 import { useNpCategories } from 'hooks/useNonprofits';
 
-/**
- * @typedef {object} NonProfit
- * @property {number} id
- * @property {string} name
- * @property {string} website_url
- * @property {string} location
- * @property {string} mission
- * @property {string} logo_url
- * @property {string} hero_url
- * @property {array} categories
- * @property {string} supported_since
- * @property {number} amount_raised
- * @property {boolean} active
- */
+import styles from './NonProfitInfo.module.scss';
 
+/**
+ * Schema should match our {@link NonprofitEditableProps}
+ */
 const schema = yupObject({
   name: max255.required('This field is required'),
-  website_url: max255.url('invalid url'),
+  website_url: url,
+  address_line_1: max255,
+  address_line_2: max255,
   city: max255.required('This field is required'),
   state: yupString().required('This field is required'),
+  zip: zipcode,
   mission: yupString().max(8000, 'max 8000 characters'),
   categories: yupArray().ensure().min(1, 'Please select at least one category'),
 });
 
-export default function Profile({ data, onSave }) {
-  const [saveError, setSaveError] = useState(null);
-  const [showPreview, setShowPreview] = useState(false);
+/**
+ * Display and edit a Nonprofit organization's profile
+ * @param {object} param0
+ * @param {InternalNonProfit} param0.data
+ * @param {function} param0.onSave
+ */
+function Profile({ data, onSave }) {
   const { data: options } = useNpCategories();
-
-  const logoDropRef = useRef(null);
-  const openLogoDrop = () => {
-    if (logoDropRef.current) {
-      logoDropRef.current.open();
-    }
-  };
   const coverDropRef = useRef(null);
   const openCoverDrop = () => {
     if (coverDropRef.current) {
@@ -60,7 +49,6 @@ export default function Profile({ data, onSave }) {
     }
   };
 
-  const [city, state] = data.location.split(', ');
   const formik = useFormik({
     validationSchema: schema,
     initialValues: {
@@ -68,8 +56,11 @@ export default function Profile({ data, onSave }) {
       logo_url: data.logo_url, // file
       name: data.name || '', // text
       categories: data.categories || [], // multiselect
-      city: city || '', // text
-      state: state || '', // state select dropdown
+      address_line_1: data.address.address_line_1 || '', // text
+      address_line_2: data.address.address_line_2 || '', // text
+      city: data.address.city || '', // text
+      state: data.address.state || '', // state select dropdown
+      zip: data.address.zip || '', // text
       website_url: data.website_url || '', // text
       mission: data.mission || '', // textarea
     },
@@ -103,41 +94,7 @@ export default function Profile({ data, onSave }) {
                 <Col sm={12} lg={8}>
                   <h2 className="h2">{data.name}</h2>
                 </Col>
-                <Col sm={12} lg={{ span: 3, offset: 1 }}>
-                  <ButtonGroup aria-label="profile actions">
-                    <Button
-                      onClick={e => {
-                        e.preventDefault();
-                        setShowPreview(!showPreview);
-                      }}
-                      variant="outline-primary"
-                    >
-                      Preview
-                    </Button>
-
-                    <Button type="submit" variant="success">
-                      Publish
-                    </Button>
-
-                    <Button
-                      variant="danger"
-                      onClick={e => {
-                        e.preventDefault();
-                      }}
-                    >
-                      Ban
-                    </Button>
-                  </ButtonGroup>
-                </Col>
               </Row>
-
-              {saveError && (
-                <Row>
-                  <Col>
-                    <Alert variant="danger">{saveError}</Alert>
-                  </Col>
-                </Row>
-              )}
 
               <section>
                 <Row className="mb-4 mt-4">
@@ -147,29 +104,20 @@ export default function Profile({ data, onSave }) {
                 </Row>
                 <Row>
                   <Col xl>
-                    <div className={styles.uploadBlock}>
-                      <div className={styles.uploadImg}>
-                        <ImageUpload
-                          uploadText="Logo not yet customized"
-                          width={128}
-                          height={128}
-                          src={data.logo_url}
-                          alt="logo"
-                          name="file_logo"
-                          maxSize={2000}
-                          minWidth={300}
-                          minHeight={300}
-                          ref={logoDropRef}
-                        />
-                      </div>
-                      <div className={styles.uploadContent}>
-                        <h3 className="h3">Organization Logo</h3>
-                        <p>Image should be at least 300*300 px</p>
-                        <Button variant="primary" onClick={openLogoDrop}>
-                          Upload
-                        </Button>
-                      </div>
-                    </div>
+                    <ImageUpload
+                      update_id={data.id}
+                      uploadText="Logo not yet customized"
+                      width={128}
+                      height={128}
+                      image_url={data.logo_url}
+                      alt="logo"
+                      name="file_logo"
+                      maxSize={2000}
+                      minWidth={300}
+                      minHeight={300}
+                      title="Organization Logo"
+                      reco="Image should be at least 300*300 px"
+                    />
                   </Col>
                   <Col xl>
                     <div className={styles.uploadBlock}>
@@ -244,6 +192,40 @@ export default function Profile({ data, onSave }) {
                       </Form.Control.Feedback>
                     </Form.Group>
 
+                    <Form.Group controlId="nonprofit_address1">
+                      <Form.Label>Address Line 1</Form.Label>
+                      <Form.Control
+                        name="address_line_1"
+                        type="text"
+                        maxLength="255"
+                        required
+                        onChange={formik.handleChange}
+                        value={formik.values.address_line_1}
+                        isValid={formik.touched.address_line_1 && !formik.errors.address_line_1}
+                        isInvalid={formik.touched.address_line_1 && formik.errors.address_line_1}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {formik.errors.address_line_1}
+                      </Form.Control.Feedback>
+                    </Form.Group>
+
+                    <Form.Group controlId="nonprofit_address2">
+                      <Form.Label>Address Line 2</Form.Label>
+                      <Form.Control
+                        name="address_line_2"
+                        type="text"
+                        maxLength="255"
+                        required
+                        onChange={formik.handleChange}
+                        value={formik.values.address_line_2}
+                        isValid={formik.touched.address_line_2 && !formik.errors.address_line_2}
+                        isInvalid={formik.touched.address_line_2 && formik.errors.address_line_2}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {formik.errors.address_line_2}
+                      </Form.Control.Feedback>
+                    </Form.Group>
+
                     <Row>
                       <Col>
                         <Form.Group controlId="nonprofit_city">
@@ -263,7 +245,7 @@ export default function Profile({ data, onSave }) {
                           </Form.Control.Feedback>
                         </Form.Group>
                       </Col>
-                      <Col sm={3}>
+                      <Col sm={12} md={3}>
                         <Form.Group controlId="nonprofit_state">
                           <Form.Label>State</Form.Label>
                           <USStateSelect
@@ -278,6 +260,24 @@ export default function Profile({ data, onSave }) {
                           />
                           <Form.Control.Feedback type="invalid">
                             {formik.errors.state}
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                      </Col>
+                      <Col sm={12} md={2}>
+                        <Form.Group controlId="nonprofit_zip">
+                          <Form.Label>Zip</Form.Label>
+                          <Form.Control
+                            name="zip"
+                            type="text"
+                            maxLength="255"
+                            required
+                            onChange={formik.handleChange}
+                            value={formik.values.zip}
+                            isValid={formik.touched.zip && !formik.errors.zip}
+                            isInvalid={formik.touched.zip && formik.errors.zip}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {formik.errors.zip}
                           </Form.Control.Feedback>
                         </Form.Group>
                       </Col>
@@ -298,8 +298,6 @@ export default function Profile({ data, onSave }) {
                         {formik.errors.website_url}
                       </Form.Control.Feedback>
                     </Form.Group>
-                  </Col>
-                  <Col>
                     <Form.Group controlId="mission">
                       <Form.Label>Mission</Form.Label>
                       <Form.Control
@@ -316,13 +314,23 @@ export default function Profile({ data, onSave }) {
                       </Form.Control.Feedback>
                     </Form.Group>
                   </Col>
+                  <Col className="d-flex justify-content-center bg-dark p-4">
+                    <ProfilePreview
+                      cta="Support This Nonprofit"
+                      data={{
+                        ...formik.values,
+                      }}
+                      type="nonprofit"
+                    />
+                  </Col>
                 </Row>
               </section>
             </article>
           </Form>
         </Col>
       </Row>
-      <PreviewModal show={showPreview} data={formik.values} onHide={() => setShowPreview(false)} />
     </Container>
   );
 }
+
+export default Profile;

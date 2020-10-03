@@ -1,88 +1,95 @@
 // external libs
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
+import { useFormik } from 'formik';
+import { object as yupObject, string as yupString } from 'yup';
 
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-import Button from 'react-bootstrap/Button';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Form from 'react-bootstrap/Form';
-import Alert from 'react-bootstrap/Alert';
 import Container from 'react-bootstrap/Container';
+import { Button } from 'react-bootstrap';
 
-import { useFormik } from 'formik';
-import { object as yupObject, string as yupString, array as yupArray } from 'yup';
-import { max255 } from 'utils/schema';
-import 'gdd-components/dist/styles/shared.scss';
-import styles from './NonProfitInfo.module.scss';
-import { ImageUpload, USStateSelect, PreviewModal, MultiSelect } from 'gdd-components';
+import { USStateSelect, MultiSelect, ProfilePreview } from 'gdd-components';
 import { cn } from 'gdd-components/dist/utils';
-import { useNpCategories } from 'hooks/useNonprofits';
+import 'gdd-components/dist/styles/shared.scss';
+
+import Spinner from 'components/Spinner';
+import ImageUploadBlock from 'components/ImageUploadBlock';
+import { max255, url, zipcode } from 'utils/schema';
+import {
+  useNpCategories,
+  useUpdateNPOLogo,
+  useUpdateNPOHero,
+  useNonprofitProfileUpdate,
+} from 'hooks/useNonprofits';
+
+import { stringToBool } from 'utils';
+import styles from './NonProfitInfo.module.scss';
 
 /**
- * @typedef {object} NonProfit
- * @property {number} id
- * @property {string} name
- * @property {string} website_url
- * @property {string} location
- * @property {string} mission
- * @property {string} logo_url
- * @property {string} hero_url
- * @property {array} categories
- * @property {string} supported_since
- * @property {number} amount_raised
- * @property {boolean} active
+ * Schema should match our {@link NonprofitEditableProps}
  */
-
 const schema = yupObject({
   name: max255.required('This field is required'),
-  website_url: max255.url('invalid url'),
+  website_url: url,
+  address_line_1: max255,
+  address_line_2: max255,
   city: max255.required('This field is required'),
   state: yupString().required('This field is required'),
+  zip: zipcode,
   mission: yupString().max(8000, 'max 8000 characters'),
-  categories: yupArray().ensure().min(1, 'Please select at least one category'),
+  // categories: yupArray().ensure().min(1, 'Please select at least one category'),
 });
 
-export default function Profile({ data, onSave }) {
-  const [saveError, setSaveError] = useState(null);
-  const [showPreview, setShowPreview] = useState(false);
+/**
+ * Display and edit a Nonprofit organization's profile
+ * @param {object} param0
+ * @param {InternalNonProfit} param0.data
+ */
+function Profile({ data }) {
   const { data: options } = useNpCategories();
+  const [updateLogo, { isLoading: logoLoading }] = useUpdateNPOLogo();
+  const [updateHero, { isLoading: heroLoading }] = useUpdateNPOHero();
+  const [udateProfile, { isLoading: profileLoading }] = useNonprofitProfileUpdate();
+  const [logoSrc, setLogoSrc] = useState(data.logo_url);
+  const [heroSrc, setHeroSrc] = useState(data.hero_url);
 
-  const logoDropRef = useRef(null);
-  const openLogoDrop = () => {
-    if (logoDropRef.current) {
-      logoDropRef.current.open();
-    }
-  };
-  const coverDropRef = useRef(null);
-  const openCoverDrop = () => {
-    if (coverDropRef.current) {
-      coverDropRef.current.open();
-    }
-  };
-
-  const [city, state] = data.location.split(', ');
   const formik = useFormik({
     validationSchema: schema,
     initialValues: {
-      hero_url: data.hero_url, // file
-      logo_url: data.logo_url, // file
       name: data.name || '', // text
       categories: data.categories || [], // multiselect
-      city: city || '', // text
-      state: state || '', // state select dropdown
+      address_line_1: data.address.address_line_1 || '', // text
+      address_line_2: data.address.address_line_2 || '', // text
+      city: data.address.city || '', // text
+      state: data.address.state || '', // state select dropdown
+      zip: data.address.zip || '', // text
       website_url: data.website_url || '', // text
       mission: data.mission || '', // textarea
+      is_banned: data.is_banned,
+      is_active: data.is_active,
+      is_folded: data.is_folded,
     },
     onSubmit: values => {
-      values.location = `${values.city}, ${values.state}`;
-      console.log('onSubmit values', values);
-      // onSave(values)
-      //   .then(() => {
-      //     setSaveError(null);
-      //   })
-      //   .catch(err => {
-      //     setSaveError(err.message);
-      //   });
+      const body = {
+        name: values.name,
+        categories: values.categories.map(c => {
+          return { category_id: c.id };
+        }),
+        website_url: values.website_url,
+        mission: values.mission,
+        address: {
+          address_line_1: values.address_line_1,
+          address_line_2: values.address_line_2,
+          city: values.city,
+          state: values.state,
+          zip: values.zip,
+        },
+        is_banned: stringToBool(values.is_banned),
+        is_active: stringToBool(values.is_active),
+        is_folded: stringToBool(values.is_folded),
+      };
+      udateProfile({ id: data.id, body });
     },
   });
 
@@ -90,6 +97,11 @@ export default function Profile({ data, onSave }) {
     <Container className="block shadow-sm">
       <Row>
         <Col>
+          {profileLoading && (
+            <div className="spinnerOverlay">
+              <Spinner />
+            </div>
+          )}
           <Form
             encType="multipart/form-data"
             noValidate
@@ -100,110 +112,69 @@ export default function Profile({ data, onSave }) {
 
             <article className={styles.profile}>
               <Row className={styles.header}>
-                <Col sm={12} lg={8}>
+                <Col>
                   <h2 className="h2">{data.name}</h2>
-                </Col>
-                <Col sm={12} lg={{ span: 3, offset: 1 }}>
-                  <ButtonGroup aria-label="profile actions">
-                    <Button
-                      onClick={e => {
-                        e.preventDefault();
-                        setShowPreview(!showPreview);
-                      }}
-                      variant="outline-primary"
-                    >
-                      Preview
-                    </Button>
-
-                    <Button type="submit" variant="success">
-                      Publish
-                    </Button>
-
-                    <Button
-                      variant="danger"
-                      onClick={e => {
-                        e.preventDefault();
-                      }}
-                    >
-                      Ban
-                    </Button>
-                  </ButtonGroup>
                 </Col>
               </Row>
 
-              {saveError && (
-                <Row>
-                  <Col>
-                    <Alert variant="danger">{saveError}</Alert>
-                  </Col>
-                </Row>
-              )}
-
               <section>
-                <Row className="mb-4 mt-4">
-                  <Col>
-                    <h3 className="h3">Profile Image</h3>
-                  </Col>
-                </Row>
                 <Row>
                   <Col xl>
-                    <div className={styles.uploadBlock}>
-                      <div className={styles.uploadImg}>
-                        <ImageUpload
-                          uploadText="Logo not yet customized"
-                          width={128}
-                          height={128}
-                          src={data.logo_url}
-                          alt="logo"
-                          name="file_logo"
-                          maxSize={2000}
-                          minWidth={300}
-                          minHeight={300}
-                          ref={logoDropRef}
-                        />
-                      </div>
-                      <div className={styles.uploadContent}>
-                        <h3 className="h3">Organization Logo</h3>
-                        <p>Image should be at least 300*300 px</p>
-                        <Button variant="primary" onClick={openLogoDrop}>
-                          Upload
-                        </Button>
-                      </div>
-                    </div>
+                    <ImageUploadBlock
+                      className={styles.imgLogoBlock}
+                      update_id={data.id}
+                      uploadText="Upload new logo"
+                      width={100}
+                      height={100}
+                      src={data.logo_url}
+                      alt="logo"
+                      name="file_logo"
+                      sqaure
+                      minWidth={300}
+                      minHeight={300}
+                      title="Organization Logo"
+                      reco="Image should be at least 300*300 px"
+                      isLoading={logoLoading}
+                      onSave={data => {
+                        return updateLogo(data);
+                      }}
+                      onImageSelected={file => {
+                        setLogoSrc(file.preview);
+                      }}
+                      onError={() => {
+                        setLogoSrc(data.logo_url);
+                      }}
+                    />
                   </Col>
                   <Col xl>
-                    <div className={styles.uploadBlock}>
-                      <div className={cn(styles.uploadImg, styles.uploadImgCover)}>
-                        <ImageUpload
-                          uploadText="Hero not yet customized"
-                          width={256}
-                          height={128}
-                          src={data.hero_url}
-                          alt="cover photo"
-                          name="file_hero"
-                          maxSize={3000}
-                          minWidth={640}
-                          minHeight={320}
-                          ref={coverDropRef}
-                        />
-                      </div>
-                      <div className={styles.uploadContent}>
-                        <h3 className="h3">Cover Photo</h3>
-                        <p>Image should be at least 640*320 px</p>
-                        <Button variant="primary" onClick={openCoverDrop}>
-                          Upload
-                        </Button>
-                      </div>
-                    </div>
+                    <ImageUploadBlock
+                      className={styles.imgHeroBlock}
+                      uploadText="Upload new cover image"
+                      width={375}
+                      height={240}
+                      src={data.hero_url}
+                      alt="cover photo"
+                      name="file_hero"
+                      minWidth={375}
+                      minHeight={240}
+                      update_id={data.id}
+                      title="Cover Photo"
+                      reco="Image should be at least 375*240 px"
+                      isLoading={heroLoading}
+                      onSave={data => {
+                        return updateHero(data);
+                      }}
+                      onImageSelected={file => {
+                        setHeroSrc(file.preview);
+                      }}
+                      onError={() => {
+                        setHeroSrc(data.hero_url);
+                      }}
+                    />
                   </Col>
                 </Row>
               </section>
               <section>
-                <Row>
-                  <Col xl>
-                    <h3 className="h3">Basic Information</h3>
-                  </Col>
-                </Row>
                 <Row>
                   <Col xl>
                     <Form.Group controlId="organization_name">
@@ -244,6 +215,40 @@ export default function Profile({ data, onSave }) {
                       </Form.Control.Feedback>
                     </Form.Group>
 
+                    <Form.Group controlId="nonprofit_address1">
+                      <Form.Label>Address Line 1</Form.Label>
+                      <Form.Control
+                        name="address_line_1"
+                        type="text"
+                        maxLength="255"
+                        required
+                        onChange={formik.handleChange}
+                        value={formik.values.address_line_1}
+                        isValid={formik.touched.address_line_1 && !formik.errors.address_line_1}
+                        isInvalid={formik.touched.address_line_1 && formik.errors.address_line_1}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {formik.errors.address_line_1}
+                      </Form.Control.Feedback>
+                    </Form.Group>
+
+                    <Form.Group controlId="nonprofit_address2">
+                      <Form.Label>Address Line 2</Form.Label>
+                      <Form.Control
+                        name="address_line_2"
+                        type="text"
+                        maxLength="255"
+                        required
+                        onChange={formik.handleChange}
+                        value={formik.values.address_line_2}
+                        isValid={formik.touched.address_line_2 && !formik.errors.address_line_2}
+                        isInvalid={formik.touched.address_line_2 && formik.errors.address_line_2}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {formik.errors.address_line_2}
+                      </Form.Control.Feedback>
+                    </Form.Group>
+
                     <Row>
                       <Col>
                         <Form.Group controlId="nonprofit_city">
@@ -263,7 +268,7 @@ export default function Profile({ data, onSave }) {
                           </Form.Control.Feedback>
                         </Form.Group>
                       </Col>
-                      <Col sm={3}>
+                      <Col sm={12} md={2}>
                         <Form.Group controlId="nonprofit_state">
                           <Form.Label>State</Form.Label>
                           <USStateSelect
@@ -278,6 +283,24 @@ export default function Profile({ data, onSave }) {
                           />
                           <Form.Control.Feedback type="invalid">
                             {formik.errors.state}
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                      </Col>
+                      <Col sm={12} md={3}>
+                        <Form.Group controlId="nonprofit_zip">
+                          <Form.Label>Zip</Form.Label>
+                          <Form.Control
+                            name="zip"
+                            type="text"
+                            maxLength="255"
+                            required
+                            onChange={formik.handleChange}
+                            value={formik.values.zip}
+                            isValid={formik.touched.zip && !formik.errors.zip}
+                            isInvalid={formik.touched.zip && formik.errors.zip}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {formik.errors.zip}
                           </Form.Control.Feedback>
                         </Form.Group>
                       </Col>
@@ -298,8 +321,6 @@ export default function Profile({ data, onSave }) {
                         {formik.errors.website_url}
                       </Form.Control.Feedback>
                     </Form.Group>
-                  </Col>
-                  <Col>
                     <Form.Group controlId="mission">
                       <Form.Label>Mission</Form.Label>
                       <Form.Control
@@ -315,6 +336,123 @@ export default function Profile({ data, onSave }) {
                         {formik.errors.mission}
                       </Form.Control.Feedback>
                     </Form.Group>
+
+                    <Form.Row>
+                      <Form.Group as={Col}>
+                        <p id="npoIsBanned" className="d-inline mr-4">
+                          <b>Is Banned:</b>
+                        </p>
+                        <Form.Check
+                          inline
+                          label="true"
+                          type="radio"
+                          name="is_banned"
+                          value={true}
+                          checked={
+                            formik.values.is_banned === 'true' || formik.values.is_banned === true
+                          }
+                          onChange={formik.handleChange}
+                          aria-describedby="npoIsBanned"
+                          id="npoIsBanned-TRUE"
+                        />
+                        <Form.Check
+                          inline
+                          label="false"
+                          onChange={formik.handleChange}
+                          type="radio"
+                          name="is_banned"
+                          value={false}
+                          checked={
+                            formik.values.is_banned === 'false' || formik.values.is_banned === false
+                          }
+                          aria-describedby="npoIsBanned"
+                          id="npoIsBanned-FALSE"
+                        />
+                      </Form.Group>
+                    </Form.Row>
+
+                    <Form.Row>
+                      <Form.Group as={Col}>
+                        <p id="npoIsActive" className="d-inline mr-4">
+                          <b>Is active:</b>
+                        </p>
+                        <Form.Check
+                          inline
+                          label="true"
+                          type="radio"
+                          name="is_active"
+                          value={true}
+                          checked={
+                            formik.values.is_active === 'true' || formik.values.is_active === true
+                          }
+                          onChange={formik.handleChange}
+                          aria-describedby="npoIsActive"
+                          id="npoIsActive-TRUE"
+                        />
+                        <Form.Check
+                          inline
+                          label="false"
+                          onChange={formik.handleChange}
+                          type="radio"
+                          name="is_active"
+                          value={false}
+                          checked={
+                            formik.values.is_active === 'false' || formik.values.is_active === false
+                          }
+                          aria-describedby="npoIsActive"
+                          id="npoIsActive-FALSE"
+                        />
+                      </Form.Group>
+                    </Form.Row>
+
+                    <Form.Row>
+                      <Form.Group as={Col}>
+                        <p id="npoIsFolded" className="d-inline mr-4">
+                          <b>Is folded:</b>
+                        </p>
+                        <Form.Check
+                          inline
+                          label="true"
+                          type="radio"
+                          name="is_folded"
+                          value={true}
+                          checked={
+                            formik.values.is_folded === 'true' || formik.values.is_folded === true
+                          }
+                          onChange={formik.handleChange}
+                          aria-describedby="npoIsFolded"
+                          id="npoIsFolded-TRUE"
+                        />
+                        <Form.Check
+                          inline
+                          label="false"
+                          onChange={formik.handleChange}
+                          type="radio"
+                          name="is_folded"
+                          value={false}
+                          checked={
+                            formik.values.is_folded === 'false' || formik.values.is_folded === false
+                          }
+                          aria-describedby="npoIsFolded"
+                          id="npoIsFolded-FALSE"
+                        />
+                      </Form.Group>
+                    </Form.Row>
+
+                    <Button type="submit" variant="primary">
+                      Update profile
+                    </Button>
+                  </Col>
+                  <Col className="d-none d-md-flex justify-content-center p-4">
+                    <ProfilePreview
+                      cta="Support This Nonprofit"
+                      data={{
+                        ...formik.values,
+                        logo_url: logoSrc,
+                        hero_url: heroSrc,
+                      }}
+                      type="nonprofit"
+                    />
                   </Col>
                 </Row>
               </section>
@@ -322,7 +460,8 @@ export default function Profile({ data, onSave }) {
           </Form>
         </Col>
       </Row>
-      <PreviewModal show={showPreview} data={formik.values} onHide={() => setShowPreview(false)} />
     </Container>
   );
 }
+
+export default Profile;

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Table from 'react-bootstrap/Table';
@@ -30,10 +31,13 @@ const GroomingQueue = () => {
 
   return (
     <Container className="block shadow-sm">
+      <Helmet>
+        <title>Brands Grooming Queue | Admin Portal | Give Good Deeds</title>
+      </Helmet>
       <Row>
         <Col>
           <h2>Brands Grooming Queue</h2>
-          <Table striped bordered hover>
+          <Table striped bordered hover responsive>
             <thead>
               <tr>
                 <th className={styles.tableDate}>Date</th>

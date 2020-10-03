@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import { createSchema, dbID } from 'utils/schema';
@@ -37,6 +38,9 @@ function DeleteUser() {
 
   return (
     <>
+      <Helmet>
+        <title>Delete User | Admin Portal | Give Good Deeds</title>
+      </Helmet>
       <Container className="block shadow-sm">
         <Row>
           <Col>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet';
 import { useFormik } from 'formik';
 import InputMask from 'react-input-mask';
 
@@ -68,6 +69,9 @@ function CreateUser() {
 
   return (
     <>
+      <Helmet>
+        <title>Create Nonprofit User | Admin Portal | Give Good Deeds</title>
+      </Helmet>
       <Container className="block shadow-sm">
         <Row>
           <Col>

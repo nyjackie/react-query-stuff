@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -34,6 +35,9 @@ function Settings({ user }) {
 
   return (
     <Container>
+      <Helmet>
+        <title>Settings | Admin Portal | Give Good Deeds</title>
+      </Helmet>
       <Row>
         <Col md={6}>
           <Container className="block shadow-sm">

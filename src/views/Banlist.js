@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Table from 'react-bootstrap/Table';
@@ -32,6 +33,9 @@ function Banlist() {
 
   return (
     <Container className="block shadow-sm">
+      <Helmet>
+        <title>Banned Nonprofits | Admin Portal | Give Good Deeds</title>
+      </Helmet>
       <PageHeader pageTitle="Banned Nonprofits" />
       <Row>
         <Col>

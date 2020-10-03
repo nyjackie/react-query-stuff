@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { Formik } from 'formik';
+import { Helmet } from 'react-helmet';
 import {
   object as yupObject,
   string as yupString,
@@ -50,7 +51,7 @@ function BrandInfo({ addNotification, match }) {
     isLoading: offerLoading,
     isError: offerError,
     data: { affiliate_programs = [] } = {},
-  } = useOffers(brand.id);
+  } = useOffers(brand?.id);
 
   const [updateBrand] = useUpdateBrand();
 
@@ -67,31 +68,16 @@ function BrandInfo({ addNotification, match }) {
   }
   return (
     <Fragment>
+      <Helmet>
+        <title>Brand: {brand?.name ? brand.name : 'Brand'} | Give Good Deeds | Admin Portal</title>
+      </Helmet>
+      {/************************************************************
+       * Brand name and grooming status checkmark
+       */}
       <Container className="block shadow-sm">
         <Row className="mb-3">
           <Col>
             <h2>{brand.name}</h2>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <p>
-              <b>Brand ID:</b> {brand.id}
-            </p>
-            <p>
-              <b>FMTC Master Merchant ID:</b> {brand.fmtc_master_merchant_id}
-            </p>
-            <p>
-              <b>FMTC Merchant ID:</b> {brand.fmtc_merchant_id}
-            </p>
-            <p>
-              <b>Created Date: </b>
-              {moment(brand.created_at).format('MM/DD/YYYY')}
-            </p>
-            <p>
-              <b>Modified Date: </b>
-              {moment(brand.modified_at).format('MM/DD/YYYY')}
-            </p>
           </Col>
           <Col md={3}>
             {brand.is_groomed && (
@@ -103,6 +89,10 @@ function BrandInfo({ addNotification, match }) {
           </Col>
         </Row>
       </Container>
+
+      {/************************************************************
+       * Brand form and preview according wrap
+       */}
       <Accordion defaultActiveKey="0">
         <Container>
           <Row>
@@ -121,8 +111,12 @@ function BrandInfo({ addNotification, match }) {
             </Col>
           </Row>
         </Container>
+
         <Container>
           <Accordion.Collapse eventKey="0">
+            {/************************************************************
+             * Begin Formik
+             */}
             <Formik
               initialValues={brand}
               validationSchema={schema}
@@ -148,7 +142,30 @@ function BrandInfo({ addNotification, match }) {
               {props => {
                 return (
                   <Row>
-                    <Col xs={12} lg={5} className="block shadow-sm">
+                    {/************************************************************
+                     * Brand Form fields column
+                     */}
+                    <Col xs={12} lg={5} className="block-fluid shadow-sm">
+                      {/************************************************************
+                       * Brand uneditable meta data
+                       */}
+                      <p className="m-0">
+                        <b>Brand ID:</b> {brand.id}
+                      </p>
+                      <p className="m-0">
+                        <b>FMTC Master Merchant ID:</b> {brand.fmtc_master_merchant_id}
+                      </p>
+                      <p className="m-0">
+                        <b>FMTC Merchant ID:</b> {brand.fmtc_merchant_id}
+                      </p>
+                      <p className="m-0">
+                        <b>Created Date: </b>
+                        {moment(brand.created_at).format('MM/DD/YYYY')}
+                      </p>
+                      <p className="m-0 mb-4">
+                        <b>Modified Date: </b>
+                        {moment(brand.modified_at).format('MM/DD/YYYY')}
+                      </p>
                       <Button
                         className="mb-4"
                         onClick={() => {
@@ -160,7 +177,11 @@ function BrandInfo({ addNotification, match }) {
                       </Button>
                       <BrandForm brand={brand} edit={edit} categories={categories} {...props} />
                     </Col>
-                    <Col xs={12} lg={{ span: 6, offset: 1 }} className="block shadow-sm">
+
+                    {/************************************************************
+                     * Brand image editing and preview modal column
+                     */}
+                    <Col xs={12} lg={{ span: 6, offset: 1 }} className="block-fluid shadow-sm">
                       <BrandImages
                         brand={{
                           ...brand,
@@ -176,6 +197,9 @@ function BrandInfo({ addNotification, match }) {
         </Container>
       </Accordion>
 
+      {/************************************************************
+       * Brand Affiliate Offer rows
+       */}
       {affiliate_programs.length > 0 && (
         <Container className="block shadow-sm">
           <Row>
@@ -200,6 +224,9 @@ function BrandInfo({ addNotification, match }) {
         </Container>
       )}
 
+      {/************************************************************
+       * Brand Affiliate Offer edit Modal
+       */}
       {offer && (
         <OfferEditModal show={show} offer={offer} handleClose={handleClose} brand_id={brand.id} />
       )}

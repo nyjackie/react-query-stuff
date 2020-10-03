@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -16,11 +17,14 @@ import styles from './NonProfitInfo.module.scss';
 
 const SingleResult = ({ result }) => {
   return (
-    <li className="pointer">
-      <Link to={`/nonprofit/${result.id}`}>
-        <h3>{result.name}</h3>
-      </Link>
-      <p>{result.mission}</p>
+    <li className={`pointer media ${styles.result_row}`}>
+      {result.logo_url && <img src={result.logo_url} alt="" />}
+      <div className="media-body">
+        <Link to={`/nonprofit/${result.id}`}>
+          <h3>{result.name}</h3>
+        </Link>
+        <p>{result.mission}</p>
+      </div>
     </li>
   );
 };
@@ -63,6 +67,9 @@ const NonprofitSearch = ({ history, location }) => {
 
   return (
     <>
+      <Helmet>
+        <title>Nonprofit Search | Admin Portal | Give Good Deeds</title>
+      </Helmet>
       <Container className="block shadow-sm">
         <Row>
           <Col>
@@ -77,7 +84,7 @@ const NonprofitSearch = ({ history, location }) => {
           </Col>
         </Row>
         <Row className="mt-4">
-          {results?.total_results && (
+          {results?.total_results > 0 && (
             <Col xs={12} lg="auto">
               <Paginator
                 total={results?.total_results}

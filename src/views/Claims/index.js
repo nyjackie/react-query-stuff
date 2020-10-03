@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import Container from 'react-bootstrap/Container';
 import Table from 'react-bootstrap/Table';
 import Alert from 'react-bootstrap/Alert';
@@ -42,6 +43,9 @@ function ClaimsPage() {
 
   return (
     <Container className="block shadow-sm">
+      <Helmet>
+        <title>Claim Queue | Admin Portal | Give Good Deeds</title>
+      </Helmet>
       {isError && <Alert variant={'danger'}>{error.message}</Alert>}
       <h2>Claims waiting for approval</h2>
       <Table striped bordered hover responsive>

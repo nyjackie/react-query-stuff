@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Form from 'react-bootstrap/Form';
@@ -69,6 +70,9 @@ function CreateUser() {
 
   return (
     <>
+      <Helmet>
+        <title>Create Internal User | Admin Portal | Give Good Deeds</title>
+      </Helmet>
       <Container className="block shadow-sm">
         <Row>
           <Col>

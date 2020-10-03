@@ -30,17 +30,24 @@ const getData = async id => {
 };
 
 const APSelect = ({ offers, getFromSelect }) => {
-  const [newOffers] = useState(offers);
+  // const [newOffers] = useState(offers);
   const [defaultOffers, setDefaultoffers] = useState([]);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
-    if (newOffers) {
-      let arr = newOffers.map(offer => offer);
-      arr.forEach(async offer => {
-        let data = await getData(offer);
-        setDefaultoffers(offer => [...offer, data]);
-      });
+    async function fetchData() {
+      if (offers) {
+        setLoading(true);
+        const newData = [];
+        for (let offer of offers) {
+          const data = await getData(offer);
+          newData.push(data);
+        }
+        setDefaultoffers(newData);
+        setLoading(false);
+      }
     }
-  }, [newOffers]);
+    fetchData();
+  }, [offers]);
 
   const onChange = useCallback(
     e => {
@@ -51,23 +58,24 @@ const APSelect = ({ offers, getFromSelect }) => {
   );
 
   return (
-    defaultOffers.length === newOffers.length && (
-      <Accordion>
-        <Accordion.Toggle as={Button} variant="success" eventKey="0">
-          Edit Offers +
-        </Accordion.Toggle>
-        <Accordion.Collapse eventKey="0" className="mt-2 mb-2">
+    <Accordion>
+      <Accordion.Toggle as={Button} variant="success" eventKey="0">
+        Edit Offers +
+      </Accordion.Toggle>
+      <Accordion.Collapse eventKey="0" className="mt-2 mb-2">
+        <>
+          {loading && <p>offers updating please hold</p>}
           <AsyncSelect
             cacheOptions
-            defaultValue={defaultOffers}
+            value={defaultOffers}
             isMulti
             isSearchable={true}
             onChange={onChange}
             loadOptions={loadOptions}
           />
-        </Accordion.Collapse>
-      </Accordion>
-    )
+        </>
+      </Accordion.Collapse>
+    </Accordion>
   );
 };
 

@@ -3,7 +3,7 @@ import AP from './APIcon';
 import { ReactComponent as Arrow } from 'assets/left-arrow.svg';
 import APSelect from './APSelect';
 
-const APDetails = ({ offers, setFieldValue }) => {
+const APDetails = ({ offers, bucket_id, setFieldValue }) => {
   const [offerArray, setOfferArray] = useState(offers);
   const reorder = (list, item, change) => {
     const index = list.indexOf(item);
@@ -32,14 +32,18 @@ const APDetails = ({ offers, setFieldValue }) => {
           offerArray.map((offer, i) => {
             return (
               <div key={offer} className="p-2">
-                <AP ap_id={offer} key={offer} />
+                <AP ap_id={offer} key={`${bucket_id}-${offer}`} />
                 <div className="d-flex justify-content-center ">
-                  <Arrow className="p-1 pointer" onClick={() => reorder(offerArray, offer, -1)} />
-                  <Arrow
-                    className="p-1 pointer"
-                    transform="scale(-1,1)"
-                    onClick={() => reorder(offerArray, offer, 1)}
-                  />
+                  {i > 0 && (
+                    <Arrow className="p-1 pointer" onClick={() => reorder(offerArray, offer, -1)} />
+                  )}
+                  {i < offerArray.length - 1 && (
+                    <Arrow
+                      className="p-1 pointer"
+                      transform="scale(-1,1)"
+                      onClick={() => reorder(offerArray, offer, 1)}
+                    />
+                  )}
                 </div>
               </div>
             );

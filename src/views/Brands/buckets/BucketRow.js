@@ -175,7 +175,7 @@ const BucketRow = ({ bucket }) => {
                   <Accordion.Collapse eventKey={id}>
                     <APDetails
                       offers={formik.values.affiliate_offers}
-                      key={id}
+                      bucket_id={id}
                       setFieldValue={formik.setFieldValue}
                     />
                   </Accordion.Collapse>

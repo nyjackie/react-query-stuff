@@ -26,7 +26,7 @@ const BucketRow = ({ bucket }) => {
       <Col>
         <Card>
           <Card.Body>
-            <h6>ID: #{id}</h6>
+            <h6>ID: #{id || ''}</h6>
             <Form noValidate onSubmit={formik.handleSubmit}>
               <Accordion>
                 <Form.Row>

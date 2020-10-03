@@ -4,29 +4,44 @@ import AsyncSelect from 'react-select/async';
 import api from 'gdd-api-lib';
 
 const loadOptions = async inputValue => {
-  const res = await api.searchOffers({ search_term: window.btoa(inputValue) });
-  const newRes = res.data.offers.map(data => {
-    return { value: data.offer_guid, label: data.offer_details.brand_name };
-  });
-  return newRes;
+  try {
+    const res = await api.searchOffers({ search_term: window.btoa(inputValue) });
+    const newRes = res.data.offers.map(data => {
+      return { value: data.offer_guid, label: data.offer_details.brand_name };
+    });
+    return newRes;
+  } catch (err) {
+    console.log(err);
+    return {};
+  }
 };
 
 const getData = async id => {
-  return await api.getOfferByGuid({ offer_guid: id, offer_type: 'AFFILIATE_PROGRAM' }).then(res => {
-    return { value: res.data.offer_guid, label: res.data.offer_details.brand_name };
-  });
+  try {
+    return await api
+      .getOfferByGuid({ offer_guid: id, offer_type: 'AFFILIATE_PROGRAM' })
+      .then(res => {
+        return { value: res.data.offer_guid, label: res.data.offer_details.brand_name };
+      });
+  } catch (err) {
+    console.log(err);
+    return {};
+  }
 };
 
 const APSelect = ({ offers, getFromSelect }) => {
   const [newOffers] = useState(offers);
   const [defaultOffers, setDefaultoffers] = useState([]);
   useEffect(() => {
-    let arr = newOffers.map(offer => offer);
-    arr.forEach(async offer => {
-      let data = await getData(offer);
-      setDefaultoffers(offer => [...offer, data]);
-    });
+    if (newOffers) {
+      let arr = newOffers.map(offer => offer);
+      arr.forEach(async offer => {
+        let data = await getData(offer);
+        setDefaultoffers(offer => [...offer, data]);
+      });
+    }
   }, [newOffers]);
+
   const onChange = useCallback(
     e => {
       const val = e.map(el => el['value']);

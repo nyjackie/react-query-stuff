@@ -53,7 +53,7 @@ const Layout = ({ children, drawerOpen, toggleDrawer }) => {
             <Navbar bg="light" expand="lg" className="p-0">
               <Navbar.Toggle aria-controls="drawer" onClick={toggleDrawer} />
             </Navbar>
-            <main className="flex-fill container-fluid">{children}</main>
+            <main className="flex-fill container-fluid h-100">{children}</main>
           </Col>
         </Row>
       </Container>

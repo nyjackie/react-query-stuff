@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Modal, Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
 
-import PageHeader from 'components/PageHeader';
 import { addNotification } from 'actions/notifications';
 import { useGetUser } from 'hooks/useUsers';
 import styles from './User.module.scss';

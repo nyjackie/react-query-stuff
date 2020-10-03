@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { USER_TYPES } from 'utils/constants';
 import styles from './User.module.scss';
 
 const SingleResult = ({

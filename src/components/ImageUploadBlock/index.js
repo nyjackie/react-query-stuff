@@ -50,7 +50,7 @@ function ImageUploadBlock({
       )}
 
       <div className={className || null}>
-        <h3 className="h3">{title}</h3>
+        {title && <h3 className="h3">{title}</h3>}
         <div className="imgBlock-img">
           <ImageUpload
             {...props}
@@ -68,7 +68,7 @@ function ImageUploadBlock({
           />
         </div>
         <div className="imgBlock-content">
-          <p>{reco}</p>
+          <p dangerouslySetInnerHTML={{ __html: reco }} />
           {!disabled && (
             <div className="imgBlock-buttons">
               <Button variant="primary" className="mr-4" onClick={openDrop}>

@@ -116,6 +116,9 @@ export function useNonprofitSearch(query) {
   return useQuery(['np_search', query], search, {
     enabled: query.search_term,
     refetchOnWindowFocus: false,
+    refetchOnMount: true,
+    cacheTime: 0,
+    staleTime: 0,
   });
 }
 

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Button, Col, Row, Container, Form } from 'react-bootstrap';
@@ -121,6 +122,9 @@ function BrandUser({ data, addNotification }) {
 
   return (
     <>
+      <Helmet>
+        <title>Brand User | Admin Portal | Give Good Deeds</title>
+      </Helmet>
       <Container className={cn(`block shadow-sm`, styles.userEdit)}>
         <Row>
           <Col>

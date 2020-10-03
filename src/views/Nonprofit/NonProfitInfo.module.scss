@@ -105,6 +105,17 @@
   }
 }
 
+.result_row {
+  img {
+    display: block;
+    margin-right: 15px;
+    width: 100px;
+    height: auto;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+  }
+}
+
 $w: 375px * 0.75;
 $h: 240px * 0.75;
 

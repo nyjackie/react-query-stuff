@@ -42,8 +42,7 @@ const Nonprofit = ({ addNotification }) => {
     return (
       <>
         <Helmet>
-          <meta charSet="utf-8" />
-          <title>{selected.name} | Give Good Deeds | Admin Portal</title>
+          <title>Nonprofit: {selected.name} | Give Good Deeds | Admin Portal</title>
         </Helmet>
         <Profile data={selected} />
       </>

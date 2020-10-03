@@ -41,20 +41,20 @@ function search(key, query) {
  * API handler to update a single brand's logo
  * @param {object} param0
  * @param {string} param0.id
- * @param {string} param0.logo_image_bytestring
+ * @param {string} param0.bytestring
  */
-function updateBrandLogo({ id, logo_image_bytestring }) {
-  return api.setBrandLogo(id, { logo_image_bytestring }).then(res => res.data);
+function updateBrandLogo({ id, bytestring }) {
+  return api.setBrandLogo(id, { logo_image_bytestring: bytestring }).then(res => res.data);
 }
 
 /**
  * API handler to update a single brand's hero/cover image
  * @param {object} param0
  * @param {string} param0.id
- * @param {string} param0.hero_image_bytestring
+ * @param {string} param0.bytestring
  */
-function updateBrandHero({ id, hero_image_bytestring }) {
-  return api.setBrandHero(id, { hero_image_bytestring }).then(res => res.data);
+function updateBrandHero({ id, bytestring }) {
+  return api.setBrandHero(id, { hero_image_bytestring: bytestring }).then(res => res.data);
 }
 
 /*********************************************

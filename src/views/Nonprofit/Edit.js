@@ -13,6 +13,7 @@ import { USStateSelect, MultiSelect, ProfilePreview } from 'gdd-components';
 import { cn } from 'gdd-components/dist/utils';
 import 'gdd-components/dist/styles/shared.scss';
 
+import Spinner from 'components/Spinner';
 import ImageUploadBlock from 'components/ImageUploadBlock';
 import { max255, url, zipcode } from 'utils/schema';
 import {
@@ -44,9 +45,8 @@ const schema = yupObject({
  * Display and edit a Nonprofit organization's profile
  * @param {object} param0
  * @param {InternalNonProfit} param0.data
- * @param {function} param0.onSave
  */
-function Profile({ data, onSave }) {
+function Profile({ data }) {
   const { data: options } = useNpCategories();
   const [updateLogo, { isLoading: logoLoading }] = useUpdateNPOLogo();
   const [updateHero, { isLoading: heroLoading }] = useUpdateNPOHero();
@@ -97,6 +97,11 @@ function Profile({ data, onSave }) {
     <Container className="block shadow-sm">
       <Row>
         <Col>
+          {profileLoading && (
+            <div className="spinnerOverlay">
+              <Spinner />
+            </div>
+          )}
           <Form
             encType="multipart/form-data"
             noValidate
@@ -107,7 +112,7 @@ function Profile({ data, onSave }) {
 
             <article className={styles.profile}>
               <Row className={styles.header}>
-                <Col sm={12} lg={8}>
+                <Col>
                   <h2 className="h2">{data.name}</h2>
                 </Col>
               </Row>
@@ -170,11 +175,6 @@ function Profile({ data, onSave }) {
                 </Row>
               </section>
               <section>
-                <Row>
-                  <Col xl>
-                    <h3 className="h3">Basic Information</h3>
-                  </Col>
-                </Row>
                 <Row>
                   <Col xl>
                     <Form.Group controlId="organization_name">
@@ -443,7 +443,7 @@ function Profile({ data, onSave }) {
                       Update profile
                     </Button>
                   </Col>
-                  <Col className="d-flex justify-content-center bg-dark p-4">
+                  <Col className="d-none d-md-flex justify-content-center p-4">
                     <ProfilePreview
                       cta="Support This Nonprofit"
                       data={{

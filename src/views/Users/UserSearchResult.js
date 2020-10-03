@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { USER_TYPES } from 'utils/constants';
 import styles from './User.module.scss';
 
 const SingleResult = ({
@@ -38,13 +37,7 @@ const SingleResult = ({
         <b>Profile:</b>
       </p>
       <p>
-        {user_type === USER_TYPES.CONSUMER || user_type === USER_TYPES.BRAND ? (
-          <Link to={`/users/${user_type}/${user_id}`}>{`/users/${user_type}/${user_id}`}</Link>
-        ) : (
-          <span>
-            API for <code>{user_type}</code> user profile not ready yet
-          </span>
-        )}
+        <Link to={`/users/${user_type}/${user_id}`}>{`/users/${user_type}/${user_id}`}</Link>
       </p>
     </li>
   );

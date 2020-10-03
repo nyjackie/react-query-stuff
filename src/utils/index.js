@@ -272,3 +272,26 @@ export function dedupeUser(source, newValues) {
   }
   return finalObj;
 }
+
+/**
+ * converts true|false strings into booleans
+ * @param {"true"|"false"|boolean} bool
+ * @returns {boolean}
+ * @throws
+ */
+export function stringToBool(bool) {
+  if (typeof bool === 'string') {
+    if (bool.toLowerCase() === 'true') {
+      return true;
+    } else if (bool.toLowerCase() === 'false') {
+      return false;
+    } else {
+      throw new Error(`bool string must be "true" or "false", received ${bool}`);
+    }
+  }
+  if (typeof bool === 'boolean') {
+    return bool;
+  } else {
+    throw new Error(`bool is an unexpected type: ${typeof bool}`);
+  }
+}

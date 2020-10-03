@@ -1,4 +1,5 @@
 import React, { Fragment, useState } from 'react';
+import { Helmet } from 'react-helmet';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Moment from 'react-moment';
@@ -96,6 +97,9 @@ const ClaimInfo = ({ addNotification, match }) => {
 
   return (
     <Fragment>
+      <Helmet>
+        <title>Claim: {claim.nonprofit.name} | Admin Portal | Give Good Deeds</title>
+      </Helmet>
       <Container className="block shadow-sm">
         <Row>
           <Col>

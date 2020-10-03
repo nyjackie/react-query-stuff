@@ -30,41 +30,6 @@
   }
 }
 
-.uploadBlock {
-  background-color: rgba(0, 0, 0, 0.05);
-  padding: 20px;
-
-  @include from-bp('lg') {
-    display: flex;
-    flex-direction: row;
-  }
-  margin-bottom: 3em;
-}
-
-.uploadImg {
-  width: 128px;
-  margin-right: 24px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  @include to-bp('lg') {
-    margin-bottom: 1em;
-  }
-}
-
-.uploadImgCover {
-  width: 256px;
-}
-
-.uploadContent {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  flex: 1;
-
-  button {
-    align-self: flex-start;
-  }
-}
-
 .offerRow {
   padding: 5px 0;
   border-top: 1px solid gray;
@@ -86,27 +51,54 @@
   }
 }
 
+.previewWrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 40px;
+  background-color: rgb(200, 200, 200);
+  padding: 30px;
+}
+
 /**************************************************
  * Brand search
  */
 .results {
   list-style-type: none;
   padding: 0;
-
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  column-gap: 30px;
-  row-gap: 30px;
 }
 
 .resultItem {
+  margin-right: 30px;
+  margin-bottom: 30px;
+  display: inline-block;
+  max-width: 200px;
+
+  a {
+    display: block;
+  }
   img {
     display: block;
     width: 100%;
+    height: auto;
     border-radius: 10px;
   }
 
   p {
     word-wrap: break-word;
+  }
+}
+
+.logoBlock {
+  margin-bottom: 20px;
+  :global(.imgBlock-img) {
+    max-width: 200px;
+  }
+}
+
+.heroBlock {
+  :global(.imgBlock-img) {
+    max-width: 375px;
   }
 }

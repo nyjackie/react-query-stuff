@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
+import { useFormik } from 'formik';
+import InputMask from 'react-input-mask';
+
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
-import { useFormik } from 'formik';
-import InputMask from 'react-input-mask';
+
 import { max255, createSchema, phone, password } from 'utils/schema';
-import { useUniqueEmail, useUniquePhone } from 'hooks/useAdmin';
-import { useBrandForgotPassword } from 'hooks/useBrands';
 import { USER_TYPES } from 'utils/constants';
-import { useCreateBrandUser } from 'hooks/useUsers';
+import { useUniqueEmail, useUniquePhone } from 'hooks/useAdmin';
+import { useCreateNoprofitUser, useNonprofitForgotPassword } from 'hooks/useNonprofits';
 import SendForgotPassword, { TEMPLATES } from 'views/Users/SendForgotPassword';
 import Password from 'components/Password';
 
@@ -22,11 +23,11 @@ const schema = createSchema({
   last_name: max255.required('This field is required'),
   password: password,
   phone_number: phone.required('This field is required'),
-  brand_id: max255.required('This field is required'),
+  nonprofit_id: max255.required('This field is required'),
 });
 
 function CreateUser() {
-  const [postUser, { isLoading, isSuccess, isError, error }] = useCreateBrandUser();
+  const [postUser, { isLoading, isSuccess, isError, error }] = useCreateNoprofitUser();
   const [checkUniqueEmail, { isLoading: ueLoading }] = useUniqueEmail();
   const [checkUniquePhone, { isLoading: upLoading }] = useUniquePhone();
 
@@ -41,7 +42,7 @@ function CreateUser() {
       last_name: '',
       password: '',
       phone_number: '',
-      brand_id: '',
+      nonprofit_id: '',
     },
     onSubmit: values => {
       values.phone_number = values.phone_number.replace(/\D/g, '');
@@ -49,11 +50,11 @@ function CreateUser() {
       Promise.all([
         checkUniqueEmail({
           email: values.email,
-          user_type: USER_TYPES.BRAND,
+          user_type: USER_TYPES.NONPROFIT,
         }),
         checkUniquePhone({
           phone_number: values.phone_number,
-          user_type: USER_TYPES.BRAND,
+          user_type: USER_TYPES.NONPROFIT,
         }),
       ]).then(results => {
         const [isUniqueEmail, isUniquePhone] = results;
@@ -69,7 +70,7 @@ function CreateUser() {
   return (
     <>
       <Helmet>
-        <title>Create Brand User | Admin Portal | Give Good Deeds</title>
+        <title>Create Nonprofit User | Admin Portal | Give Good Deeds</title>
       </Helmet>
       <Container className="block shadow-sm">
         <Row>
@@ -77,28 +78,28 @@ function CreateUser() {
             <h2>
               Create new{' '}
               <b>
-                <u>Brand</u>
+                <u>Nonprofit</u>
               </b>{' '}
               user
             </h2>
             <Form noValidate onSubmit={formik.handleSubmit}>
               <Form.Group controlId="brandID">
                 <Form.Label className="sr-only">
-                  <b>Brand ID</b>
+                  <b>Nonprofit ID</b>
                 </Form.Label>
                 <Form.Control
-                  placeholder="Brand ID"
+                  placeholder="Nonprofit ID"
                   type="text"
-                  name="brand_id"
+                  name="nonprofit_id"
                   autoFocus
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  value={formik.values.brand_id}
-                  isValid={formik.touched.brand_id && !formik.errors.brand_id}
-                  isInvalid={formik.touched.brand_id && !!formik.errors.brand_id}
+                  value={formik.values.nonprofit_id}
+                  isValid={formik.touched.nonprofit_id && !formik.errors.nonprofit_id}
+                  isInvalid={formik.touched.nonprofit_id && !!formik.errors.nonprofit_id}
                 />
                 <Form.Control.Feedback type="invalid">
-                  {formik.errors.brand_id}
+                  {formik.errors.nonprofit_id}
                 </Form.Control.Feedback>
               </Form.Group>
 
@@ -121,7 +122,7 @@ function CreateUser() {
                 />
                 <Form.Control.Feedback type="invalid">
                   {formik.errors.email}
-                  {isBadEmail && `Brand user with email ${formik.values.email} already exists`}
+                  {isBadEmail && `Nonprofit user with email ${formik.values.email} already exists`}
                 </Form.Control.Feedback>
               </Form.Group>
 
@@ -199,7 +200,7 @@ function CreateUser() {
                 />
                 <Form.Control.Feedback type="invalid">
                   {formik.errors.phone_number}
-                  {isBadPhone && `Brand user with this phone number already exists`}
+                  {isBadPhone && `Nonprofit user with this phone number already exists`}
                 </Form.Control.Feedback>
               </Form.Group>
 
@@ -213,9 +214,9 @@ function CreateUser() {
               {isError && (
                 <p className="mt-2 text-danger">{error?.message || 'An internal error occured!'}</p>
               )}
-              {isError && error.response.status === 409 && (
+              {isError && error.response?.status === 409 && (
                 <p className="mt-2 text-danger">
-                  A user already exists for this brand ID. Only one user per brand
+                  A user already exists for this nonprofit ID. Only one user per brand
                 </p>
               )}
               {(ueLoading || upLoading || isLoading) && (
@@ -231,8 +232,8 @@ function CreateUser() {
       {isSuccess && (
         <SendForgotPassword
           email={formik.values.email}
-          hook={useBrandForgotPassword}
-          new_template={TEMPLATES.NEW_BRAND}
+          hook={useNonprofitForgotPassword}
+          new_template={TEMPLATES.NEW_NONPROFIT}
         />
       )}
     </>

@@ -20,10 +20,11 @@ const SearchInput = ({ history, location }) => {
       phone_number: query.phone_number || '',
       user_type: query.user_type || '',
     },
-    onSubmit: ({ email, phone_number }) => {
+    onSubmit: ({ email, phone_number, user_type }) => {
       const phone = phone_number.replace(/[^0-9]+/g, '');
       if (email || phone) {
         const param = new URLSearchParams({ email, phone_number: phone });
+        if (user_type) param.append('user_type', user_type);
         history.push(`${location.pathname}?${param.toString()}`);
       }
       if (!email && !phone) {
@@ -39,6 +40,7 @@ const SearchInput = ({ history, location }) => {
         <Form.Control
           type="email"
           name="email"
+          autoFocus
           onChange={formik.handleChange}
           value={formik.values.email}
           isInvalid={formik.touched.email && formik.errors.email}

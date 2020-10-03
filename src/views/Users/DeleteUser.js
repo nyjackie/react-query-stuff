@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import { createSchema, dbID } from 'utils/schema';
@@ -11,10 +12,6 @@ const schema = createSchema({
 function DeleteUser() {
   const [check, setCheck] = useState(false);
   const [deleteUser] = useDeleteUser();
-
-  function finalDelete() {
-    deleteUser({ id: formik.values.user_id });
-  }
 
   useEffect(() => {
     if (check) {
@@ -32,8 +29,18 @@ function DeleteUser() {
     },
   });
 
+  function finalDelete() {
+    deleteUser({ id: formik.values.user_id }).then(() => {
+      setCheck(false);
+      formik.resetForm({ user_id: '' });
+    });
+  }
+
   return (
     <>
+      <Helmet>
+        <title>Delete User | Admin Portal | Give Good Deeds</title>
+      </Helmet>
       <Container className="block shadow-sm">
         <Row>
           <Col>
@@ -55,6 +62,7 @@ function DeleteUser() {
                 <Form.Control
                   type="text"
                   name="user_id"
+                  autoFocus
                   autoComplete="off"
                   onChange={formik.handleChange}
                   value={formik.values.user_id}

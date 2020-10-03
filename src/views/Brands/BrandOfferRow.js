@@ -27,7 +27,7 @@ function BrandOfferRow({ affiliate_program, onClick }) {
 
   return (
     <Row className={styles.offerRow}>
-      <Col>
+      <Col sm={12} md={5}>
         <p>
           <b>Begins:</b> <span>{begins_at ? moment(begins_at).format('MM/DD/YY') : 'N/A'}</span>
         </p>
@@ -35,31 +35,32 @@ function BrandOfferRow({ affiliate_program, onClick }) {
           <b>Ends:</b> <span>{ends_at ? moment(ends_at).format('MM/DD/YY') : 'N/A'}</span>
         </p>
         <p>
-          <b>Supported Nonprofit Id:</b>
+          <b>Supported Nonprofit: </b>
           <span>
             {supported_nonprofit_id && supportedNP ? (
               <Link target="_blank" to={`/nonprofit/${supportedNP.id}`}>
                 {supportedNP.name}
               </Link>
             ) : (
-              'N/A'
+              '--'
             )}
-          </span>
-        </p>
-        <p>
-          <b>Program ID:</b>
-          <span>{program_id}</span>
+          </span>{' '}
+          {supported_nonprofit_id && <span>id: {supported_nonprofit_id}</span>}
         </p>
         <p>
           <b>Offer ID:</b>
           <span>{offer_guid}</span>
         </p>
         <p>
+          <b>Program ID:</b>
+          <span>{program_id}</span>
+        </p>
+        <p>
           <b>Offer Type:</b>
           <span>{offer_type}</span>
         </p>
       </Col>
-      <Col>
+      <Col sm={12} md={5}>
         <p>
           <b>Consumer Payout:</b>
           <span>{base_consumer_payout}</span>
@@ -74,11 +75,11 @@ function BrandOfferRow({ affiliate_program, onClick }) {
         </p>
         <p>
           <b>Is Disabled:</b>
-          <span>{is_disabled ? 'Enabled' : 'Disabled'}</span>
+          <span>{String(is_disabled)}</span>
         </p>
         <p>
-          <b>Grooming Status:</b>
-          <span>{is_groomed ? 'Complete' : 'Incomplete'}</span>
+          <b>Is Groomed:</b>
+          <span>{String(is_groomed)}</span>
         </p>
       </Col>
       <Col className="v-center" md={2}>

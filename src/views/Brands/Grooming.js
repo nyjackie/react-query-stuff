@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Table from 'react-bootstrap/Table';
 import Container from 'react-bootstrap/Container';
 
 import { Paginator } from 'gdd-components';
-import { useBrands } from 'hooks/useBrands';
+import { useBrandGroomingQueue } from 'hooks/useBrands';
 
 import Spinner from 'components/Spinner';
 import GroomingQueueRow from './GroomingQueueRow';
@@ -13,7 +14,12 @@ import styles from './Brands.module.scss';
 
 const GroomingQueue = () => {
   const [offset, setOffset] = useState(0);
-  const { resolvedData: { brands = [] } = {}, latestData, isError, isLoading } = useBrands(offset);
+  const {
+    resolvedData: { brands = [] } = {},
+    latestData,
+    isError,
+    isLoading,
+  } = useBrandGroomingQueue(offset);
 
   if (isLoading) {
     return <Spinner />;
@@ -25,10 +31,13 @@ const GroomingQueue = () => {
 
   return (
     <Container className="block shadow-sm">
+      <Helmet>
+        <title>Brands Grooming Queue | Admin Portal | Give Good Deeds</title>
+      </Helmet>
       <Row>
         <Col>
           <h2>Brands Grooming Queue</h2>
-          <Table striped bordered hover>
+          <Table striped bordered hover responsive>
             <thead>
               <tr>
                 <th className={styles.tableDate}>Date</th>

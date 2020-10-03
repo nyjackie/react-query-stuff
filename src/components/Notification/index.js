@@ -1,66 +1,56 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Toast } from 'react-bootstrap';
+import './Notification.scss';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { removeNotification } from 'actions/notifications';
-import styles from './Notification.module.scss';
 
-const Notification = ({ notification, onClose }) => {
-  const [show, setShow] = useState(true);
+const FadeTransition = props => (
+  <CSSTransition {...props} classNames="notification" timeout={{ enter: 500, exit: 300 }} />
+);
 
+const Notification = ({ notification, removeNotification }) => {
   return (
-    <div aria-live="polite" aria-atomic="true" className={styles.toastContainer}>
-      <div className={styles.toastInner}>
-        <Toast
-          autohide
-          delay={notification.waitTime}
-          show={show}
-          onClose={() => {
-            setShow(false);
-            onClose();
-          }}
-          className={`${styles.toast} ${styles[notification.variant]}`}
-        >
-          <Toast.Header className={styles.header}>
-            <strong className="mr-auto">{notification.msg}</strong>
-          </Toast.Header>
-        </Toast>
-      </div>
-    </div>
+    <TransitionGroup className="toasts">
+      {notification !== null &&
+        notification.length > 0 &&
+        notification.map(toast => (
+          <FadeTransition
+            key={toast.id}
+            className={`shadow-sm notification notification-${toast.variant}`}
+          >
+            <div>
+              <div className="flex-grow-1">{toast.msg}</div>
+              <span
+                className="mr-3 cursor-pointer"
+                onClick={() => {
+                  removeNotification(toast.id);
+                }}
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M4 12L12 4" stroke="#536567" strokeWidth="2.5" strokeLinecap="round" />
+                  <path d="M4 4L12 12" stroke="#536567" strokeWidth="2.5" strokeLinecap="round" />
+                </svg>
+              </span>
+            </div>
+          </FadeTransition>
+        ))}
+    </TransitionGroup>
   );
 };
 
-const Notifications = ({ notifications, removeNotification }) => {
-  if (!notifications || notifications.length === 0) {
-    return null;
-  }
-
-  return (
-    <div className={styles.container}>
-      {notifications.map(notification => {
-        return (
-          <Notification
-            key={notification.id}
-            notification={notification}
-            onClose={() => {
-              setTimeout(() => {
-                removeNotification(notification.id);
-              }, 160); // Boostrap's Toast css fade is 150ms
-            }}
-          />
-        );
-      })}
-    </div>
-  );
-};
-
-Notifications.propTypes = {
-  notifications: PropTypes.array.isRequired,
-  removeNotification: PropTypes.func.isRequired,
+Notification.propTypes = {
+  notification: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = state => ({
-  notifications: state.notification,
+  notification: state.notification,
 });
 
-export default connect(mapStateToProps, { removeNotification })(Notifications);
+export default connect(mapStateToProps, { removeNotification })(Notification);

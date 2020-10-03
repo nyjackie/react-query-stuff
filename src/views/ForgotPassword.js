@@ -59,6 +59,7 @@ const ForgotPassword = () => {
               placeholder="Email"
               type="email"
               name="email"
+              autoFocus
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.email}

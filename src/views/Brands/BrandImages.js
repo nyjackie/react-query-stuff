@@ -16,13 +16,13 @@ function BrandImages({ brand }) {
   const [uploadHero, { isLoading: heroLoading }] = useUpdateBrandHero();
   const [logoError, setLogoError] = useState(null);
   const [coverError, setCoverError] = useState(null);
-  const [logoSrc, setLogoSrc] = useState(null);
-  const [coverSrc, setCoverSrc] = useState(null);
+  const [logoSrc, setLogoSrc] = useState(logo_url);
+  const [coverSrc, setCoverSrc] = useState(hero_url);
 
   const preview = {
     ...brand,
-    hero_url: coverSrc || hero_url,
-    logo_url: logoSrc || logo_url,
+    logo_url: logoSrc,
+    hero_url: coverSrc,
   };
 
   const logoDropRef = useRef(null);

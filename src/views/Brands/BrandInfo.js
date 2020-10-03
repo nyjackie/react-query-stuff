@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { Formik } from 'formik';
+import { Helmet } from 'react-helmet';
 import {
   object as yupObject,
   string as yupString,
@@ -67,6 +68,9 @@ function BrandInfo({ addNotification, match }) {
   }
   return (
     <Fragment>
+      <Helmet>
+        <title>{brand?.name ? brand.name : 'Brand'} | Give Good Deeds | Admin Portal</title>
+      </Helmet>
       <Container className="block shadow-sm">
         <Row className="mb-3">
           <Col>

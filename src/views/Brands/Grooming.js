@@ -23,10 +23,10 @@ const GroomingQueue = () => {
   if (isLoading) {
     return <Spinner />;
   }
-
-  if (isError) {
-    return <div>Oooops something went wrong. Please try again later! </div>;
-  }
+  // console.log('groomin', isError)
+  // if (isError) {
+  //   return <div>Oooops something went wrong. Please try again later! </div>;
+  // }
 
   return (
     <Container className="block shadow-sm">

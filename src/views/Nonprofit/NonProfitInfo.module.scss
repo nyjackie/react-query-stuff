@@ -104,3 +104,16 @@
     }
   }
 }
+
+$w: 375px * 0.75;
+$h: 240px * 0.75;
+
+.imgLogoBlock {
+  :global(.imgBlock-img) {
+    max-width: $h;
+  }
+}
+
+.imgHeroBlock {
+  max-width: $w;
+}

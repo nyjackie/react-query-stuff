@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import { Row, Col } from 'react-bootstrap';
 import { useParams, Link } from 'react-router-dom';
@@ -38,7 +39,15 @@ const Nonprofit = ({ addNotification }) => {
   }
 
   if (selected) {
-    return <Profile data={selected} />;
+    return (
+      <>
+        <Helmet>
+          <meta charSet="utf-8" />
+          <title>{selected.name} | Give Good Deeds | Admin Portal</title>
+        </Helmet>
+        <Profile data={selected} />
+      </>
+    );
   }
 
   return (

@@ -1,12 +1,13 @@
 // external libs
-import React from 'react';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
-import { object as yupObject, string as yupString, array as yupArray } from 'yup';
+import { object as yupObject, string as yupString } from 'yup';
 
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Form from 'react-bootstrap/Form';
 import Container from 'react-bootstrap/Container';
+import { Button } from 'react-bootstrap';
 
 import { USStateSelect, MultiSelect, ProfilePreview } from 'gdd-components';
 import { cn } from 'gdd-components/dist/utils';
@@ -14,8 +15,14 @@ import 'gdd-components/dist/styles/shared.scss';
 
 import ImageUploadBlock from 'components/ImageUploadBlock';
 import { max255, url, zipcode } from 'utils/schema';
-import { useNpCategories, useUpdateNPOLogo, useUpdateNPOHero } from 'hooks/useNonprofits';
+import {
+  useNpCategories,
+  useUpdateNPOLogo,
+  useUpdateNPOHero,
+  useNonprofitProfileUpdate,
+} from 'hooks/useNonprofits';
 
+import { stringToBool } from 'utils';
 import styles from './NonProfitInfo.module.scss';
 
 /**
@@ -30,7 +37,7 @@ const schema = yupObject({
   state: yupString().required('This field is required'),
   zip: zipcode,
   mission: yupString().max(8000, 'max 8000 characters'),
-  categories: yupArray().ensure().min(1, 'Please select at least one category'),
+  // categories: yupArray().ensure().min(1, 'Please select at least one category'),
 });
 
 /**
@@ -43,12 +50,13 @@ function Profile({ data, onSave }) {
   const { data: options } = useNpCategories();
   const [updateLogo, { isLoading: logoLoading }] = useUpdateNPOLogo();
   const [updateHero, { isLoading: heroLoading }] = useUpdateNPOHero();
+  const [udateProfile, { isLoading: profileLoading }] = useNonprofitProfileUpdate();
+  const [logoSrc, setLogoSrc] = useState(data.logo_url);
+  const [heroSrc, setHeroSrc] = useState(data.hero_url);
 
   const formik = useFormik({
     validationSchema: schema,
     initialValues: {
-      hero_url: data.hero_url, // file
-      logo_url: data.logo_url, // file
       name: data.name || '', // text
       categories: data.categories || [], // multiselect
       address_line_1: data.address.address_line_1 || '', // text
@@ -58,17 +66,30 @@ function Profile({ data, onSave }) {
       zip: data.address.zip || '', // text
       website_url: data.website_url || '', // text
       mission: data.mission || '', // textarea
+      is_banned: data.is_banned,
+      is_active: data.is_active,
+      is_folded: data.is_folded,
     },
     onSubmit: values => {
-      values.location = `${values.city}, ${values.state}`;
-      console.log('onSubmit values', values);
-      // onSave(values)
-      //   .then(() => {
-      //     setSaveError(null);
-      //   })
-      //   .catch(err => {
-      //     setSaveError(err.message);
-      //   });
+      const body = {
+        name: values.name,
+        categories: values.categories.map(c => {
+          return { category_id: c.id };
+        }),
+        website_url: values.website_url,
+        mission: values.mission,
+        address: {
+          address_line_1: values.address_line_1,
+          address_line_2: values.address_line_2,
+          city: values.city,
+          state: values.state,
+          zip: values.zip,
+        },
+        is_banned: stringToBool(values.is_banned),
+        is_active: stringToBool(values.is_active),
+        is_folded: stringToBool(values.is_folded),
+      };
+      udateProfile({ id: data.id, body });
     },
   });
 
@@ -95,14 +116,14 @@ function Profile({ data, onSave }) {
                 <Row>
                   <Col xl>
                     <ImageUploadBlock
+                      className={styles.imgLogoBlock}
                       update_id={data.id}
-                      uploadText="Logo not yet customized"
+                      uploadText="Upload new logo"
                       width={100}
                       height={100}
                       src={data.logo_url}
                       alt="logo"
                       name="file_logo"
-                      // exact
                       sqaure
                       minWidth={300}
                       minHeight={300}
@@ -112,13 +133,20 @@ function Profile({ data, onSave }) {
                       onSave={data => {
                         return updateLogo(data);
                       }}
+                      onImageSelected={file => {
+                        setLogoSrc(file.preview);
+                      }}
+                      onError={() => {
+                        setLogoSrc(data.logo_url);
+                      }}
                     />
                   </Col>
                   <Col xl>
                     <ImageUploadBlock
-                      uploadText="Cover not yet customized"
-                      width={256}
-                      height={128}
+                      className={styles.imgHeroBlock}
+                      uploadText="Upload new cover image"
+                      width={375}
+                      height={240}
                       src={data.hero_url}
                       alt="cover photo"
                       name="file_hero"
@@ -130,6 +158,12 @@ function Profile({ data, onSave }) {
                       isLoading={heroLoading}
                       onSave={data => {
                         return updateHero(data);
+                      }}
+                      onImageSelected={file => {
+                        setHeroSrc(file.preview);
+                      }}
+                      onError={() => {
+                        setHeroSrc(data.hero_url);
                       }}
                     />
                   </Col>
@@ -234,7 +268,7 @@ function Profile({ data, onSave }) {
                           </Form.Control.Feedback>
                         </Form.Group>
                       </Col>
-                      <Col sm={12} md={3}>
+                      <Col sm={12} md={2}>
                         <Form.Group controlId="nonprofit_state">
                           <Form.Label>State</Form.Label>
                           <USStateSelect
@@ -252,7 +286,7 @@ function Profile({ data, onSave }) {
                           </Form.Control.Feedback>
                         </Form.Group>
                       </Col>
-                      <Col sm={12} md={2}>
+                      <Col sm={12} md={3}>
                         <Form.Group controlId="nonprofit_zip">
                           <Form.Label>Zip</Form.Label>
                           <Form.Control
@@ -302,12 +336,120 @@ function Profile({ data, onSave }) {
                         {formik.errors.mission}
                       </Form.Control.Feedback>
                     </Form.Group>
+
+                    <Form.Row>
+                      <Form.Group as={Col}>
+                        <p id="npoIsBanned" className="d-inline mr-4">
+                          <b>Is Banned:</b>
+                        </p>
+                        <Form.Check
+                          inline
+                          label="true"
+                          type="radio"
+                          name="is_banned"
+                          value={true}
+                          checked={
+                            formik.values.is_banned === 'true' || formik.values.is_banned === true
+                          }
+                          onChange={formik.handleChange}
+                          aria-describedby="npoIsBanned"
+                          id="npoIsBanned-TRUE"
+                        />
+                        <Form.Check
+                          inline
+                          label="false"
+                          onChange={formik.handleChange}
+                          type="radio"
+                          name="is_banned"
+                          value={false}
+                          checked={
+                            formik.values.is_banned === 'false' || formik.values.is_banned === false
+                          }
+                          aria-describedby="npoIsBanned"
+                          id="npoIsBanned-FALSE"
+                        />
+                      </Form.Group>
+                    </Form.Row>
+
+                    <Form.Row>
+                      <Form.Group as={Col}>
+                        <p id="npoIsActive" className="d-inline mr-4">
+                          <b>Is active:</b>
+                        </p>
+                        <Form.Check
+                          inline
+                          label="true"
+                          type="radio"
+                          name="is_active"
+                          value={true}
+                          checked={
+                            formik.values.is_active === 'true' || formik.values.is_active === true
+                          }
+                          onChange={formik.handleChange}
+                          aria-describedby="npoIsActive"
+                          id="npoIsActive-TRUE"
+                        />
+                        <Form.Check
+                          inline
+                          label="false"
+                          onChange={formik.handleChange}
+                          type="radio"
+                          name="is_active"
+                          value={false}
+                          checked={
+                            formik.values.is_active === 'false' || formik.values.is_active === false
+                          }
+                          aria-describedby="npoIsActive"
+                          id="npoIsActive-FALSE"
+                        />
+                      </Form.Group>
+                    </Form.Row>
+
+                    <Form.Row>
+                      <Form.Group as={Col}>
+                        <p id="npoIsFolded" className="d-inline mr-4">
+                          <b>Is folded:</b>
+                        </p>
+                        <Form.Check
+                          inline
+                          label="true"
+                          type="radio"
+                          name="is_folded"
+                          value={true}
+                          checked={
+                            formik.values.is_folded === 'true' || formik.values.is_folded === true
+                          }
+                          onChange={formik.handleChange}
+                          aria-describedby="npoIsFolded"
+                          id="npoIsFolded-TRUE"
+                        />
+                        <Form.Check
+                          inline
+                          label="false"
+                          onChange={formik.handleChange}
+                          type="radio"
+                          name="is_folded"
+                          value={false}
+                          checked={
+                            formik.values.is_folded === 'false' || formik.values.is_folded === false
+                          }
+                          aria-describedby="npoIsFolded"
+                          id="npoIsFolded-FALSE"
+                        />
+                      </Form.Group>
+                    </Form.Row>
+
+                    <Button type="submit" variant="primary">
+                      Update profile
+                    </Button>
                   </Col>
                   <Col className="d-flex justify-content-center bg-dark p-4">
                     <ProfilePreview
                       cta="Support This Nonprofit"
                       data={{
                         ...formik.values,
+                        logo_url: logoSrc,
+                        hero_url: heroSrc,
                       }}
                       type="nonprofit"
                     />

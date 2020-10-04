@@ -27,7 +27,7 @@ const CreateBucket = () => {
           <Button onClick={handleShow}>+ Create New Bucket</Button>
         </Col>
       </Row>
-      <Modal show={show} onHide={handleClose}>
+      <Modal show={show} onHide={handleClose} size="xl">
         <Modal.Header closeButton>
           <Modal.Title>Modal heading</Modal.Title>
         </Modal.Header>

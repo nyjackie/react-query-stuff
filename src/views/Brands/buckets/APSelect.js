@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Button, Accordion } from 'react-bootstrap';
+import { Button, Accordion, Spinner } from 'react-bootstrap';
 import AsyncSelect from 'react-select/async';
 import api from 'gdd-api-lib';
 
@@ -30,7 +30,6 @@ const getData = async id => {
 };
 
 const APSelect = ({ offers, getFromSelect }) => {
-  // const [newOffers] = useState(offers);
   const [defaultOffers, setDefaultoffers] = useState([]);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
@@ -59,21 +58,22 @@ const APSelect = ({ offers, getFromSelect }) => {
 
   return (
     <Accordion>
-      <Accordion.Toggle as={Button} variant="success" eventKey="0">
-        Edit Offers +
-      </Accordion.Toggle>
+      <div className="d-flex">
+        <Accordion.Toggle as={Button} variant="success" eventKey="0">
+          Edit Offers +
+        </Accordion.Toggle>
+        {loading && <Spinner className="ml-2" animation="border" />}
+      </div>
+
       <Accordion.Collapse eventKey="0" className="mt-2 mb-2">
-        <>
-          {loading && <p>offers updating please hold</p>}
-          <AsyncSelect
-            cacheOptions
-            value={defaultOffers}
-            isMulti
-            isSearchable={true}
-            onChange={onChange}
-            loadOptions={loadOptions}
-          />
-        </>
+        <AsyncSelect
+          cacheOptions
+          value={defaultOffers}
+          isMulti
+          isSearchable={true}
+          onChange={onChange}
+          loadOptions={loadOptions}
+        />
       </Accordion.Collapse>
     </Accordion>
   );

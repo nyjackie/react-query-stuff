@@ -120,7 +120,7 @@ export function useDeleteBucket() {
     {
       onSuccess: () => {
         queryCache.invalidateQueries('buckets');
-        store.dispatch(addNotification('Bucket deleted', 'success'));
+        store.dispatch(addNotification('Bucket deleted', 'info'));
       },
       onError: err => {
         if (err.response.status === 404) {

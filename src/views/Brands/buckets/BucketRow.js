@@ -1,11 +1,11 @@
 import React from 'react';
 import APDetails from './APDetails';
 import { useFormik } from 'formik';
-import { Button, Col, Accordion, Row, Form, Card } from 'react-bootstrap';
+import { Button, Col, Accordion, Row, Form, Card, Popover, OverlayTrigger } from 'react-bootstrap';
 import Moment from 'react-moment';
 import { useCategories } from 'hooks/useBrands';
 import { object as yupObject, string as yupString, number as yupNumber } from 'yup';
-import { useUpdateBucket } from 'hooks/useBrands';
+import { useUpdateBucket, useDeleteBucket } from 'hooks/useBrands';
 import { connect } from 'react-redux';
 import { addNotification } from 'actions/notifications';
 import PropTypes from 'prop-types';
@@ -19,6 +19,7 @@ const BucketRow = ({ bucket, addNotification }) => {
   const { id, created_at, modified_at } = bucket;
   const { data: categories = [] } = useCategories();
   const [updateBucket] = useUpdateBucket();
+  const [deleteBucket] = useDeleteBucket();
 
   const formik = useFormik({
     initialValues: bucket,
@@ -41,6 +42,18 @@ const BucketRow = ({ bucket, addNotification }) => {
       console.log(values);
     },
   });
+  const popover = (
+    <Popover id="popover-basic">
+      <Popover.Content className="text-center">
+        <p>
+          This action will <strong>DELETE</strong> this bucket
+        </p>
+        <Button variant="danger" onClick={() => console.log(deleteBucket({ id: id }))}>
+          DELETE BUCKET
+        </Button>
+      </Popover.Content>
+    </Popover>
+  );
   return (
     <Row className="mt-2 mb-2">
       <Col>
@@ -188,6 +201,13 @@ const BucketRow = ({ bucket, addNotification }) => {
                     <Button type="submit" className=" align-self-center  mt-3">
                       Save
                     </Button>
+                    {id && (
+                      <OverlayTrigger trigger="click" placement="left" overlay={popover}>
+                        <Button variant="danger" className="ml-auto mt-3">
+                          X
+                        </Button>
+                      </OverlayTrigger>
+                    )}
                   </Col>
                 </Row>
                 {(formik.values.brand_category_id === '' ||

@@ -4,18 +4,18 @@ import BucketRow from './BucketRow';
 
 const initialState = {
   active: true,
-  affiliate_offers: null,
+  affiliate_offers: [],
   brand_category_id: null,
   bucket_sort_order: null,
-  created_at: null,
+  created_at: new Date().toISOString(),
   id: null,
-  modified_at: null,
-  presentation_type: null,
-  title: null,
+  modified_at: new Date().toISOString(),
+  presentation_type: 'TILE',
+  title: '',
 };
 
 const CreateBucket = () => {
-  const [bucket, setBucket] = useState(initialState);
+  const [bucket] = useState(initialState);
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -29,19 +29,11 @@ const CreateBucket = () => {
       </Row>
       <Modal show={show} onHide={handleClose} size="xl">
         <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
+          <Modal.Title>Create new bucket</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <BucketRow bucket={bucket} />
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
       </Modal>
     </Fragment>
   );

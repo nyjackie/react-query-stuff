@@ -4,13 +4,25 @@ import { useFormik } from 'formik';
 import { Button, Col, Accordion, Row, Form, Card } from 'react-bootstrap';
 import Moment from 'react-moment';
 import { useCategories } from 'hooks/useBrands';
+import { object as yupObject, string as yupString, number as yupNumber } from 'yup';
+import { useUpdateBucket } from 'hooks/useBrands';
+import { connect } from 'react-redux';
+import { addNotification } from 'actions/notifications';
+import PropTypes from 'prop-types';
 
-const BucketRow = ({ bucket }) => {
+const schema = yupObject({
+  title: yupString().required('Title cannot be empty.').max(255, 'max 255 characters'),
+  bucket_sort_order: yupNumber().typeError('Please enter sort order.'),
+});
+
+const BucketRow = ({ bucket, addNotification }) => {
   const { id, created_at, modified_at } = bucket;
-  const { isLoading: catLoading, isError: catError, data: categories = [] } = useCategories();
+  const { data: categories = [] } = useCategories();
+  const [updateBucket] = useUpdateBucket();
 
   const formik = useFormik({
     initialValues: bucket,
+    validationSchema: schema,
     onSubmit: values => {
       if (values.brand_category_id === '' || values.brand_category_id === null) {
         values.brand_category_id = null;
@@ -18,6 +30,14 @@ const BucketRow = ({ bucket }) => {
         values.affiliate_offers = null;
         values.brand_category_id = +values.brand_category_id;
       }
+      values.active = values.active === 'true' ? true : false;
+      updateBucket({ form: values })
+        .then(() => {
+          addNotification(`Bucket update success`, 'success');
+        })
+        .catch(err => {
+          addNotification(`Bucket update failed. ${err?.response?.data?.message}`, 'error');
+        });
       console.log(values);
     },
   });
@@ -53,7 +73,7 @@ const BucketRow = ({ bucket }) => {
                       <b>Sort Order:</b>
                     </Form.Label>
                     <Form.Control
-                      placeholder="bucket_sort_order"
+                      placeholder="Sort Order"
                       type="bucket_sort_order"
                       name="bucket_sort_order"
                       onChange={formik.handleChange}
@@ -189,4 +209,8 @@ const BucketRow = ({ bucket }) => {
   );
 };
 
-export default BucketRow;
+BucketRow.propTypes = {
+  addNotification: PropTypes.func.isRequired,
+};
+
+export default connect(null, { addNotification })(BucketRow);

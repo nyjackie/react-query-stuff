@@ -57,6 +57,14 @@ function updateBrandHero({ id, bytestring }) {
   return api.setBrandHero(id, { hero_image_bytestring: bytestring }).then(res => res.data);
 }
 
+/**
+ * Creates a new offer bucket or updates existing
+ * @param {object} param0.form form data
+ */
+function updateBucket({ form }) {
+  return api.upsertOfferBucket(form).then(res => res.data);
+}
+
 /*********************************************
  * exported hooks
  */
@@ -86,6 +94,18 @@ export function useBuckets() {
 export function useBucket(id) {
   return useQuery(['bucket', id], () => {
     return api.getOffersByBucketId(id).then(res => res.data);
+  });
+}
+
+/**
+ *  Creates a new offer bucket or updates existing
+ */
+export function useUpdateBucket() {
+  return useMutation(updateBucket, {
+    throwOnError: true,
+    onSuccess: () => {
+      queryCache.invalidateQueries('buckets');
+    },
   });
 }
 

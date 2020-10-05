@@ -39,12 +39,11 @@ const BucketRow = ({ bucket, addNotification, setShow }) => {
       updateBucket({ form: values })
         .then(() => {
           addNotification(`Bucket update success`, 'success');
-          setShow(false);
         })
         .catch(err => {
           addNotification(`Bucket update failed. ${err?.response?.data?.message}`, 'error');
         });
-      console.log(values);
+      setShow(false);
     },
   });
   const popover = (

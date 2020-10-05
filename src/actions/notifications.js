@@ -8,10 +8,13 @@ import { v4 as uuidv4 } from 'uuid';
  * @param {number} waitTime how long in milliseconds the notification stays on screen
  */
 export const addNotification = (msg, variant = 'none', waitTime = 10000) => dispatch => {
+  const id = uuidv4();
+
   dispatch({
     type: SET_NOTIFICATION,
-    payload: { msg, id: uuidv4(), waitTime, variant },
+    payload: { msg, id: id, waitTime, variant },
   });
+  setTimeout(() => dispatch({ type: REMOVE_NOTIFICATION, payload: id }), waitTime);
 };
 
 export const removeNotification = id => dispatch => {

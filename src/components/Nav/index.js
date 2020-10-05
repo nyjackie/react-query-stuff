@@ -123,6 +123,11 @@ const SideNav = ({ isAuthenticated, logout, closeDrawer }) => {
               </NavLink>
             </li>
             <li>
+              <NavLink className="js-closeDrawer" to="/brands/buckets" exact={true}>
+                Buckets
+              </NavLink>
+            </li>
+            <li>
               <NavLink className="js-closeDrawer" to="/brands/grooming" exact={true}>
                 Grooming Queue
               </NavLink>

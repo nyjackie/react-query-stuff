@@ -57,6 +57,14 @@ function updateBrandHero({ id, bytestring }) {
   return api.setBrandHero(id, { hero_image_bytestring: bytestring }).then(res => res.data);
 }
 
+/**
+ * Creates a new offer bucket or updates existing
+ * @param {object} param.form form data
+ */
+function updateBucket({ form }) {
+  return api.upsertOfferBucket(form).then(res => res.data);
+}
+
 /*********************************************
  * exported hooks
  */
@@ -73,6 +81,48 @@ export function useCategories() {
     {
       cacheTime: Infinity,
       refetchOnWindowFocus: false,
+    }
+  );
+}
+
+export function useBuckets() {
+  return useQuery('buckets', () => {
+    return api.getInternalOfferBuckets({ include_inactive: true }).then(res => res.data);
+  });
+}
+
+/**
+ *  Creates a new offer bucket or updates existing
+ */
+export function useUpdateBucket() {
+  return useMutation(updateBucket, {
+    throwOnError: true,
+    onSuccess: () => {
+      queryCache.invalidateQueries('buckets');
+    },
+  });
+}
+
+/**
+ *  Creates a new offer bucket or updates existing
+ */
+export function useDeleteBucket() {
+  return useMutation(
+    id => {
+      return api.deleteOfferBucket(id);
+    },
+    {
+      onSuccess: () => {
+        queryCache.invalidateQueries('buckets');
+        store.dispatch(addNotification('Bucket deleted', 'info'));
+      },
+      onError: err => {
+        if (err.response.status === 404) {
+          store.dispatch(addNotification(`A bucket with that ID does not exist`, 'error'));
+        } else {
+          store.dispatch(addNotification(`An Error occured: ${err.message} `, 'error'));
+        }
+      },
     }
   );
 }

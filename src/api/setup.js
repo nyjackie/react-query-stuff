@@ -1,11 +1,11 @@
-// gdd-components
-import { api } from 'gdd-components';
-import mock from 'gdd-components/dist/api/mock';
-import tokenStore from 'gdd-components/dist/api/tokenStore';
+import api from 'gdd-api-lib';
+import tokenStore from 'gdd-api-lib/dist/tokenStore';
+import mock from 'gdd-api-lib/dist/mocks/index';
+// import { PRIVATE_ROUTES } from 'gdd-api-lib/dist/routes';
 
 // local modules
 import store from '../store';
-import { LOGOUT, CLEAR_STATE, LOGIN_SUCCESS, ERROR } from '../actions/types';
+import { LOGOUT, CLEAR_STATE, LOGIN_SUCCESS } from '../actions/types';
 import errorHandler from 'utils/errorHandler';
 import userService from 'services/user';
 
@@ -13,8 +13,7 @@ import userService from 'services/user';
 tokenStore.openDB('gdd-admin-db');
 
 // TODO: remove this mock once API is completed
-// setting the refresh tokens only last 60 minutes
-api.provideMock(mock, 60, false);
+api.provideMock(mock);
 
 /**
  * Set up the response inteceptor which will automatically handle logging out
@@ -32,14 +31,6 @@ api.setupResponseInterceptor(
   },
   function onError(err) {
     errorHandler(err);
-    // this redicts to an error page
-    store.dispatch({
-      type: ERROR,
-      payload: {
-        error: err,
-        errorType: 'API',
-      },
-    });
   }
 );
 

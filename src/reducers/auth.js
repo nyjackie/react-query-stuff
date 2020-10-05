@@ -21,7 +21,7 @@ export default function (state = initialState, action) {
     case AUTO_LOGIN_SUCCESS:
       return {
         ...state,
-        isAuthenticated: isObj(payload.user),
+        isAuthenticated: payload.user !== null && isObj(payload.user),
         user: payload.user,
         token: payload.jwt,
         isLoading: false,

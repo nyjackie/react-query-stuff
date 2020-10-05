@@ -1,3 +1,5 @@
+@import '../../styles/mixins';
+
 .jumbotron {
   max-width: 1500px;
 }
@@ -28,4 +30,64 @@
 
 .ban {
   float: right;
+}
+
+.userEdit {
+  label {
+    font-weight: bold;
+  }
+}
+
+.userSearchResult {
+  list-style-type: none;
+  padding: 0;
+
+  li {
+    margin-bottom: 30px;
+    border-bottom: 1px solid var(--primary);
+    padding-bottom: 20px;
+    display: grid;
+    grid-template-columns: 100px minmax(0, 1fr);
+    overflow: hidden;
+
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+
+  p {
+    margin: 0.3rem;
+    word-wrap: break-word;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+}
+
+.label {
+  display: inline-block;
+  padding: 1px 6px;
+  background-color: var(--primary);
+  color: var(--white);
+  border-radius: 5px;
+
+  &.consumer {
+    background-color: var(--primary);
+    // color: var(--white);
+  }
+  &.nonprofit {
+    background-color: var(--secondary);
+    // color: var(-);
+  }
+
+  &.internal {
+    background-color: var(--danger);
+    // color: var(--white);
+  }
+
+  &.brand {
+    background-color: var(--purple);
+    // color: var(--white);
+  }
 }

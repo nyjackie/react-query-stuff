@@ -1,14 +1,14 @@
 # test pipeline
 steps:
-  - name: node:10.15.1
+  - name: node:14
     entrypoint: yarn
-    args: ["remove", "gdd-components"]
-  - name: node:10.15.1
+    args: ["remove", "gdd-components", "gdd-api-lib"]
+  - name: node:14
     entrypoint: yarn
     args: ["add", "firebase-tools"]
-  - name: node:10.15.1
+  - name: node:14
     entrypoint: bash
     args: ["./build.sh", "$_GITHUB_ACCESS_TOKEN", "$_ENV"]
-  - name: "node:10.15.1"
+  - name: node:14
     entrypoint: "./node_modules/.bin/firebase"
     args: ["deploy", "--project", "$PROJECT_ID", "--token", "$_TOKEN"]

@@ -1,5 +1,9 @@
-import React, { Fragment } from 'react';
-import { Row, Col, Table } from 'react-bootstrap';
+import React from 'react';
+import { Helmet } from 'react-helmet';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Table from 'react-bootstrap/Table';
+import Container from 'react-bootstrap/Container';
 import PageHeader from 'components/PageHeader';
 import { useBanned } from 'hooks/useBanned';
 import Spinner from 'components/Spinner';
@@ -28,8 +32,11 @@ function Banlist() {
   }
 
   return (
-    <Fragment>
-      <PageHeader pageTitle="Banlist" />
+    <Container className="block shadow-sm">
+      <Helmet>
+        <title>Banned Nonprofits | Admin Portal | Give Good Deeds</title>
+      </Helmet>
+      <PageHeader pageTitle="Banned Nonprofits" />
       <Row>
         <Col>
           <Table striped bordered hover>
@@ -49,7 +56,7 @@ function Banlist() {
           </Table>
         </Col>
       </Row>
-    </Fragment>
+    </Container>
   );
 }
 

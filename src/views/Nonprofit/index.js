@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import { Row, Col } from 'react-bootstrap';
 import { useParams, Link } from 'react-router-dom';
@@ -10,13 +11,11 @@ import Spinner from 'components/Spinner';
 
 /**
  * Nonprofit profile
- * If a `selected` item lives in redux state it will use that to populate the
- * date, if not it will search our api using the ein in the url parameter
  */
 const Nonprofit = ({ addNotification }) => {
-  const { ein } = useParams();
+  const { id } = useParams();
 
-  const { isLoading, isError, data: selected, error } = useNonprofit(ein);
+  const { isLoading, isError, data: selected, error } = useNonprofit(id);
 
   if (isLoading) {
     return <Spinner />;
@@ -28,7 +27,7 @@ const Nonprofit = ({ addNotification }) => {
         <PageHeader pageTitle="Nonprofit Profile" />
         <Row>
           <Col>
-            <p>A profile for {ein} could not be found.</p>
+            <p>A profile for {id} could not be found.</p>
             <p>{error.message}</p>
             <p>
               <Link to="/nonprofit">Try searching again</Link>
@@ -40,7 +39,14 @@ const Nonprofit = ({ addNotification }) => {
   }
 
   if (selected) {
-    return <Profile onSave={data => console.log('perform save', data)} data={selected} />;
+    return (
+      <>
+        <Helmet>
+          <title>Nonprofit: {selected.name} | Give Good Deeds | Admin Portal</title>
+        </Helmet>
+        <Profile data={selected} />
+      </>
+    );
   }
 
   return (

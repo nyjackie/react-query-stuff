@@ -1,4 +1,5 @@
 import React, { Fragment, useState } from 'react';
+import { Helmet } from 'react-helmet';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Moment from 'react-moment';
@@ -8,16 +9,13 @@ import styles from './Claim.module.scss';
 import { connect } from 'react-redux';
 import { addNotification } from 'actions/notifications';
 import { cn } from 'gdd-components/dist/utils';
-import {
-  Modal,
-  Button,
-  InputGroup,
-  FormControl,
-  Col,
-  Row,
-  Container,
-  Jumbotron,
-} from 'react-bootstrap';
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
+import InputGroup from 'react-bootstrap/InputGroup';
+import FormControl from 'react-bootstrap/FormControl';
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
+import Container from 'react-bootstrap/Container';
 
 const ConfirmationModal = ({ show, choice, onClose, onApprove, onDeny }) => {
   const [msg, setMsg] = useState({
@@ -99,8 +97,11 @@ const ClaimInfo = ({ addNotification, match }) => {
 
   return (
     <Fragment>
-      <Container>
-        <Row className={cn('mb-4', styles.statusRow)}>
+      <Helmet>
+        <title>Claim: {claim.nonprofit.name} | Admin Portal | Give Good Deeds</title>
+      </Helmet>
+      <Container className="block shadow-sm">
+        <Row>
           <Col>
             <h3>
               Status:{' '}
@@ -115,104 +116,98 @@ const ClaimInfo = ({ addNotification, match }) => {
           </Col>
         </Row>
       </Container>
-      <Jumbotron>
-        <Container>
-          <Row>
-            <Col>
-              <h2>Claim</h2>
-            </Col>
-          </Row>
 
-          <Row className="mb-4">
-            <Col>
-              <p>
-                <Moment format="MM/DD/YYYY h:MM a">{claim.created_at}</Moment>
-              </p>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <h3>Contact info</h3>
-              <p>
-                <b>name: </b> {claim.first_name} {claim.last_name}
-              </p>
-              <p>
-                <b>Email: </b> <a href={`mailto:${claim.email}`}>{claim.email}</a>
-              </p>
-              <p>
-                <b>Phone: </b> <a href={`tel:${claim.phone}`}>{claim.phone}</a>
-              </p>
-            </Col>
-            <Col>
-              <h3>Nonprofit info</h3>
-              <p>
-                <b>Name:&nbsp;</b>
-                {claim.nonprofit.name}
-              </p>
-              <p>
-                <b>EIN:&nbsp;</b>
-                {claim.nonprofit.ein}
-              </p>
-              <p>
-                GDD profile: <Link to={`/nonprofit/${claim.nonprofit.ein}`}>link</Link>
-              </p>
-              <p>
-                <b>GuideStar profile:&nbsp;</b>
-                <a
-                  href={`https://www.guidestar.org/profile/${claim.nonprofit.ein}`}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  link
-                </a>
-              </p>
-              <p>
-                <b>Address: </b>
-              </p>
-              <p>
-                {claim.nonprofit.address.address_line_1}
-                <br />
-                {claim.nonprofit.address.address_line_2}
-                <br />
-                {claim.nonprofit.address.city}, {claim.nonprofit.address.state},{' '}
-                {claim.nonprofit.address.zip}
-              </p>
-            </Col>
-          </Row>
+      <Container className="block shadow-sm">
+        <Row>
+          <Col>
+            <h2>Claim</h2>
+          </Col>
+        </Row>
 
-          <Row>
-            <Col>
-              <p>
-                <b>Nonprofit Mission Statement: </b>
-              </p>
-              <p>{claim.nonprofit.mission}</p>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <p>
-                <b>Nonprofit Description: </b>
-              </p>
-              <p>{claim.nonprofit.description}</p>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <p>Cummulated donation amount: $13200</p>
-            </Col>
-          </Row>
-          {(!claim.status || claim.status === 'waiting') && (
-            <div>
-              <Button className="mr-1" onClick={() => openModal('approve')} variant="success">
-                Approve
-              </Button>
-              <Button onClick={() => openModal('deny')} variant="danger">
-                Deny
-              </Button>
-            </div>
-          )}
-        </Container>
-      </Jumbotron>
+        <Row className="mb-4">
+          <Col>
+            <p>
+              <Moment format="MM/DD/YYYY h:MM a">{claim.created_at}</Moment>
+            </p>
+          </Col>
+        </Row>
+
+        <Row>
+          <Col>
+            <h3>Contact info</h3>
+            <p>
+              <b>name: </b> {claim.first_name} {claim.last_name}
+            </p>
+            <p>
+              <b>Email: </b> <a href={`mailto:${claim.email}`}>{claim.email}</a>
+            </p>
+            <p>
+              <b>Phone: </b> <a href={`tel:${claim.phone}`}>{claim.phone}</a>
+            </p>
+          </Col>
+          <Col>
+            <h3>Nonprofit info</h3>
+            <p>
+              <b>Name:&nbsp;</b>
+              {claim.nonprofit.name}
+            </p>
+            <p>
+              <b>EIN:&nbsp;</b>
+              {claim.nonprofit.ein}
+            </p>
+            <p>
+              GDD profile: <Link to={`/nonprofit/${claim.nonprofit.ein}`}>link</Link>
+            </p>
+            <p>
+              <b>GuideStar profile:&nbsp;</b>
+              <a
+                href={`https://www.guidestar.org/profile/${claim.nonprofit.ein}`}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                link
+              </a>
+            </p>
+            <p>
+              <b>Location: </b>
+            </p>
+            <p>{claim.nonprofit.location}</p>
+          </Col>
+        </Row>
+
+        <Row>
+          <Col>
+            <p>
+              <b>Nonprofit Mission Statement: </b>
+            </p>
+            <p>{claim.nonprofit.mission}</p>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <p>
+              <b>Nonprofit Description: </b>
+            </p>
+            <p>{claim.nonprofit.description}</p>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <p>Cummulated donation amount: $13200</p>
+          </Col>
+        </Row>
+        {(!claim.status || claim.status === 'waiting') && (
+          <div>
+            <Button className="mr-1" onClick={() => openModal('approve')} variant="success">
+              Approve
+            </Button>
+            <Button onClick={() => openModal('deny')} variant="danger">
+              Deny
+            </Button>
+          </div>
+        )}
+      </Container>
+
       <ConfirmationModal
         show={show}
         choice={choice}

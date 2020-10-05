@@ -1,5 +1,9 @@
 @import '../../styles/mixins.scss';
 
+/**************************************************
+ * Grooming Queue
+ */
+
 .table {
   &Date {
     width: 20%;
@@ -15,6 +19,10 @@
   }
 }
 
+/**************************************************
+ *  brands/:id  - viewing single brand
+ */
+
 .select {
   text-transform: capitalize;
   &:disabled {
@@ -22,33 +30,75 @@
   }
 }
 
-.uploadBlock {
-  @include from-bp('lg') {
-    display: flex;
-    flex-direction: row;
+.offerRow {
+  padding: 5px 0;
+  border-top: 1px solid gray;
+  &:first-child {
+    border-top: none;
   }
-  margin-bottom: 1.5em;
-}
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
 
-.uploadImg {
-  width: 128px;
-  margin-right: 24px;
-  @include to-bp('lg') {
-    margin-bottom: 1em;
+  p {
+    margin: 0;
+
+    span {
+      display: inline-block;
+      margin-left: 10px;
+      margin-left: 1ch;
+    }
   }
 }
 
-.uploadImgCover {
-  width: 256px;
-}
-
-.uploadContent {
+.previewWrap {
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  flex: 1;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 40px;
+  background-color: rgb(200, 200, 200);
+  padding: 30px;
+}
 
-  button {
-    align-self: flex-start;
+/**************************************************
+ * Brand search
+ */
+.results {
+  list-style-type: none;
+  padding: 0;
+}
+
+.resultItem {
+  margin-right: 30px;
+  margin-bottom: 30px;
+  display: inline-block;
+  max-width: 200px;
+
+  a {
+    display: block;
+  }
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+  }
+
+  p {
+    word-wrap: break-word;
+  }
+}
+
+.logoBlock {
+  margin-bottom: 20px;
+  :global(.imgBlock-img) {
+    max-width: 200px;
+  }
+}
+
+.heroBlock {
+  :global(.imgBlock-img) {
+    max-width: 375px;
   }
 }

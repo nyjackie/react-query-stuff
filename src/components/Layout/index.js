@@ -11,7 +11,7 @@ import Notification from 'components/Notification';
 import { useLocation } from 'react-router-dom';
 import { cn } from 'gdd-components/dist/utils';
 
-const noNav = ['/login'];
+const noNav = ['/login', '/forgot-password'];
 
 const Layout = ({ children, drawerOpen, toggleDrawer }) => {
   const location = useLocation();
@@ -23,7 +23,7 @@ const Layout = ({ children, drawerOpen, toggleDrawer }) => {
         <Container fluid className="d-flex flex-column h-100">
           <Row className="h-100 position-relative">
             <Col>
-              <main className="flex-fill container-fluid">{children}</main>
+              <main className="flex-fill container-fluid h-100">{children}</main>
             </Col>
           </Row>
         </Container>
@@ -43,20 +43,17 @@ const Layout = ({ children, drawerOpen, toggleDrawer }) => {
   return (
     <Fragment>
       <Notification />
-      <Container fluid className="d-flex flex-column h-100">
+      <Container fluid className="d-flex flex-column h-100 p-0">
         <h1 className="sr-only">Good Deeds Data admin portal</h1>
-        <Row className="h-100 position-relative">
+        <Row className="h-100 position-relative no-gutters">
           <Col id="drawer" className={drawerCSS}>
             <SideNav />
           </Col>
           <Col className={contentCSS}>
-            <Navbar bg="light" expand="lg" className="p-0 pt-2">
+            <Navbar bg="light" expand="lg" className="p-0">
               <Navbar.Toggle aria-controls="drawer" onClick={toggleDrawer} />
             </Navbar>
-            <main className="flex-fill container-fluid">{children}</main>
-            <footer>
-              <p>&copy; Good Deeds Data</p>
-            </footer>
+            <main className="flex-fill container-fluid h-100">{children}</main>
           </Col>
         </Row>
       </Container>

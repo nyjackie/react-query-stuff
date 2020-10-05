@@ -1,9 +1,9 @@
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import Container from 'react-bootstrap/Container';
 import Table from 'react-bootstrap/Table';
 import Alert from 'react-bootstrap/Alert';
-import PageHeader from 'components/PageHeader';
-import Claim from './Claim';
+import ClaimRow from './ClaimRow';
 import { useClaims } from 'hooks/useClaims';
 import Spinner from 'components/Spinner';
 
@@ -23,7 +23,7 @@ function UpdatedTable({ claims }) {
       </thead>
       <tbody>
         {claims.map(claim => (
-          <Claim key={claim.id} claim={claim} note={claim.note || '[none provided]'} />
+          <ClaimRow key={claim.id} claim={claim} note={claim.note || '[none provided]'} />
         ))}
       </tbody>
     </Table>
@@ -42,10 +42,12 @@ function ClaimsPage() {
   const waiting = claims.filter(c => c.status === 'waiting');
 
   return (
-    <Container>
-      <PageHeader pageTitle="Claims Page" />
+    <Container className="block shadow-sm">
+      <Helmet>
+        <title>Claim Queue | Admin Portal | Give Good Deeds</title>
+      </Helmet>
       {isError && <Alert variant={'danger'}>{error.message}</Alert>}
-      <h2>Waiting for approval</h2>
+      <h2>Claims waiting for approval</h2>
       <Table striped bordered hover responsive>
         <thead>
           <tr>
@@ -59,19 +61,19 @@ function ClaimsPage() {
         </thead>
         <tbody>
           {waiting.map(claim => (
-            <Claim key={claim.id} claim={claim} />
+            <ClaimRow key={claim.id} claim={claim} />
           ))}
         </tbody>
       </Table>
       {appoved.length > 0 && (
         <>
-          <h2>Approved</h2>
+          <h2>Approved Claims</h2>
           <UpdatedTable claims={appoved} />
         </>
       )}
       {denied.length > 0 && (
         <>
-          <h2>Denied</h2>
+          <h2>Denied Claims</h2>
           <UpdatedTable claims={denied} />
         </>
       )}

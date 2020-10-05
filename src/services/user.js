@@ -1,7 +1,7 @@
 import jwt_decode from 'jwt-decode';
-import { api } from 'gdd-components';
+import api from 'gdd-api-lib';
 import errorHandler from 'utils/errorHandler';
-import tokenStore from 'gdd-components/dist/api/tokenStore';
+import tokenStore from 'gdd-api-lib/dist/tokenStore';
 import { willExpire } from 'utils';
 
 /**
@@ -40,7 +40,10 @@ async function updateLocalStore(jwt, refresh_token) {
  */
 export async function login(email, password) {
   try {
-    const res = await api.auth.login('internal', email, password);
+    const headers = {
+      Authorization: 'Basic ' + window.btoa(email + ':' + password),
+    };
+    const res = await api.internalUserLogin(headers);
 
     api.setAuthHeader(res.data.jwt);
 
@@ -57,14 +60,14 @@ export async function login(email, password) {
  */
 export async function logout() {
   const tokensData = await tokenStore.get();
-  api.auth.logout(tokensData?.refresh_token);
+  api.logout({ refresh_token: tokensData?.refresh_token });
   tokenStore.remove();
   api.removeAuthHeader();
 }
 
-export async function resetPassword(email) {
+export async function forgotPassword(email) {
   try {
-    const res = await api.account.resetPassword(email);
+    const res = await api.forgotPasswordInternal({ email: window.btoa(email) });
     return [null, res.data];
   } catch (err) {
     return [err, null];
@@ -119,6 +122,6 @@ export default {
   login,
   logout,
   loadUser,
-  resetPassword,
+  forgotPassword: forgotPassword,
   updateLocalStore,
 };

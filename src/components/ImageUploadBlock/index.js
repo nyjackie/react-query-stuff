@@ -16,10 +16,12 @@ function ImageUploadBlock({
   reco,
   title,
   className,
+  src,
   ...props
 }) {
   const [validationError, setValidationError] = useState(null);
-  const [src, setSrc] = useState(null);
+  const [localSrc, setSrc] = useState(src);
+  const [hasSelected, setHasSelected] = useState(false);
 
   const dropRef = useRef(null);
   const openDrop = () => {
@@ -31,13 +33,14 @@ function ImageUploadBlock({
   function saveCover() {
     onSave({
       id: update_id,
-      bytestring: src.replace('data:image/png;base64,', ''),
+      bytestring: localSrc.replace('data:image/png;base64,', ''),
     })
       .then(() => {
-        setSrc(null);
+        // setSrc(src);
+        setHasSelected(false);
       })
       .catch(err => {
-        setSrc(null);
+        setSrc(src);
       });
   }
 
@@ -54,12 +57,14 @@ function ImageUploadBlock({
         <div className="imgBlock-img">
           <ImageUpload
             {...props}
+            src={localSrc}
             ref={dropRef}
             disabled={isLoading}
             onImageSelected={file => {
               setValidationError(null);
               setSrc(file.preview);
               onImageSelected(file);
+              setHasSelected(true);
             }}
             onError={err => {
               setValidationError(err.message);
@@ -74,7 +79,7 @@ function ImageUploadBlock({
               <Button variant="primary" className="mr-4" onClick={openDrop}>
                 Select image
               </Button>
-              {src && (
+              {hasSelected && (
                 <Button variant="success" onClick={saveCover}>
                   save
                 </Button>

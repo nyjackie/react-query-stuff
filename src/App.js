@@ -33,7 +33,7 @@ import PrivateRoute from 'components/PrivateRoute';
 import store from 'store';
 import { autoLogin } from 'actions/auth';
 import BrandInfo from 'views/Brands/BrandInfo';
-import Buckets from 'views/Brands/buckets/Buckets';
+import Buckets from 'views/Brands/buckets';
 
 const queryConfig = {
   queries: {

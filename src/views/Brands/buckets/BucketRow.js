@@ -15,7 +15,7 @@ const schema = yupObject({
   bucket_sort_order: yupNumber().typeError('Please enter sort order.'),
 });
 
-const BucketRow = ({ bucket, addNotification }) => {
+const BucketRow = ({ bucket, addNotification, setShow }) => {
   const { id, created_at, modified_at } = bucket;
   const { data: categories = [] } = useCategories();
   const [updateBucket] = useUpdateBucket();
@@ -31,10 +31,15 @@ const BucketRow = ({ bucket, addNotification }) => {
         values.affiliate_offers = null;
         values.brand_category_id = +values.brand_category_id;
       }
-      values.active = values.active === 'true' ? true : false;
+      if (values.active === true || values.active === 'true') {
+        values.active = true;
+      } else {
+        values.active = false;
+      }
       updateBucket({ form: values })
         .then(() => {
           addNotification(`Bucket update success`, 'success');
+          setShow(false);
         })
         .catch(err => {
           addNotification(`Bucket update failed. ${err?.response?.data?.message}`, 'error');

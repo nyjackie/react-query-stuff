@@ -87,7 +87,7 @@ export function useCategories() {
 
 export function useBuckets() {
   return useQuery('buckets', () => {
-    return api.getInternalOfferBuckets().then(res => res.data);
+    return api.getInternalOfferBuckets({ include_inactive: true }).then(res => res.data);
   });
 }
 

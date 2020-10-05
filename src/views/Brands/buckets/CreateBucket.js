@@ -32,7 +32,7 @@ const CreateBucket = () => {
           <Modal.Title>Create new bucket</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <BucketRow bucket={bucket} />
+          <BucketRow bucket={bucket} setShow={setShow} />
         </Modal.Body>
       </Modal>
     </Fragment>

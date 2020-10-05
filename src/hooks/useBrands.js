@@ -91,12 +91,6 @@ export function useBuckets() {
   });
 }
 
-export function useBucket(id) {
-  return useQuery(['bucket', id], () => {
-    return api.getOffersByBucketId(id).then(res => res.data);
-  });
-}
-
 /**
  *  Creates a new offer bucket or updates existing
  */

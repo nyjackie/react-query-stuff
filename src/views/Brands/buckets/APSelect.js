@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Button, Accordion, Spinner } from 'react-bootstrap';
+import { Spinner } from 'react-bootstrap';
 import AsyncSelect from 'react-select/async';
 import api from 'gdd-api-lib';
+import styles from './Buckets.module.scss';
 
 const loadOptions = async inputValue => {
   try {
@@ -57,25 +58,21 @@ const APSelect = ({ offers, getFromSelect }) => {
   );
 
   return (
-    <Accordion>
-      <div className="d-flex">
-        <Accordion.Toggle as={Button} variant="success" eventKey="0">
-          Edit Offers +
-        </Accordion.Toggle>
-        {loading && <Spinner className="ml-2" animation="border" />}
-      </div>
-
-      <Accordion.Collapse eventKey="0" className="mt-2 mb-2">
-        <AsyncSelect
-          cacheOptions
-          value={defaultOffers}
-          isMulti
-          isSearchable={true}
-          onChange={onChange}
-          loadOptions={loadOptions}
-        />
-      </Accordion.Collapse>
-    </Accordion>
+    <div className=" position-relative">
+      {loading && (
+        <div className={styles.spinner}>
+          <Spinner className="ml-2" animation="border" />
+        </div>
+      )}
+      <AsyncSelect
+        cacheOptions
+        value={defaultOffers}
+        isMulti
+        isSearchable={true}
+        onChange={onChange}
+        loadOptions={loadOptions}
+      />
+    </div>
   );
 };
 

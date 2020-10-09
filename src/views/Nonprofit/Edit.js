@@ -1,5 +1,7 @@
 // external libs
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { useFormik } from 'formik';
 import { object as yupObject, string as yupString } from 'yup';
 
@@ -13,6 +15,7 @@ import { USStateSelect, MultiSelect, ProfilePreview } from 'gdd-components';
 import { cn } from 'gdd-components/dist/utils';
 import 'gdd-components/dist/styles/shared.scss';
 
+import { addNotification } from 'actions/notifications';
 import Spinner from 'components/Spinner';
 import ImageUploadBlock from 'components/ImageUploadBlock';
 import { max255, url, zipcode } from 'utils/schema';
@@ -34,11 +37,9 @@ const schema = yupObject({
   website_url: url,
   address_line_1: max255,
   address_line_2: max255,
-  city: max255.required('This field is required'),
-  state: yupString().required('This field is required'),
+  city: max255,
   zip: zipcode,
   mission: yupString().max(8000, 'max 8000 characters'),
-  // categories: yupArray().ensure().min(1, 'Please select at least one category'),
 });
 
 /**
@@ -46,7 +47,7 @@ const schema = yupObject({
  * @param {object} param0
  * @param {InternalNonProfit} param0.data
  */
-function Profile({ data }) {
+function Profile({ data, addNotification }) {
   const { data: options } = useNpCategories();
   const [updateLogo, { isLoading: logoLoading }] = useUpdateNPOLogo();
   const [updateHero, { isLoading: heroLoading }] = useUpdateNPOHero();
@@ -70,31 +71,41 @@ function Profile({ data }) {
       is_active: data.is_active,
       is_folded: data.is_folded,
     },
-    onSubmit: values => {
-      const body = {
-        name: values.name,
-        categories: values.categories.map(c => {
-          return { category_id: c.id };
-        }),
-        website_url: values.website_url,
-        mission: values.mission,
-        address: {
-          address_line_1: values.address_line_1,
-          address_line_2: values.address_line_2,
-          city: values.city,
-          state: values.state,
-          zip: values.zip,
-        },
-        is_banned: stringToBool(values.is_banned),
-        is_active: stringToBool(values.is_active),
-        is_folded: stringToBool(values.is_folded),
-      };
-      udateProfile({ id: data.id, body });
+    onSubmit: async values => {
+      try {
+        const body = {
+          name: values.name,
+          website_url: values.website_url,
+          mission: values.mission,
+          address: {
+            address_line_1: values.address_line_1,
+            address_line_2: values.address_line_2,
+            city: values.city,
+            state: values.state,
+            zip: values.zip,
+          },
+          is_banned: stringToBool(values.is_banned),
+          is_active: stringToBool(values.is_active),
+          is_folded: stringToBool(values.is_folded),
+        };
+
+        if (!values.categories) {
+          body.categories = [];
+        } else {
+          body.categories = values.categories.map(c => {
+            return { category_id: c.id };
+          });
+        }
+        await udateProfile({ id: data.id, body });
+        addNotification('Profile updated!', 'success');
+      } catch (err) {
+        addNotification(`Update failed: ${err.message}: ${err.response?.data?.message}`, 'error');
+      }
     },
   });
 
   return (
-    <Container className="block shadow-sm">
+    <Container className={cn('block shadow-sm', styles.profileEdit)}>
       <Row>
         <Col>
           {profileLoading && (
@@ -120,65 +131,81 @@ function Profile({ data }) {
               <section>
                 <Row>
                   <Col xl>
-                    <ImageUploadBlock
-                      className={styles.imgLogoBlock}
-                      update_id={data.id}
-                      uploadText="Upload new logo"
-                      width={100}
-                      height={100}
-                      src={data.logo_url}
-                      alt="logo"
-                      name="file_logo"
-                      sqaure
-                      minWidth={300}
-                      minHeight={300}
-                      title="Organization Logo"
-                      reco="Image should be at least 300*300 px"
-                      isLoading={logoLoading}
-                      onSave={data => {
-                        return updateLogo(data);
-                      }}
-                      onImageSelected={file => {
-                        setLogoSrc(file.preview);
-                      }}
-                      onError={() => {
-                        setLogoSrc(data.logo_url);
-                      }}
-                    />
-                  </Col>
-                  <Col xl>
-                    <ImageUploadBlock
-                      className={styles.imgHeroBlock}
-                      uploadText="Upload new cover image"
-                      width={375}
-                      height={240}
-                      src={data.hero_url}
-                      alt="cover photo"
-                      name="file_hero"
-                      minWidth={375}
-                      minHeight={240}
-                      update_id={data.id}
-                      title="Cover Photo"
-                      reco="Image should be at least 375*240 px"
-                      isLoading={heroLoading}
-                      onSave={data => {
-                        return updateHero(data);
-                      }}
-                      onImageSelected={file => {
-                        setHeroSrc(file.preview);
-                      }}
-                      onError={() => {
-                        setHeroSrc(data.hero_url);
-                      }}
-                    />
-                  </Col>
-                </Row>
-              </section>
-              <section>
-                <Row>
-                  <Col xl>
-                    <Form.Group controlId="organization_name">
-                      <Form.Label>Organization Name</Form.Label>
+                    <Row className="mt-4 pb-4">
+                      <Col xl>
+                        <ImageUploadBlock
+                          className={styles.imgLogoBlock}
+                          update_id={data.id}
+                          uploadText="Drag and drop or click to upload"
+                          width={100}
+                          height={100}
+                          src={data.logo_url}
+                          alt="logo"
+                          name="file_logo"
+                          sqaure
+                          minWidth={300}
+                          minHeight={300}
+                          title="Organization Logo"
+                          reco="Image should be at least 300*300 px"
+                          isLoading={logoLoading}
+                          onSave={async data => {
+                            try {
+                              const resData = await updateLogo(data);
+                              addNotification('Logo image uploaded.', 'success');
+                              return resData;
+                            } catch (err) {
+                              addNotification(
+                                `Logo upload failed: ${err.message}: ${err.response?.data?.message}`,
+                                'error'
+                              );
+                            }
+                          }}
+                          onImageSelected={file => {
+                            setLogoSrc(file.preview);
+                          }}
+                          onError={() => {
+                            setLogoSrc(data.logo_url);
+                          }}
+                        />
+                      </Col>
+                      <Col xl>
+                        <ImageUploadBlock
+                          className={styles.imgHeroBlock}
+                          uploadText="Drag and drop or click to upload"
+                          width={375}
+                          height={240}
+                          src={data.hero_url}
+                          alt="cover photo"
+                          name="file_hero"
+                          minWidth={375}
+                          minHeight={240}
+                          update_id={data.id}
+                          title="Cover Photo"
+                          reco="Image should be at least 375*240 px"
+                          isLoading={heroLoading}
+                          onSave={async data => {
+                            try {
+                              const resData = await updateHero(data);
+                              addNotification('Cover image uploaded.', 'success');
+                              return resData;
+                            } catch (err) {
+                              addNotification(
+                                `Cover upload failed: ${err.message}: ${err.response?.data?.message}`,
+                                'error'
+                              );
+                            }
+                          }}
+                          onImageSelected={file => {
+                            setHeroSrc(file.preview);
+                          }}
+                          onError={() => {
+                            setHeroSrc(data.hero_url);
+                          }}
+                        />
+                      </Col>
+                    </Row>
+                    <Form.Group className="mt-4" controlId="organization_name">
+                      <Form.Label>Name (required)</Form.Label>
                       <Form.Control
                         name="name"
                         type="text"
@@ -186,7 +213,6 @@ function Profile({ data }) {
                         required
                         onChange={formik.handleChange}
                         value={formik.values.name}
-                        isValid={formik.touched.name && !formik.errors.name}
                         isInvalid={formik.touched.name && formik.errors.name}
                       />
                       <Form.Control.Feedback type="invalid">
@@ -224,7 +250,6 @@ function Profile({ data }) {
                         required
                         onChange={formik.handleChange}
                         value={formik.values.address_line_1}
-                        isValid={formik.touched.address_line_1 && !formik.errors.address_line_1}
                         isInvalid={formik.touched.address_line_1 && formik.errors.address_line_1}
                       />
                       <Form.Control.Feedback type="invalid">
@@ -241,7 +266,6 @@ function Profile({ data }) {
                         required
                         onChange={formik.handleChange}
                         value={formik.values.address_line_2}
-                        isValid={formik.touched.address_line_2 && !formik.errors.address_line_2}
                         isInvalid={formik.touched.address_line_2 && formik.errors.address_line_2}
                       />
                       <Form.Control.Feedback type="invalid">
@@ -260,7 +284,6 @@ function Profile({ data }) {
                             required
                             onChange={formik.handleChange}
                             value={formik.values.city}
-                            isValid={formik.touched.city && !formik.errors.city}
                             isInvalid={formik.touched.city && formik.errors.city}
                           />
                           <Form.Control.Feedback type="invalid">
@@ -278,7 +301,6 @@ function Profile({ data }) {
                             required
                             onChange={formik.handleChange}
                             value={formik.values.state}
-                            isValid={formik.touched.state && !formik.errors.state}
                             isInvalid={formik.touched.state && formik.errors.state}
                           />
                           <Form.Control.Feedback type="invalid">
@@ -296,7 +318,6 @@ function Profile({ data }) {
                             required
                             onChange={formik.handleChange}
                             value={formik.values.zip}
-                            isValid={formik.touched.zip && !formik.errors.zip}
                             isInvalid={formik.touched.zip && formik.errors.zip}
                           />
                           <Form.Control.Feedback type="invalid">
@@ -314,7 +335,6 @@ function Profile({ data }) {
                         maxLength="255"
                         onChange={formik.handleChange}
                         value={formik.values.website_url}
-                        isValid={formik.touched.website_url && !formik.errors.website_url}
                         isInvalid={formik.touched.website_url && formik.errors.website_url}
                       />
                       <Form.Control.Feedback type="invalid">
@@ -464,4 +484,8 @@ function Profile({ data }) {
   );
 }
 
-export default Profile;
+Profile.propTypes = {
+  addNotification: PropTypes.func.isRequired,
+};
+
+export default connect(null, { addNotification })(Profile);

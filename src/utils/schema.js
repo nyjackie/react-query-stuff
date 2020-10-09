@@ -106,4 +106,6 @@ let rUrl = /^((https?|ftp):)?(\/\/)?(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\
 /**
  * Custom URL because yup's URL requires the protocol
  */
-export const url = max255.matches(rUrl, 'Invalid URL');
+export const url = string()
+  .max(255, 'Max 255 characters allowed for this field')
+  .matches(rUrl, 'Invalid URL');

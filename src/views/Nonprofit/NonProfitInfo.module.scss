@@ -1,5 +1,11 @@
 @import '../../styles/mixins.scss';
 
+.profileEdit {
+  label {
+    font-weight: bold;
+  }
+}
+
 .header {
   @include from-bp('lg') {
     margin-top: 1em;

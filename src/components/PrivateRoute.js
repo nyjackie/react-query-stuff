@@ -20,20 +20,16 @@ function PrivateRoute({
     <Route
       {...rest}
       render={props => {
-        if (props.location.pathname !== '/error' && error.error && !error.seen) {
-          // redirect to the error page only once per error
-          return <Redirect to="/error" />;
-        }
-
-        if (isAuthenticated) {
+        if (isLoading) {
+          return <Spinner />;
+        } else if (isAuthenticated) {
           return (
             <Layout>
               <Component {...props} />
             </Layout>
           );
-        } else if (isLoading) {
-          return <Spinner />;
         } else {
+          // else always go to login
           return (
             <Redirect
               to={{

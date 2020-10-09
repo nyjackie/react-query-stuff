@@ -9,7 +9,7 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Form from 'react-bootstrap/Form';
 import Container from 'react-bootstrap/Container';
-import { Button } from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
 
 import { USStateSelect, MultiSelect, ProfilePreview } from 'gdd-components';
 import { cn } from 'gdd-components/dist/utils';
@@ -88,6 +88,10 @@ function Profile({ data, addNotification }) {
           is_active: stringToBool(values.is_active),
           is_folded: stringToBool(values.is_folded),
         };
+
+        if (!/^(https?)?:\/\//i.test(values.website_url)) {
+          body.website_url = 'http://' + values.website_url;
+        }
 
         if (!values.categories) {
           body.categories = [];

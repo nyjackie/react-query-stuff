@@ -1,6 +1,15 @@
 // third party
-import React, { Fragment, useState } from 'react';
-import { Col, Row, Container, Form, Button, FormControl, Accordion } from 'react-bootstrap';
+import React, { Fragment, useEffect, useState } from 'react';
+import {
+  Col,
+  Row,
+  Container,
+  Form,
+  Button,
+  FormControl,
+  Accordion,
+  Spinner as Loader,
+} from 'react-bootstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import moment from 'moment';
@@ -15,7 +24,7 @@ import {
 
 // internal
 import { addNotification } from 'actions/notifications';
-import { useBrand, useCategories, useOffers, useUpdateBrand } from 'hooks/useBrands';
+import { useBrand, useCategories, useOffers, useUpdateBrand, useCESubID } from 'hooks/useBrands';
 import Spinner from 'components/Spinner';
 import OfferRow from './BrandOfferRow';
 import OfferEditModal from './OfferEditModal';
@@ -234,7 +243,35 @@ function BrandInfo({ addNotification, match }) {
   );
 }
 
-const BrandForm = ({ categories, values, errors, handleChange, edit, handleSubmit }) => {
+const BrandForm = ({
+  categories,
+  values,
+  errors,
+  handleChange,
+  edit,
+  handleSubmit,
+  setFieldValue,
+  setErrors,
+}) => {
+  const [error, setError] = useState(false);
+  const [ceSub, setCeSub] = useState(values.ce_subindustry_id || '');
+  const { isLoading, isError, data: ce_cat } = useCESubID(ceSub.length > 3 ? ceSub : null);
+  useEffect(() => {
+    setError(false);
+    if (ce_cat?.category_id) {
+      setFieldValue('brand_category_id', ce_cat.category_id);
+    }
+    if (isError) {
+      setErrors({ ce_subindustry_id: 'Invalid CE Sub Industry ID' });
+      setError(true);
+    }
+  }, [ce_cat, setFieldValue, isError, setErrors]);
+
+  const ceChange = e => {
+    setFieldValue('ce_subindustry_id', e.target.value);
+    setCeSub(e.target.value);
+  };
+
   return (
     <Form onSubmit={handleSubmit}>
       <Form.Row>
@@ -246,7 +283,7 @@ const BrandForm = ({ categories, values, errors, handleChange, edit, handleSubmi
             <Form.Control
               readOnly={edit}
               name="name"
-              value={values.name}
+              value={values.name || ''}
               onChange={handleChange}
               aria-describedby="name"
               isInvalid={!!errors.name}
@@ -260,7 +297,7 @@ const BrandForm = ({ categories, values, errors, handleChange, edit, handleSubmi
             <Form.Control
               readOnly={edit}
               name="ce_brand_id"
-              value={values.ce_brand_id ?? ''}
+              value={values.ce_brand_id || ''}
               onChange={handleChange}
               aria-describedby="ce_brand_id"
               isInvalid={!!errors.ce_brand_id}
@@ -271,18 +308,47 @@ const BrandForm = ({ categories, values, errors, handleChange, edit, handleSubmi
           <Form.Group>
             <Form.Label>
               <b>CE Sub Industry ID:</b>
+              {isLoading && <Loader className={styles.loader} animation="border" />}
+              {!isError && ce_cat && (
+                <span className="ml-1 text-success">CE category: {ce_cat.title}</span>
+              )}
             </Form.Label>
+
             <Form.Control
               readOnly={edit}
               name="ce_subindustry_id"
-              value={values.ce_subindustry_id ?? ''}
-              onChange={handleChange}
+              value={ceSub || ''}
+              onChange={ceChange}
               aria-describedby="ce_subindustry_id"
               isInvalid={!!errors.ce_subindustry_id}
             />
             <Form.Control.Feedback type="invalid">{errors.ce_subindustry_id}</Form.Control.Feedback>
           </Form.Group>
+          <Form.Group>
+            <Form.Label>
+              <b>Category </b>
+            </Form.Label>
+            <FormControl
+              name="brand_category_id"
+              as="select"
+              custom
+              className={`${styles.select} form-control-plaintext`}
+              readOnly={edit}
+              disabled={edit}
+              value={values.brand_category_id || ''}
+              onChange={handleChange}
+              isInvalid={errors.brand_category_id}
+            >
+              <option hidden>No category</option>
+              {categories.map(cat => (
+                <option key={`category-${cat.category_id}`} value={cat.category_id}>
+                  {cat.title}
+                </option>
+              ))}
+            </FormControl>
 
+            <Form.Control.Feedback type="invalid">{errors.category}</Form.Control.Feedback>
+          </Form.Group>
           <Form.Row>
             <Form.Group as={Col}>
               <p id="brandIsDisabled" className="d-inline mr-4">
@@ -361,31 +427,6 @@ const BrandForm = ({ categories, values, errors, handleChange, edit, handleSubmi
             />
             <Form.Control.Feedback type="invalid">{errors.website_url}</Form.Control.Feedback>
           </Form.Group>
-          <Form.Group>
-            <Form.Label>
-              <b>Category </b>
-            </Form.Label>
-            <FormControl
-              name="brand_category_id"
-              as="select"
-              custom
-              className={`${styles.select} form-control-plaintext`}
-              readOnly={edit}
-              disabled={edit}
-              value={values.brand_category_id}
-              onChange={handleChange}
-              isInvalid={errors.brand_category_id}
-            >
-              <option hidden>No category</option>
-              {categories.map(cat => (
-                <option key={`category-${cat.category_id}`} value={cat.category_id}>
-                  {cat.title}
-                </option>
-              ))}
-            </FormControl>
-
-            <Form.Control.Feedback type="invalid">{errors.category}</Form.Control.Feedback>
-          </Form.Group>
         </Col>
       </Form.Row>
       <Form.Row>
@@ -409,7 +450,13 @@ const BrandForm = ({ categories, values, errors, handleChange, edit, handleSubmi
         </Col>
       </Form.Row>
       <Form.Row>
-        <Col className="text-right">{!edit && <Button type="submit">Submit</Button>}</Col>
+        <Col className="text-right">
+          {!edit && (
+            <Button type="submit" disabled={error}>
+              Submit
+            </Button>
+          )}
+        </Col>
       </Form.Row>
     </Form>
   );

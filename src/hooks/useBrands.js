@@ -141,6 +141,22 @@ export function useBrandGroomingQueue(offset = 0) {
  * Get the data for a single brand
  * @param {number} id brand's unique id from our db
  */
+
+export function useCESubID(id) {
+  return useQuery(
+    ['ce_subindustry_id', id],
+    () => api.subindustryToCategory(id).then(res => res.data),
+    {
+      enabled: id,
+      manual: true,
+    }
+  );
+}
+
+/**
+ * Get the data for a single brand
+ * @param {number} id brand's unique id from our db
+ */
 export function useBrand(id) {
   return useQuery(
     ['brand', id],

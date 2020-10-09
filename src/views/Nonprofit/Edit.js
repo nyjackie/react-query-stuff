@@ -89,7 +89,7 @@ function Profile({ data, addNotification }) {
           is_folded: stringToBool(values.is_folded),
         };
 
-        if (!/^(https?)?:\/\//i.test(values.website_url)) {
+        if (values.website_url !== '' && !/^(https?)?:\/\//i.test(values.website_url)) {
           body.website_url = 'http://' + values.website_url;
         }
 

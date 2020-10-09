@@ -221,7 +221,7 @@ function Profile({ data, addNotification }) {
                     </Form.Group>
 
                     <Form.Group controlId="np_category">
-                      <Form.Label>Categories</Form.Label>
+                      <Form.Label>Cause Area</Form.Label>
                       <MultiSelect
                         inputId="np_category"
                         name="categories"
@@ -247,7 +247,6 @@ function Profile({ data, addNotification }) {
                         name="address_line_1"
                         type="text"
                         maxLength="255"
-                        required
                         onChange={formik.handleChange}
                         value={formik.values.address_line_1}
                         isInvalid={formik.touched.address_line_1 && formik.errors.address_line_1}
@@ -263,7 +262,6 @@ function Profile({ data, addNotification }) {
                         name="address_line_2"
                         type="text"
                         maxLength="255"
-                        required
                         onChange={formik.handleChange}
                         value={formik.values.address_line_2}
                         isInvalid={formik.touched.address_line_2 && formik.errors.address_line_2}
@@ -281,7 +279,6 @@ function Profile({ data, addNotification }) {
                             name="city"
                             type="text"
                             maxLength="255"
-                            required
                             onChange={formik.handleChange}
                             value={formik.values.city}
                             isInvalid={formik.touched.city && formik.errors.city}
@@ -298,7 +295,6 @@ function Profile({ data, addNotification }) {
                             includeTerritories
                             sort
                             name="state"
-                            required
                             onChange={formik.handleChange}
                             value={formik.values.state}
                             isInvalid={formik.touched.state && formik.errors.state}
@@ -315,7 +311,6 @@ function Profile({ data, addNotification }) {
                             name="zip"
                             type="text"
                             maxLength="255"
-                            required
                             onChange={formik.handleChange}
                             value={formik.values.zip}
                             isInvalid={formik.touched.zip && formik.errors.zip}

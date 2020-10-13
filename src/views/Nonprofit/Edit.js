@@ -19,6 +19,7 @@ import { addNotification } from 'actions/notifications';
 import Spinner from 'components/Spinner';
 import ImageUploadBlock from 'components/ImageUploadBlock';
 import { max255, url, zipcode } from 'utils/schema';
+import AllInfoModal from './AllInfoModal';
 import {
   useNpCategories,
   useUpdateNPOLogo,
@@ -54,6 +55,7 @@ function Profile({ data, addNotification }) {
   const [udateProfile, { isLoading: profileLoading }] = useNonprofitProfileUpdate();
   const [logoSrc, setLogoSrc] = useState(data.logo_url);
   const [heroSrc, setHeroSrc] = useState(data.hero_url);
+  const [showModal, setShowModal] = useState(false);
 
   const formik = useFormik({
     validationSchema: schema,
@@ -128,7 +130,28 @@ function Profile({ data, addNotification }) {
             <article className={styles.profile}>
               <Row className={styles.header}>
                 <Col>
-                  <h2 className="h2">{data.name}</h2>
+                  <h1 className="h2">{data.name}</h1>
+                </Col>
+                <Col className="d-flex justify-content-end">
+                  <Button
+                    variant="outline-primary"
+                    onClick={e => {
+                      e.preventDefault();
+                      setShowModal(true);
+                    }}
+                  >
+                    info
+                  </Button>
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <p>
+                    <b>ID:</b> {data.id}
+                  </p>
+                  <p>
+                    <b>EIN:</b> {data.ein}
+                  </p>
                 </Col>
               </Row>
 
@@ -479,6 +502,7 @@ function Profile({ data, addNotification }) {
           </Form>
         </Col>
       </Row>
+      <AllInfoModal data={data} show={showModal} handleClose={() => setShowModal(false)} />
     </Container>
   );
 }

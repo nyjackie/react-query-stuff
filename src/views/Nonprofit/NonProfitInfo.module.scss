@@ -134,3 +134,25 @@ $h: 240px * 0.75;
 .imgHeroBlock {
   max-width: $w;
 }
+.infoKey {
+  min-width: 120px;
+  display: inline-block;
+}
+.infoModal {
+  max-width: 1000px;
+  p {
+    margin: 0.5em 0;
+  }
+}
+.info-level-0 {
+  padding-left: 0;
+}
+.info-level-1 {
+  padding-left: 20px;
+}
+.info-level-2 {
+  padding-left: 40px;
+}
+.info-level-3 {
+  padding-left: 60px;
+}

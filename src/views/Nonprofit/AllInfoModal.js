@@ -30,33 +30,35 @@ function DataBasic({ dataKey, val, level }) {
 }
 
 function DataObject({ data, level }) {
-  return Object.keys(data).map((dataKey, i) => {
-    const val = data[dataKey];
-    const reactKey = `${data.id}-${dataKey}`;
+  return Object.keys(data)
+    .sort()
+    .map((dataKey, i) => {
+      const val = data[dataKey];
+      const reactKey = `${data.id}-${dataKey}`;
 
-    if (Array.isArray(val)) {
-      return (
-        <div key={reactKey} className="mt-2">
-          <p className="m-0">
-            <b className={styles.infoKey}>{dataKey}:</b> <code>{`{array[${val.length}]}`}</code>
-          </p>
-          <DataArray data={val} level={level + 1} />
-        </div>
-      );
-    }
+      if (Array.isArray(val)) {
+        return (
+          <div key={reactKey} className="mt-2">
+            <p className="m-0">
+              <b className={styles.infoKey}>{dataKey}:</b> <code>{`{array[${val.length}]}`}</code>
+            </p>
+            <DataArray data={val} level={level + 1} />
+          </div>
+        );
+      }
 
-    if (isObject(val)) {
-      return (
-        <div key={reactKey} className="mt-2">
-          <p className="m-0">
-            <b className={styles.infoKey}>{dataKey}:</b> <code>{'{object}'}</code>
-          </p>
-          <DataObject data={val} level={level + 1} />
-        </div>
-      );
-    }
-    return <DataBasic key={reactKey} dataKey={dataKey} val={val} level={level} />;
-  });
+      if (isObject(val)) {
+        return (
+          <div key={reactKey} className="mt-2">
+            <p className="m-0">
+              <b className={styles.infoKey}>{dataKey}:</b> <code>{'{object}'}</code>
+            </p>
+            <DataObject data={val} level={level + 1} />
+          </div>
+        );
+      }
+      return <DataBasic key={reactKey} dataKey={dataKey} val={val} level={level} />;
+    });
 }
 
 function DataArray({ data, level }) {

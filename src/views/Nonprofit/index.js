@@ -16,7 +16,6 @@ const Nonprofit = ({ addNotification }) => {
   const { id } = useParams();
 
   const { isLoading, isError, data: selected, error } = useNonprofit(id);
-  console.log(selected);
 
   if (isLoading) {
     return <Spinner />;

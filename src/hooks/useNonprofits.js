@@ -183,18 +183,9 @@ export function useUpdateNonprofitUser() {
 export function useUpdateNPOLogo() {
   return useMutation(updateNPOLogo, {
     throwOnError: true,
-    onError: err => {
-      store.dispatch(
-        addNotification(
-          `Logo upload failed: ${err.message}: ${err.response?.data?.message}`,
-          'error'
-        )
-      );
-    },
     onSuccess: (data, variable) => {
       queryCache.invalidateQueries(['np_profile', variable.id]);
       queryCache.refetchQueries(['np_profile', variable.id]);
-      store.dispatch(addNotification('Logo image uploaded.', 'success'));
     },
   });
 }
@@ -205,31 +196,17 @@ export function useUpdateNPOLogo() {
 export function useUpdateNPOHero() {
   return useMutation(updateNPOHero, {
     throwOnError: true,
-    onError: err => {
-      store.dispatch(
-        addNotification(
-          `Cover upload failed: ${err.message}: ${err.response?.data?.message}`,
-          'error'
-        )
-      );
-    },
     onSuccess: (data, variable) => {
       queryCache.invalidateQueries(['np_profile', variable.id]);
-      store.dispatch(addNotification('Hero image uploaded.', 'success'));
     },
   });
 }
 
 export function useNonprofitProfileUpdate() {
   return useMutation(updateNonprofitProfile, {
-    onError: err => {
-      store.dispatch(
-        addNotification(`Update failed: ${err.message}: ${err.response?.data?.message}`, 'error')
-      );
-    },
+    throwOnError: true,
     onSuccess: (data, variable) => {
       queryCache.invalidateQueries(['np_profile', variable.id]);
-      store.dispatch(addNotification('Profile updated!', 'success'));
     },
   });
 }

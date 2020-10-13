@@ -99,7 +99,6 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
             begins_at,
             ends_at,
           }) => {
-            console.log(is_disabled, is_groomed);
             const form = {
               offer_type,
               offer_guid,
@@ -127,7 +126,6 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
         >
           {props => {
             const { values, errors, touched, handleSubmit, handleChange } = props;
-            console.log(values);
 
             return (
               <Form noValidate onSubmit={handleSubmit}>

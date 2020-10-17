@@ -51,6 +51,8 @@ const App = ({ autoLogin, user, isLoading }) => {
 
   /**
    * Show the Google Sign in button if not signed in with firebase auth
+   * no page of any kind should be accessible until user successfully sign-ins
+   * with a @givegooddeeds email using the sign-in with google button
    */
   if (!isSignedIn) {
     return (

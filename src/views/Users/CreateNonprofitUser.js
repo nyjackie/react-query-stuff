@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useFormik } from 'formik';
 import InputMask from 'react-input-mask';
+import AsyncSelect from 'react-select/async';
 
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -16,6 +17,7 @@ import { useUniqueEmail, useUniquePhone } from 'hooks/useAdmin';
 import { useCreateNoprofitUser, useNonprofitForgotPassword } from 'hooks/useNonprofits';
 import SendForgotPassword, { TEMPLATES } from 'views/Users/SendForgotPassword';
 import Password from 'components/Password';
+import api from 'gdd-api-lib';
 
 const schema = createSchema({
   email: max255.required('This field is required').email('Please enter a valid email'),
@@ -25,6 +27,14 @@ const schema = createSchema({
   phone_number: phone.required('This field is required'),
   nonprofit_id: max255.required('This field is required'),
 });
+
+const loadOptions = async inputValue => {
+  const res = await api.searchNonprofits({ search_term: window.btoa(inputValue) });
+  const newRes = res.data.nonprofits.map(data => {
+    return { value: data.id, label: data.name };
+  });
+  return newRes;
+};
 
 function CreateUser() {
   const [postUser, { isLoading, isSuccess, isError, error }] = useCreateNoprofitUser();
@@ -67,6 +77,13 @@ function CreateUser() {
     },
   });
 
+  const customStyles = {
+    control: provided => ({
+      ...provided,
+      borderColor: formik.errors.nonprofit_id ? 'var(--danger)' : provided.borderColor,
+    }),
+  };
+
   return (
     <>
       <Helmet>
@@ -76,29 +93,34 @@ function CreateUser() {
         <Row>
           <Col>
             <h2>
-              Create new{' '}
+              Create a new{' '}
               <b>
                 <u>Nonprofit</u>
               </b>{' '}
               user
             </h2>
             <Form noValidate onSubmit={formik.handleSubmit}>
-              <Form.Group controlId="brandID">
+              <Form.Group controlId="npoID">
                 <Form.Label className="sr-only">
-                  <b>Nonprofit ID</b>
+                  <b>Search and select a nonprofit</b>
                 </Form.Label>
-                <Form.Control
-                  placeholder="Nonprofit ID"
-                  type="text"
+                <AsyncSelect
+                  styles={customStyles}
+                  placeholder="Search and select a nonprofit"
                   name="nonprofit_id"
                   autoFocus
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.nonprofit_id}
-                  isValid={formik.touched.nonprofit_id && !formik.errors.nonprofit_id}
-                  isInvalid={formik.touched.nonprofit_id && !!formik.errors.nonprofit_id}
+                  cacheOptions
+                  loadOptions={loadOptions}
+                  isSearchable={true}
+                  isClearable
+                  onChange={e => {
+                    formik.setFieldValue('nonprofit_id', e?.value || null);
+                  }}
                 />
-                <Form.Control.Feedback type="invalid">
+                <Form.Control.Feedback
+                  type="invalid"
+                  className={formik.errors.nonprofit_id ? 'd-block' : ''}
+                >
                   {formik.errors.nonprofit_id}
                 </Form.Control.Feedback>
               </Form.Group>
@@ -118,7 +140,6 @@ function CreateUser() {
                   onBlur={formik.handleBlur}
                   value={formik.values.email}
                   isInvalid={isBadEmail || (formik.touched.email && formik.errors.email)}
-                  isValid={!isBadEmail && formik.touched.email && !formik.errors.email}
                 />
                 <Form.Control.Feedback type="invalid">
                   {formik.errors.email}
@@ -137,7 +158,6 @@ function CreateUser() {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.first_name}
-                  isValid={formik.touched.first_name && !formik.errors.first_name}
                   isInvalid={formik.touched.first_name && !!formik.errors.first_name}
                 />
                 <Form.Control.Feedback type="invalid">
@@ -156,7 +176,6 @@ function CreateUser() {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.last_name}
-                  isValid={formik.touched.last_name && !formik.errors.last_name}
                   isInvalid={formik.touched.last_name && !!formik.errors.last_name}
                 />
                 <Form.Control.Feedback type="invalid">
@@ -170,7 +189,6 @@ function CreateUser() {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.password}
-                isValid={formik.touched.password && !formik.errors.password}
                 isInvalid={formik.touched.password && !!formik.errors.password}
                 error={formik.errors.password}
               />
@@ -193,9 +211,6 @@ function CreateUser() {
                   value={formik.values.phone_number}
                   isInvalid={
                     isBadPhone || (formik.touched.phone_number && formik.errors.phone_number)
-                  }
-                  isValid={
-                    !isBadPhone && formik.touched.phone_number && !formik.errors.phone_number
                   }
                 />
                 <Form.Control.Feedback type="invalid">

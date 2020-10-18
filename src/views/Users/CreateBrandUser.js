@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
+import { useFormik } from 'formik';
+import AsyncSelect from 'react-select/async';
+import InputMask from 'react-input-mask';
+
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
-import { useFormik } from 'formik';
-import InputMask from 'react-input-mask';
+
 import { max255, createSchema, phone, password } from 'utils/schema';
 import { useUniqueEmail, useUniquePhone } from 'hooks/useAdmin';
 import { useBrandForgotPassword } from 'hooks/useBrands';
@@ -15,6 +18,7 @@ import { USER_TYPES } from 'utils/constants';
 import { useCreateBrandUser } from 'hooks/useUsers';
 import SendForgotPassword, { TEMPLATES } from 'views/Users/SendForgotPassword';
 import Password from 'components/Password';
+import api from 'gdd-api-lib';
 
 const schema = createSchema({
   email: max255.required('This field is required').email('Please enter a valid email'),
@@ -24,6 +28,14 @@ const schema = createSchema({
   phone_number: phone.required('This field is required'),
   brand_id: max255.required('This field is required'),
 });
+
+const loadOptions = async inputValue => {
+  const res = await api.internalSearchBrands({ search_term: window.btoa(inputValue) });
+  const newRes = res.data.brands.map(data => {
+    return { value: data.id, label: data.name };
+  });
+  return newRes;
+};
 
 function CreateUser() {
   const [postUser, { isLoading, isSuccess, isError, error }] = useCreateBrandUser();
@@ -66,6 +78,13 @@ function CreateUser() {
     },
   });
 
+  const customStyles = {
+    control: provided => ({
+      ...provided,
+      borderColor: formik.errors.brand_id ? 'var(--danger)' : provided.borderColor,
+    }),
+  };
+
   return (
     <>
       <Helmet>
@@ -75,7 +94,7 @@ function CreateUser() {
         <Row>
           <Col>
             <h2>
-              Create new{' '}
+              Create a new{' '}
               <b>
                 <u>Brand</u>
               </b>{' '}
@@ -84,20 +103,26 @@ function CreateUser() {
             <Form noValidate onSubmit={formik.handleSubmit}>
               <Form.Group controlId="brandID">
                 <Form.Label className="sr-only">
-                  <b>Brand ID</b>
+                  <b>Search and select a brand</b>
                 </Form.Label>
-                <Form.Control
-                  placeholder="Brand ID"
-                  type="text"
+                <AsyncSelect
+                  styles={customStyles}
+                  placeholder="Search and select a brand"
                   name="brand_id"
+                  required
                   autoFocus
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.brand_id}
-                  isValid={formik.touched.brand_id && !formik.errors.brand_id}
-                  isInvalid={formik.touched.brand_id && !!formik.errors.brand_id}
+                  cacheOptions
+                  loadOptions={loadOptions}
+                  isSearchable={true}
+                  isClearable
+                  onChange={e => {
+                    formik.setFieldValue('brand_id', e?.value || null);
+                  }}
                 />
-                <Form.Control.Feedback type="invalid">
+                <Form.Control.Feedback
+                  type="invalid"
+                  className={formik.errors.brand_id ? 'd-block' : ''}
+                >
                   {formik.errors.brand_id}
                 </Form.Control.Feedback>
               </Form.Group>

@@ -10,6 +10,7 @@ import styles from './Layout.module.scss';
 import Notification from 'components/Notification';
 import { useLocation } from 'react-router-dom';
 import { cn } from 'gdd-components/dist/utils';
+import ErrorBoundary from 'components/ErrorBoundary';
 
 const noNav = ['/login', '/forgot-password'];
 
@@ -53,7 +54,10 @@ const Layout = ({ children, drawerOpen, toggleDrawer }) => {
             <Navbar bg="light" expand="lg" className="p-0">
               <Navbar.Toggle aria-controls="drawer" onClick={toggleDrawer} />
             </Navbar>
-            <main className="flex-fill container-fluid h-100">{children}</main>
+            <main className="flex-fill container-fluid h-100">
+              {/* This error boundary will catch errors within all views */}
+              <ErrorBoundary>{children}</ErrorBoundary>
+            </main>
           </Col>
         </Row>
       </Container>

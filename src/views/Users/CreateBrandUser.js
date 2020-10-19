@@ -39,7 +39,7 @@ const loadOptions = async inputValue => {
   return newRes;
 };
 
-function CreateUser({ addNotification }) {
+function CreateBrandUser({ addNotification }) {
   const [postUser, { isLoading, isSuccess }] = useCreateBrandUser();
   const [checkUniqueEmail, { isLoading: ueLoading }] = useUniqueEmail();
   const [checkUniquePhone, { isLoading: upLoading }] = useUniquePhone();
@@ -268,4 +268,4 @@ function CreateUser({ addNotification }) {
   );
 }
 
-export default connect(null, { addNotification })(CreateUser);
+export default connect(null, { addNotification })(CreateBrandUser);

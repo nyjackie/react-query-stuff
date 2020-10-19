@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import { useFormik } from 'formik';
 import InputMask from 'react-input-mask';
@@ -11,6 +12,7 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
 
+import { addNotification } from 'actions/notifications';
 import { max255, createSchema, phone, password } from 'utils/schema';
 import { USER_TYPES } from 'utils/constants';
 import { useUniqueEmail, useUniquePhone } from 'hooks/useAdmin';
@@ -36,8 +38,8 @@ const loadOptions = async inputValue => {
   return newRes;
 };
 
-function CreateUser() {
-  const [postUser, { isLoading, isSuccess, isError, error }] = useCreateNoprofitUser();
+function CreateNonprofitUser() {
+  const [postUser, { isLoading, isSuccess }] = useCreateNoprofitUser();
   const [checkUniqueEmail, { isLoading: ueLoading }] = useUniqueEmail();
   const [checkUniquePhone, { isLoading: upLoading }] = useUniquePhone();
 
@@ -54,26 +56,38 @@ function CreateUser() {
       phone_number: '',
       nonprofit_id: '',
     },
-    onSubmit: values => {
+    onSubmit: async values => {
       values.phone_number = values.phone_number.replace(/\D/g, '');
 
-      Promise.all([
-        checkUniqueEmail({
+      try {
+        const isUniqueEmail = checkUniqueEmail({
           email: values.email,
           user_type: USER_TYPES.NONPROFIT,
-        }),
-        checkUniquePhone({
+        });
+        setIsBadEmail(!isUniqueEmail);
+
+        const isUniquePhone = checkUniquePhone({
           phone_number: values.phone_number,
           user_type: USER_TYPES.NONPROFIT,
-        }),
-      ]).then(results => {
-        const [isUniqueEmail, isUniquePhone] = results;
-        setIsBadEmail(!isUniqueEmail);
+        });
+
         setIsBadPhone(!isUniquePhone);
+
         if (isUniqueEmail && isUniquePhone) {
-          postUser(values);
+          await postUser(values);
+          addNotification('User successfully created', 'success');
         }
-      });
+      } catch (err) {
+        if (err.response.status === 409) {
+          addNotification(
+            'A user already exists for this nonprofit ID. Only one user per Nonprofit',
+            'error',
+            20000
+          );
+          return;
+        }
+        addNotification(`An error occured: ${err.response?.data?.message}`, 'error', 20000);
+      }
     },
   });
 
@@ -226,20 +240,11 @@ function CreateUser() {
               >
                 Submit
               </Button>
-              {isError && (
-                <p className="mt-2 text-danger">{error?.message || 'An internal error occured!'}</p>
-              )}
-              {isError && error.response?.status === 409 && (
-                <p className="mt-2 text-danger">
-                  A user already exists for this nonprofit ID. Only one user per brand
-                </p>
-              )}
               {(ueLoading || upLoading || isLoading) && (
                 <Spinner as="span" size="md" animation="border" role="status" aria-hidden="true">
                   <span className="sr-only">Loading...</span>
                 </Spinner>
               )}
-              {isSuccess && <p className="mt-2 text-success">User successfully created!</p>}
             </Form>
           </Col>
         </Row>
@@ -255,4 +260,4 @@ function CreateUser() {
   );
 }
 
-export default CreateUser;
+export default connect(null, { addNotification })(CreateNonprofitUser);

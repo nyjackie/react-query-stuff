@@ -45,11 +45,11 @@ export function useCreateAdminUser() {
 }
 
 export function useUniqueEmail() {
-  return useMutation(uniqueEmail);
+  return useMutation(uniqueEmail, { throwOnError: true });
 }
 
 export function useUniquePhone() {
-  return useMutation(uniquePhone);
+  return useMutation(uniquePhone, { throwOnError: true });
 }
 
 /**

@@ -38,7 +38,7 @@ const loadOptions = async inputValue => {
   return newRes;
 };
 
-function CreateNonprofitUser() {
+function CreateNonprofitUser({ addNotification }) {
   const [postUser, { isLoading, isSuccess }] = useCreateNoprofitUser();
   const [checkUniqueEmail, { isLoading: ueLoading }] = useUniqueEmail();
   const [checkUniquePhone, { isLoading: upLoading }] = useUniquePhone();
@@ -60,13 +60,13 @@ function CreateNonprofitUser() {
       values.phone_number = values.phone_number.replace(/\D/g, '');
 
       try {
-        const isUniqueEmail = checkUniqueEmail({
+        const isUniqueEmail = await checkUniqueEmail({
           email: values.email,
           user_type: USER_TYPES.NONPROFIT,
         });
         setIsBadEmail(!isUniqueEmail);
 
-        const isUniquePhone = checkUniquePhone({
+        const isUniquePhone = await checkUniquePhone({
           phone_number: values.phone_number,
           user_type: USER_TYPES.NONPROFIT,
         });
@@ -78,14 +78,6 @@ function CreateNonprofitUser() {
           addNotification('User successfully created', 'success');
         }
       } catch (err) {
-        if (err.response.status === 409) {
-          addNotification(
-            'A user already exists for this nonprofit ID. Only one user per Nonprofit',
-            'error',
-            20000
-          );
-          return;
-        }
         addNotification(`An error occured: ${err.response?.data?.message}`, 'error', 20000);
       }
     },

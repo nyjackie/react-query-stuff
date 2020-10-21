@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
+import { useFormik } from 'formik';
+import AsyncSelect from 'react-select/async';
+import InputMask from 'react-input-mask';
+
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
-import { useFormik } from 'formik';
-import InputMask from 'react-input-mask';
+
+import { addNotification } from 'actions/notifications';
 import { max255, createSchema, phone, password } from 'utils/schema';
 import { useUniqueEmail, useUniquePhone } from 'hooks/useAdmin';
 import { useBrandForgotPassword } from 'hooks/useBrands';
@@ -15,6 +20,7 @@ import { USER_TYPES } from 'utils/constants';
 import { useCreateBrandUser } from 'hooks/useUsers';
 import SendForgotPassword, { TEMPLATES } from 'views/Users/SendForgotPassword';
 import Password from 'components/Password';
+import api from 'gdd-api-lib';
 
 const schema = createSchema({
   email: max255.required('This field is required').email('Please enter a valid email'),
@@ -25,8 +31,16 @@ const schema = createSchema({
   brand_id: max255.required('This field is required'),
 });
 
-function CreateUser() {
-  const [postUser, { isLoading, isSuccess, isError, error }] = useCreateBrandUser();
+const loadOptions = async inputValue => {
+  const res = await api.internalSearchBrands({ search_term: window.btoa(inputValue) });
+  const newRes = res.data.brands.map(data => {
+    return { value: data.id, label: data.name };
+  });
+  return newRes;
+};
+
+function CreateBrandUser({ addNotification }) {
+  const [postUser, { isLoading, isSuccess }] = useCreateBrandUser();
   const [checkUniqueEmail, { isLoading: ueLoading }] = useUniqueEmail();
   const [checkUniquePhone, { isLoading: upLoading }] = useUniquePhone();
 
@@ -43,28 +57,53 @@ function CreateUser() {
       phone_number: '',
       brand_id: '',
     },
-    onSubmit: values => {
+    onSubmit: async values => {
       values.phone_number = values.phone_number.replace(/\D/g, '');
 
-      Promise.all([
-        checkUniqueEmail({
-          email: values.email,
-          user_type: USER_TYPES.BRAND,
-        }),
-        checkUniquePhone({
+      try {
+        const isUniquePhone = await checkUniquePhone({
           phone_number: values.phone_number,
           user_type: USER_TYPES.BRAND,
-        }),
-      ]).then(results => {
-        const [isUniqueEmail, isUniquePhone] = results;
+        });
+        const isUniqueEmail = await checkUniqueEmail({
+          email: values.email,
+          user_type: USER_TYPES.BRAND,
+        });
+
         setIsBadEmail(!isUniqueEmail);
         setIsBadPhone(!isUniquePhone);
+
         if (isUniqueEmail && isUniquePhone) {
-          postUser(values);
+          await postUser(values);
+          addNotification('User successfully created', 'success');
         }
-      });
+      } catch (err) {
+        if (err.response.status === 409) {
+          addNotification(
+            'A user already exists for this brand ID. Only one user per brand',
+            'error',
+            20000 // 20s
+          );
+          return;
+        }
+        addNotification(
+          `An error occured: ${err.response?.data?.message}`,
+          'error',
+          20000 // 20s
+        );
+      }
     },
   });
+
+  /**
+   * react-select/AsyncSelect - set error border color to match react-bootstrap
+   */
+  const customStyles = {
+    control: provided => ({
+      ...provided,
+      borderColor: formik.errors.brand_id ? 'var(--danger)' : provided.borderColor,
+    }),
+  };
 
   return (
     <>
@@ -75,7 +114,7 @@ function CreateUser() {
         <Row>
           <Col>
             <h2>
-              Create new{' '}
+              Create a new{' '}
               <b>
                 <u>Brand</u>
               </b>{' '}
@@ -84,20 +123,26 @@ function CreateUser() {
             <Form noValidate onSubmit={formik.handleSubmit}>
               <Form.Group controlId="brandID">
                 <Form.Label className="sr-only">
-                  <b>Brand ID</b>
+                  <b>Search and select a brand</b>
                 </Form.Label>
-                <Form.Control
-                  placeholder="Brand ID"
-                  type="text"
+                <AsyncSelect
+                  styles={customStyles}
+                  placeholder="Search and select a brand"
                   name="brand_id"
+                  required
                   autoFocus
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.brand_id}
-                  isValid={formik.touched.brand_id && !formik.errors.brand_id}
-                  isInvalid={formik.touched.brand_id && !!formik.errors.brand_id}
+                  cacheOptions
+                  loadOptions={loadOptions}
+                  isSearchable={true}
+                  isClearable
+                  onChange={e => {
+                    formik.setFieldValue('brand_id', e?.value || null);
+                  }}
                 />
-                <Form.Control.Feedback type="invalid">
+                <Form.Control.Feedback
+                  type="invalid"
+                  className={formik.errors.brand_id ? 'd-block' : ''}
+                >
                   {formik.errors.brand_id}
                 </Form.Control.Feedback>
               </Form.Group>
@@ -117,7 +162,6 @@ function CreateUser() {
                   onBlur={formik.handleBlur}
                   value={formik.values.email}
                   isInvalid={isBadEmail || (formik.touched.email && formik.errors.email)}
-                  isValid={!isBadEmail && formik.touched.email && !formik.errors.email}
                 />
                 <Form.Control.Feedback type="invalid">
                   {formik.errors.email}
@@ -136,7 +180,6 @@ function CreateUser() {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.first_name}
-                  isValid={formik.touched.first_name && !formik.errors.first_name}
                   isInvalid={formik.touched.first_name && !!formik.errors.first_name}
                 />
                 <Form.Control.Feedback type="invalid">
@@ -155,7 +198,6 @@ function CreateUser() {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.last_name}
-                  isValid={formik.touched.last_name && !formik.errors.last_name}
                   isInvalid={formik.touched.last_name && !!formik.errors.last_name}
                 />
                 <Form.Control.Feedback type="invalid">
@@ -169,7 +211,6 @@ function CreateUser() {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.password}
-                isValid={formik.touched.password && !formik.errors.password}
                 isInvalid={formik.touched.password && !!formik.errors.password}
                 error={formik.errors.password}
               />
@@ -193,9 +234,6 @@ function CreateUser() {
                   isInvalid={
                     isBadPhone || (formik.touched.phone_number && formik.errors.phone_number)
                   }
-                  isValid={
-                    !isBadPhone && formik.touched.phone_number && !formik.errors.phone_number
-                  }
                 />
                 <Form.Control.Feedback type="invalid">
                   {formik.errors.phone_number}
@@ -210,20 +248,11 @@ function CreateUser() {
               >
                 Submit
               </Button>
-              {isError && (
-                <p className="mt-2 text-danger">{error?.message || 'An internal error occured!'}</p>
-              )}
-              {isError && error.response.status === 409 && (
-                <p className="mt-2 text-danger">
-                  A user already exists for this brand ID. Only one user per brand
-                </p>
-              )}
               {(ueLoading || upLoading || isLoading) && (
                 <Spinner as="span" size="md" animation="border" role="status" aria-hidden="true">
                   <span className="sr-only">Loading...</span>
                 </Spinner>
               )}
-              {isSuccess && <p className="mt-2 text-success">User successfully created!</p>}
             </Form>
           </Col>
         </Row>
@@ -239,4 +268,4 @@ function CreateUser() {
   );
 }
 
-export default CreateUser;
+export default connect(null, { addNotification })(CreateBrandUser);

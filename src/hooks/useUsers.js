@@ -81,7 +81,7 @@ export function useUpdateBrandUser() {
 }
 
 export function useCreateBrandUser() {
-  return useMutation(postNewBrandUser);
+  return useMutation(postNewBrandUser, { throwOnError: true });
 }
 
 export function useDeleteUser() {

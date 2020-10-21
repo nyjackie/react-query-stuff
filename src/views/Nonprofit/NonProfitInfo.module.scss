@@ -104,21 +104,26 @@
       font-size: 1.3em;
       font-size: 1.3rem;
     }
-
-    p {
-      margin: 0;
-    }
   }
 }
 
 .result_row {
   img {
     display: block;
-    margin-right: 15px;
-    width: 100px;
+    width: 100%;
+    max-width: 200px;
     height: auto;
     border: 1px solid rgba(0, 0, 0, 0.3);
     border-radius: 10px;
+  }
+}
+.result_row_right {
+  font-size: 0.9rem;
+  p {
+    margin-top: 1rem;
+    &:first-child {
+      margin-top: 0;
+    }
   }
 }
 

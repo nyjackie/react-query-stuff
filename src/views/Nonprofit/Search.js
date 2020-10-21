@@ -7,7 +7,7 @@ import Form from 'react-bootstrap/Form';
 import Container from 'react-bootstrap/Container';
 import InputGroup from 'react-bootstrap/InputGroup';
 
-import { getSearchQuery } from 'utils';
+import { getSearchQuery, currency } from 'utils';
 import { Paginator } from 'gdd-components';
 
 import { useNonprofitSearch } from 'hooks/useNonprofits';
@@ -15,15 +15,45 @@ import Spinner from 'components/Spinner';
 import SearchInput from './NPSearchInput';
 import styles from './NonProfitInfo.module.scss';
 
+/**
+ * Component for a single search result
+ * @param {object} param0
+ * @param {import('../../utils/typedef').InternalNonProfit} param0.result
+ */
 const SingleResult = ({ result }) => {
   return (
-    <li className={`pointer media ${styles.result_row}`}>
-      {result.logo_url && <img src={result.logo_url} alt="" />}
-      <div className="media-body">
+    <li className={`pointer media row ${styles.result_row}`}>
+      <div className="col-md-2">{result.logo_url && <img src={result.logo_url} alt="" />}</div>
+      <div className="media-body col-md">
         <Link to={`/nonprofit/${result.id}`}>
           <h3>{result.name}</h3>
         </Link>
+        {result.alias && result.alias !== result.name && (
+          <p>
+            <b>Alias:</b> {result.alias}
+          </p>
+        )}
+        <p className="mb-3">
+          {result.address.city}, {result.address.state} | EIN: {result.ein}
+        </p>
         <p>{result.mission}</p>
+      </div>
+      <div className={`col-md-3 ${styles.result_row_right}`}>
+        <p>
+          <b>NTEE:</b>
+          <br />
+          {result.ntee_code}
+        </p>
+        <p>
+          <b>Claim status:</b>
+          <br />
+          {result.status.id === 2 ? 'Claimed' : 'unclaimed'}
+        </p>
+        <p>
+          <b>Gross receipts:</b>
+          <br />
+          {currency(result.gross_receipts)}
+        </p>
       </div>
     </li>
   );

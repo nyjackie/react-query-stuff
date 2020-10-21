@@ -295,3 +295,17 @@ export function stringToBool(bool) {
     throw new Error(`bool is an unexpected type: ${typeof bool}`);
   }
 }
+
+/**
+ * Convert a number into USD currency format with commas
+ * @param {number} num
+ */
+export function currency(num) {
+  // Create our number formatter.
+  var formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  });
+
+  return formatter.format(num).split('.')[0];
+}

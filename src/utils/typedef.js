@@ -94,3 +94,5 @@
  * @property {string} name
  * @property {string} website_url
  */
+
+export default {};

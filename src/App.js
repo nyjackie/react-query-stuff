@@ -1,10 +1,10 @@
 // npm libs
 import React, { useEffect } from 'react';
-import { Provider } from 'react-redux';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { BrowserRouter as Router, Switch, Redirect } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { ReactQueryDevtools } from 'react-query-devtools';
-import { ReactQueryConfigProvider } from 'react-query';
 
 // views or route components
 import Landing from 'views/Landing';
@@ -30,73 +30,99 @@ import DeleteUser from 'views/Users/DeleteUser';
 // components|other
 import PublicRoute from 'components/PublicRoute';
 import PrivateRoute from 'components/PrivateRoute';
-import store from 'store';
 import { autoLogin } from 'actions/auth';
 import BrandInfo from 'views/Brands/BrandInfo';
 import Buckets from 'views/Brands/buckets';
+import Spinner from 'components/Spinner';
+import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
+import useFirebaseAuth from 'hooks/useFirebaseAuth';
 
-const queryConfig = {
-  queries: {
-    /**
-     * This makes queries stale after 5 minutes instead of immediately
-     */
-    // staleTime: 1000 * 60 * 5,
+const App = ({ autoLogin, user, isLoading }) => {
+  const { isSignedIn, firebase, uiConfig } = useFirebaseAuth();
 
-    /**
-     * our default should be no retries.
-     */
-    retry: false,
-  },
-};
-
-const App = () => {
   useEffect(() => {
-    store.dispatch(autoLogin());
-  }, []);
+    /**
+     * After successful sign in with google we kick off auto login
+     */
+    if (isSignedIn) {
+      autoLogin();
+    }
+  }, [isSignedIn, autoLogin]);
+
+  /**
+   * Show the Google Sign in button if not signed in with firebase auth
+   * no page of any kind should be accessible until user successfully sign-ins
+   * with a @givegooddeeds email using the sign-in with google button
+   */
+  if (!isSignedIn) {
+    return (
+      <div className="container d-flex justify-content-center align-items-center h-100">
+        <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
+      </div>
+    );
+  }
+
+  /**
+   * Show spinner when processing the auto login
+   */
+  if (isLoading) {
+    return (
+      <div className="spinnerOverlay">
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
-    <ReactQueryConfigProvider config={queryConfig}>
-      <Provider store={store}>
-        <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
-        <Router>
-          <Helmet>
-            <title>Give Good Deeds</title>
-          </Helmet>
-          <Switch>
-            {/* Public Routes */}
-            <PublicRoute exact path="/" component={Landing} />
-            <PublicRoute exact path="/login" component={Login} />
-            <PublicRoute exact path="/forgot-password" component={ForgotPassword} />
-            <PublicRoute exact path="/error" component={ErrorPage} />
-            <PublicRoute exact path="/notfound" component={NotFound} />
+    <Router>
+      <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
+      <Helmet>
+        <title>Give Good Deeds</title>
+      </Helmet>
+      <Switch>
+        {/* Public Routes */}
+        <PublicRoute exact path="/" component={Landing} />
+        <PublicRoute exact path="/login" component={Login} />
+        <PublicRoute exact path="/forgot-password" component={ForgotPassword} />
+        <PublicRoute exact path="/error" component={ErrorPage} />
+        <PublicRoute exact path="/notfound" component={NotFound} />
 
-            {/* Private Routes */}
-            <PrivateRoute exact path="/banlist" component={Banlist} />
-            <PrivateRoute exact path="/claims" component={Claims} />
-            <PrivateRoute exact path="/claims/:id" component={ClaimInfo} />
-            <PrivateRoute exact path="/nonprofit" component={NonprofitSearch} />
-            <PrivateRoute exact path="/nonprofit/:id" component={Nonprofit} />
-            <PrivateRoute exact path="/brands/search" component={BrandsSearch} />
-            <PrivateRoute exact path="/brands/grooming" component={BrandsGrooming} />
-            <PrivateRoute exact path="/brands/buckets" component={Buckets} />
-            <PrivateRoute exact path="/brands/:id" component={BrandInfo} />
-            <PrivateRoute exact path="/users" component={Users} />
-            <PrivateRoute exact path="/users/:type/:id" component={UserInfo} />
-            <PrivateRoute exact path="/users/admin" component={CreateAdminUser} />
-            <PrivateRoute exact path="/users/brand" component={CreateBrandUser} />
-            <PrivateRoute exact path="/users/nonprofit" component={CreateNonprofitUser} />
-            <PrivateRoute exact path="/settings" component={Settings} />
-            <PrivateRoute exact path="/delete-user" component={DeleteUser} />
+        {/* Private Routes */}
+        <PrivateRoute exact path="/banlist" component={Banlist} />
+        <PrivateRoute exact path="/claims" component={Claims} />
+        <PrivateRoute exact path="/claims/:id" component={ClaimInfo} />
+        <PrivateRoute exact path="/nonprofit" component={NonprofitSearch} />
+        <PrivateRoute exact path="/nonprofit/:id" component={Nonprofit} />
+        <PrivateRoute exact path="/brands/search" component={BrandsSearch} />
+        <PrivateRoute exact path="/brands/grooming" component={BrandsGrooming} />
+        <PrivateRoute exact path="/brands/buckets" component={Buckets} />
+        <PrivateRoute exact path="/brands/:id" component={BrandInfo} />
+        <PrivateRoute exact path="/users" component={Users} />
+        <PrivateRoute exact path="/users/:type/:id" component={UserInfo} />
+        <PrivateRoute exact path="/users/admin" component={CreateAdminUser} />
+        <PrivateRoute exact path="/users/brand" component={CreateBrandUser} />
+        <PrivateRoute exact path="/users/nonprofit" component={CreateNonprofitUser} />
+        <PrivateRoute exact path="/settings" component={Settings} />
+        <PrivateRoute exact path="/delete-user" component={DeleteUser} />
 
-            {/* 404 */}
-            <PublicRoute path="*">
-              <Redirect to="/notfound" />
-            </PublicRoute>
-          </Switch>
-        </Router>
-      </Provider>
-    </ReactQueryConfigProvider>
+        {/* 404 */}
+        <PublicRoute path="*">
+          <Redirect to="/notfound" />
+        </PublicRoute>
+      </Switch>
+    </Router>
   );
 };
 
-export default App;
+App.propTypes = {
+  isAuthenticated: PropTypes.bool,
+  user: PropTypes.object,
+};
+
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated,
+  user: state.auth.user,
+  isLoading: state.auth.isLoading,
+});
+
+export default connect(mapStateToProps, { autoLogin })(App);

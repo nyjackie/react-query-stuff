@@ -140,7 +140,7 @@ export function useNpCategories() {
 }
 
 export function useCreateNoprofitUser() {
-  return useMutation(postNewNonprofitUser);
+  return useMutation(postNewNonprofitUser, { throwOnError: true });
 }
 
 /**

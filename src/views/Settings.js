@@ -39,7 +39,7 @@ function Settings({ user }) {
         <title>Settings | Admin Portal | Give Good Deeds</title>
       </Helmet>
       <Row>
-        <Col md={6}>
+        <Col md={8}>
           <Container className="block shadow-sm">
             <Row>
               <Col>

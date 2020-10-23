@@ -1,6 +1,16 @@
 # Good Deeds Data - Admin Web Portal
 
-Use [yarn](https://yarnpkg.com/) please! :smile:
+## Setup
+
+- Install Node 14+
+
+- Download [yarn](https://yarnpkg.com/)
+
+- Setup your local yarn workspace, [Instructions can be found here](https://github.com/consumer-edge/gdd-components/blob/main/README.md)
+
+- Along with this repo you'll also need to include the following 2 repos in your workspace:
+  - [gdd-components](https://github.com/consumer-edge/gdd-components)
+  - [gdd-api-lib](https://github.com/consumer-edge/gdd-admin-portal)
 
 ## Development
 
@@ -8,16 +18,12 @@ Use [yarn](https://yarnpkg.com/) please! :smile:
 
 ## Environment Variables
 
-:warning: :rotating_light: :bangbang:
-The end product of this repo is static html/css/js/images, **DO NOT** put any secrets into any `.env` file
+:rotating_light:
+The end product of this repo is static html/css/js/images, **DO NOT** put any secrets into any `.env` file :rotating_light:
 
 Read more about how create-react-app handles env variables [here](https://create-react-app.dev/docs/adding-custom-environment-variables/)
 
 use `.env.development.local` or `.env.local` to override what's in `.env`. ([more info](https://create-react-app.dev/docs/adding-custom-environment-variables/#what-other-env-files-can-be-used))
-
-| variable            | desc                                       |
-| ------------------- | ------------------------------------------ |
-| `REACT_APP_API_URL` | set the base API url for all GDD api calls |
 
 ## CSS
 
@@ -49,80 +55,6 @@ import 'utils/my-utils';
 import 'components/Header.module.scss';
 ```
 
-## CORS Proxy
-
-To temporarily overcome any CORS issues you can setup a local proxy server:
-https://gist.github.com/francisco-gdd/ed24b2278a140fbb9afa1d42a5520649
-
-and switch your `REACT_APP_API_URL` to point to it
-
 ---
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-## Available Scripts
-
-In the project directory, you can run:
-
-### `yarn start`
-
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
-
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify

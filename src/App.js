@@ -34,33 +34,11 @@ import { autoLogin } from 'actions/auth';
 import BrandInfo from 'views/Brands/BrandInfo';
 import Buckets from 'views/Brands/buckets';
 import Spinner from 'components/Spinner';
-import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
-import useFirebaseAuth from 'hooks/useFirebaseAuth';
 
 const App = ({ autoLogin, user, isLoading }) => {
-  const { isSignedIn, firebase, uiConfig } = useFirebaseAuth();
-
   useEffect(() => {
-    /**
-     * After successful sign in with google we kick off auto login
-     */
-    if (isSignedIn) {
-      autoLogin();
-    }
-  }, [isSignedIn, autoLogin]);
-
-  /**
-   * Show the Google Sign in button if not signed in with firebase auth
-   * no page of any kind should be accessible until user successfully sign-ins
-   * with a @givegooddeeds email using the sign-in with google button
-   */
-  if (!isSignedIn) {
-    return (
-      <div className="container d-flex justify-content-center align-items-center h-100">
-        <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
-      </div>
-    );
-  }
+    autoLogin();
+  }, [autoLogin]);
 
   /**
    * Show spinner when processing the auto login

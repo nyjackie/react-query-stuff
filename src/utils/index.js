@@ -1,5 +1,7 @@
 import errorHandler from './errorHandler';
 import { dateFmt } from 'components/DateInput';
+import moment from 'moment';
+import { DATETIME_FORMAT } from './constants';
 
 /**
  * Wrapper around setTimeout to use within in an async function and have it wait
@@ -34,7 +36,11 @@ export function willExpire(expiry, seconds = 30) {
   return now > expiry - seconds;
 }
 
-export const decryptBasicAuth = encrypted => {
+/**
+ * Decode a Basic Auth Base64 encoded basic auth username:password string
+ * @param {string} encrypted
+ */
+export const decodeBasicAuth = encrypted => {
   //  'Basic ' + window.btoa(email + ':' + password),
   const parts = window.atob(encrypted.substring(6)).split(':');
   return {
@@ -42,18 +48,6 @@ export const decryptBasicAuth = encrypted => {
     password: parts[1],
   };
 };
-
-/**
- * Simple func to combine className strings
- * can make this more robust if needed like this: https://github.com/JedWatson/classnames#readme
- * @param {string} original
- * @param {string} extra
- */
-export function classNames(original, extra) {
-  if (original) return `${original} ${extra}`;
-
-  return extra;
-}
 
 export function getTextNodeWidth(textNode) {
   var range = document.createRange();
@@ -89,6 +83,7 @@ export function serialize(form, encode = true) {
 }
 
 /**
+ * Converts a flat (no nested properties) object into a URL search query string
  * @param {object} data
  */
 export function toQueryString(data) {
@@ -115,17 +110,6 @@ export function fromQueryString(str) {
     }
     return acc;
   }, {});
-}
-
-/**
- * source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent
- * @param {string} str
- * @returns {string}
- */
-export function fixedEncodeURIComponent(str) {
-  return encodeURIComponent(str).replace(/[!'()*]/g, function (c) {
-    return '%' + c.charCodeAt(0).toString(16);
-  });
 }
 
 export function queryEncode(str) {
@@ -200,6 +184,11 @@ export function updateCollection(collection, key, newData) {
   });
 }
 
+/**
+ * Replaces all properties with null values in a flat object with an empty
+ * string
+ * @param {object} obj
+ */
 export function nullToEmpty(obj) {
   return Object.keys(obj).reduce((acc, key) => {
     const val = obj[key];
@@ -226,7 +215,8 @@ export function dedupeObj(source, newObj) {
 }
 
 /**
- * Left pads a single 0 for things like dates days and months
+ * Left pads a single 0 for things like dates days and months. Only inserts a
+ * single zero
  * @param {number|string} n number to be left padded
  * @returns {string}
  */
@@ -309,3 +299,25 @@ export function currency(num) {
 
   return formatter.format(num).split('.')[0];
 }
+
+/**
+ * Convert a timestamp to a UTC one in the format that our API expects
+ * @param {string} timestamp a valid timestamp
+ */
+export function toUTC(timestamp) {
+  return moment(timestamp).utc().format(DATETIME_FORMAT);
+}
+
+/**
+ * Our database stores all timestamps in UTC so this converts a timestamp
+ * provided by our API into user's local date time
+ * @param {string} timestamp
+ */
+export function fromUTC(timestamp) {
+  return moment.utc(timestamp).local().format(DATETIME_FORMAT);
+}
+
+/**
+ * Get the user's current timezone name (ex: America/New_York)
+ */
+export const timeZoneName = () => Intl.DateTimeFormat().resolvedOptions().timeZone;

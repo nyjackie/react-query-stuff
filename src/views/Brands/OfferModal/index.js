@@ -23,7 +23,7 @@ import { addNotification } from 'actions/notifications';
 import { useUpdateOffer } from 'hooks/useBrands';
 import { useNonprofit } from 'hooks/useNonprofits';
 import DateInput from 'components/DateInput';
-import { stringToBool } from 'utils';
+import { stringToBool, toUTC, fromUTC } from 'utils';
 import styles from './OfferEditModal.module.scss';
 
 /**
@@ -59,24 +59,36 @@ const schema = yupObject({
   base_consumer_payout: yupNumber()
     .typeError('Consumer Payout must be a number')
     .required('Consumer Payout cannot be empty.'),
-  commission_percent: yupNumber()
-    .moreThan(-1, 'Must be a positive number or 0')
-    .typeError('Commission must be a number')
-    .required('Commission cannot be empty.'),
-  commission_flat: yupNumber()
-    .moreThan(-1, 'Must be a positive number or 0')
-    .typeError('Commission must be a number')
-    .required('Commission cannot be empty.'),
+
+  /**
+   * Commision validation is conditional on which commission_type is selected
+   */
+  commission_type: yupString(),
+  commission_percent: yupNumber().when('commission_type', {
+    is: 'PERCENT',
+    then: yupNumber()
+      .required('Commission cannot be empty.')
+      .typeError('Commission must be a number')
+      .moreThan(-1, 'Must be a positive number or 0'),
+  }),
+  commission_flat: yupNumber().when('commission_type', {
+    is: 'FLAT',
+    then: yupNumber()
+      .required('Commission cannot be empty.')
+      .typeError('Commission must be a number')
+      .moreThan(-1, 'Must be a positive number or 0'),
+  }),
+
   disclaimer: yupString().nullable(),
   supported_nonprofit_id: yupNumber()
     .typeError('Supported Nonprofit ID must be a number')
     .nullable(),
   coupons: yupArray().of(
     yupObject().shape({
-      begins_at: yupString(),
-      ends_at: yupString(),
-      code: yupString(),
-      description: yupString(),
+      begins_at: yupString().nullable(),
+      ends_at: yupString().nullable(),
+      code: yupString().required('Code is required'),
+      description: yupString().required('Description is required'),
     })
   ),
 });
@@ -95,14 +107,6 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
 
   if (!offer) return null;
 
-  if (offer.commission_type === 'PERCENT') {
-    offer.commission_percent = offer.commission * 100;
-    offer.commission_flat = 0;
-  } else {
-    offer.commission_flat = offer.commission || 0;
-    offer.commission_percent = 0;
-  }
-
   return (
     <Modal show={show} onHide={handleClose} dialogClassName={styles.modal}>
       <Modal.Header closeButton>
@@ -114,37 +118,40 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
       </Modal.Header>
       <Modal.Body>
         <Formik
-          initialValues={offer}
+          initialValues={{
+            ...offer,
+            coupons: offer.coupons.map(c => {
+              // convert all timestamps to local time for initial values
+              return {
+                ...c,
+                begins_at: c.begins_at ? fromUTC(c.begins_at) : null,
+                ends_at: c.ends_at ? fromUTC(c.ends_at) : null,
+              };
+            }),
+          }}
           validationSchema={schema}
-          onSubmit={({
-            offer_type,
-            offer_guid,
-            supported_nonprofit_id,
-            disclaimer,
-            commission_percent,
-            commission_flat,
-            commission_type,
-            is_disabled,
-            is_groomed,
-            begins_at,
-            ends_at,
-            coupons,
-          }) => {
+          onSubmit={values => {
             const form = {
-              offer_type,
-              offer_guid,
-              supported_nonprofit_id: parseInt(supported_nonprofit_id),
-              disclaimer,
+              ...values,
+              supported_nonprofit_id: parseInt(values.supported_nonprofit_id),
               commission:
-                commission_type === 'PERCENT' ? commission_percent / 100 : commission_flat,
+                values.commission_type === 'PERCENT'
+                  ? values.commission_percent / 100
+                  : values.commission_flat,
               base_consumer_payout:
-                commission_type === 'PERCENT' ? commission_percent / 100 : commission_flat,
-              commission_type,
-              is_disabled: stringToBool(is_disabled),
-              is_groomed: stringToBool(is_groomed),
-              begins_at,
-              ends_at,
-              coupons,
+                values.commission_type === 'PERCENT'
+                  ? values.commission_percent / 100
+                  : values.commission_flat,
+              is_disabled: stringToBool(values.is_disabled),
+              is_groomed: stringToBool(values.is_groomed),
+              coupons: values.coupons.map(c => {
+                // convert all timestamps to UTC before saving
+                return {
+                  ...c,
+                  begins_at: c.begins_at ? toUTC(c.begins_at) : null,
+                  ends_at: c.ends_at ? toUTC(c.ends_at) : null,
+                };
+              }),
             };
             updateOffer({ form, brand_id })
               .then(() => {
@@ -216,7 +223,7 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
                 </Form.Row>
 
                 {/* Commission section **********/}
-                <Commission offer={offer} formik={props} />
+                <Commission offer={offer} />
 
                 {/* Offer bool flags **********/}
                 <Form.Row>
@@ -299,8 +306,9 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
                 </Form.Row>
 
                 {/* Coupons section **********/}
-                <Coupons offer={offer} formik={props} />
+                <Coupons coupons={values.coupons} />
 
+                {/* Modal actions **********/}
                 <Row>
                   <Col className="text-right">
                     <Button variant="secondary" onClick={handleClose}>

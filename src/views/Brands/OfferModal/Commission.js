@@ -2,9 +2,10 @@ import React, { Fragment } from 'react';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import InputGroup from 'react-bootstrap/InputGroup';
+import { useFormikContext } from 'formik';
 
-function Commission({ offer, formik }) {
-  const { values, handleChange, errors } = formik;
+function Commission({ offer }) {
+  const { values, handleChange, errors } = useFormikContext();
 
   if (offer.commission_type === 'PERCENT') {
     offer.commission_percent = offer.commission * 100;

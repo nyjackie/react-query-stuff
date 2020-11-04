@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -9,6 +10,21 @@ import ConsumerUser from './ConsumerUser';
 import BrandUser from './BrandUser';
 import NonprofitUser from './NonprofitUser';
 import AdminUser from './AdminUser';
+
+const MatchUser = ({ type, user }) => {
+  switch (type) {
+    case 'consumer':
+      return <ConsumerUser data={user} />;
+    case 'brand':
+      return <BrandUser data={user} />;
+    case 'nonprofit':
+      return <NonprofitUser data={user} />;
+    case 'internal':
+      return <AdminUser data={user} />;
+    default:
+      return <p>Type: {user.type} not supported yet</p>;
+  }
+}
 
 function UserInfo({ match, addNotification }) {
   const { id, type } = match.params;
@@ -26,22 +42,18 @@ function UserInfo({ match, addNotification }) {
 
   data.user_id = id;
 
-  switch (type) {
-    case 'consumer':
-      return <ConsumerUser data={data} />;
-    case 'brand':
-      return <BrandUser data={data} />;
-    case 'nonprofit':
-      return <NonprofitUser data={data} />;
-    case 'internal':
-      return <AdminUser data={data} />;
-    default:
-      return <p>type: {type} not supported yet</p>;
-  }
+  return (
+    <>
+      <Helmet>
+        <title>{type.charAt(0).toUpperCase() + type.slice(1)} User | Admin Portal | Give Good Deeds</title>
+      </Helmet>
+      <MatchUser user={data} type={type} />
+    </>
+  )
 }
 
 UserInfo.propTypes = {
-  addNotification: PropTypes.func.isRequired,
+  match: PropTypes.object,
 };
 
-export default connect(null, { addNotification })(UserInfo);
+export default UserInfo;

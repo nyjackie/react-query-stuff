@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
@@ -125,13 +124,10 @@ function NonprofitUser({ data, addNotification }) {
 
   return (
     <>
-      <Helmet>
-        <title>Nonprofit User | Admin Portal | Give Good Deeds</title>
-      </Helmet>
       <Container className={cn(`block shadow-sm`, styles.userEdit)}>
         <Row>
           <Col>
-            <h2>Nonprofit Profile edit</h2>
+            <h2>Nonprofit Profile Edit: {data.first_name} {data.last_name}</h2>
           </Col>
         </Row>
         <Row>

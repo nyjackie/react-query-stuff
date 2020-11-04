@@ -1,7 +1,6 @@
 import errorHandler from './errorHandler';
 import { dateFmt } from 'components/DateInput';
-import moment from 'moment';
-import { DATETIME_FORMAT } from './constants';
+import { getNow } from 'utils/datetime';
 
 /**
  * Wrapper around setTimeout to use within in an async function and have it wait
@@ -14,14 +13,6 @@ export const wait = ms => {
     setTimeout(resolve, ms);
   });
 };
-
-/**
- * get UTC unix epoch timestamp in seconds
- */
-export function getNow() {
-  // our tokens expiry use Unix Epoch UTC Timestamps in seconds
-  return Math.floor(new Date().getTime() / 1000);
-}
 
 /**
  * checks whether the timestamp provide is within <given seconds> of right now
@@ -299,25 +290,3 @@ export function currency(num) {
 
   return formatter.format(num).split('.')[0];
 }
-
-/**
- * Convert a timestamp to a UTC one in the format that our API expects
- * @param {string} timestamp a valid timestamp
- */
-export function toUTC(timestamp) {
-  return moment(timestamp).utc().format(DATETIME_FORMAT);
-}
-
-/**
- * Our database stores all timestamps in UTC so this converts a timestamp
- * provided by our API into user's local date time
- * @param {string} timestamp
- */
-export function fromUTC(timestamp) {
-  return moment.utc(timestamp).local().format(DATETIME_FORMAT);
-}
-
-/**
- * Get the user's current timezone name (ex: America/New_York)
- */
-export const timeZoneName = () => Intl.DateTimeFormat().resolvedOptions().timeZone;

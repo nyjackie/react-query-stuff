@@ -2,8 +2,9 @@ import React, { Fragment } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
-import { timeZoneName } from 'utils';
 import { FieldArray, useFormikContext } from 'formik';
+import DateTimeET from 'components/DateTimeET';
+import styles from './OfferEditModal.module.scss';
 
 function emptyCoupon() {
   return {
@@ -13,12 +14,6 @@ function emptyCoupon() {
     ends_at: '',
   };
 }
-
-const TZHelpText = () => (
-  <Form.Text className="text-muted">
-    Select a time based on your local time zone: <b>{timeZoneName()}</b>
-  </Form.Text>
-);
 
 /**
  * A single Coupon
@@ -68,40 +63,40 @@ function Coupon({ id, index, name }) {
         {/***********************************************
          * Coupon Start Date
          */}
-        <Form.Group as={Col} controlId={`coupon_${index}_beginAt`}>
-          <Form.Label>
-            <b>Start at:</b>
-          </Form.Label>
-          <Form.Control
-            type="datetime-local"
+        <Col>
+          <DateTimeET
+            controlId={`coupon_${index}_beginAt`}
+            label={
+              <Form.Label>
+                <b>Begins:</b>
+              </Form.Label>
+            }
             name={`${name}.begins_at`}
             onChange={handleChange}
             value={vals.begins_at || ''}
             isInvalid={!!err.begins_at}
+            feedback={<Form.Control.Feedback type="invalid">{err.begins_at}</Form.Control.Feedback>}
           />
-          <TZHelpText />
-          <Form.Control.Feedback type="invalid">{err.begins_at}</Form.Control.Feedback>
-        </Form.Group>
-
+        </Col>
         {/***********************************************
          * Coupon End Date
          */}
-        <Form.Group as={Col} controlId={`coupon_${index}_endsAt`}>
-          <Form.Label>
-            <b>End at:</b>
-          </Form.Label>
-          <Form.Control
-            type="datetime-local"
+        <Col>
+          <DateTimeET
+            controlId={`coupon_${index}_endsAt`}
+            label={
+              <Form.Label>
+                <b>Ends:</b>
+              </Form.Label>
+            }
             name={`${name}.ends_at`}
             value={vals.ends_at || ''}
             onChange={handleChange}
             isInvalid={!!err.ends_at}
+            feedback={<Form.Control.Feedback type="invalid">{err.ends_at}</Form.Control.Feedback>}
           />
-          <TZHelpText />
-          <Form.Control.Feedback type="invalid">{err.ends_at}</Form.Control.Feedback>
-        </Form.Group>
+        </Col>
       </Form.Row>
-
       {/***********************************************
        * Coupon Description
        */}
@@ -141,9 +136,9 @@ function Coupons({ coupons = [] }) {
               <Button onClick={() => arrayHelpers.push(emptyCoupon())}>Add a coupon</Button>
             )}
             {coupons.length > 0 && (
-              <ul className="list-unstyled">
+              <ul className={`${styles.couponList} list-unstyled`}>
                 {coupons.map((c, i) => (
-                  <li className="mb-1 mt-1" key={`id-${c.id}` || `index-${i}`}>
+                  <li key={`id-${c.id}` || `index-${i}`}>
                     <Form.Row>
                       <Col>
                         <Coupon name={`coupons[${i}]`} id={c.id} index={i} />

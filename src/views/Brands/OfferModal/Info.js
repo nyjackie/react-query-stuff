@@ -1,11 +1,12 @@
 import React, { Fragment } from 'react';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
+import moment from 'moment';
 import styles from './OfferEditModal.module.scss';
 
 function Meta({ label, val, children }) {
   return (
-    <Row className={styles.metaRow}>
+    <Row>
       <Col sm={12} md={3} className={styles.metaLabel}>
         <p>{label}</p>
       </Col>
@@ -19,7 +20,8 @@ function Meta({ label, val, children }) {
 function Info({ offer }) {
   return (
     <Fragment>
-      <Meta label="Offer GUID:" val={offer.offer_guid} />
+      <Meta label="Created:" val={moment(offer.created_at).format('MM/DD/YY')} />
+      <Meta label="Offer Program ID:" val={offer.program_id} />
       <Meta label="Offer Type:" val={offer.offer_type} />
       <Meta
         label="Shop URL:"

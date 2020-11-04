@@ -3,15 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import AsyncSelect from 'react-select/async';
 import { Modal, Button, Form, Col, Row } from 'react-bootstrap';
-import moment from 'moment';
 import { Formik } from 'formik';
-import {
-  object as yupObject,
-  number as yupNumber,
-  string as yupString,
-  array as yupArray,
-} from 'yup';
-
 import api from 'gdd-api-lib';
 
 // modal sections
@@ -19,11 +11,13 @@ import Info from './Info';
 import Commission from './Commission';
 import Coupons from './Coupons';
 
+import schema from './offerSchema';
+import DateTimeET from 'components/DateTimeET';
 import { addNotification } from 'actions/notifications';
 import { useUpdateOffer } from 'hooks/useBrands';
 import { useNonprofit } from 'hooks/useNonprofits';
-import DateInput from 'components/DateInput';
-import { stringToBool, toUTC, fromUTC } from 'utils';
+import { stringToBool } from 'utils';
+import { utcToET, etToUTC } from 'utils/datetime';
 import styles from './OfferEditModal.module.scss';
 
 /**
@@ -54,45 +48,6 @@ import styles from './OfferEditModal.module.scss';
  * @property {Coupon[]} offer.coupons
  */
 
-const schema = yupObject({
-  begins_at: yupString().required('Begins at date cannot be empty.'),
-  base_consumer_payout: yupNumber()
-    .typeError('Consumer Payout must be a number')
-    .required('Consumer Payout cannot be empty.'),
-
-  /**
-   * Commision validation is conditional on which commission_type is selected
-   */
-  commission_type: yupString(),
-  commission_percent: yupNumber().when('commission_type', {
-    is: 'PERCENT',
-    then: yupNumber()
-      .required('Commission cannot be empty.')
-      .typeError('Commission must be a number')
-      .moreThan(-1, 'Must be a positive number or 0'),
-  }),
-  commission_flat: yupNumber().when('commission_type', {
-    is: 'FLAT',
-    then: yupNumber()
-      .required('Commission cannot be empty.')
-      .typeError('Commission must be a number')
-      .moreThan(-1, 'Must be a positive number or 0'),
-  }),
-
-  disclaimer: yupString().nullable(),
-  supported_nonprofit_id: yupNumber()
-    .typeError('Supported Nonprofit ID must be a number')
-    .nullable(),
-  coupons: yupArray().of(
-    yupObject().shape({
-      begins_at: yupString().nullable(),
-      ends_at: yupString().nullable(),
-      code: yupString().required('Code is required'),
-      description: yupString().required('Description is required'),
-    })
-  ),
-});
-
 const loadOptions = async inputValue => {
   const res = await api.searchNonprofits({ search_term: window.btoa(inputValue) });
   const newRes = res.data.nonprofits.map(data => {
@@ -107,33 +62,44 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
 
   if (!offer) return null;
 
+  if (offer.commission_type === 'PERCENT') {
+    offer.commission_percent = offer.commission * 100;
+    offer.commission_flat = 0;
+  } else {
+    offer.commission_flat = offer.commission || 0;
+    offer.commission_percent = 0;
+  }
+
   return (
     <Modal show={show} onHide={handleClose} dialogClassName={styles.modal}>
       <Modal.Header closeButton>
         <Modal.Title>
-          Program ID: {offer.program_id}
-          <br />
-          {offer.created_at ? `(Created ${moment(offer.created_at).format('MM/DD/YY')})` : ''}
+          <small>OFFER GUID:</small> <code>{offer.offer_guid}</code>
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Formik
           initialValues={{
             ...offer,
+            begins_at: offer.begins_at ? utcToET(offer.begins_at) : null,
+            ends_at: offer.ends_at ? utcToET(offer.ends_at) : null,
             coupons: offer.coupons.map(c => {
-              // convert all timestamps to local time for initial values
               return {
                 ...c,
-                begins_at: c.begins_at ? fromUTC(c.begins_at) : null,
-                ends_at: c.ends_at ? fromUTC(c.ends_at) : null,
+                begins_at: c.begins_at ? utcToET(c.begins_at) : null,
+                ends_at: c.ends_at ? utcToET(c.ends_at) : null,
               };
             }),
           }}
           validationSchema={schema}
-          onSubmit={values => {
+          onSubmit={async values => {
             const form = {
               ...values,
+
+              // api expects an int for supported_nonprofit_id
               supported_nonprofit_id: parseInt(values.supported_nonprofit_id),
+
+              // set commission and payout
               commission:
                 values.commission_type === 'PERCENT'
                   ? values.commission_percent / 100
@@ -142,25 +108,30 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
                 values.commission_type === 'PERCENT'
                   ? values.commission_percent / 100
                   : values.commission_flat,
+
+              // convert string "true" or "false" to actual bools
               is_disabled: stringToBool(values.is_disabled),
               is_groomed: stringToBool(values.is_groomed),
+
+              // convert Datetimes from Eastern Time to UTC
+              begins_at: values.begins_at ? etToUTC(values.begins_at) : null,
+              ends_at: values.ends_at ? etToUTC(values.ends_at) : null,
               coupons: values.coupons.map(c => {
-                // convert all timestamps to UTC before saving
                 return {
                   ...c,
-                  begins_at: c.begins_at ? toUTC(c.begins_at) : null,
-                  ends_at: c.ends_at ? toUTC(c.ends_at) : null,
+                  begins_at: c.begins_at ? etToUTC(c.begins_at) : null,
+                  ends_at: c.ends_at ? etToUTC(c.ends_at) : null,
                 };
               }),
             };
-            updateOffer({ form, brand_id })
-              .then(() => {
-                addNotification(`Offer update success`, 'success');
-                handleClose();
-              })
-              .catch(() => {
-                addNotification(`Offer update failed. Something went wrong.`, 'fail');
-              });
+
+            try {
+              await updateOffer({ form, brand_id });
+              addNotification(`Offer update success`, 'success');
+              handleClose();
+            } catch (err) {
+              addNotification(`Error saving offer ${err.response?.data?.message}`, 'error');
+            }
           }}
         >
           {props => {
@@ -196,30 +167,44 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
 
                 {/* Offer Start + End Dates **********/}
                 <Form.Row>
-                  <Form.Group as={Col} controlId="beginsAt">
-                    <Form.Label>
-                      <b>Start Date:</b>
-                    </Form.Label>
-                    <DateInput
+                  <Col>
+                    <DateTimeET
+                      controlId="beginsAt"
+                      label={
+                        <Form.Label>
+                          <b>Start Date:</b>
+                        </Form.Label>
+                      }
                       name="begins_at"
-                      value={moment(values.begins_at).format('yyyy-MM-DD')}
+                      value={values.begins_at}
                       onChange={handleChange}
-                      isInvalid={touched.begins_at && errors.begins_at}
-                      errorMsg={errors.begins_at}
+                      isInvalid={touched.begins_at && !!errors.begins_at}
+                      feedback={
+                        <Form.Control.Feedback type="invalid">
+                          {errors.begins_at}
+                        </Form.Control.Feedback>
+                      }
                     />
-                  </Form.Group>
-                  <Form.Group as={Col} controlId="endsAt">
-                    <Form.Label>
-                      <b>End Date:</b>
-                    </Form.Label>
-                    <DateInput
+                  </Col>
+                  <Col>
+                    <DateTimeET
+                      controlId="endsAt"
+                      label={
+                        <Form.Label>
+                          <b>End Date:</b>
+                        </Form.Label>
+                      }
                       name="ends_at"
-                      value={moment(values.ends_at).format('yyyy-MM-DD')}
+                      value={values.ends_at}
                       onChange={handleChange}
                       isInvalid={touched.ends_at && errors.ends_at}
-                      errorMsg={errors.ends_at}
+                      feedback={
+                        <Form.Control.Feedback type="invalid">
+                          {errors.ends_at}
+                        </Form.Control.Feedback>
+                      }
                     />
-                  </Form.Group>
+                  </Col>
                 </Form.Row>
 
                 {/* Commission section **********/}
@@ -308,7 +293,7 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
                 {/* Coupons section **********/}
                 <Coupons coupons={values.coupons} />
 
-                {/* Modal actions **********/}
+                {/* Actions **********/}
                 <Row>
                   <Col className="text-right">
                     <Button variant="secondary" onClick={handleClose}>
@@ -324,8 +309,6 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
           }}
         </Formik>
       </Modal.Body>
-
-      <Modal.Footer></Modal.Footer>
     </Modal>
   );
 };

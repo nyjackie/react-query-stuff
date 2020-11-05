@@ -204,6 +204,7 @@ export function useUpdateBrand() {
  */
 export function useUpdateOffer() {
   return useMutation(updateOffer, {
+    throwOnError: true,
     onSuccess: (offer, variable) => {
       queryCache.invalidateQueries(['offers', variable.brand_id]);
     },

@@ -1,13 +1,18 @@
 .modal {
   max-width: 80%;
 }
-
-.metaRow {
-}
 .metaLabel {
   font-weight: bold;
   max-width: 210px;
 }
 .metaVal {
   word-wrap: break-word;
+}
+
+.couponList {
+  li {
+    margin: 0;
+    padding: 1em 0.5em;
+    border-top: solid 1px gray;
+  }
 }

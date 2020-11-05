@@ -27,7 +27,7 @@ import { addNotification } from 'actions/notifications';
 import { useBrand, useCategories, useOffers, useUpdateBrand, useCESubID } from 'hooks/useBrands';
 import Spinner from 'components/Spinner';
 import OfferRow from './BrandOfferRow';
-import OfferEditModal from './OfferEditModal';
+import OfferEditModal from './OfferModal';
 import BrandImages from './BrandImages';
 import { stringToBool } from 'utils';
 import { ReactComponent as GreenCheck } from 'assets/green-check.svg';

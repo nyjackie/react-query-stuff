@@ -219,34 +219,13 @@ function NonprofitUser({ data, addNotification }) {
             </Col>
           </Form.Group>
 
-          <UserFormControls isEdit={edit} setEdit={toggleEdit} />
+          <UserFormControls
+            isEdit={edit}
+            setEdit={toggleEdit}
+            email={data.email}
+            useForgotPassword={useNonprofitForgotPassword}
+          />
 
-          {edit ? (
-            <>
-              <Button
-                variant="outline-primary mr-2"
-                onClick={e => {
-                  e.preventDefault();
-                  toggleEdit(false);
-                }}
-              >
-                Cancel
-              </Button>
-              <Button type="submit" variant="success">
-                Save
-              </Button>
-            </>
-          ) : (
-            <Button
-              className={styles.edit}
-              onClick={e => {
-                e.preventDefault();
-                toggleEdit(true);
-              }}
-            >
-              Edit
-            </Button>
-          )}
         </Form>
       </Container>
 

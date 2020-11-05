@@ -148,8 +148,7 @@ export function useCreateNoprofitUser() {
  * @param {string?|boolean} template template=new_nonprofit if using for new nonprofit user creation
  */
 export function useNonprofitForgotPassword(email, template = false) {
-  return useQuery(
-    ['np_forgotPW', email],
+  return useMutation(
     () => {
       const query = { email: window.btoa(email) };
       if (template) {
@@ -157,15 +156,7 @@ export function useNonprofitForgotPassword(email, template = false) {
       }
       return api.nonprofitForgotPassword(query);
     },
-    {
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      cacheTime: 0,
-      staleTime: 0,
-      enabled: email,
-      retry: false,
-      onError: console.error,
-    }
+    { onError: console.error }
   );
 }
 

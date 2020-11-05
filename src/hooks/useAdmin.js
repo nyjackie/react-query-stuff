@@ -57,8 +57,7 @@ export function useUniquePhone() {
  * @param {string?|boolean} template template=new_nonprofit if using for new nonprofit user creation
  */
 export function useAdminForgotPassword(email, template = false) {
-  return useQuery(
-    ['admin_forgotPW', email],
+  return useMutation(
     () => {
       const query = { email: window.btoa(email) };
       if (template) {
@@ -66,14 +65,6 @@ export function useAdminForgotPassword(email, template = false) {
       }
       return api.forgotPasswordInternal(query);
     },
-    {
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      cacheTime: 0,
-      staleTime: 0,
-      enabled: email,
-      retry: false,
-      onError: console.error,
-    }
+    { onError: console.error }
   );
 }

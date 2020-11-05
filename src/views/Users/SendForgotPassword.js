@@ -12,8 +12,8 @@ export const TEMPLATES = {
 };
 
 function SendForgotPassword({ email, hook, new_template = false }) {
-  const [finalEmail, setFinalEmail] = useState(null);
-  const { isSuccess, isLoading, error } = hook(finalEmail, new_template);
+  const [sendForgotPassword, { isSuccess, isLoading, error }] = hook(email, new_template);
+  console.log(isSuccess, isLoading, error);
 
   const buttonCopy = new_template
     ? 'Send new user password reset email'
@@ -25,10 +25,9 @@ function SendForgotPassword({ email, hook, new_template = false }) {
         <Col>
           <p>{email}</p>
           <Button
-            onClick={() => {
-              setFinalEmail(email);
-            }}
+            onClick={sendForgotPassword}
             variant="primary"
+            disabled={isSuccess || isLoading}
           >
             {buttonCopy}
           </Button>

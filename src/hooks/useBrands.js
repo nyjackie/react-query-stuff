@@ -269,8 +269,7 @@ export function useUpdateBrandHero() {
  * @param {string?|boolean} template template=new_brand
  */
 export function useBrandForgotPassword(email, template = false) {
-  return useQuery(
-    ['brand_forgotPW', email],
+  return useMutation(
     () => {
       const query = { email: window.btoa(email) };
       if (template) {
@@ -278,14 +277,6 @@ export function useBrandForgotPassword(email, template = false) {
       }
       return api.brandForgotPassword(query);
     },
-    {
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      cacheTime: 0,
-      staleTime: 0,
-      enabled: email,
-      retry: false,
-      onError: console.error,
-    }
+    { onError: console.error, }
   );
 }

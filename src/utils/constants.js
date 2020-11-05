@@ -34,5 +34,3 @@ export const USER_TYPES = {
   BRAND: 'brand',
   INTERNAL: 'internal',
 };
-
-export const DATETIME_FORMAT = 'YYYY-MM-DDTHH:mm:ss';

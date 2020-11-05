@@ -39,6 +39,24 @@
   }
 }
 
+.userEditList {
+  margin-bottom: 32px;
+  padding: 0;
+
+  .userEdit {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  h2 {
+    margin: 0;
+  }
+
+  :global(.card-header) {
+    cursor: pointer;
+  }
+}
+
 .userEditControls {
   width: 100%;
   display: flex;

@@ -34,7 +34,7 @@ const schema = createSchema({
   // phone_number: phone.required('This field is required'),
 });
 
-function AdminUser({ data = { email: '' }, addNotification }) {
+function AdminUser({ data = { email: '' }, addNotification, includeHeader=true }) {
   // const [updateUser] = useUpdateBrandUser();
   // const [checkUniqueEmail, { data: ueData }] = useUniqueEmail();
   // const [checkUniquePhone, { data: upData }] = useUniquePhone();
@@ -118,20 +118,24 @@ function AdminUser({ data = { email: '' }, addNotification }) {
 
   return (
     <>
-      <Helmet>
-        <title>Internal User | Admin Portal | Give Good Deeds</title>
-      </Helmet>
       <Container className={cn(`block shadow-sm`, styles.userEdit)}>
-        <Row>
-          <Col>
+        {includeHeader &&
+        <>
+          <Helmet>
+            <title>Internal User | Admin Portal | Give Good Deeds</title>
+          </Helmet>
+          <Row>
+            <Col>
             <h2>Admin Profile edit</h2>
-            <p>
-              Currently unavailable until the following API is ready:{' '}
-              <code>GET /user/internal/{`user_id`}/profile</code>{' '}
-            </p>
-            <p>Enter an email below to initiate a forgot password for that user</p>
-          </Col>
-        </Row>
+              <p>
+                Currently unavailable until the following API is ready:{' '}
+                <code>GET /user/internal/{`user_id`}/profile</code>{' '}
+              </p>
+              <p>Enter an email below to initiate a forgot password for that user</p>
+            </Col>
+          </Row>
+        </>
+        }
         <Form noValidate onSubmit={formik.handleSubmit} className="mb-2">
           {/* <Form.Group as={Row} controlId="first_name">
             <Form.Label column xl={3}>

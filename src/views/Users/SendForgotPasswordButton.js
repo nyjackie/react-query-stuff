@@ -11,7 +11,7 @@ function SendForgotPasswordButton({ email, useForgotPassword, new_template = fal
   let [sendForgotPassword, { isSuccess, isLoading, isError, reset }] =
     useForgotPassword(email, new_template);
 
-return (
+  return (
     <Button
       onClick={(isSuccess || isError) ? reset : sendForgotPassword}
       variant={isSuccess ? "success" : (isError ? "danger" : "primary")}

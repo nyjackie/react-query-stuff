@@ -14,7 +14,6 @@ import { useUpdateNonprofitUser, useNonprofitForgotPassword } from 'hooks/useNon
 import { useUniqueEmail, useUniquePhone } from 'hooks/useAdmin';
 import { USER_TYPES } from 'utils/constants';
 import { dedupeUser } from 'utils';
-import SendForgotPassword from 'views/Users/SendForgotPassword';
 import UserFormControls from 'views/Users/UserFormControls';
 import styles from './User.module.scss';
 
@@ -40,7 +39,7 @@ const schema = createSchema({
  * @param {object} props
  * @param {NonprofitUserProfile} props.data
  */
-function NonprofitUser({ data, addNotification }) {
+function NonprofitUser({ data, addNotification, includeHeader=true }) {
   const [edit, toggleEdit] = useState(false);
   const [updateUser] = useUpdateNonprofitUser();
   const [checkUniqueEmail, { data: ueData }] = useUniqueEmail();
@@ -126,20 +125,24 @@ function NonprofitUser({ data, addNotification }) {
   return (
     <>
       <Container className={cn(`block shadow-sm`, styles.userEdit)}>
-        <Row>
-          <Col>
-            <h2>Nonprofit Profile Edit: {data.first_name} {data.last_name}</h2>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <p>
-              <Link to={`/nonprofit/${data.nonprofit_id}`}>
-                <u>Nonprofit id: {data.nonprofit_id}</u>
-              </Link>
-            </p>
-          </Col>
-        </Row>
+        {includeHeader &&
+          <>
+            <Row>
+              <Col>
+              <h2>Nonprofit Profile Edit: {data.first_name} {data.last_name}</h2>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <p>
+                  <Link to={`/nonprofit/${data.nonprofit_id}`}>
+                  <u>Nonprofit id: {data.nonprofit_id}</u>
+                  </Link>
+                </p>
+              </Col>
+            </Row>
+          </>
+        }
         <Form noValidate onSubmit={formik.handleSubmit} className="mb-2">
           <Form.Group as={Row} controlId="first_name">
             <Form.Label column xl={3}>
@@ -228,8 +231,6 @@ function NonprofitUser({ data, addNotification }) {
 
         </Form>
       </Container>
-
-      <SendForgotPassword email={data.email} hook={useNonprofitForgotPassword} />
     </>
   );
 }

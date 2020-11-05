@@ -13,7 +13,6 @@ export const TEMPLATES = {
 
 function SendForgotPassword({ email, hook, new_template = false }) {
   const [sendForgotPassword, { isSuccess, isLoading, error }] = hook(email, new_template);
-  console.log(isSuccess, isLoading, error);
 
   const buttonCopy = new_template
     ? 'Send new user password reset email'

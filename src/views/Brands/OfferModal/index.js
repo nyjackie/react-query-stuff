@@ -81,13 +81,13 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
         <Formik
           initialValues={{
             ...offer,
-            begins_at: offer.begins_at ? utcToET(offer.begins_at) : null,
-            ends_at: offer.ends_at ? utcToET(offer.ends_at) : null,
+            begins_at: offer.begins_at ? utcToET(offer.begins_at) : '',
+            ends_at: offer.ends_at ? utcToET(offer.ends_at) : '',
             coupons: offer.coupons.map(c => {
               return {
                 ...c,
-                begins_at: c.begins_at ? utcToET(c.begins_at) : null,
-                ends_at: c.ends_at ? utcToET(c.ends_at) : null,
+                begins_at: c.begins_at ? utcToET(c.begins_at) : '',
+                ends_at: c.ends_at ? utcToET(c.ends_at) : '',
               };
             }),
           }}

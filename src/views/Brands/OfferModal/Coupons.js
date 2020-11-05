@@ -67,7 +67,7 @@ function Coupon({ id, index, name }) {
             }
             name={`${name}.begins_at`}
             onChange={handleChange}
-            value={vals.begins_at || ''}
+            value={vals.begins_at}
             isInvalid={!!err.begins_at}
             feedback={<Form.Control.Feedback type="invalid">{err.begins_at}</Form.Control.Feedback>}
           />
@@ -84,7 +84,7 @@ function Coupon({ id, index, name }) {
               </Form.Label>
             }
             name={`${name}.ends_at`}
-            value={vals.ends_at || ''}
+            value={vals.ends_at}
             onChange={handleChange}
             isInvalid={!!err.ends_at}
             feedback={<Form.Control.Feedback type="invalid">{err.ends_at}</Form.Control.Feedback>}
@@ -126,13 +126,10 @@ function Coupons({ coupons = [] }) {
         name="coupons"
         render={arrayHelpers => (
           <>
-            {coupons.length === 0 && (
-              <Button onClick={() => arrayHelpers.push(emptyCoupon())}>Add a coupon</Button>
-            )}
             {coupons.length > 0 && (
               <ul className={`${styles.couponList} list-unstyled`}>
                 {coupons.map((c, i) => (
-                  <li key={`id-${c.id}` || `index-${i}`}>
+                  <li key={c.id ? `id-${c.id}` : `index-${i}`}>
                     <Form.Row>
                       <Col>
                         <Coupon name={`coupons[${i}]`} id={c.id} index={i} />
@@ -151,19 +148,9 @@ function Coupons({ coupons = [] }) {
                     </Form.Row>
                   </li>
                 ))}
-                <li>
-                  <Button
-                    className="mt-1"
-                    title="add a new coupon"
-                    onClick={() =>
-                      arrayHelpers.insert(coupons.length > 0 ? coupons.length : 0, emptyCoupon())
-                    }
-                  >
-                    Add new coupon
-                  </Button>
-                </li>
               </ul>
             )}
+            <Button onClick={() => arrayHelpers.push(emptyCoupon())}>Add a coupon</Button>
           </>
         )}
       />

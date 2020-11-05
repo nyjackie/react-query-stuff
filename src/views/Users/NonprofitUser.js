@@ -15,6 +15,7 @@ import { useUniqueEmail, useUniquePhone } from 'hooks/useAdmin';
 import { USER_TYPES } from 'utils/constants';
 import { dedupeUser } from 'utils';
 import SendForgotPassword from 'views/Users/SendForgotPassword';
+import UserFormControls from 'views/Users/UserFormControls';
 import styles from './User.module.scss';
 
 const schema = createSchema({
@@ -217,6 +218,8 @@ function NonprofitUser({ data, addNotification }) {
               </Form.Control.Feedback>
             </Col>
           </Form.Group>
+
+          <UserFormControls isEdit={edit} setEdit={toggleEdit} />
 
           {edit ? (
             <>

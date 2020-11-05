@@ -22,6 +22,7 @@ import { dedupeUser } from 'utils';
 
 // components
 import SendForgotPassword from 'views/Users/SendForgotPassword';
+import SendForgotPasswordButton from 'views/Users/SendForgotPasswordButton';
 
 // styles
 import styles from './User.module.scss';
@@ -172,18 +173,26 @@ function AdminUser({ data = { email: '' }, addNotification }) {
             <Form.Label column xl={3}>
               Email:
             </Form.Label>
-            <Col>
+            <Col sm={8}>
               <Form.Control
                 type="email"
                 name="email"
                 value={formik.values.email || ''}
                 onChange={formik.handleChange}
+                className={styles.edit}
                 // isInvalid={badEmail || (formik.touched.email && formik.errors.email)}
                 // isValid={!badEmail && formik.touched.email && !formik.errors.email}
                 isInvalid={formik.touched.email && formik.errors.email}
                 isValid={formik.touched.email && !formik.errors.email}
               />
               <Form.Control.Feedback type="invalid">{formik.errors.email}</Form.Control.Feedback>
+            </Col>
+            <Col sm={4}>
+              <SendForgotPasswordButton
+                style={{ width: "100%" }}
+                email={formik.values.email}
+                useForgotPassword={useAdminForgotPassword}
+              />
             </Col>
           </Form.Group>
 
@@ -213,7 +222,6 @@ function AdminUser({ data = { email: '' }, addNotification }) {
           </Button> */}
         </Form>
       </Container>
-      <SendForgotPassword email={formik.values.email} hook={useAdminForgotPassword} />
     </>
   );
 }

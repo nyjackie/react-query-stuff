@@ -14,7 +14,7 @@ import { useBrandForgotPassword } from 'hooks/useBrands';
 import { useUniqueEmail, useUniquePhone } from 'hooks/useAdmin';
 import { USER_TYPES } from 'utils/constants';
 import { dedupeUser } from 'utils';
-import SendForgotPassword from 'views/Users/SendForgotPassword';
+import UserFormControls from 'views/Users/UserFormControls';
 import styles from './User.module.scss';
 
 const schema = createSchema({
@@ -219,35 +219,14 @@ function BrandUser({ data, addNotification }) {
             </Col>
           </Form.Group>
 
-          {edit ? (
-            <>
-              <Button
-                variant="outline-primary mr-2"
-                onClick={e => {
-                  e.preventDefault();
-                  toggleEdit(false);
-                }}
-              >
-                Cancel
-              </Button>
-              <Button type="submit" variant="success">
-                Save
-              </Button>
-            </>
-          ) : (
-            <Button
-              className={styles.edit}
-              onClick={e => {
-                e.preventDefault();
-                toggleEdit(true);
-              }}
-            >
-              Edit
-            </Button>
-          )}
+          <UserFormControls
+            isEdit={edit}
+            setEdit={toggleEdit}
+            email={data.email}
+            useForgotPassword={useBrandForgotPassword}
+          />
         </Form>
       </Container>
-      <SendForgotPassword email={data.email} hook={useBrandForgotPassword} />
     </>
   );
 }

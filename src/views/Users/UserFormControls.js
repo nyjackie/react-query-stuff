@@ -24,9 +24,7 @@ export default ({ isEdit, setEdit, email, useForgotPassword }) => {
               Save
             </Button>
           </div>
-          <Button className={styles.edit}>
-            Send Forgot Password
-          </Button>
+          <SendForgotPasswordButton email={email} useForgotPassword={useForgotPassword}/>
         </>
       ) : (
         <>
@@ -41,9 +39,7 @@ export default ({ isEdit, setEdit, email, useForgotPassword }) => {
               Edit
             </Button>
           </div>
-          <SendForgotPasswordButton email={email} useForgotPassword={useForgotPassword}>
-            Send Forgot Password
-          </SendForgotPasswordButton>
+          <SendForgotPasswordButton email={email} useForgotPassword={useForgotPassword}/>
         </>
       )}
 

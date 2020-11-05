@@ -13,11 +13,6 @@ function SendForgotPasswordButton({ email, useForgotPassword, new_template = fal
 
   return (
     <div>
-      {isLoading && (
-        <Spinner as="span" size="md" animation="border" role="status" aria-hidden="true">
-          <span className="sr-only">Loading...</span>
-        </Spinner>
-      )}
       <Button
         onClick={isSuccess ? reset : sendForgotPassword}
         variant={isSuccess ? "success" : "primary"}

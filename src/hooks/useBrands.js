@@ -178,7 +178,7 @@ export function useOffers(id) {
   return useQuery(
     ['offers', id],
     () => {
-      return api.getAllBrandsOffers(id).then(res => res.data);
+      return api.getOffersByBrandId(id).then(res => res.data);
     },
     {
       enabled: id,
@@ -204,6 +204,7 @@ export function useUpdateBrand() {
  */
 export function useUpdateOffer() {
   return useMutation(updateOffer, {
+    throwOnError: true,
     onSuccess: (offer, variable) => {
       queryCache.invalidateQueries(['offers', variable.brand_id]);
     },

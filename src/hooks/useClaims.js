@@ -24,7 +24,8 @@ export function useClaims() {
   return useQuery(
     'claims',
     () => {
-      return api.getClaims().then(res => res.data);
+      // return api.getClaims().then(res => res.data);
+      return Promise.resolve([]);
     },
     {
       retry: false,

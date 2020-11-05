@@ -1,5 +1,6 @@
 import errorHandler from './errorHandler';
 import { dateFmt } from 'components/DateInput';
+import { getNow } from 'utils/datetime';
 
 /**
  * Wrapper around setTimeout to use within in an async function and have it wait
@@ -14,14 +15,6 @@ export const wait = ms => {
 };
 
 /**
- * get UTC unix epoch timestamp in seconds
- */
-export function getNow() {
-  // our tokens expiry use Unix Epoch UTC Timestamps in seconds
-  return Math.floor(new Date().getTime() / 1000);
-}
-
-/**
  * checks whether the timestamp provide is within <given seconds> of right now
  * @param {string} expiry unix epoch timestamp in seconds from jwt.user.exp
  * @param {number} [seconds=30] set how many seconds before expire to check
@@ -34,7 +27,11 @@ export function willExpire(expiry, seconds = 30) {
   return now > expiry - seconds;
 }
 
-export const decryptBasicAuth = encrypted => {
+/**
+ * Decode a Basic Auth Base64 encoded basic auth username:password string
+ * @param {string} encrypted
+ */
+export const decodeBasicAuth = encrypted => {
   //  'Basic ' + window.btoa(email + ':' + password),
   const parts = window.atob(encrypted.substring(6)).split(':');
   return {
@@ -42,18 +39,6 @@ export const decryptBasicAuth = encrypted => {
     password: parts[1],
   };
 };
-
-/**
- * Simple func to combine className strings
- * can make this more robust if needed like this: https://github.com/JedWatson/classnames#readme
- * @param {string} original
- * @param {string} extra
- */
-export function classNames(original, extra) {
-  if (original) return `${original} ${extra}`;
-
-  return extra;
-}
 
 export function getTextNodeWidth(textNode) {
   var range = document.createRange();
@@ -89,6 +74,7 @@ export function serialize(form, encode = true) {
 }
 
 /**
+ * Converts a flat (no nested properties) object into a URL search query string
  * @param {object} data
  */
 export function toQueryString(data) {
@@ -115,17 +101,6 @@ export function fromQueryString(str) {
     }
     return acc;
   }, {});
-}
-
-/**
- * source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent
- * @param {string} str
- * @returns {string}
- */
-export function fixedEncodeURIComponent(str) {
-  return encodeURIComponent(str).replace(/[!'()*]/g, function (c) {
-    return '%' + c.charCodeAt(0).toString(16);
-  });
 }
 
 export function queryEncode(str) {
@@ -200,6 +175,11 @@ export function updateCollection(collection, key, newData) {
   });
 }
 
+/**
+ * Replaces all properties with null values in a flat object with an empty
+ * string
+ * @param {object} obj
+ */
 export function nullToEmpty(obj) {
   return Object.keys(obj).reduce((acc, key) => {
     const val = obj[key];
@@ -226,7 +206,8 @@ export function dedupeObj(source, newObj) {
 }
 
 /**
- * Left pads a single 0 for things like dates days and months
+ * Left pads a single 0 for things like dates days and months. Only inserts a
+ * single zero
  * @param {number|string} n number to be left padded
  * @returns {string}
  */

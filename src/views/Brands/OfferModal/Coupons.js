@@ -27,21 +27,15 @@ function Coupon({ id, index, name }) {
     <Fragment>
       <Form.Row>
         {/***********************************************
-         * ID or New
+         * ID if it exists
          */}
-        {id ? (
+        {id && (
           <Form.Group as={Col} xs={1} controlId={`coupon_${index}_id`}>
             <Form.Label>
               <b>ID:</b>
             </Form.Label>
             <Form.Control name={`${name}.id`} value={vals.id} readOnly plaintext />
           </Form.Group>
-        ) : (
-          <Col xs={1} className="d-flex flex-column justify-content-end pb-2">
-            <p>
-              <b>NEW</b>
-            </p>
-          </Col>
         )}
 
         {/***********************************************

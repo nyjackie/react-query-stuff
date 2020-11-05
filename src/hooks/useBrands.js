@@ -178,7 +178,7 @@ export function useOffers(id) {
   return useQuery(
     ['offers', id],
     () => {
-      return api.getAllBrandsOffers(id).then(res => res.data);
+      return api.getOffersByBrandId(id).then(res => res.data);
     },
     {
       enabled: id,

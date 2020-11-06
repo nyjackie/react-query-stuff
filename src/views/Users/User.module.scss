@@ -6,6 +6,7 @@
 
 .edit {
   margin-bottom: 20px;
+  position: relative;
 }
 
 .gridcol {
@@ -36,6 +37,32 @@
   label {
     font-weight: bold;
   }
+}
+
+.userEditList {
+  margin-bottom: 32px;
+  padding: 0;
+
+  .userEdit {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: 2rem 2rem;
+  }
+
+  h2 {
+    margin: 0;
+  }
+
+  :global(.card-header) {
+    cursor: pointer;
+  }
+}
+
+.userEditControls {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 
 .userSearchResult {

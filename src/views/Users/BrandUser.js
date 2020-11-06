@@ -14,7 +14,7 @@ import { useBrandForgotPassword } from 'hooks/useBrands';
 import { useUniqueEmail, useUniquePhone } from 'hooks/useAdmin';
 import { USER_TYPES } from 'utils/constants';
 import { dedupeUser } from 'utils';
-import SendForgotPassword from 'views/Users/SendForgotPassword';
+import UserFormControls from 'views/Users/UserFormControls';
 import styles from './User.module.scss';
 
 const schema = createSchema({
@@ -37,7 +37,7 @@ const schema = createSchema({
  * @param {object} props
  * @param {UserProfile} props.data
  */
-function BrandUser({ data, addNotification }) {
+function BrandUser({ data, addNotification, includeHeader=true }) {
   const [edit, toggleEdit] = useState(false);
   const [updateUser] = useUpdateBrandUser();
   const [checkUniqueEmail, { data: ueData }] = useUniqueEmail();
@@ -122,24 +122,28 @@ function BrandUser({ data, addNotification }) {
 
   return (
     <>
-      <Helmet>
-        <title>Brand User | Admin Portal | Give Good Deeds</title>
-      </Helmet>
       <Container className={cn(`block shadow-sm`, styles.userEdit)}>
-        <Row>
-          <Col>
-            <h2>Brand Profile edit</h2>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <p>
-              <Link to={`/brands/${data.brand_id}`}>
-                <u>Brand id: {data.brand_id}</u>
-              </Link>
-            </p>
-          </Col>
-        </Row>
+        {includeHeader &&
+          <>
+            <Helmet>
+              <title>Brand User | Admin Portal | Give Good Deeds</title>
+            </Helmet>
+            <Row>
+              <Col>
+                <h2>Brand Profile edit</h2>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <p>
+                  <Link to={`/brands/${data.brand_id}`}>
+                    <u>Brand id: {data.brand_id}</u>
+                  </Link>
+                </p>
+              </Col>
+            </Row>
+          </>
+        }
         <Form noValidate onSubmit={formik.handleSubmit} className="mb-2">
           <Form.Group as={Row} controlId="first_name">
             <Form.Label column xl={3}>
@@ -219,35 +223,14 @@ function BrandUser({ data, addNotification }) {
             </Col>
           </Form.Group>
 
-          {edit ? (
-            <>
-              <Button
-                variant="outline-primary mr-2"
-                onClick={e => {
-                  e.preventDefault();
-                  toggleEdit(false);
-                }}
-              >
-                Cancel
-              </Button>
-              <Button type="submit" variant="success">
-                Save
-              </Button>
-            </>
-          ) : (
-            <Button
-              className={styles.edit}
-              onClick={e => {
-                e.preventDefault();
-                toggleEdit(true);
-              }}
-            >
-              Edit
-            </Button>
-          )}
+          <UserFormControls
+            isEdit={edit}
+            setEdit={toggleEdit}
+            email={data.email}
+            useForgotPassword={useBrandForgotPassword}
+          />
         </Form>
       </Container>
-      <SendForgotPassword email={data.email} hook={useBrandForgotPassword} />
     </>
   );
 }

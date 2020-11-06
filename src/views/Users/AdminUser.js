@@ -22,6 +22,7 @@ import { dedupeUser } from 'utils';
 
 // components
 import SendForgotPassword from 'views/Users/SendForgotPassword';
+import SendForgotPasswordButton from 'views/Users/SendForgotPasswordButton';
 
 // styles
 import styles from './User.module.scss';
@@ -33,7 +34,7 @@ const schema = createSchema({
   // phone_number: phone.required('This field is required'),
 });
 
-function AdminUser({ data = { email: '' }, addNotification }) {
+function AdminUser({ data = { email: '' }, addNotification, includeHeader=true }) {
   // const [updateUser] = useUpdateBrandUser();
   // const [checkUniqueEmail, { data: ueData }] = useUniqueEmail();
   // const [checkUniquePhone, { data: upData }] = useUniquePhone();
@@ -117,20 +118,24 @@ function AdminUser({ data = { email: '' }, addNotification }) {
 
   return (
     <>
-      <Helmet>
-        <title>Internal User | Admin Portal | Give Good Deeds</title>
-      </Helmet>
       <Container className={cn(`block shadow-sm`, styles.userEdit)}>
-        <Row>
-          <Col>
+        {includeHeader &&
+        <>
+          <Helmet>
+            <title>Internal User | Admin Portal | Give Good Deeds</title>
+          </Helmet>
+          <Row>
+            <Col>
             <h2>Admin Profile edit</h2>
-            <p>
-              Currently unavailable until the following API is ready:{' '}
-              <code>GET /user/internal/{`user_id`}/profile</code>{' '}
-            </p>
-            <p>Enter an email below to initiate a forgot password for that user</p>
-          </Col>
-        </Row>
+              <p>
+                Currently unavailable until the following API is ready:{' '}
+                <code>GET /user/internal/{`user_id`}/profile</code>{' '}
+              </p>
+              <p>Enter an email below to initiate a forgot password for that user</p>
+            </Col>
+          </Row>
+        </>
+        }
         <Form noValidate onSubmit={formik.handleSubmit} className="mb-2">
           {/* <Form.Group as={Row} controlId="first_name">
             <Form.Label column xl={3}>
@@ -172,18 +177,26 @@ function AdminUser({ data = { email: '' }, addNotification }) {
             <Form.Label column xl={3}>
               Email:
             </Form.Label>
-            <Col>
+            <Col sm={8}>
               <Form.Control
                 type="email"
                 name="email"
                 value={formik.values.email || ''}
                 onChange={formik.handleChange}
+                className={styles.edit}
                 // isInvalid={badEmail || (formik.touched.email && formik.errors.email)}
                 // isValid={!badEmail && formik.touched.email && !formik.errors.email}
                 isInvalid={formik.touched.email && formik.errors.email}
                 isValid={formik.touched.email && !formik.errors.email}
               />
               <Form.Control.Feedback type="invalid">{formik.errors.email}</Form.Control.Feedback>
+            </Col>
+            <Col sm={4}>
+              <SendForgotPasswordButton
+                style={{ width: "100%" }}
+                email={formik.values.email}
+                useForgotPassword={useAdminForgotPassword}
+              />
             </Col>
           </Form.Group>
 
@@ -213,7 +226,6 @@ function AdminUser({ data = { email: '' }, addNotification }) {
           </Button> */}
         </Form>
       </Container>
-      <SendForgotPassword email={formik.values.email} hook={useAdminForgotPassword} />
     </>
   );
 }

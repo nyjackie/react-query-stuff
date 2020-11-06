@@ -44,7 +44,7 @@ const schema = createSchema({
  * @param {object} props
  * @param {UserProfile} props.data
  */
-function ConsumerUser({ data, addNotification }) {
+function ConsumerUser({ data, addNotification, includeHeader=true }) {
   const [edit, toggleEdit] = useState(false);
   const { data: options } = usePronounIncomeOptions();
   const [updateUser] = useUpdateConsumerUser();
@@ -130,14 +130,18 @@ function ConsumerUser({ data, addNotification }) {
 
   return (
     <Container className={cn(`block shadow-sm`, styles.userEdit)}>
-      <Helmet>
-        <title>Consumer User | Admin Portal | Give Good Deeds</title>
-      </Helmet>
-      <Row>
-        <Col>
-          <h2>Consumer Profile edit</h2>
-        </Col>
-      </Row>
+      {includeHeader &&
+        <>
+          <Helmet>
+          <title>Consumer User | Admin Portal | Give Good Deeds</title>
+            </Helmet>
+          <Row>
+            <Col>
+              <h2>Consumer Profile Edit</h2>
+            </Col>
+          </Row>
+        </>
+      }
       <Form noValidate onSubmit={formik.handleSubmit} className="mb-2">
         <Form.Group as={Row} controlId="first_name">
           <Form.Label column xl={3}>

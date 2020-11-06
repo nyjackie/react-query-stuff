@@ -7,6 +7,7 @@ import PageHeader from 'components/PageHeader';
 import { addNotification } from 'actions/notifications';
 import Profile from 'views/Nonprofit/Edit';
 import { useNonprofit } from 'hooks/useNonprofits';
+import UserInfoList from 'views/Users/UserInfoList';
 import Spinner from 'components/Spinner';
 
 /**
@@ -38,6 +39,8 @@ const Nonprofit = ({ addNotification }) => {
     );
   }
 
+  // TODO: WEB-191 details.
+  // Make a UserInfoList component to handle lists of users in an accordion.
   if (selected) {
     return (
       <>
@@ -45,6 +48,7 @@ const Nonprofit = ({ addNotification }) => {
           <title>Nonprofit: {selected.name} | Give Good Deeds | Admin Portal</title>
         </Helmet>
         <Profile data={selected} />
+        <UserInfoList ids={selected.users.map(({ id }) => id)} type="nonprofit"/>
       </>
     );
   }

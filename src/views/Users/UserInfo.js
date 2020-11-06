@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -10,8 +11,14 @@ import BrandUser from './BrandUser';
 import NonprofitUser from './NonprofitUser';
 import AdminUser from './AdminUser';
 
-function UserInfo({ match, addNotification }) {
-  const { id, type } = match.params;
+const userTypeMap = {
+  'consumer': ConsumerUser,
+  'brand': BrandUser,
+  'nonprofit': NonprofitUser,
+  'internal': AdminUser,
+}
+
+function UserInfo({ id, type, addNotification, includeHeader }) {
   // const [show, setShow] = useState(false);
   // const [edit, toggleEdit] = useState(true);
   const { isLoading, isError, data, error } = useGetUser(id, type);
@@ -24,24 +31,28 @@ function UserInfo({ match, addNotification }) {
     return <p>{error.message}</p>;
   }
 
-  data.user_id = id;
+  const UserComponent = type in userTypeMap
+    ? userTypeMap[type]
+    : () => <p>User Type: {type} not supported</p>;
 
-  switch (type) {
-    case 'consumer':
-      return <ConsumerUser data={data} />;
-    case 'brand':
-      return <BrandUser data={data} />;
-    case 'nonprofit':
-      return <NonprofitUser data={data} />;
-    case 'internal':
-      return <AdminUser data={data} />;
-    default:
-      return <p>type: {type} not supported yet</p>;
-  }
+  return (
+    <>
+      <Helmet>
+        <title>{type.charAt(0).toUpperCase() + type.slice(1)} User | Admin Portal | Give Good Deeds</title>
+      </Helmet>
+      <UserComponent data={{ ...data, user_id: id }} type={type} includeHeader={includeHeader} />
+    </>
+  )
 }
 
 UserInfo.propTypes = {
-  addNotification: PropTypes.func.isRequired,
+  id: PropTypes.oneOfType(
+    [ PropTypes.string, PropTypes.number ]
+  ),
+  type: PropTypes.string,
+  includeHeader: PropTypes.bool,
+
+  addNotification: PropTypes.func,
 };
 
-export default connect(null, { addNotification })(UserInfo);
+export default UserInfo;

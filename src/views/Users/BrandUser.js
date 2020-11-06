@@ -130,7 +130,7 @@ function BrandUser({ data, addNotification, includeHeader = true }) {
             </Helmet>
             <Row>
               <Col>
-                <h2>Brand Profile edit</h2>
+                <h2>Brand User Edit</h2>
               </Col>
             </Row>
             <Row>

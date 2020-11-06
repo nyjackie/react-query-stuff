@@ -40,7 +40,7 @@ function AdminUser({ data = { email: '' }, addNotification, includeHeader = true
           </Helmet>
           <Row>
             <Col>
-              <h2>Admin Profile edit</h2>
+              <h2>Admin (aka Internal) User Edit</h2>
               <p>
                 Currently unavailable until the following API is ready:{' '}
                 <code>GET /user/internal/{`user_id`}/profile</code>{' '}

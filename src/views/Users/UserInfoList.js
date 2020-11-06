@@ -8,10 +8,6 @@ import styles from './User.module.scss';
 import UserInfo from 'views/Users/UserInfo';
 
 function UserInfoList({ ids, type }) {
-  if (!ids.length) {
-    return null;
-  }
-
   return (
     <>
       <Accordion as={Container} className={styles.userEditList} defaultActiveKey={ids[0]}>
@@ -20,6 +16,11 @@ function UserInfoList({ ids, type }) {
             <h2>Users List</h2>
           </Col>
         </Card.Header>
+        {!ids.length && (
+          <Card.Body>
+            <p>No users attached to this nonprofit</p>
+          </Card.Body>
+        )}
         {ids.map(id => {
           return (
             <Card key={id}>

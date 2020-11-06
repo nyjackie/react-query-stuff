@@ -39,8 +39,6 @@ const Nonprofit = ({ addNotification }) => {
     );
   }
 
-  // TODO: WEB-191 details.
-  // Make a UserInfoList component to handle lists of users in an accordion.
   if (selected) {
     return (
       <>
@@ -48,7 +46,7 @@ const Nonprofit = ({ addNotification }) => {
           <title>Nonprofit: {selected.name} | Give Good Deeds | Admin Portal</title>
         </Helmet>
         <Profile data={selected} />
-        <UserInfoList ids={selected.users.map(({ id }) => id)} type="nonprofit"/>
+        <UserInfoList ids={selected.users.map(({ id }) => id)} type="nonprofit" />
       </>
     );
   }

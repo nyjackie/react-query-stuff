@@ -129,9 +129,7 @@ function NonprofitUser({ data, addNotification, includeHeader = true }) {
           <>
             <Row>
               <Col>
-                <h2>
-                  Nonprofit Profile Edit: {data.first_name} {data.last_name}
-                </h2>
+                <h2>Nonprofit User Edit</h2>
               </Col>
             </Row>
             <Row>

@@ -32,6 +32,16 @@ function UserInfoList({ ids, type }) {
                   <Col sm={8}>
                     <Button variant={'link'}>User ID: {id}</Button>
                   </Col>
+                  <Col sm={4}>
+                    <Button
+                      as={NavLink}
+                      style={{ float: 'right' }}
+                      variant={'link'}
+                      to={`/users/${type}/${id}`}
+                    >
+                      Go To User Page
+                    </Button>
+                  </Col>
                 </Row>
               </Accordion.Toggle>
               <Accordion.Collapse eventKey={id}>

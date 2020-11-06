@@ -64,6 +64,7 @@
     "rules": {
       "no-console": "error",
       "no-debugger": "error",
+      "no-alert": "error",
       "no-unused-vars": "error"
     }
   },

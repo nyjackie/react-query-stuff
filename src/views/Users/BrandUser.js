@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Button, Col, Row, Container, Form } from 'react-bootstrap';
+import { Col, Row, Container, Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useFormik } from 'formik';
 import InputMask from 'react-input-mask';
@@ -37,7 +37,7 @@ const schema = createSchema({
  * @param {object} props
  * @param {UserProfile} props.data
  */
-function BrandUser({ data, addNotification, includeHeader=true }) {
+function BrandUser({ data, addNotification, includeHeader = true }) {
   const [edit, toggleEdit] = useState(false);
   const [updateUser] = useUpdateBrandUser();
   const [checkUniqueEmail, { data: ueData }] = useUniqueEmail();
@@ -123,7 +123,7 @@ function BrandUser({ data, addNotification, includeHeader=true }) {
   return (
     <>
       <Container className={cn(`block shadow-sm`, styles.userEdit)}>
-        {includeHeader &&
+        {includeHeader && (
           <>
             <Helmet>
               <title>Brand User | Admin Portal | Give Good Deeds</title>
@@ -143,7 +143,7 @@ function BrandUser({ data, addNotification, includeHeader=true }) {
               </Col>
             </Row>
           </>
-        }
+        )}
         <Form noValidate onSubmit={formik.handleSubmit} className="mb-2">
           <Form.Group as={Row} controlId="first_name">
             <Form.Label column xl={3}>

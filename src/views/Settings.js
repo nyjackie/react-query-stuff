@@ -10,25 +10,27 @@ import Spinner from 'react-bootstrap/Spinner';
 import { useFormik } from 'formik';
 import { createSchema, password } from 'utils/schema';
 import { useChangePassword } from 'hooks/useSettings';
+import { addNotification } from 'actions/notifications';
 import Password from 'components/Password';
 
 const schema = createSchema({
   password: password,
 });
 
-function Settings({ user }) {
-  const [doChangePassword, { isLoading, isSuccess, isError, error }] = useChangePassword();
+function Settings({ user, addNotification }) {
+  const [doChangePassword, { isLoading }] = useChangePassword();
 
   const formik = useFormik({
     validationSchema: schema,
     initialValues: {
       password: '',
     },
-    onSubmit: values => {
-      if (user && user.user_id) {
-        doChangePassword({ id: user.user_id, body: values });
-      } else {
-        console.warn('cant change password, missing user id');
+    onSubmit: async values => {
+      try {
+        await doChangePassword({ id: user.user_id, body: values });
+        addNotification('Password successfully updated', 'success');
+      } catch (err) {
+        addNotification(`Error: ${err.response?.data?.message}`, 'error');
       }
     },
   });
@@ -64,11 +66,6 @@ function Settings({ user }) {
                   <Button type="submit" variant="primary">
                     Submit
                   </Button>
-                  {isError && (
-                    <p className="mt-2 text-danger">
-                      {error?.message || 'An internal error occured!'}
-                    </p>
-                  )}
                   {isLoading && (
                     <Spinner
                       as="span"
@@ -80,7 +77,6 @@ function Settings({ user }) {
                       <span className="sr-only">Loading...</span>
                     </Spinner>
                   )}
-                  {isSuccess && <p className="mt-2 text-success">Password successfully updated</p>}
                 </Form>
               </Col>
             </Row>
@@ -95,4 +91,4 @@ const mapStateToProps = state => ({
   user: state.auth.user,
 });
 
-export default connect(mapStateToProps)(Settings);
+export default connect(mapStateToProps, { addNotification })(Settings);

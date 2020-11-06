@@ -52,7 +52,7 @@ const BucketRow = ({ bucket, addNotification, setShow }) => {
         <p>
           This action will <strong>DELETE</strong> this bucket
         </p>
-        <Button variant="danger" onClick={() => console.log(deleteBucket({ id: id }))}>
+        <Button variant="danger" onClick={() => deleteBucket({ id: id })}>
           DELETE BUCKET
         </Button>
       </Popover.Content>

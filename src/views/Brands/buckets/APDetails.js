@@ -8,7 +8,6 @@ const APDetails = ({ offers, bucket_id, setFieldValue }) => {
   const reorder = (list, item, change) => {
     const index = list.indexOf(item);
     if (index + change === list.length || index + change < 0) {
-      console.log(index, change);
       return;
     }
     let result = Array.from(list);

@@ -1,10 +1,9 @@
 import React from 'react';
-import { ButtonGroup, Button, Form } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 import styles from './User.module.scss';
 import SendForgotPasswordButton from './SendForgotPasswordButton';
 
 export default ({ isEdit, setEdit, email, useForgotPassword }) => {
-
   return (
     <Form.Group className={styles.userEditControls}>
       {isEdit ? (
@@ -24,7 +23,7 @@ export default ({ isEdit, setEdit, email, useForgotPassword }) => {
               Save
             </Button>
           </div>
-          <SendForgotPasswordButton email={email} useForgotPassword={useForgotPassword}/>
+          <SendForgotPasswordButton email={email} useForgotPassword={useForgotPassword} />
         </>
       ) : (
         <>
@@ -39,10 +38,9 @@ export default ({ isEdit, setEdit, email, useForgotPassword }) => {
               Edit
             </Button>
           </div>
-          <SendForgotPasswordButton email={email} useForgotPassword={useForgotPassword}/>
+          <SendForgotPasswordButton email={email} useForgotPassword={useForgotPassword} />
         </>
       )}
-
     </Form.Group>
-  )
-} 
+  );
+};

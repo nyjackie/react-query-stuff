@@ -1,20 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styles from './User.module.scss';
 
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
 
 function SendForgotPasswordButton({ email, useForgotPassword, new_template = false, ...props }) {
-  let [sendForgotPassword, { isSuccess, isLoading, isError, reset }] =
-    useForgotPassword(email, new_template);
+  let [sendForgotPassword, { isSuccess, isLoading, isError, reset }] = useForgotPassword(
+    email,
+    new_template
+  );
 
   return (
     <Button
-      onClick={(isSuccess || isError) ? reset : sendForgotPassword}
-      variant={isSuccess ? "success" : (isError ? "danger" : "primary")}
+      onClick={isSuccess || isError ? reset : sendForgotPassword}
+      variant={isSuccess ? 'success' : isError ? 'danger' : 'primary'}
       disabled={isLoading}
       className={styles.edit}
       {...props}
@@ -32,16 +31,16 @@ function SendForgotPasswordButton({ email, useForgotPassword, new_template = fal
         aria-hidden="true"
       />
       {isLoading && <span className="absolute-center sr-only">Loading...</span>}
-      {isSuccess &&
+      {isSuccess && (
         <div className="absolute-center" style={{ height: 'fit-content' }}>
           <span className={`fadable ${isSuccess ? 'active' : ''}`}>Email Sent!</span>
         </div>
-      }
-      {isError &&
+      )}
+      {isError && (
         <div className="absolute-center" style={{ height: 'fit-content' }}>
           <span className={`fadable ${isError ? 'active' : ''}`}>Error</span>
         </div>
-      }
+      )}
     </Button>
   );
 }

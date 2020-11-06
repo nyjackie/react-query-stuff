@@ -3,6 +3,7 @@ import { Spinner } from 'react-bootstrap';
 import AsyncSelect from 'react-select/async';
 import api from 'gdd-api-lib';
 import styles from './Buckets.module.scss';
+import errorHandler from 'utils/errorHandler';
 
 const loadOptions = async inputValue => {
   try {
@@ -12,7 +13,7 @@ const loadOptions = async inputValue => {
     });
     return newRes;
   } catch (err) {
-    console.log(err);
+    errorHandler(err);
     return {};
   }
 };
@@ -25,7 +26,7 @@ const getData = async id => {
         return { value: res.data.offer_guid, label: res.data.offer_details.brand_name };
       });
   } catch (err) {
-    console.log(err);
+    errorHandler(err);
     return {};
   }
 };

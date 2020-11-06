@@ -52,10 +52,20 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "format": "prettier --write \"**/*.+(js|jsx|json|scss|css|md)\"",
-    "format-staged": "pretty-quick --staged --pattern \"**/*.+(js|jsx|json|scss|css|md)\""
+    "format-staged": "pretty-quick --staged --pattern \"**/*.+(js|jsx|json|scss|css|md)\"",
+    "lint": "eslint --quiet  --ext .js ./src"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "react-app",
+      "prettier",
+      "prettier/react"
+    ],
+    "rules": {
+      "no-console": "error",
+      "no-debugger": "error",
+      "no-unused-vars": "error"
+    }
   },
   "browserslist": {
     "production": [
@@ -70,12 +80,15 @@
     ]
   },
   "devDependencies": {
+    "eslint": "^7.12.1",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-plugin-react": "^7.21.5",
     "husky": "^4.2.5",
     "pretty-quick": "^2.0.1"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run format-staged && cp ../yarn.lock . && git add yarn.lock"
+      "pre-commit": "npm run lint --silent && npm run format-staged && cp ../yarn.lock . && git add yarn.lock"
     }
   }
 }

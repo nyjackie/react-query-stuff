@@ -1,7 +1,5 @@
 import { useQuery, useMutation, queryCache } from 'react-query';
 import api from 'gdd-api-lib';
-import store from 'store';
-import { addNotification } from 'actions/notifications';
 
 /****************************************************************
  * Functions that perform api calls
@@ -148,16 +146,13 @@ export function useCreateNoprofitUser() {
  * @param {string?|boolean} template template=new_nonprofit if using for new nonprofit user creation
  */
 export function useNonprofitForgotPassword(email, template = false) {
-  return useMutation(
-    () => {
-      const query = { email: window.btoa(email) };
-      if (template) {
-        query.template = template;
-      }
-      return api.nonprofitForgotPassword(query);
-    },
-    { onError: console.error }
-  );
+  return useMutation(() => {
+    const query = { email: window.btoa(email) };
+    if (template) {
+      query.template = template;
+    }
+    return api.nonprofitForgotPassword(query);
+  });
 }
 
 export function useUpdateNonprofitUser() {

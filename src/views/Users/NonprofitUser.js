@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { useFormik } from 'formik';
 import InputMask from 'react-input-mask';
 
-import { Button, Col, Row, Container, Form } from 'react-bootstrap';
+import { Col, Row, Container, Form } from 'react-bootstrap';
 
 import { cn } from 'gdd-components/dist/utils';
 import { addNotification } from 'actions/notifications';
@@ -39,7 +39,7 @@ const schema = createSchema({
  * @param {object} props
  * @param {NonprofitUserProfile} props.data
  */
-function NonprofitUser({ data, addNotification, includeHeader=true }) {
+function NonprofitUser({ data, addNotification, includeHeader = true }) {
   const [edit, toggleEdit] = useState(false);
   const [updateUser] = useUpdateNonprofitUser();
   const [checkUniqueEmail, { data: ueData }] = useUniqueEmail();
@@ -125,24 +125,26 @@ function NonprofitUser({ data, addNotification, includeHeader=true }) {
   return (
     <>
       <Container className={cn(`block shadow-sm`, styles.userEdit)}>
-        {includeHeader &&
+        {includeHeader && (
           <>
             <Row>
               <Col>
-              <h2>Nonprofit Profile Edit: {data.first_name} {data.last_name}</h2>
+                <h2>
+                  Nonprofit Profile Edit: {data.first_name} {data.last_name}
+                </h2>
               </Col>
             </Row>
             <Row>
               <Col>
                 <p>
                   <Link to={`/nonprofit/${data.nonprofit_id}`}>
-                  <u>Nonprofit id: {data.nonprofit_id}</u>
+                    <u>Nonprofit id: {data.nonprofit_id}</u>
                   </Link>
                 </p>
               </Col>
             </Row>
           </>
-        }
+        )}
         <Form noValidate onSubmit={formik.handleSubmit} className="mb-2">
           <Form.Group as={Row} controlId="first_name">
             <Form.Label column xl={3}>
@@ -228,7 +230,6 @@ function NonprofitUser({ data, addNotification, includeHeader=true }) {
             email={data.email}
             useForgotPassword={useNonprofitForgotPassword}
           />
-
         </Form>
       </Container>
     </>

@@ -37,7 +37,7 @@ const schema = createSchema({
  * @param {object} props
  * @param {UserProfile} props.data
  */
-function BrandUser({ data, addNotification, includeHeader=true }) {
+function BrandUser({ data, addNotification, includeHeader = true }) {
   const [edit, toggleEdit] = useState(false);
   const [updateUser] = useUpdateBrandUser();
   const [checkUniqueEmail, { data: ueData }] = useUniqueEmail();
@@ -123,14 +123,14 @@ function BrandUser({ data, addNotification, includeHeader=true }) {
   return (
     <>
       <Container className={cn(`block shadow-sm`, styles.userEdit)}>
-        {includeHeader &&
+        {includeHeader && (
           <>
             <Helmet>
               <title>Brand User | Admin Portal | Give Good Deeds</title>
             </Helmet>
             <Row>
               <Col>
-                <h2>Brand Profile edit</h2>
+                <h2>Brand User Edit</h2>
               </Col>
             </Row>
             <Row>
@@ -143,7 +143,7 @@ function BrandUser({ data, addNotification, includeHeader=true }) {
               </Col>
             </Row>
           </>
-        }
+        )}
         <Form noValidate onSubmit={formik.handleSubmit} className="mb-2">
           <Form.Group as={Row} controlId="first_name">
             <Form.Label column xl={3}>

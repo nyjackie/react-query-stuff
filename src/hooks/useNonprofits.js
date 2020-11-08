@@ -37,6 +37,13 @@ function getCategories() {
 }
 
 /**
+ * Get internal nonprofit categories from the db
+ */
+function getInternalNpCategories() {
+  return api.getInternalNonprofitCategories().then(res => res.data);
+}
+
+/**
  * Create a new Nonprofit User
  * @param {object} body
  * @param {number} nonprofit_id id of the nonprofit user works for
@@ -131,6 +138,16 @@ export function useNonprofit(id) {
 
 export function useNpCategories() {
   return useQuery('np_categories', getCategories, {
+    // these should never go stale because they will barely ever change. We
+    // should definitely cache them throughout the whole session
+    staleTime: Infinity,
+    cacheTime: Infinity,
+    refetchOnWindowFocus: false,
+  });
+}
+
+export function useInternalNpCategories() {
+  return useQuery('internal_np_categories', getInternalNpCategories, {
     // these should never go stale because they will barely ever change. We
     // should definitely cache them throughout the whole session
     staleTime: Infinity,

@@ -13,6 +13,7 @@ import Claims from 'views/Claims';
 import ClaimInfo from 'views/Claims/ClaimInfo';
 import NonprofitSearch from 'views/Nonprofit/Search';
 import Nonprofit from 'views/Nonprofit';
+import InternalNonprofitCategories from 'views/Nonprofit/Categories';
 import ForgotPassword from 'views/ForgotPassword';
 import Banlist from 'views/Banlist';
 import Users from 'views/Users';
@@ -71,6 +72,7 @@ const App = ({ autoLogin, user, isLoading }) => {
         <PrivateRoute exact path="/claims/:id" component={ClaimInfo} />
         <PrivateRoute exact path="/nonprofit" component={NonprofitSearch} />
         <PrivateRoute exact path="/nonprofit/:id" component={Nonprofit} />
+        <PrivateRoute exact path="/nonprofit-categories" component={InternalNonprofitCategories} />
         <PrivateRoute exact path="/brands/search" component={BrandsSearch} />
         <PrivateRoute exact path="/brands/grooming" component={BrandsGrooming} />
         <PrivateRoute exact path="/brands/buckets" component={Buckets} />

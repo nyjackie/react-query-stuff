@@ -7,13 +7,18 @@ import Form from 'react-bootstrap/Form';
 import Container from 'react-bootstrap/Container';
 import InputGroup from 'react-bootstrap/InputGroup';
 
-import { getSearchQuery, currency } from 'utils';
+import { getSearchQuery } from 'utils';
 import { Paginator } from 'gdd-components';
 
 import { useNonprofitSearch } from 'hooks/useNonprofits';
 import Spinner from 'components/Spinner';
 import SearchInput from './NPSearchInput';
 import styles from './NonProfitInfo.module.scss';
+
+function makeLocation(address) {
+  if (!address) return '--';
+  return [address.city, address.state].filter(Boolean).join(', ');
+}
 
 /**
  * Component for a single search result
@@ -34,7 +39,7 @@ const SingleResult = ({ result }) => {
           </p>
         )}
         <p className="mb-3">
-          {result.address.city}, {result.address.state} | EIN: {result.ein}
+          {makeLocation(result.address)} | EIN: {result.ein}
         </p>
         <p>{result.mission}</p>
       </div>
@@ -47,12 +52,7 @@ const SingleResult = ({ result }) => {
         <p>
           <b>Claim status:</b>
           <br />
-          {result.status.id === 2 ? 'Claimed' : 'unclaimed'}
-        </p>
-        <p>
-          <b>Gross receipts:</b>
-          <br />
-          {currency(result.gross_receipts)}
+          {result.status?.id === 2 ? 'Claimed' : 'unclaimed'}
         </p>
       </div>
     </li>

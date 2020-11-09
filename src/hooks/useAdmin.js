@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from 'react-query';
+import { useMutation } from 'react-query';
 import api from 'gdd-api-lib';
 
 export const USER_TYPES = {
@@ -57,14 +57,11 @@ export function useUniquePhone() {
  * @param {string?|boolean} template template=new_nonprofit if using for new nonprofit user creation
  */
 export function useAdminForgotPassword(email, template = false) {
-  return useMutation(
-    () => {
-      const query = { email: window.btoa(email) };
-      if (template) {
-        query.template = template;
-      }
-      return api.forgotPasswordInternal(query);
-    },
-    { onError: console.error }
-  );
+  return useMutation(() => {
+    const query = { email: window.btoa(email) };
+    if (template) {
+      query.template = template;
+    }
+    return api.forgotPasswordInternal(query);
+  });
 }

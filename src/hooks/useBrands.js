@@ -270,14 +270,11 @@ export function useUpdateBrandHero() {
  * @param {string?|boolean} template template=new_brand
  */
 export function useBrandForgotPassword(email, template = false) {
-  return useMutation(
-    () => {
-      const query = { email: window.btoa(email) };
-      if (template) {
-        query.template = template;
-      }
-      return api.brandForgotPassword(query);
-    },
-    { onError: console.error, }
-  );
+  return useMutation(() => {
+    const query = { email: window.btoa(email) };
+    if (template) {
+      query.template = template;
+    }
+    return api.brandForgotPassword(query);
+  });
 }

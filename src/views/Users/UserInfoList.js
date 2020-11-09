@@ -1,14 +1,11 @@
 import React from 'react';
-import { Helmet } from 'react-helmet';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import { Container, Accordion, Card, Button, Col, Row } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
 
 import styles from './User.module.scss';
 
 import UserInfo from 'views/Users/UserInfo';
-import Spinner from 'components/Spinner';
 
 function UserInfoList({ ids, type }) {
   return (

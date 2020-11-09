@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -23,11 +23,7 @@ function SendForgotPassword({ email, hook, new_template = false }) {
       <Row>
         <Col>
           <p>{email}</p>
-          <Button
-            onClick={sendForgotPassword}
-            variant="primary"
-            disabled={isSuccess || isLoading}
-          >
+          <Button onClick={sendForgotPassword} variant="primary" disabled={isSuccess || isLoading}>
             {buttonCopy}
           </Button>
           {new_template && (

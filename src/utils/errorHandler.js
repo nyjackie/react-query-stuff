@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 function errorTypes(err) {
   if (err.response) {
     // this is an API error

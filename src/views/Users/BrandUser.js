@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Button, Col, Row, Container, Form } from 'react-bootstrap';
+import { Col, Row, Container, Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useFormik } from 'formik';
 import InputMask from 'react-input-mask';

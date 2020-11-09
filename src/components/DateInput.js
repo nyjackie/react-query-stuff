@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Form, FormControl } from 'react-bootstrap';
 import InputMask from 'react-input-mask';
+import errorHandler from 'utils/errorHandler';
 
 /**
  * This component handles fallbacks for browsers that do not support
@@ -29,7 +30,9 @@ function format(inputDate) {
 const test = document.createElement('input');
 try {
   test.type = 'date';
-} catch (e) {}
+} catch (e) {
+  errorHandler(e);
+}
 
 function CustomDateInput({ type, onChange, value, ...props }) {
   const [invalid, setInvalid] = useState(false);

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { useFormik } from 'formik';
 import InputMask from 'react-input-mask';
 
-import { Button, Col, Row, Container, Form } from 'react-bootstrap';
+import { Col, Row, Container, Form } from 'react-bootstrap';
 
 import { cn } from 'gdd-components/dist/utils';
 import { addNotification } from 'actions/notifications';

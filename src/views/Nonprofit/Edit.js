@@ -11,7 +11,7 @@ import Form from 'react-bootstrap/Form';
 import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
 
-import { USStateSelect, MultiSelect, ProfilePreview } from 'gdd-components';
+import { USStateSelect, MultiSelect, ProfilePreview, AppPreviews } from 'gdd-components';
 import { cn } from 'gdd-components/dist/utils';
 import 'gdd-components/dist/styles/shared.scss';
 
@@ -29,6 +29,10 @@ import {
 
 import { stringToBool } from 'utils';
 import styles from './NonProfitInfo.module.scss';
+
+function makeLocation(values) {
+  return [values.city, values.state].filter(Boolean).join(', ');
+}
 
 /**
  * Schema should match our {@link NonprofitEditableProps}
@@ -485,16 +489,23 @@ function Profile({ data, addNotification }) {
                       Update profile
                     </Button>
                   </Col>
-                  <Col className="d-none d-md-flex justify-content-center p-4">
+                  <Col className="d-none d-md-flex flex-column align-items-center p-4">
                     <ProfilePreview
                       cta="Support This Nonprofit"
-                      data={{
-                        ...formik.values,
-                        logo_url: logoSrc,
-                        hero_url: heroSrc,
-                      }}
+                      data={formik.values}
+                      logo={logoSrc}
+                      hero={heroSrc}
                       type="nonprofit"
                     />
+                    <div className="mt-4 p-3">
+                      <AppPreviews.Nonprofit
+                        logo={logoSrc}
+                        hero={heroSrc}
+                        name={formik.values.name}
+                        location={makeLocation(formik.values)}
+                        causeArea={formik.values.categories?.[0].name}
+                      />
+                    </div>
                   </Col>
                 </Row>
               </section>

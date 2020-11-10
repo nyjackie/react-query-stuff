@@ -1,10 +1,19 @@
-.categoriesContainer {
-  border: 1px solid #ccc !important;
+.nonprofitList {
+  background-color: var(--primary);
+  height: 100%;
+  padding: 1em;
 }
 
-.categoryContainer {
-  border: 1px solid #ccc !important;
-  border-radius: 16px;
-  padding: 1.2em;
-  margin: 1em 0.2em 1em 0.2em;
+.nonprofitItem {
+  margin-bottom: 0.5em;
+}
+
+.spinner {
+  justify-content: center;
+  align-items: center;
+}
+
+.icon {
+  width: 50px;
+  margin: 0.2em;
 }

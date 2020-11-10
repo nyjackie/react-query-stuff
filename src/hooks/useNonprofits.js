@@ -1,7 +1,5 @@
 import { useQuery, useMutation, queryCache } from 'react-query';
 import api from 'gdd-api-lib';
-import store from 'store';
-import { addNotification } from 'actions/notifications';
 
 /****************************************************************
  * Functions that perform api calls
@@ -154,6 +152,47 @@ export function useInternalNpCategories() {
     cacheTime: Infinity,
     refetchOnWindowFocus: false,
   });
+}
+
+export function useUpdateInternalNpCategories() {
+  return useMutation(setInternalNonprofitCategory, {
+    throwOnError: true,
+    onSuccess: (data, variable) => {
+      queryCache.invalidateQueries(['internal_np_categories', variable.category_id]);
+    },
+  });
+}
+
+function setInternalNonprofitCategory({ id, body }) {
+  return api.setInternalNonprofitCategory(id, body).then(res => res.data);
+}
+
+export function useInternalNonprofitsInCategory(id) {
+  return useQuery(
+    ['internal_np_category', id],
+    () => {
+      return api.getInternalNonprofitsInCategory(id).then(res => res.data);
+    },
+    {
+      enabled: id,
+      staleTime: Infinity,
+      cacheTime: Infinity,
+      refetchOnWindowFocus: false,
+    }
+  );
+}
+
+export function useUpdateInternalNonprofitCategoryPriority() {
+  return useMutation(setInternalNonprofitCategoryPriority, {
+    throwOnError: true,
+    onSuccess: (data, variable) => {
+      queryCache.invalidateQueries(['internal_np_category', variable.category_id]);
+    },
+  });
+}
+
+function setInternalNonprofitCategoryPriority({ category_id, body }) {
+  return api.setInternalNonprofitCategoryPriority(category_id, body).then(res => res.data);
 }
 
 export function useCreateNoprofitUser() {

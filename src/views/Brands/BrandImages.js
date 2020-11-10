@@ -81,7 +81,12 @@ function BrandImages({ brand }) {
       <div className={styles.previewWrap}>
         <Row>
           <Col className="d-flex justify-content-center">
-            <ProfilePreview data={preview} cta="Shop Online" type="brand" />
+            <ProfilePreview
+              data={preview}
+              hero={preview.hero_url}
+              logo={preview.logo_url}
+              type="brand"
+            />
           </Col>
           <Col className="d-flex justify-content-center pt-4">
             <AppPreviews.Brand

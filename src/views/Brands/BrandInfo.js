@@ -154,7 +154,7 @@ function BrandInfo({ addNotification, match }) {
                     {/************************************************************
                      * Brand Form fields column
                      */}
-                    <Col xs={12} lg={5} className="block-fluid shadow-sm">
+                    <Col xs={12} lg={4} className="block-fluid shadow-sm">
                       {/************************************************************
                        * Brand uneditable meta data
                        */}
@@ -190,7 +190,7 @@ function BrandInfo({ addNotification, match }) {
                     {/************************************************************
                      * Brand image editing and preview modal column
                      */}
-                    <Col xs={12} lg={{ span: 6, offset: 1 }} className="block-fluid shadow-sm">
+                    <Col xs={12} lg={{ span: 7, offset: 1 }} className="block-fluid shadow-sm">
                       <BrandImages
                         brand={{
                           ...brand,

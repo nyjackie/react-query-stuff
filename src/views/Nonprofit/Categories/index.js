@@ -11,12 +11,13 @@ import { addNotification } from 'actions/notifications';
 const InternalNonprofitCategories = ({ addNotification }) => {
   const { isLoading, isError, data: categories } = useInternalNpCategories();
   const [setInternalNonprofitCategory] = useUpdateInternalNpCategories();
-  const [currentCat, setCurrentCat] = useState(1);
+  const [currentCat, setCurrentCat] = useState();
   const [catList, setCatList] = useState(null);
   useEffect(() => {
     if (categories) {
       const list = categories.sort((a, b) => (a.sort_order > b.sort_order ? 1 : -1));
       setCatList(list);
+      setCurrentCat(list[0].id);
     }
   }, [categories, setCatList]);
 
@@ -32,20 +33,18 @@ const InternalNonprofitCategories = ({ addNotification }) => {
   if (!isLoading && isError) {
     return <Container className="block shadow-sm">Error Occurred. Try again later.</Container>;
   }
-  const onCategorySave = () => {
-    const promises = [];
-    for (let i = 0; i < catList.length; i++) {
-      if (i + 1 !== catList[i].sort_order) {
-        promises.push(saveNewOrder(i + 1, catList[i]));
+
+  const onCategorySave = async () => {
+    try {
+      for (let i = 0; i < catList.length; i++) {
+        if (i + 1 !== catList[i].sort_order) {
+          await saveNewOrder(i + 1, catList[i]);
+        }
       }
+      addNotification(`Category order updated`, 'success');
+    } catch (err) {
+      addNotification(`Category order update failed. Please try again later.`, 'error');
     }
-    Promise.all(promises)
-      .then(() => {
-        addNotification(`Category order updated`, 'success');
-      })
-      .catch(err => {
-        addNotification(`Category order update failed. Please try again later.`, 'error');
-      });
   };
 
   function saveNewOrder(i, item) {

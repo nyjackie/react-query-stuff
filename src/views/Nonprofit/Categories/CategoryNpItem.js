@@ -16,7 +16,7 @@ const CategoryItem = ({ item: { category_id, priority_order }, nonprofit_id, eol
     priority_order: priority_order,
   });
   useEffect(() => {
-    const cat = npCat?.find(cat => cat.id === category_id).name;
+    const cat = npCat?.find(cat => cat.id === category_id)?.name;
     setCategory(cat || '');
   }, [npCat, category_id]);
 

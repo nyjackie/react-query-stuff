@@ -35,6 +35,13 @@ function getCategories() {
 }
 
 /**
+ * Get internal nonprofit categories from the db
+ */
+function getInternalNpCategories() {
+  return api.getInternalNonprofitCategories().then(res => res.data);
+}
+
+/**
  * Create a new Nonprofit User
  * @param {object} body
  * @param {number} nonprofit_id id of the nonprofit user works for
@@ -135,6 +142,57 @@ export function useNpCategories() {
     cacheTime: Infinity,
     refetchOnWindowFocus: false,
   });
+}
+
+export function useInternalNpCategories() {
+  return useQuery('internal_np_categories', getInternalNpCategories, {
+    // these should never go stale because they will barely ever change. We
+    // should definitely cache them throughout the whole session
+    staleTime: Infinity,
+    cacheTime: Infinity,
+    refetchOnWindowFocus: false,
+  });
+}
+
+export function useUpdateInternalNpCategories() {
+  return useMutation(setInternalNonprofitCategory, {
+    throwOnError: true,
+    onSuccess: (data, variable) => {
+      queryCache.invalidateQueries(['internal_np_categories', variable.category_id]);
+    },
+  });
+}
+
+function setInternalNonprofitCategory({ id, body }) {
+  return api.setInternalNonprofitCategory(id, body).then(res => res.data);
+}
+
+export function useInternalNonprofitsInCategory(id) {
+  return useQuery(
+    ['internal_np_category', id],
+    () => {
+      return api.getInternalNonprofitsInCategory(id).then(res => res.data);
+    },
+    {
+      enabled: id,
+      staleTime: Infinity,
+      cacheTime: Infinity,
+      refetchOnWindowFocus: false,
+    }
+  );
+}
+
+export function useUpdateInternalNonprofitCategoryPriority() {
+  return useMutation(setInternalNonprofitCategoryPriority, {
+    throwOnError: true,
+    onSuccess: (data, variable) => {
+      queryCache.invalidateQueries(['internal_np_category', variable.category_id]);
+    },
+  });
+}
+
+function setInternalNonprofitCategoryPriority({ category_id, body }) {
+  return api.setInternalNonprofitCategoryPriority(category_id, body).then(res => res.data);
 }
 
 export function useCreateNoprofitUser() {

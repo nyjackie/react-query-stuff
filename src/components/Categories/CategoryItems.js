@@ -11,15 +11,15 @@ import PropTypes from 'prop-types';
 import CategoryItem from './CategoryItem';
 import { Paginator } from 'gdd-components';
 
-const BrandItems = ({ id, name, brand_category_priority, onSave }) => {
+const BrandItems = ({ id, name, brand_category_priority, onSave, category_id }) => {
   const [formData, setFormData] = useState({
     brand_id: id,
-    brand_category_priority: brand_category_priority,
+    priority_order: brand_category_priority,
   });
   const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
   const onSubmit = e => {
     e.preventDefault();
-    onSave(formData);
+    onSave(category_id, formData);
   };
   return (
     <Card className={styles.nonprofitItem}>
@@ -36,7 +36,7 @@ const BrandItems = ({ id, name, brand_category_priority, onSave }) => {
                 <Form.Label>Sort Order:</Form.Label>
                 <Form.Control
                   defaultValue={brand_category_priority}
-                  name="brand_category_priority"
+                  name="priority_order"
                   onChange={onChange}
                   type="number"
                 />
@@ -89,13 +89,14 @@ const NPItems = ({ id, name, priority, categories, onSave }) => {
 const CategoryItems = ({ selected, categoryItems, categories, onSave, location }) => {
   const [offset, setOffset] = useState(0);
   const [limit, setLimit] = useState(0);
-  console.log('offset', offset);
   useEffect(() => {
     setOffset(0);
   }, [selected, setOffset]);
 
-  const { resolvedData: items, latestData, isError, isLoading } = categoryItems(selected, offset);
-
+  const { resolvedData: items, latestData, isError, isLoading, isFetching } = categoryItems(
+    selected,
+    offset
+  );
   useEffect(() => {
     if (latestData) {
       setLimit(latestData?.total_results || 50);
@@ -105,13 +106,15 @@ const CategoryItems = ({ selected, categoryItems, categories, onSave, location }
   if (isError || !selected) {
     return <div className={styles.nonprofitList}>Please select a Category.</div>;
   }
-  if (isLoading || !items) {
+
+  if (isLoading || isFetching) {
     return (
       <div className={`d-flex ${styles.nonprofitList} justify-content-center align-items-center`}>
         <Spinner animation="border" variant="light" className={styles.spinner} />
       </div>
     );
   }
+
   if (!isLoading && items?.total_results === 0) {
     return (
       <div
@@ -148,16 +151,19 @@ const CategoryItems = ({ selected, categoryItems, categories, onSave, location }
             const { id, name, brand_category_priority } = item;
             return (
               <BrandItems
+                category_id={selected}
                 id={id}
                 name={name}
                 brand_category_priority={brand_category_priority}
                 key={id}
+                onSave={onSave}
               />
             );
           })}
         <Paginator
           total={latestData?.total_results || limit}
-          offset={0}
+          offset={offset}
+          limit={8}
           onPage={newOffset => {
             setOffset(newOffset);
           }}

@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import {
-  useInternalNonprofitsInCategory,
-  useUpdateInternalNonprofitCategoryPriority,
-} from 'hooks/useNonprofits';
-import {
   useBrandCategories,
   useUpdateInternalBrandCategories,
   useInternalBrandsInCategory,
+  useUpdateInternalBrandCategoryPriority,
 } from 'hooks/useBrands';
 import CategoriesList from 'components/Categories/CategoriesList';
 import CategoryItems from 'components/Categories/CategoryItems';
@@ -19,7 +16,7 @@ import { addNotification } from 'actions/notifications';
 const InternalBrandCategories = ({ addNotification }) => {
   const { isLoading, isError, data: categories } = useBrandCategories();
   const [setInternalBrandCategory] = useUpdateInternalBrandCategories();
-  const [setInternalNonprofitCategoryPriority] = useUpdateInternalNonprofitCategoryPriority();
+  const [setBrandCategoryPriority] = useUpdateInternalBrandCategoryPriority();
   const [currentCat, setCurrentCat] = useState();
   const [catList, setCatList] = useState(null);
   useEffect(() => {
@@ -55,9 +52,9 @@ const InternalBrandCategories = ({ addNotification }) => {
       addNotification(`Category order update failed. Please try again later.`, 'error');
     }
   };
-  const onNpSave = async (category_id, form) => {
+  const onBrandSave = async (category_id, form) => {
     try {
-      await setInternalNonprofitCategoryPriority({ category_id, body: form });
+      await setBrandCategoryPriority({ category_id, body: form });
       addNotification(`Sort order updated`, 'success');
     } catch (err) {
       addNotification(`Sort order update failed. Please try again later.`, 'error');
@@ -99,7 +96,7 @@ const InternalBrandCategories = ({ addNotification }) => {
               categoryItems={useInternalBrandsInCategory}
               location="brands"
               categories={catList}
-              onSave={onNpSave}
+              onSave={onBrandSave}
             />
           </div>
         </div>

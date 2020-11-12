@@ -175,7 +175,7 @@ export function useBrand(id) {
  */
 export function useBrandCategories() {
   return useQuery(
-    'brand_categories',
+    'internal_brands_categories',
     () => {
       return api.getInternalBrandCategories().then(res => res.data);
     },
@@ -299,10 +299,23 @@ export function useUpdateBrandHero() {
 export function useUpdateInternalBrandCategories() {
   return useMutation(setInternalBrandCategory, {
     throwOnError: true,
-    onSuccess: (data, variable) => {
-      queryCache.invalidateQueries(['internal_np_categories', variable.category_id]);
+    onSuccess: () => {
+      queryCache.invalidateQueries(['internal_brands_categories']);
     },
   });
+}
+
+export function useUpdateInternalBrandCategoryPriority() {
+  return useMutation(setBrandCategoryPriority, {
+    throwOnError: true,
+    onSuccess: (data, variable) => {
+      queryCache.invalidateQueries(['internal_brands_category', variable.category_id]);
+    },
+  });
+}
+
+function setBrandCategoryPriority({ category_id, body }) {
+  return api.setBrandCategoryPriority(body).then(res => res.data);
 }
 
 function setInternalBrandCategory({ id, body }) {

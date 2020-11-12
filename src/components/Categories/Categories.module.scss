@@ -1,4 +1,4 @@
-.nonprofitList {
+.list {
   background-color: var(--primary);
   height: 100%;
   padding: 1em;
@@ -16,4 +16,9 @@
 .icon {
   width: 50px;
   margin: 0.2em;
+}
+
+.hide {
+  background-color: red;
+  display: none !important;
 }

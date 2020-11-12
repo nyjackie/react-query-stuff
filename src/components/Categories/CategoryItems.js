@@ -107,7 +107,7 @@ const CategoryItems = ({ selected, categoryItems, categories, onSave, location }
     return <div className={styles.nonprofitList}>Please select a Category.</div>;
   }
 
-  if (isLoading || isFetching) {
+  if (isLoading) {
     return (
       <div className={`d-flex ${styles.nonprofitList} justify-content-center align-items-center`}>
         <Spinner animation="border" variant="light" className={styles.spinner} />
@@ -117,9 +117,7 @@ const CategoryItems = ({ selected, categoryItems, categories, onSave, location }
 
   if (!isLoading && items?.total_results === 0) {
     return (
-      <div
-        className={`d-flex ${styles.nonprofitList} justify-content-center align-items-center text-light`}
-      >
+      <div className={`d-flex ${styles.list} justify-content-center align-items-center text-light`}>
         <figure className="text-center">
           <img src="https://imgflip.com/s/meme/Doge.jpg" alt="empty" className={styles.icon} />
           <figcaption>Wow. such empty</figcaption>
@@ -131,8 +129,14 @@ const CategoryItems = ({ selected, categoryItems, categories, onSave, location }
     !isLoading &&
     !isError &&
     items && (
-      <div className={styles.nonprofitList}>
-        {location === 'np' &&
+      <div className={styles.list}>
+        {isFetching && (
+          <div className={`d-flex m-5 justify-content-center align-items-center`}>
+            <Spinner animation="border" variant="light" className={styles.spinner} />
+          </div>
+        )}
+        {!isFetching &&
+          location === 'np' &&
           items.nonprofits.map(item => {
             const { id, name, priority } = item;
             return (
@@ -146,7 +150,8 @@ const CategoryItems = ({ selected, categoryItems, categories, onSave, location }
               />
             );
           })}
-        {location === 'brands' &&
+        {!isFetching &&
+          location === 'brands' &&
           items.brands.map(item => {
             const { id, name, brand_category_priority } = item;
             return (
@@ -160,14 +165,16 @@ const CategoryItems = ({ selected, categoryItems, categories, onSave, location }
               />
             );
           })}
-        <Paginator
-          total={latestData?.total_results || limit}
-          offset={offset}
-          limit={8}
-          onPage={newOffset => {
-            setOffset(newOffset);
-          }}
-        />
+        <div className={isFetching ? styles.hide : ''}>
+          <Paginator
+            total={latestData?.total_results || limit}
+            offset={offset}
+            limit={8}
+            onPage={newOffset => {
+              setOffset(newOffset);
+            }}
+          />
+        </div>
       </div>
     )
   );

@@ -299,9 +299,6 @@ export function useUpdateBrandHero() {
 export function useUpdateInternalBrandCategories() {
   return useMutation(setInternalBrandCategory, {
     throwOnError: true,
-    onSuccess: () => {
-      queryCache.invalidateQueries(['internal_brands_categories']);
-    },
   });
 }
 

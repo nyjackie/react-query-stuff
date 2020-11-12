@@ -157,9 +157,6 @@ export function useInternalNpCategories() {
 export function useUpdateInternalNpCategories() {
   return useMutation(setInternalNonprofitCategory, {
     throwOnError: true,
-    onSuccess: (data, variable) => {
-      queryCache.invalidateQueries(['internal_np_categories', variable.category_id]);
-    },
   });
 }
 

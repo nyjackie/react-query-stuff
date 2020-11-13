@@ -1,7 +1,9 @@
 // third party
 import React, { useState } from 'react';
+import { Row, Col } from 'react-bootstrap';
+
 // our external libraries
-import { ProfilePreview } from 'gdd-components';
+import { ProfilePreview, AppPreviews } from 'gdd-components';
 
 // internal
 import ImageUploadBlock from 'components/ImageUploadBlock';
@@ -23,56 +25,77 @@ function BrandImages({ brand }) {
 
   return (
     <div className="position-relative">
-      <ImageUploadBlock
-        className={styles.logoBlock}
-        update_id={brand_id}
-        uploadText="Upload new brand logo"
-        width={128}
-        height={128}
-        src={logo_url}
-        alt="logo"
-        name="file_logo"
-        sqaure
-        isLoading={logoLoading}
-        reco={` Image must be square <br />
-          We recommend at least 400x400 px <br />
-          Max file size: 4.9 MB`}
-        onSave={data => {
-          return uploadLogo(data);
-        }}
-        onImageSelected={file => {
-          setLogoSrc(file.preview);
-        }}
-        onError={() => {
-          setLogoSrc(logo_url);
-        }}
-      />
-
-      <ImageUploadBlock
-        className={styles.heroBlock}
-        update_id={brand_id}
-        uploadText="Upload new brand cover photo"
-        width={375}
-        height={240}
-        src={hero_url}
-        alt="cover photo"
-        name="file_hero"
-        reco={`We recommend at least ${375 * 4}x${240 * 4} px <br />
-        Max file size: 4.9 MB`}
-        isLoading={heroLoading}
-        onSave={data => {
-          return uploadHero(data);
-        }}
-        onImageSelected={file => {
-          setCoverSrc(file.preview);
-        }}
-        onError={() => {
-          setCoverSrc(hero_url);
-        }}
-      />
+      <Row>
+        <Col>
+          <ImageUploadBlock
+            className={styles.logoBlock}
+            update_id={brand_id}
+            uploadText="Upload new brand logo"
+            width={128}
+            height={128}
+            src={logo_url}
+            alt="logo"
+            name="file_logo"
+            sqaure
+            isLoading={logoLoading}
+            reco={` Image must be square <br />
+                    We recommend at least 400x400 px <br />
+                    Max file size: 4.9 MB`}
+            onSave={data => {
+              return uploadLogo(data);
+            }}
+            onImageSelected={file => {
+              setLogoSrc(file.preview);
+            }}
+            onError={() => {
+              setLogoSrc(logo_url);
+            }}
+          />
+        </Col>
+        <Col>
+          <ImageUploadBlock
+            className={styles.heroBlock}
+            update_id={brand_id}
+            uploadText="Upload new brand cover photo"
+            width={375}
+            height={240}
+            src={hero_url}
+            alt="cover photo"
+            name="file_hero"
+            reco={`We recommend at least ${375 * 4}x${240 * 4} px <br />
+                  Max file size: 4.9 MB`}
+            isLoading={heroLoading}
+            onSave={data => {
+              return uploadHero(data);
+            }}
+            onImageSelected={file => {
+              setCoverSrc(file.preview);
+            }}
+            onError={() => {
+              setCoverSrc(hero_url);
+            }}
+          />
+        </Col>
+      </Row>
 
       <div className={styles.previewWrap}>
-        <ProfilePreview data={preview} cta="Shop Online" type="brand" />
+        <Row>
+          <Col className="d-flex justify-content-center">
+            <ProfilePreview
+              data={preview}
+              hero={preview.hero_url}
+              logo={preview.logo_url}
+              type="brand"
+            />
+          </Col>
+          <Col className="d-flex justify-content-center pt-4">
+            <AppPreviews.Brand
+              name={preview.name}
+              logo={preview.logo_url}
+              hero={preview.hero_url}
+            />
+          </Col>
+        </Row>
       </div>
     </div>
   );

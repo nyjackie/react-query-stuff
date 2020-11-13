@@ -78,7 +78,7 @@ const SideNav = ({ isAuthenticated, logout, closeDrawer }) => {
             </li>
             <li>
               <NavLink className="js-closeDrawer" to="/nonprofit-categories" exact={true}>
-                Categories
+                NP Categories
               </NavLink>
             </li>
             {/* <li>
@@ -135,6 +135,11 @@ const SideNav = ({ isAuthenticated, logout, closeDrawer }) => {
             <li>
               <NavLink className="js-closeDrawer" to="/brands/grooming" exact={true}>
                 Grooming Queue
+              </NavLink>
+            </li>
+            <li>
+              <NavLink className="js-closeDrawer" to="/brands/brand-categories" exact={true}>
+                Brand Categories
               </NavLink>
             </li>
           </ul>

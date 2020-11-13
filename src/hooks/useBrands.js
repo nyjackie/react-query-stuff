@@ -171,6 +171,34 @@ export function useBrand(id) {
 }
 
 /**
+ * Get Brand Categories
+ */
+export function useBrandCategories() {
+  return useQuery(
+    'internal_brands_categories',
+    () => {
+      return api.getInternalBrandCategories().then(res => res.data);
+    },
+    { staleTime: Infinity, cacheTime: Infinity, refetchOnWindowFocus: false }
+  );
+}
+
+export function useInternalBrandsInCategory(id, offset) {
+  return usePaginatedQuery(
+    ['internal_brands_category', id, offset],
+    () => {
+      return api.internalGetBrandsInCategory(id, { offset, limit: 8 }).then(res => res.data);
+    },
+    {
+      enabled: id,
+      staleTime: Infinity,
+      cacheTime: Infinity,
+      refetchOnWindowFocus: false,
+    }
+  );
+}
+
+/**
  * Get all of the offers for a specific brand
  * @param {number} id brand's unique id from our db
  */
@@ -263,6 +291,32 @@ export function useUpdateBrandHero() {
       store.dispatch(addNotification('Hero image uploaded.', 'success'));
     },
   });
+}
+
+/**
+ * Mutation: Update the brand category
+ */
+export function useUpdateInternalBrandCategories() {
+  return useMutation(setInternalBrandCategory, {
+    throwOnError: true,
+  });
+}
+
+export function useUpdateInternalBrandCategoryPriority() {
+  return useMutation(setBrandCategoryPriority, {
+    throwOnError: true,
+    onSuccess: (data, variable) => {
+      queryCache.invalidateQueries(['internal_brands_category', variable.category_id]);
+    },
+  });
+}
+
+function setBrandCategoryPriority({ category_id, body }) {
+  return api.setBrandCategoryPriority(body).then(res => res.data);
+}
+
+function setInternalBrandCategory({ id, body }) {
+  return api.setInternalBrandCategory(id, body).then(res => res.data);
 }
 
 /**

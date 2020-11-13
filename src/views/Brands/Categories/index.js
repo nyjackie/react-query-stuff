@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import {
-  useInternalNpCategories,
-  useUpdateInternalNpCategories,
-  useInternalNonprofitsInCategory,
-  useUpdateInternalNonprofitCategoryPriority,
-} from 'hooks/useNonprofits';
+  useBrandCategories,
+  useUpdateInternalBrandCategories,
+  useInternalBrandsInCategory,
+  useUpdateInternalBrandCategoryPriority,
+} from 'hooks/useBrands';
 import CategoriesList from 'components/Categories/CategoriesList';
 import CategoryItems from 'components/Categories/CategoryItems';
 import Spinner from 'react-bootstrap/Spinner';
@@ -13,11 +13,10 @@ import Button from 'react-bootstrap/Button';
 import { connect } from 'react-redux';
 import { addNotification } from 'actions/notifications';
 
-const InternalNonprofitCategories = ({ addNotification }) => {
-  const { isLoading, isError, data: categories } = useInternalNpCategories();
-  const [setInternalNonprofitCategory] = useUpdateInternalNpCategories();
-  const [setInternalNonprofitCategoryPriority] = useUpdateInternalNonprofitCategoryPriority();
-
+const InternalBrandCategories = ({ addNotification }) => {
+  const { isLoading, isError, data: categories } = useBrandCategories();
+  const [setInternalBrandCategory] = useUpdateInternalBrandCategories();
+  const [setBrandCategoryPriority] = useUpdateInternalBrandCategoryPriority();
   const [currentCat, setCurrentCat] = useState();
   const [catList, setCatList] = useState(null);
   useEffect(() => {
@@ -53,9 +52,9 @@ const InternalNonprofitCategories = ({ addNotification }) => {
       addNotification(`Category order update failed. Please try again later.`, 'error');
     }
   };
-  const onNpSave = async (category_id, form) => {
+  const onBrandSave = async (category_id, form) => {
     try {
-      await setInternalNonprofitCategoryPriority({ category_id, body: form });
+      await setBrandCategoryPriority({ category_id, body: form });
       addNotification(`Sort order updated`, 'success');
     } catch (err) {
       addNotification(`Sort order update failed. Please try again later.`, 'error');
@@ -64,14 +63,11 @@ const InternalNonprofitCategories = ({ addNotification }) => {
 
   function saveNewOrder(i, item) {
     return new Promise(resolve => {
-      const { hero_color, main_color, name, nonprofit_hero_color, id } = item;
-      setInternalNonprofitCategory({
+      const { name, id } = item;
+      setInternalBrandCategory({
         id: id,
         body: {
-          hero_color,
-          main_color,
           name,
-          nonprofit_hero_color,
           sort_order: i,
         },
       });
@@ -97,10 +93,10 @@ const InternalNonprofitCategories = ({ addNotification }) => {
           <div className="col-6">
             <CategoryItems
               selected={currentCat}
-              categoryItems={useInternalNonprofitsInCategory}
-              location="np"
+              categoryItems={useInternalBrandsInCategory}
+              location="brands"
               categories={catList}
-              onSave={onNpSave}
+              onSave={onBrandSave}
             />
           </div>
         </div>
@@ -109,4 +105,4 @@ const InternalNonprofitCategories = ({ addNotification }) => {
   );
 };
 
-export default connect(null, { addNotification })(InternalNonprofitCategories);
+export default connect(null, { addNotification })(InternalBrandCategories);

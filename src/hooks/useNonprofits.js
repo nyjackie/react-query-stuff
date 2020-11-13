@@ -1,4 +1,4 @@
-import { useQuery, useMutation, queryCache } from 'react-query';
+import { useQuery, useMutation, queryCache, usePaginatedQuery } from 'react-query';
 import api from 'gdd-api-lib';
 
 /****************************************************************
@@ -157,9 +157,6 @@ export function useInternalNpCategories() {
 export function useUpdateInternalNpCategories() {
   return useMutation(setInternalNonprofitCategory, {
     throwOnError: true,
-    onSuccess: (data, variable) => {
-      queryCache.invalidateQueries(['internal_np_categories', variable.category_id]);
-    },
   });
 }
 
@@ -167,11 +164,11 @@ function setInternalNonprofitCategory({ id, body }) {
   return api.setInternalNonprofitCategory(id, body).then(res => res.data);
 }
 
-export function useInternalNonprofitsInCategory(id) {
-  return useQuery(
-    ['internal_np_category', id],
+export function useInternalNonprofitsInCategory(id, offset) {
+  return usePaginatedQuery(
+    ['internal_np_category', id, offset],
     () => {
-      return api.getInternalNonprofitsInCategory(id).then(res => res.data);
+      return api.getInternalNonprofitsInCategory(id, { offset, limit: 8 }).then(res => res.data);
     },
     {
       enabled: id,

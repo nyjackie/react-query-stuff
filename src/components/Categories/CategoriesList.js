@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import ListGroup from 'react-bootstrap/ListGroup';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import PropTypes from 'prop-types';
-import styles from './InternalNonprofitCategories.module.scss';
+import styles from './Categories.module.scss';
 
 const CategoryItem = ({ item, index, setCat }) => (
   <Draggable draggableId={`${item.id}`} index={index}>
@@ -16,7 +16,9 @@ const CategoryItem = ({ item, index, setCat }) => (
             onClick={() => setCat(item.id)}
             className="d-flex align-items-center"
           >
-            <img src={item.logo_url} alt="category_logo" className={styles.icon} />
+            {item.logo_url && (
+              <img src={item.logo_url} alt="category_logo" className={styles.icon} />
+            )}
             <h4>{item.name}</h4>
           </ListGroup.Item>
         </div>

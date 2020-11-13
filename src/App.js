@@ -35,9 +35,9 @@ import { autoLogin } from 'actions/auth';
 import BrandInfo from 'views/Brands/BrandInfo';
 import Buckets from 'views/Brands/buckets';
 import Spinner from 'components/Spinner';
+import InternalBrandCategories from 'views/Brands/Categories';
 
-const MatchUserInfo = ({ match, ...props }) =>
-  <UserInfo {...props} {...match.params} />;
+const MatchUserInfo = ({ match, ...props }) => <UserInfo {...props} {...match.params} />;
 
 const App = ({ autoLogin, user, isLoading }) => {
   useEffect(() => {
@@ -78,6 +78,7 @@ const App = ({ autoLogin, user, isLoading }) => {
         <PrivateRoute exact path="/nonprofit-categories" component={InternalNonprofitCategories} />
         <PrivateRoute exact path="/brands/search" component={BrandsSearch} />
         <PrivateRoute exact path="/brands/grooming" component={BrandsGrooming} />
+        <PrivateRoute exact path="/brands/brand-categories" component={InternalBrandCategories} />
         <PrivateRoute exact path="/brands/buckets" component={Buckets} />
         <PrivateRoute exact path="/brands/:id" component={BrandInfo} />
         <PrivateRoute exact path="/users" component={Users} />

@@ -503,7 +503,7 @@ function Profile({ data, addNotification }) {
                         hero={heroSrc}
                         name={formik.values.name}
                         location={makeLocation(formik.values)}
-                        causeArea={formik.values.categories?.[0].name}
+                        causeArea={formik.values.categories?.[0]?.name}
                       />
                     </div>
                   </Col>

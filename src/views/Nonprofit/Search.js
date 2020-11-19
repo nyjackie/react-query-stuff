@@ -49,10 +49,14 @@ const SingleResult = ({ result }) => {
           <br />
           {result.ntee_code}
         </p>
-        <p>
-          <b>Claim status:</b>
-          <br />
-          {result.status?.id === 2 ? 'Claimed' : 'unclaimed'}
+        <p className="m-0">
+          <b>Claim status:</b> {result.status?.id === 2 ? 'Claimed' : 'unclaimed'}
+        </p>
+        <p className="m-0">
+          <b>Number of supporters:</b> {result.number_of_supporters}
+        </p>
+        <p className="m-0">
+          <b>Total raised:</b> ${result.lifetime_donations_amount}
         </p>
       </div>
     </li>

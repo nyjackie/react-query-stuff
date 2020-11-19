@@ -10,7 +10,7 @@ const Landing = ({ auth: { isAuthenticated }, logout }) => {
   }
 
   // if logged in defaulting to /claims
-  return <Redirect to="/claims" />;
+  return <Redirect to="/claims/pending" />;
 };
 
 Landing.propTypes = {

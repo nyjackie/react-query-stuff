@@ -161,3 +161,20 @@ $h: 240px * 0.75;
 .info-level-3 {
   padding-left: 60px;
 }
+
+.claimWrap {
+  button {
+    padding-left: 0;
+  }
+}
+
+.claimRow {
+  padding: 20px;
+  box-shadow: inset 0 0 5px gray;
+}
+
+.claimCol {
+  h5 {
+    border-bottom: 1px solid gray;
+  }
+}

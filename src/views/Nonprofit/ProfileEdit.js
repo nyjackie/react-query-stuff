@@ -15,6 +15,8 @@ import { USStateSelect, MultiSelect, ProfilePreview, AppPreviews } from 'gdd-com
 import { cn } from 'gdd-components/dist/utils';
 import 'gdd-components/dist/styles/shared.scss';
 
+import NpoProfileClaimSection from './ClaimSection';
+
 import { addNotification } from 'actions/notifications';
 import Spinner from 'components/Spinner';
 import ImageUploadBlock from 'components/ImageUploadBlock';
@@ -156,6 +158,7 @@ function Profile({ data, addNotification }) {
                   <p>
                     <b>EIN:</b> {data.ein}
                   </p>
+                  <NpoProfileClaimSection data={data} className={styles.claimWrap} />
                 </Col>
               </Row>
 

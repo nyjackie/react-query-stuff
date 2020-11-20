@@ -5,7 +5,7 @@ import { Row, Col } from 'react-bootstrap';
 import { useParams, Link } from 'react-router-dom';
 import PageHeader from 'components/PageHeader';
 import { addNotification } from 'actions/notifications';
-import Profile from 'views/Nonprofit/Edit';
+import Profile from 'views/Nonprofit/ProfileEdit';
 import { useNonprofit } from 'hooks/useNonprofits';
 import UserInfoList from 'views/Users/UserInfoList';
 import Spinner from 'components/Spinner';

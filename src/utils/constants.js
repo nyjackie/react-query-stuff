@@ -34,3 +34,11 @@ export const USER_TYPES = {
   BRAND: 'brand',
   INTERNAL: 'internal',
 };
+
+// APPROVED, DENIED, PENDING, or SUBMITTED
+export const CLAIM_STATUS = {
+  APPROVED: 'APPROVED',
+  DENIED: 'DENIED',
+  PENDING: 'PENDING',
+  SUBMITTED: 'SUBMITTED',
+};

@@ -70,15 +70,66 @@ $pad: 20px;
 
   li {
     margin: 0;
+    &:hover,
+    &:active {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
   }
 
   li a {
     display: block;
     padding: 5px $pad;
+  }
+}
 
-    &:hover,
-    &:active {
-      background-color: rgba(255, 255, 255, 0.2);
-    }
+.collapsedContent {
+  transition: max-height 200ms ease-in-out;
+  max-height: 0;
+  overflow: hidden;
+
+  &.open {
+    max-height: 500px;
+  }
+
+  ul li {
+    // padding-left: 1.4em;
+  }
+}
+
+.collapsedTitle {
+  color: var(--primary);
+  font-size: 0.9rem;
+  margin: 0;
+  // background-color: rgba(43, 194, 189, 0.2);
+  padding: 5px $pad;
+  font-weight: bold;
+  position: relative;
+  cursor: pointer;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  &:after {
+    position: absolute;
+    background-image: url('../../assets/dropdown-arrow.svg');
+    background-repeat: no-repeat;
+    background-size: 100% auto;
+    content: '';
+    display: block;
+    right: 2rem;
+    top: calc(50% - 6px);
+    width: 12px;
+    height: 6px;
+    transition: transform 200ms linear;
+  }
+
+  &.open {
+    border-bottom: 1px solid var(--primary);
+  }
+
+  &.open:after {
+    transform: rotate(180deg);
+    transform-origin: center;
   }
 }

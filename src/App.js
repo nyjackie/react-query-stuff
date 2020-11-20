@@ -10,7 +10,6 @@ import { ReactQueryDevtools } from 'react-query-devtools';
 import Landing from 'views/Landing';
 import Login from 'views/Login';
 import Claims from 'views/Claims';
-import ClaimInfo from 'views/Claims/ClaimInfo';
 import NonprofitSearch from 'views/Nonprofit/Search';
 import Nonprofit from 'views/Nonprofit';
 import InternalNonprofitCategories from 'views/Nonprofit/Categories';
@@ -72,7 +71,6 @@ const App = ({ autoLogin, user, isLoading }) => {
         {/* Private Routes */}
         <PrivateRoute exact path="/banlist" component={Banlist} />
         <PrivateRoute exact path="/claims" component={Claims} />
-        <PrivateRoute exact path="/claims/:id" component={ClaimInfo} />
         <PrivateRoute exact path="/nonprofit" component={NonprofitSearch} />
         <PrivateRoute exact path="/nonprofit/:id" component={Nonprofit} />
         <PrivateRoute exact path="/nonprofit-categories" component={InternalNonprofitCategories} />

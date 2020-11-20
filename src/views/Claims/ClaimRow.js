@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import Moment from 'react-moment';
+import { Luxon } from 'gdd-components';
 import styles from './Claim.module.scss';
 
 const Claim = ({ claim, note }) => {
@@ -10,7 +10,7 @@ const Claim = ({ claim, note }) => {
   return (
     <tr>
       <td>
-        <Moment format="YYYY/MM/DD">{created_at}</Moment>
+        <Luxon format="yyyy/MM/dd">{created_at}</Luxon>
       </td>
       <td>
         <Link to={`/nonprofit/${nonprofit.id}`}>{nonprofit.name}</Link>

@@ -2,7 +2,7 @@ import React, { Fragment, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import Moment from 'react-moment';
+import { Luxon } from 'gdd-components';
 import { useClaim, useUpdateClaim } from 'hooks/useClaims';
 import Spinner from 'components/Spinner';
 import styles from './Claim.module.scss';
@@ -127,7 +127,7 @@ const ClaimInfo = ({ addNotification, match }) => {
         <Row className="mb-4">
           <Col>
             <p>
-              <Moment format="MM/DD/YYYY h:MM a">{claim.created_at}</Moment>
+              <Luxon format="mm/DD/yyyy h:MM a">{claim.created_at}</Luxon>
             </p>
           </Col>
         </Row>

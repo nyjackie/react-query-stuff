@@ -12,7 +12,7 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
 
-import { addNotification } from 'actions/notifications';
+import { setNotification } from 'actions/notifications';
 import { max255, createSchema, phone, password } from 'utils/schema';
 import { useUniqueEmail, useUniquePhone } from 'hooks/useAdmin';
 import { useBrandForgotPassword } from 'hooks/useBrands';
@@ -39,7 +39,7 @@ const loadOptions = async inputValue => {
   return newRes;
 };
 
-function CreateBrandUser({ addNotification }) {
+function CreateBrandUser({ setNotification }) {
   const [postUser, { isLoading, isSuccess }] = useCreateBrandUser();
   const [checkUniqueEmail, { isLoading: ueLoading }] = useUniqueEmail();
   const [checkUniquePhone, { isLoading: upLoading }] = useUniquePhone();
@@ -75,18 +75,18 @@ function CreateBrandUser({ addNotification }) {
 
         if (isUniqueEmail && isUniquePhone) {
           await postUser(values);
-          addNotification('User successfully created', 'success');
+          setNotification('User successfully created', 'success');
         }
       } catch (err) {
         if (err.response.status === 409) {
-          addNotification(
+          setNotification(
             'A user already exists for this brand ID. Only one user per brand',
             'error',
             20000 // 20s
           );
           return;
         }
-        addNotification(
+        setNotification(
           `An error occured: ${err.response?.data?.message}`,
           'error',
           20000 // 20s
@@ -268,4 +268,4 @@ function CreateBrandUser({ addNotification }) {
   );
 }
 
-export default connect(null, { addNotification })(CreateBrandUser);
+export default connect(null, { setNotification })(CreateBrandUser);

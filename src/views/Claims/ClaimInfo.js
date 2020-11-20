@@ -7,7 +7,7 @@ import { useClaim, useUpdateClaim } from 'hooks/useClaims';
 import Spinner from 'components/Spinner';
 import styles from './Claim.module.scss';
 import { connect } from 'react-redux';
-import { addNotification } from 'actions/notifications';
+import { setNotification } from 'actions/notifications';
 import { cn } from 'gdd-components/dist/utils';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
@@ -75,7 +75,7 @@ const ConfirmationModal = ({ show, choice, onClose, onApprove, onDeny }) => {
   );
 };
 
-const ClaimInfo = ({ addNotification, match }) => {
+const ClaimInfo = ({ setNotification, match }) => {
   const [show, setShow] = useState(false);
   const [choice, decision] = useState('');
 
@@ -215,11 +215,11 @@ const ClaimInfo = ({ addNotification, match }) => {
         status={claimUpdateStatus}
         onApprove={msg => {
           updateClaim({ id: claim.id, status: 'approve', note: msg.note });
-          addNotification(`${claim.nonprofit.name} - Approved`, 'success');
+          setNotification(`${claim.nonprofit.name} - Approved`, 'success');
         }}
         onDeny={msg => {
           updateClaim({ id: claim.id, status: 'deny', note: msg.note });
-          addNotification(`${claim.nonprofit.name} - Denied`, 'fail');
+          setNotification(`${claim.nonprofit.name} - Denied`, 'fail');
         }}
       />
     </Fragment>
@@ -227,7 +227,7 @@ const ClaimInfo = ({ addNotification, match }) => {
 };
 
 ClaimInfo.propTypes = {
-  addNotification: PropTypes.func.isRequired,
+  setNotification: PropTypes.func.isRequired,
 };
 
-export default connect(null, { addNotification })(ClaimInfo);
+export default connect(null, { setNotification })(ClaimInfo);

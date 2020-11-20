@@ -12,7 +12,22 @@ import { useApproveClaim, useDenyClaim } from 'hooks/useClaims';
 import { addNotification } from 'actions/notifications';
 import customConfirm from 'components/CustomConfirm';
 import { track, identify } from 'utils/segment';
+import { CLAIM_STATUS } from 'utils/constants';
 import styles from './index.module.scss';
+
+function formatDate(d) {
+  if (!d) return '--';
+
+  // the time stamps are missing the "Z" that is required by the ISO 8601 format
+  // https://en.wikipedia.org/wiki/ISO_8601#Coordinated_Universal_Time_(UTC)
+
+  // future proofing just in case they get added by the backend
+  if (/Z$/.test(d)) {
+    return DateTime.fromISO(d).toLocaleString(DateTime.DATETIME_MED);
+  }
+
+  return DateTime.fromISO(d + 'Z').toLocaleString(DateTime.DATETIME_MED);
+}
 
 const ClaimInfo = ({ npo, addNotification, className = null }) => {
   const [approve, approveState] = useApproveClaim();
@@ -23,7 +38,6 @@ const ClaimInfo = ({ npo, addNotification, className = null }) => {
   if (!nonprofit_claim) {
     return <p>Missing nonprofit claim info</p>;
   }
-
   const {
     id: claimId,
     created_at,
@@ -143,13 +157,13 @@ const ClaimInfo = ({ npo, addNotification, className = null }) => {
         <p className={styles.header}>Status</p>
         <p className={cn(styles.status, styles[status.toLowerCase()])}>{status}</p>
         <p className="m-0">
-          <b>Created:</b> {DateTime.fromISO(created_at).toLocaleString()}
+          <b>Created:</b> {formatDate(created_at)}
         </p>
         <p className="m-0">
-          <b>Decided:</b> {(decided_at && DateTime.fromISO(decided_at).toLocaleString()) || '--'}
+          <b>Decided:</b> {formatDate(decided_at)}
         </p>
         <p>
-          <b>Reviewed by:</b> {reviewed_by || '--'}
+          <b>Reviewed by user id:</b> {reviewed_by || '--'}
         </p>
       </Col>
       <Col md={12} lg={3} className={styles.actions}>
@@ -162,6 +176,7 @@ const ClaimInfo = ({ npo, addNotification, className = null }) => {
           isLoading={approveState.isLoading}
           isError={approveState.isError}
           onClick={handleApprove}
+          disabled={status === CLAIM_STATUS.APPROVED}
         />
         <AjaxButton
           variant="danger"
@@ -170,6 +185,7 @@ const ClaimInfo = ({ npo, addNotification, className = null }) => {
           isLoading={denyState.isLoading}
           isError={denyState.isError}
           onClick={handleDeny}
+          disabled={status === CLAIM_STATUS.DENIED}
         />
       </Col>
     </Row>

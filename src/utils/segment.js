@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /**
  * Local in-memory store of properties that should be sent with every 'track'
  * request. This will contain:

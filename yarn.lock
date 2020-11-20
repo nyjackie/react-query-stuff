@@ -1320,6 +1320,21 @@
   resolved "https://registry.yarnpkg.com/@csstools/normalize.css/-/normalize.css-10.1.0.tgz#f0950bba18819512d42f7197e56c518aa491cf18"
   integrity sha512-ij4wRiunFfaJxjB0BdrYHIH8FxBJpOwNPhhAcunlmPdXudL1WQV1qoP9un6JsEBAgQH+7UXyyjh0g7jTxXK6tg==
 
+"@datadog/browser-core@1.25.4":
+  version "1.25.4"
+  resolved "https://registry.yarnpkg.com/@datadog/browser-core/-/browser-core-1.25.4.tgz#f4b9fec5aca7256ee7c786e708808a73a8b0172a"
+  integrity sha512-+HIHhiboxYkIY1qP45p29DJXd5pD9C7KX0tBZ3we/vfTu5ovQ0rW1lWSRmynUxn+H7qTvneNofJ6e7QAOV5dAA==
+  dependencies:
+    tslib "^1.10.0"
+
+"@datadog/browser-logs@^1.25.4":
+  version "1.25.4"
+  resolved "https://registry.yarnpkg.com/@datadog/browser-logs/-/browser-logs-1.25.4.tgz#4a347b22e4afd780439e7c7d6141c929e53725d9"
+  integrity sha512-kgG7NVca+U1rDCM/LHY7nh0p7W5shD84v1qcDTuS9ZnHs7RghFlN7qvvkq0jGLmABWEiAwzhbm7CnZPVNl4Kqg==
+  dependencies:
+    "@datadog/browser-core" "1.25.4"
+    tslib "^1.10.0"
+
 "@emotion/cache@^10.0.27", "@emotion/cache@^10.0.9":
   version "10.0.29"
   resolved "https://registry.yarnpkg.com/@emotion/cache/-/cache-10.0.29.tgz#87e7e64f412c060102d589fe7c6dc042e6f9d1e0"
@@ -10000,7 +10015,7 @@ jest-worker@^26.2.1, jest-worker@^26.6.2:
     merge-stream "^2.0.0"
     supports-color "^7.0.0"
 
-jest@24.9.0, jest@^24.9.0:
+jest@24.9.0:
   version "24.9.0"
   resolved "https://registry.yarnpkg.com/jest/-/jest-24.9.0.tgz#987d290c05a08b52c56188c1002e368edb007171"
   integrity sha512-YvkBL1Zm7d2B1+h5fHEOdyjCG+sGMz4f8D86/0HiqJ6MB4MnDc8FgP5vdWsGnemOQro7lnYo8UakZ3+5A0jxGw==

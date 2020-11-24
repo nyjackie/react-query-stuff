@@ -173,7 +173,9 @@ function Profile({ data, addNotification }) {
                           uploadText="Drag and drop or click to upload"
                           width={100}
                           height={100}
-                          src={data.logo_url}
+                          profile={data}
+                          type="nonprofit"
+                          src={logoSrc}
                           alt="logo"
                           name="file_logo"
                           sqaure
@@ -195,7 +197,7 @@ function Profile({ data, addNotification }) {
                             }
                           }}
                           onImageSelected={file => {
-                            setLogoSrc(file.preview);
+                            setLogoSrc(file);
                           }}
                           onError={() => {
                             setLogoSrc(data.logo_url);
@@ -208,7 +210,9 @@ function Profile({ data, addNotification }) {
                           uploadText="Drag and drop or click to upload"
                           width={375}
                           height={240}
-                          src={data.hero_url}
+                          src={heroSrc}
+                          profile={data}
+                          type="nonprofit"
                           alt="cover photo"
                           name="file_hero"
                           minWidth={375}
@@ -230,7 +234,7 @@ function Profile({ data, addNotification }) {
                             }
                           }}
                           onImageSelected={file => {
-                            setHeroSrc(file.preview);
+                            setHeroSrc(file);
                           }}
                           onError={() => {
                             setHeroSrc(data.hero_url);

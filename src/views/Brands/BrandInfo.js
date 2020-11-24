@@ -53,6 +53,7 @@ function BrandInfo({ addNotification, match }) {
   const { isLoading: brandLoading, isError: brandError, data: brand = {} } = useBrand(
     match.params.id
   );
+  console.log('brand', brand);
 
   const { isLoading: catLoading, isError: catError, data: categories = [] } = useCategories();
 
@@ -76,170 +77,174 @@ function BrandInfo({ addNotification, match }) {
     return <div>Oooops something went wrong. Please try again </div>;
   }
   return (
-    <Fragment>
-      <Helmet>
-        <title>Brand: {brand?.name ? brand.name : 'Brand'} | Give Good Deeds | Admin Portal</title>
-      </Helmet>
-      {/************************************************************
-       * Brand name and grooming status checkmark
-       */}
-      <Container className="block shadow-sm">
-        <Row className="mb-3">
-          <Col>
-            <h2>{brand.name}</h2>
-          </Col>
-          <Col md={3}>
-            {brand.is_groomed && (
-              <>
-                <GreenCheck />
-                <p>Groomed</p>
-              </>
-            )}
-          </Col>
-        </Row>
-      </Container>
+    brand && (
+      <Fragment>
+        <Helmet>
+          <title>
+            Brand: {brand?.name ? brand.name : 'Brand'} | Give Good Deeds | Admin Portal
+          </title>
+        </Helmet>
+        {/************************************************************
+         * Brand name and grooming status checkmark
+         */}
+        <Container className="block shadow-sm">
+          <Row className="mb-3">
+            <Col>
+              <h2>{brand.name}</h2>
+            </Col>
+            <Col md={3}>
+              {brand.is_groomed && (
+                <>
+                  <GreenCheck />
+                  <p>Groomed</p>
+                </>
+              )}
+            </Col>
+          </Row>
+        </Container>
 
-      {/************************************************************
-       * Brand form and preview according wrap
-       */}
-      <Accordion defaultActiveKey="0">
-        <Container>
-          <Row>
-            <Col className="d-flex justify-content-end">
-              <Accordion.Toggle
-                as={Button}
-                variant="outline-primary"
-                eventKey="0"
-                onClick={e => {
-                  e.target.textContent =
-                    e.target.textContent === 'collapse' ? 'expand' : 'collapse';
+        {/************************************************************
+         * Brand form and preview according wrap
+         */}
+        <Accordion defaultActiveKey="0">
+          <Container>
+            <Row>
+              <Col className="d-flex justify-content-end">
+                <Accordion.Toggle
+                  as={Button}
+                  variant="outline-primary"
+                  eventKey="0"
+                  onClick={e => {
+                    e.target.textContent =
+                      e.target.textContent === 'collapse' ? 'expand' : 'collapse';
+                  }}
+                >
+                  collapse
+                </Accordion.Toggle>
+              </Col>
+            </Row>
+          </Container>
+
+          <Container>
+            <Accordion.Collapse eventKey="0">
+              {/************************************************************
+               * Begin Formik
+               */}
+              <Formik
+                initialValues={brand}
+                validationSchema={schema}
+                onSubmit={values => {
+                  const form = {
+                    ...values,
+                    is_disabled: stringToBool(values.is_disabled),
+                    is_groomed: stringToBool(values.is_groomed),
+                  };
+                  updateBrand({ id: brand.id, form })
+                    .then(() => {
+                      addNotification(`Brand update success`, 'success');
+                      toggleEdit(false);
+                    })
+                    .catch(err => {
+                      addNotification(
+                        `Brand update failed. ${err?.response?.data?.message}`,
+                        'error'
+                      );
+                    });
                 }}
               >
-                collapse
-              </Accordion.Toggle>
-            </Col>
-          </Row>
-        </Container>
-
-        <Container>
-          <Accordion.Collapse eventKey="0">
-            {/************************************************************
-             * Begin Formik
-             */}
-            <Formik
-              initialValues={brand}
-              validationSchema={schema}
-              onSubmit={values => {
-                const form = {
-                  ...values,
-                  is_disabled: stringToBool(values.is_disabled),
-                  is_groomed: stringToBool(values.is_groomed),
-                };
-                updateBrand({ id: brand.id, form })
-                  .then(() => {
-                    addNotification(`Brand update success`, 'success');
-                    toggleEdit(false);
-                  })
-                  .catch(err => {
-                    addNotification(
-                      `Brand update failed. ${err?.response?.data?.message}`,
-                      'error'
-                    );
-                  });
-              }}
-            >
-              {props => {
-                return (
-                  <Row>
-                    {/************************************************************
-                     * Brand Form fields column
-                     */}
-                    <Col xs={12} lg={4} className="block-fluid shadow-sm">
+                {props => {
+                  return (
+                    <Row>
                       {/************************************************************
-                       * Brand uneditable meta data
+                       * Brand Form fields column
                        */}
-                      <p className="m-0">
-                        <b>Brand ID:</b> {brand.id}
-                      </p>
-                      <p className="m-0">
-                        <b>FMTC Master Merchant ID:</b> {brand.fmtc_master_merchant_id}
-                      </p>
-                      <p className="m-0">
-                        <b>FMTC Merchant ID:</b> {brand.fmtc_merchant_id}
-                      </p>
-                      <p className="m-0">
-                        <b>Created Date: </b>
-                        {moment(brand.created_at).format('MM/DD/YYYY')}
-                      </p>
-                      <p className="m-0 mb-4">
-                        <b>Modified Date: </b>
-                        {moment(brand.modified_at).format('MM/DD/YYYY')}
-                      </p>
-                      <Button
-                        className="mb-4"
-                        onClick={() => {
-                          toggleEdit(!edit);
-                        }}
-                        variant={!edit ? 'outline-primary' : 'primary'}
-                      >
-                        {edit ? 'Edit' : 'Stop editing'}
-                      </Button>
-                      <BrandForm brand={brand} edit={edit} categories={categories} {...props} />
-                    </Col>
+                      <Col xs={12} lg={4} className="block-fluid shadow-sm">
+                        {/************************************************************
+                         * Brand uneditable meta data
+                         */}
+                        <p className="m-0">
+                          <b>Brand ID:</b> {brand.id}
+                        </p>
+                        <p className="m-0">
+                          <b>FMTC Master Merchant ID:</b> {brand.fmtc_master_merchant_id}
+                        </p>
+                        <p className="m-0">
+                          <b>FMTC Merchant ID:</b> {brand.fmtc_merchant_id}
+                        </p>
+                        <p className="m-0">
+                          <b>Created Date: </b>
+                          {moment(brand.created_at).format('MM/DD/YYYY')}
+                        </p>
+                        <p className="m-0 mb-4">
+                          <b>Modified Date: </b>
+                          {moment(brand.modified_at).format('MM/DD/YYYY')}
+                        </p>
+                        <Button
+                          className="mb-4"
+                          onClick={() => {
+                            toggleEdit(!edit);
+                          }}
+                          variant={!edit ? 'outline-primary' : 'primary'}
+                        >
+                          {edit ? 'Edit' : 'Stop editing'}
+                        </Button>
+                        <BrandForm brand={brand} edit={edit} categories={categories} {...props} />
+                      </Col>
 
-                    {/************************************************************
-                     * Brand image editing and preview modal column
-                     */}
-                    <Col xs={12} lg={{ span: 7, offset: 1 }} className="block-fluid shadow-sm">
-                      <BrandImages
-                        brand={{
-                          ...brand,
-                          ...props.values,
-                        }}
-                      />
-                    </Col>
-                  </Row>
-                );
-              }}
-            </Formik>
-          </Accordion.Collapse>
-        </Container>
-      </Accordion>
-
-      {/************************************************************
-       * Brand Affiliate Offer rows
-       */}
-      {affiliate_programs.length > 0 && (
-        <Container className="block shadow-sm">
-          <Row>
-            <Col>
-              <h3>Offers</h3>
-            </Col>
-          </Row>
-          {affiliate_programs.map(affiliate_program => {
-            return (
-              <OfferRow
-                key={affiliate_program.offer_guid}
-                affiliate_program={affiliate_program}
-                onClick={() => {
-                  if (!show) {
-                    setOffer(affiliate_program);
-                    handleShow();
-                  }
+                      {/************************************************************
+                       * Brand image editing and preview modal column
+                       */}
+                      <Col xs={12} lg={{ span: 7, offset: 1 }} className="block-fluid shadow-sm">
+                        <BrandImages
+                          brand={{
+                            ...brand,
+                            ...props.values,
+                          }}
+                        />
+                      </Col>
+                    </Row>
+                  );
                 }}
-              />
-            );
-          })}
-        </Container>
-      )}
+              </Formik>
+            </Accordion.Collapse>
+          </Container>
+        </Accordion>
 
-      {/************************************************************
-       * Brand Affiliate Offer edit Modal
-       */}
-      {offer && (
-        <OfferEditModal show={show} offer={offer} handleClose={handleClose} brand_id={brand.id} />
-      )}
-    </Fragment>
+        {/************************************************************
+         * Brand Affiliate Offer rows
+         */}
+        {affiliate_programs.length > 0 && (
+          <Container className="block shadow-sm">
+            <Row>
+              <Col>
+                <h3>Offers</h3>
+              </Col>
+            </Row>
+            {affiliate_programs.map(affiliate_program => {
+              return (
+                <OfferRow
+                  key={affiliate_program.offer_guid}
+                  affiliate_program={affiliate_program}
+                  onClick={() => {
+                    if (!show) {
+                      setOffer(affiliate_program);
+                      handleShow();
+                    }
+                  }}
+                />
+              );
+            })}
+          </Container>
+        )}
+
+        {/************************************************************
+         * Brand Affiliate Offer edit Modal
+         */}
+        {offer && (
+          <OfferEditModal show={show} offer={offer} handleClose={handleClose} brand_id={brand.id} />
+        )}
+      </Fragment>
+    )
   );
 }
 

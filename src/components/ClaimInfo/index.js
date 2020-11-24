@@ -11,7 +11,7 @@ import { AjaxButton } from 'gdd-components';
 import { useApproveClaim, useDenyClaim } from 'hooks/useClaims';
 import { addNotification } from 'actions/notifications';
 import customConfirm from 'components/CustomConfirm';
-import { track, identify } from 'utils/segment';
+import { track, identify, reset } from 'utils/segment';
 import { CLAIM_STATUS } from 'utils/constants';
 import styles from './index.module.scss';
 
@@ -62,11 +62,8 @@ const ClaimInfo = ({ npo, addNotification, className = null }) => {
     try {
       await approve(claimId);
       addNotification(`${name} has been successfully approved 🎉`, 'success');
-      identify(null, {
-        email,
-        nonprofitId: id,
-      });
-      track('nonprofitApproved', {
+      reset();
+      const trackData = {
         email,
         firstName: first_name,
         lastName: last_name,
@@ -76,7 +73,9 @@ const ClaimInfo = ({ npo, addNotification, className = null }) => {
         isAccountOwner: true,
         title: role,
         yearlyUniqueDonors: yearly_unique_donors,
-      });
+      };
+      identify(null, trackData);
+      track('nonprofitApproved', trackData);
     } catch (err) {
       addNotification(
         `Error processing approval ${name}: ${err.response?.data?.message || err.message}`,

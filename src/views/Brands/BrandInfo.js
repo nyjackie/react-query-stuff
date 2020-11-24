@@ -199,6 +199,8 @@ function BrandInfo({ addNotification, match }) {
                           brand={{
                             ...brand,
                             ...props.values,
+                            logo_url: brand.logo_url,
+                            hero_url: brand.hero_url,
                           }}
                         />
                       </Col>

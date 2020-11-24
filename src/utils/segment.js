@@ -111,3 +111,5 @@ export function segmentLogin(user_id, email, nonprofit_id) {
     nonprofit_id,
   };
 }
+
+export const reset = () => window.analytics?.reset();

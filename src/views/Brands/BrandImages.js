@@ -15,7 +15,6 @@ function BrandImages({ brand }) {
   const [uploadLogo, { isLoading: logoLoading }] = useUpdateBrandLogo();
   const [uploadHero, { isLoading: heroLoading }] = useUpdateBrandHero();
   const [logoSrc, setLogoSrc] = useState(logo_url);
-  console.log('logo', logoSrc);
   const [coverSrc, setCoverSrc] = useState(hero_url);
 
   const preview = {

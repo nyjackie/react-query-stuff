@@ -11,7 +11,7 @@
     "bootstrap": "^4.5.2",
     "cookie": "^0.4.1",
     "env-cmd": "^10.1.0",
-    "eslint": "^6.6.0",
+    "eslint": "^7.14.0",
     "eslint-config-prettier": "^6.15.0",
     "faker": "^5.1.0",
     "formik": "^2.1.7",
@@ -93,8 +93,5 @@
     "hooks": {
       "pre-commit": "npm run lint --silent && npm run format-staged && cp ../yarn.lock . && git add yarn.lock"
     }
-  },
-  "resolutions": {
-    "react-scripts/babel-loader": "^8.1.0"
   }
 }

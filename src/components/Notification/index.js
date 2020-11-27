@@ -10,7 +10,7 @@ import { removeNotification } from 'actions/notifications';
  */
 
 const Notification = ({ notifications, removeNotification }) => {
-  return <Notifications notifications={notifications} removeNotifications={removeNotification} />;
+  return <Notifications notifications={notifications} removeNotification={removeNotification} />;
 };
 
 Notification.propTypes = {

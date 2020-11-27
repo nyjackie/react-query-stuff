@@ -7,7 +7,7 @@ import { useCategories } from 'hooks/useBrands';
 import { object as yupObject, string as yupString, number as yupNumber } from 'yup';
 import { useUpdateBucket, useDeleteBucket } from 'hooks/useBrands';
 import { connect } from 'react-redux';
-import { addNotification } from 'actions/notifications';
+import { setNotification } from 'actions/notifications';
 import PropTypes from 'prop-types';
 
 const schema = yupObject({
@@ -15,7 +15,7 @@ const schema = yupObject({
   bucket_sort_order: yupNumber().typeError('Please enter sort order.'),
 });
 
-const BucketRow = ({ bucket, addNotification, setShow }) => {
+const BucketRow = ({ bucket, setNotification, setShow }) => {
   const { id, created_at, modified_at } = bucket;
   const { data: categories = [] } = useCategories();
   const [updateBucket] = useUpdateBucket();
@@ -38,10 +38,10 @@ const BucketRow = ({ bucket, addNotification, setShow }) => {
       }
       updateBucket({ form: values })
         .then(() => {
-          addNotification(`Bucket update success`, 'success');
+          setNotification(`Bucket update success`, 'success');
         })
         .catch(err => {
-          addNotification(`Bucket update failed. ${err?.response?.data?.message}`, 'error');
+          setNotification(`Bucket update failed. ${err?.response?.data?.message}`, 'error');
         });
       setShow(false);
     },
@@ -234,7 +234,7 @@ const BucketRow = ({ bucket, addNotification, setShow }) => {
 };
 
 BucketRow.propTypes = {
-  addNotification: PropTypes.func.isRequired,
+  setNotification: PropTypes.func.isRequired,
 };
 
-export default connect(null, { addNotification })(BucketRow);
+export default connect(null, { setNotification })(BucketRow);

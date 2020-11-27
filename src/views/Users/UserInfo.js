@@ -16,7 +16,7 @@ const userTypeMap = {
   internal: AdminUser,
 };
 
-function UserInfo({ id, type, addNotification, includeHeader }) {
+function UserInfo({ id, type, setNotification, includeHeader }) {
   // const [show, setShow] = useState(false);
   // const [edit, toggleEdit] = useState(true);
   const { isLoading, isError, data, error } = useGetUser(id, type);
@@ -49,7 +49,7 @@ UserInfo.propTypes = {
   type: PropTypes.string,
   includeHeader: PropTypes.bool,
 
-  addNotification: PropTypes.func,
+  setNotification: PropTypes.func,
 };
 
 export default UserInfo;

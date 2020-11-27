@@ -10,14 +10,14 @@ import Spinner from 'react-bootstrap/Spinner';
 import { useFormik } from 'formik';
 import { createSchema, password } from 'utils/schema';
 import { useChangePassword } from 'hooks/useSettings';
-import { addNotification } from 'actions/notifications';
+import { setNotification } from 'actions/notifications';
 import Password from 'components/Password';
 
 const schema = createSchema({
   password: password,
 });
 
-function Settings({ user, addNotification }) {
+function Settings({ user, setNotification }) {
   const [doChangePassword, { isLoading }] = useChangePassword();
 
   const formik = useFormik({
@@ -28,9 +28,9 @@ function Settings({ user, addNotification }) {
     onSubmit: async values => {
       try {
         await doChangePassword({ id: user.user_id, body: values });
-        addNotification('Password successfully updated', 'success');
+        setNotification('Password successfully updated', 'success');
       } catch (err) {
-        addNotification(`Error: ${err.response?.data?.message}`, 'error');
+        setNotification(`Error: ${err.response?.data?.message}`, 'error');
       }
     },
   });
@@ -40,6 +40,7 @@ function Settings({ user, addNotification }) {
       <Helmet>
         <title>Settings | Admin Portal | Give Good Deeds</title>
       </Helmet>
+
       <Row>
         <Col md={8}>
           <Container className="block shadow-sm">
@@ -91,4 +92,4 @@ const mapStateToProps = state => ({
   user: state.auth.user,
 });
 
-export default connect(mapStateToProps, { addNotification })(Settings);
+export default connect(mapStateToProps, { setNotification })(Settings);

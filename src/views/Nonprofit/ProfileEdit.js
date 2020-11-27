@@ -15,9 +15,8 @@ import { USStateSelect, MultiSelect, ProfilePreview, AppPreviews } from 'gdd-com
 import { cn } from 'gdd-components/dist/utils';
 import 'gdd-components/dist/styles/shared.scss';
 
+import { setNotification } from 'actions/notifications';
 import NpoProfileClaimSection from './ClaimSection';
-
-import { addNotification } from 'actions/notifications';
 import Spinner from 'components/Spinner';
 import ImageUploadBlock from 'components/ImageUploadBlock';
 import { max255, url, zipcode } from 'utils/schema';
@@ -54,7 +53,7 @@ const schema = yupObject({
  * @param {object} param0
  * @param {InternalNonProfit} param0.data
  */
-function Profile({ data, addNotification }) {
+function Profile({ data, setNotification }) {
   const { data: options } = useNpCategories();
   const [updateLogo, { isLoading: logoLoading }] = useUpdateNPOLogo();
   const [updateHero, { isLoading: heroLoading }] = useUpdateNPOHero();
@@ -109,9 +108,9 @@ function Profile({ data, addNotification }) {
           });
         }
         await udateProfile({ id: data.id, body });
-        addNotification('Profile updated!', 'success');
+        setNotification('Profile updated!', 'success');
       } catch (err) {
-        addNotification(`Update failed: ${err.message}: ${err.response?.data?.message}`, 'error');
+        setNotification(`Update failed: ${err.message}: ${err.response?.data?.message}`, 'error');
       }
     },
   });
@@ -185,10 +184,10 @@ function Profile({ data, addNotification }) {
                           onSave={async data => {
                             try {
                               const resData = await updateLogo(data);
-                              addNotification('Logo image uploaded.', 'success');
+                              setNotification('Logo image uploaded.', 'success');
                               return resData;
                             } catch (err) {
-                              addNotification(
+                              setNotification(
                                 `Logo upload failed: ${err.message}: ${err.response?.data?.message}`,
                                 'error'
                               );
@@ -220,10 +219,10 @@ function Profile({ data, addNotification }) {
                           onSave={async data => {
                             try {
                               const resData = await updateHero(data);
-                              addNotification('Cover image uploaded.', 'success');
+                              setNotification('Cover image uploaded.', 'success');
                               return resData;
                             } catch (err) {
-                              addNotification(
+                              setNotification(
                                 `Cover upload failed: ${err.message}: ${err.response?.data?.message}`,
                                 'error'
                               );
@@ -522,7 +521,7 @@ function Profile({ data, addNotification }) {
 }
 
 Profile.propTypes = {
-  addNotification: PropTypes.func.isRequired,
+  setNotification: PropTypes.func.isRequired,
 };
 
-export default connect(null, { addNotification })(Profile);
+export default connect(null, { setNotification })(Profile);

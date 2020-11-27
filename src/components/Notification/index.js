@@ -1,56 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import './Notification.scss';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import { Notifications } from 'gdd-components';
 import { removeNotification } from 'actions/notifications';
 
-const FadeTransition = props => (
-  <CSSTransition {...props} classNames="notification" timeout={{ enter: 500, exit: 300 }} />
-);
+/**
+ * @param { id: string, msg: string, variant: 'success' | 'error' | 'warning' | 'info' } notification
+ * @param Function removeNotification
+ */
 
-const Notification = ({ notification, removeNotification }) => {
-  return (
-    <TransitionGroup className="toasts">
-      {notification !== null &&
-        notification.length > 0 &&
-        notification.map(toast => (
-          <FadeTransition
-            key={toast.id}
-            className={`shadow-sm notification notification-${toast.variant}`}
-          >
-            <div>
-              <div className="flex-grow-1">{toast.msg}</div>
-              <span
-                className="mr-3 cursor-pointer"
-                onClick={() => {
-                  removeNotification(toast.id);
-                }}
-              >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M4 12L12 4" stroke="#536567" strokeWidth="2.5" strokeLinecap="round" />
-                  <path d="M4 4L12 12" stroke="#536567" strokeWidth="2.5" strokeLinecap="round" />
-                </svg>
-              </span>
-            </div>
-          </FadeTransition>
-        ))}
-    </TransitionGroup>
-  );
+const Notification = ({ notifications, removeNotification }) => {
+  return <Notifications notifications={notifications} removeNotification={removeNotification} />;
 };
 
 Notification.propTypes = {
-  notification: PropTypes.array.isRequired,
+  notifications: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = state => ({
-  notification: state.notification,
+  notifications: state.notifications,
 });
 
 export default connect(mapStateToProps, { removeNotification })(Notification);

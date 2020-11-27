@@ -5,9 +5,9 @@ import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import { AjaxButton } from 'gdd-components';
 import { useClaimOptions, useRequestInfo } from 'hooks/useClaims';
-import { addNotification } from 'actions/notifications';
+import { setNotification } from 'actions/notifications';
 
-function RequestInfoButton({ claim_id, addNotification, className = null }) {
+function RequestInfoButton({ claim_id, setNotification, className = null }) {
   const { data, isLoading: loadingOptions } = useClaimOptions();
   const [postRequest, { isLoading, isError, isSuccess }] = useRequestInfo();
   const [show, setShow] = useState(false);
@@ -30,10 +30,10 @@ function RequestInfoButton({ claim_id, addNotification, className = null }) {
           claim_id,
           template_name: val,
         });
-        addNotification('Request info successfully sent', 'success');
+        setNotification('Request info successfully sent', 'success');
         setShow(false);
       } catch (err) {
-        addNotification(`An error occurred ${err.response?.data?.message || err.message}`, 'error');
+        setNotification(`An error occurred ${err.response?.data?.message || err.message}`, 'error');
       }
     }
 
@@ -108,4 +108,4 @@ function RequestInfoButton({ claim_id, addNotification, className = null }) {
   );
 }
 
-export default connect(null, { addNotification })(RequestInfoButton);
+export default connect(null, { setNotification })(RequestInfoButton);

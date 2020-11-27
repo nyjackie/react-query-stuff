@@ -1,7 +1,7 @@
 import { usePaginatedQuery, useQuery, useMutation, queryCache } from 'react-query';
 import api from 'gdd-api-lib';
 import store from 'store';
-import { addNotification } from 'actions/notifications';
+import { setNotification } from 'actions/notifications';
 
 /**
  * API handler to update a single brand's profile info
@@ -114,13 +114,13 @@ export function useDeleteBucket() {
     {
       onSuccess: () => {
         queryCache.invalidateQueries('buckets');
-        store.dispatch(addNotification('Bucket deleted', 'info'));
+        store.dispatch(setNotification('Bucket deleted', 'info'));
       },
       onError: err => {
         if (err.response.status === 404) {
-          store.dispatch(addNotification(`A bucket with that ID does not exist`, 'error'));
+          store.dispatch(setNotification(`A bucket with that ID does not exist`, 'error'));
         } else {
-          store.dispatch(addNotification(`An Error occured: ${err.message} `, 'error'));
+          store.dispatch(setNotification(`An Error occured: ${err.message} `, 'error'));
         }
       },
     }
@@ -258,7 +258,7 @@ export function useUpdateBrandLogo() {
     throwOnError: true,
     onError: err => {
       store.dispatch(
-        addNotification(
+        setNotification(
           `Logo upload failed: ${err.message}: ${err.response?.data?.message}`,
           'error'
         )
@@ -267,7 +267,7 @@ export function useUpdateBrandLogo() {
     onSuccess: (data, variable) => {
       queryCache.invalidateQueries(['brand', variable.id]);
       queryCache.refetchQueries(['brand', variable.id]);
-      store.dispatch(addNotification('Logo image uploaded.', 'success'));
+      store.dispatch(setNotification('Logo image uploaded.', 'success'));
     },
   });
 }
@@ -280,7 +280,7 @@ export function useUpdateBrandHero() {
     throwOnError: true,
     onError: err => {
       store.dispatch(
-        addNotification(
+        setNotification(
           `Cover upload failed: ${err.message}: ${err.response?.data?.message}`,
           'error'
         )
@@ -288,7 +288,7 @@ export function useUpdateBrandHero() {
     },
     onSuccess: (data, variable) => {
       queryCache.invalidateQueries(['brand', variable.id]);
-      store.dispatch(addNotification('Hero image uploaded.', 'success'));
+      store.dispatch(setNotification('Hero image uploaded.', 'success'));
     },
   });
 }

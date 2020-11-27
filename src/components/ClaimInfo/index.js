@@ -9,7 +9,7 @@ import RequestInfo from './RequestInfo';
 import { cn } from 'gdd-components/dist/utils';
 import { AjaxButton } from 'gdd-components';
 import { useApproveClaim, useDenyClaim } from 'hooks/useClaims';
-import { addNotification } from 'actions/notifications';
+import { setNotification } from 'actions/notifications';
 import customConfirm from 'components/CustomConfirm';
 import { track, identify, reset } from 'utils/segment';
 import { CLAIM_STATUS } from 'utils/constants';
@@ -29,7 +29,7 @@ function formatDate(d) {
   return DateTime.fromISO(d + 'Z').toLocaleString(DateTime.DATETIME_MED);
 }
 
-const ClaimInfo = ({ npo, addNotification, className = null }) => {
+const ClaimInfo = ({ npo, setNotification, className = null }) => {
   const [approve, approveState] = useApproveClaim();
   const [deny, denyState] = useDenyClaim();
 
@@ -61,7 +61,7 @@ const ClaimInfo = ({ npo, addNotification, className = null }) => {
     }
     try {
       await approve(claimId);
-      addNotification(`${name} has been successfully approved 🎉`, 'success');
+      setNotification(`${name} has been successfully approved 🎉`, 'success');
       reset();
       const trackData = {
         email,
@@ -77,7 +77,7 @@ const ClaimInfo = ({ npo, addNotification, className = null }) => {
       identify(null, trackData);
       track('nonprofitApproved', trackData);
     } catch (err) {
-      addNotification(
+      setNotification(
         `Error processing approval ${name}: ${err.response?.data?.message || err.message}`,
         'error'
       );
@@ -91,9 +91,9 @@ const ClaimInfo = ({ npo, addNotification, className = null }) => {
     }
     try {
       await deny(claimId);
-      addNotification(`${name} has been denied`, 'success');
+      setNotification(`${name} has been denied`, 'success');
     } catch (err) {
-      addNotification(
+      setNotification(
         `Error processing denial for ${name}: ${err.response?.data?.message || err.message}`,
         'error'
       );
@@ -195,4 +195,4 @@ ClaimInfo.propTypes = {
   npo: PropTypes.object.isRequired,
 };
 
-export default connect(null, { addNotification })(ClaimInfo);
+export default connect(null, { setNotification })(ClaimInfo);

@@ -6,14 +6,14 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Container from 'react-bootstrap/Container';
 import InputGroup from 'react-bootstrap/InputGroup';
-
 import { getSearchQuery } from 'utils';
 import { Paginator } from 'gdd-components';
 
-import { useNonprofitSearch } from 'hooks/useNonprofits';
+import { useNonprofitSearch, useGuideStarSearch } from 'hooks/useNonprofits';
 import Spinner from 'components/Spinner';
 import SearchInput from './NPSearchInput';
 import styles from './NonProfitInfo.module.scss';
+import { Button } from 'react-bootstrap';
 
 function makeLocation(address) {
   if (!address) return '--';
@@ -63,11 +63,24 @@ const SingleResult = ({ result }) => {
   );
 };
 
-const SearchResults = ({ results }) => {
-  if (!results || results.length === 0) {
-    return <p>no results found</p>;
-  }
+const GuideStarSearch = () => {
+  const { search_term } = getSearchQuery();
+  const { isLoading, data: results, refetch } = useGuideStarSearch(search_term);
+  const onSearch = () => {
+    refetch();
+  };
+  console.log('result', isLoading, results);
+  return (
+    <div>
+      <p>
+        We couldn't find any nonprofits. Please try another search term or use our expand search.
+      </p>
+      <Button onClick={onSearch}>Expand Search</Button>
+    </div>
+  );
+};
 
+const SearchResults = ({ results }) => {
   return (
     <ul className={styles.results}>
       {results.map(item => (
@@ -98,7 +111,6 @@ const NonprofitSearch = ({ history, location }) => {
 
     history.push(`${location.pathname}?${param.toString()}`);
   }
-
   return (
     <>
       <Helmet>
@@ -158,11 +170,16 @@ const NonprofitSearch = ({ history, location }) => {
           </Col>
         </Row>
       </Container>
-      {results && (
+      {/* {results && results.nonprofits.length !== 0 && (
         <Container className="block shadow-sm">
           <SearchResults results={results.nonprofits} />
         </Container>
-      )}
+      )} */}
+      {/* {(!results || results.nonprofits.length === 0) && ( */}
+      <Container className="block shadow-sm">
+        <GuideStarSearch search_term={search_term} />
+      </Container>
+      {/* )} */}
     </>
   );
 };

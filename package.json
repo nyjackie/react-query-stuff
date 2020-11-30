@@ -69,7 +69,7 @@
       "no-console": "warn",
       "no-debugger": "error",
       "no-alert": "error",
-      "no-unused-vars": "error"
+      "no-unused-vars": "warn"
     }
   },
   "browserslist": {

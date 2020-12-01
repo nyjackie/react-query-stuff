@@ -256,14 +256,7 @@ export function useBrandSearch(query) {
 export function useUpdateBrandLogo() {
   return useMutation(updateBrandLogo, {
     throwOnError: true,
-    onError: err => {
-      store.dispatch(
-        setNotification(
-          `Logo upload failed: ${err.message}: ${err.response?.data?.message}`,
-          'error'
-        )
-      );
-    },
+
     onSuccess: (data, variable) => {
       queryCache.invalidateQueries(['brand', String(variable.id)]);
       store.dispatch(setNotification('Logo image uploaded.', 'success'));
@@ -277,14 +270,7 @@ export function useUpdateBrandLogo() {
 export function useUpdateBrandHero() {
   return useMutation(updateBrandHero, {
     throwOnError: true,
-    onError: err => {
-      store.dispatch(
-        setNotification(
-          `Cover upload failed: ${err.message}: ${err.response?.data?.message}`,
-          'error'
-        )
-      );
-    },
+
     onSuccess: (data, variable) => {
       queryCache.invalidateQueries(['brand', String(variable.id)]);
       store.dispatch(setNotification('Hero image uploaded.', 'success'));

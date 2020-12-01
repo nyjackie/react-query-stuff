@@ -79,6 +79,9 @@ const GuideStarSearch = () => {
       </div>
     );
   }
+  if (results?.nonprofits?.length == 0) {
+    return <p>no results found</p>;
+  }
   return (
     <ul className={styles.results}>
       {results?.nonprofits?.map(item => (
@@ -183,7 +186,7 @@ const NonprofitSearch = ({ history, location }) => {
           <SearchResults results={results.nonprofits} />
         </Container>
       )}
-      {(!results || results.nonprofits.length === 0) && (
+      {results && results.nonprofits.length === 0 && (
         <Container className="block shadow-sm">
           <GuideStarSearch search_term={search_term} />
         </Container>

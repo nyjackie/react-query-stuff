@@ -132,7 +132,6 @@ export function useGuideStarSearch(search_term) {
     ['guidestar_search', search_term],
     () => {
       const encoded = window.btoa(search_term);
-      console.log(encoded);
       return api.searchGuidestar({ search_term: encoded }).then(res => res.data);
     },
     {

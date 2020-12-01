@@ -7,10 +7,12 @@ import { ProfilePreview, AppPreviews } from 'gdd-components';
 
 // internal
 import ImageUploadBlock from 'components/ImageUploadBlock';
+import { setNotification } from 'actions/notifications';
+import { connect } from 'react-redux';
 import { useUpdateBrandHero, useUpdateBrandLogo } from 'hooks/useBrands';
 import styles from './Brands.module.scss';
 
-function BrandImages({ brand }) {
+function BrandImages({ brand, setNotification }) {
   const { id: brand_id, logo_url, hero_url } = brand;
   const [uploadLogo, { isLoading: logoLoading }] = useUpdateBrandLogo();
   const [uploadHero, { isLoading: heroLoading }] = useUpdateBrandHero();
@@ -41,8 +43,17 @@ function BrandImages({ brand }) {
             reco={` Image must be square <br />
                     We recommend at least 400x400 px <br />
                     Max file size: 4.9 MB`}
-            onSave={data => {
-              return uploadLogo(data);
+            onSave={async data => {
+              try {
+                const resData = await uploadLogo(data);
+                setNotification('Logo image uploaded.', 'success');
+                return resData;
+              } catch (err) {
+                setNotification(
+                  `Logo upload failed: ${err.message}: ${err.response?.data?.message}`,
+                  'error'
+                );
+              }
             }}
             onImageSelected={file => {
               setLogoSrc(file.preview);
@@ -65,8 +76,17 @@ function BrandImages({ brand }) {
             reco={`We recommend at least ${375 * 4}x${240 * 4} px <br />
                   Max file size: 4.9 MB`}
             isLoading={heroLoading}
-            onSave={data => {
-              return uploadHero(data);
+            onSave={async data => {
+              try {
+                const resData = await uploadHero(data);
+                setNotification('Cover image uploaded.', 'success');
+                return resData;
+              } catch (err) {
+                setNotification(
+                  `Cover upload failed: ${err.message}: ${err.response?.data?.message}`,
+                  'error'
+                );
+              }
             }}
             onImageSelected={file => {
               setCoverSrc(file.preview);
@@ -101,4 +121,4 @@ function BrandImages({ brand }) {
   );
 }
 
-export default BrandImages;
+export default connect(null, { setNotification })(BrandImages);

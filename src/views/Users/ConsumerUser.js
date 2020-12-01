@@ -9,7 +9,7 @@ import InputMask from 'react-input-mask';
 import { cn } from 'gdd-components/dist/utils';
 
 import DateInput from 'components/DateInput';
-import { addNotification } from 'actions/notifications';
+import { setNotification } from 'actions/notifications';
 import { usePronounIncomeOptions } from 'hooks/useOptions';
 import { useUpdateConsumerUser } from 'hooks/useUsers';
 import { useUniqueEmail, useUniquePhone } from 'hooks/useAdmin';
@@ -44,7 +44,7 @@ const schema = createSchema({
  * @param {object} props
  * @param {UserProfile} props.data
  */
-function ConsumerUser({ data, addNotification, includeHeader = true }) {
+function ConsumerUser({ data, setNotification, includeHeader = true }) {
   const [edit, toggleEdit] = useState(false);
   const { data: options } = usePronounIncomeOptions();
   const [updateUser] = useUpdateConsumerUser();
@@ -57,11 +57,11 @@ function ConsumerUser({ data, addNotification, includeHeader = true }) {
   function doUpdateUser(changedValues) {
     updateUser({ id: data.id, body: changedValues })
       .then(() => {
-        addNotification('Saves successful', 'success');
+        setNotification('Saves successful', 'success');
         toggleEdit(false);
       })
       .catch(e => {
-        addNotification(e.message, 'danger');
+        setNotification(e.message, 'danger');
         toggleEdit(false);
       });
   }
@@ -76,7 +76,7 @@ function ConsumerUser({ data, addNotification, includeHeader = true }) {
 
       if (Object.keys(changedValues).length === 0) {
         // nothing changed
-        addNotification('no values changed, nothing to update', 'warning');
+        setNotification('no values changed, nothing to update', 'warning');
         return;
       }
 
@@ -107,7 +107,7 @@ function ConsumerUser({ data, addNotification, includeHeader = true }) {
           .then(results => {
             results.forEach((r, i) => {
               if (r === false) {
-                addNotification(
+                setNotification(
                   `A brand user with that ${promiseOrder[i]} already exist`,
                   'danger',
                   10000
@@ -120,7 +120,7 @@ function ConsumerUser({ data, addNotification, includeHeader = true }) {
             }
           })
           .catch(err => {
-            addNotification(err.message, 'danger');
+            setNotification(err.message, 'danger');
           });
         return;
       }
@@ -343,7 +343,7 @@ function ConsumerUser({ data, addNotification, includeHeader = true }) {
 }
 
 ConsumerUser.propTypes = {
-  addNotification: PropTypes.func.isRequired,
+  setNotification: PropTypes.func.isRequired,
 };
 
-export default connect(null, { addNotification })(ConsumerUser);
+export default connect(null, { setNotification })(ConsumerUser);

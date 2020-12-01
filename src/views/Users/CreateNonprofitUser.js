@@ -12,7 +12,7 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
 
-import { addNotification } from 'actions/notifications';
+import { setNotification } from 'actions/notifications';
 import { max255, createSchema, phone, password } from 'utils/schema';
 import { USER_TYPES } from 'utils/constants';
 import { useUniqueEmail, useUniquePhone } from 'hooks/useAdmin';
@@ -38,7 +38,7 @@ const loadOptions = async inputValue => {
   return newRes;
 };
 
-function CreateNonprofitUser({ addNotification }) {
+function CreateNonprofitUser({ setNotification }) {
   const [postUser, { isLoading, isSuccess }] = useCreateNoprofitUser();
   const [checkUniqueEmail, { isLoading: ueLoading }] = useUniqueEmail();
   const [checkUniquePhone, { isLoading: upLoading }] = useUniquePhone();
@@ -75,10 +75,10 @@ function CreateNonprofitUser({ addNotification }) {
 
         if (isUniqueEmail && isUniquePhone) {
           await postUser(values);
-          addNotification('User successfully created', 'success');
+          setNotification('User successfully created', 'success');
         }
       } catch (err) {
-        addNotification(`An error occured: ${err.response?.data?.message}`, 'error', 20000);
+        setNotification(`An error occured: ${err.response?.data?.message}`, 'error', 20000);
       }
     },
   });
@@ -252,4 +252,4 @@ function CreateNonprofitUser({ addNotification }) {
   );
 }
 
-export default connect(null, { addNotification })(CreateNonprofitUser);
+export default connect(null, { setNotification })(CreateNonprofitUser);

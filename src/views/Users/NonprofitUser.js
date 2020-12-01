@@ -8,7 +8,7 @@ import InputMask from 'react-input-mask';
 import { Col, Row, Container, Form } from 'react-bootstrap';
 
 import { cn } from 'gdd-components/dist/utils';
-import { addNotification } from 'actions/notifications';
+import { setNotification } from 'actions/notifications';
 import { createSchema, max255, phone } from 'utils/schema';
 import { useUpdateNonprofitUser, useNonprofitForgotPassword } from 'hooks/useNonprofits';
 import { useUniqueEmail, useUniquePhone } from 'hooks/useAdmin';
@@ -39,7 +39,7 @@ const schema = createSchema({
  * @param {object} props
  * @param {NonprofitUserProfile} props.data
  */
-function NonprofitUser({ data, addNotification, includeHeader = true }) {
+function NonprofitUser({ data, setNotification, includeHeader = true }) {
   const [edit, toggleEdit] = useState(false);
   const [updateUser] = useUpdateNonprofitUser();
   const [checkUniqueEmail, { data: ueData }] = useUniqueEmail();
@@ -51,11 +51,11 @@ function NonprofitUser({ data, addNotification, includeHeader = true }) {
   function doUpdateUser(changedValues) {
     updateUser({ id: data.user_id, body: changedValues })
       .then(() => {
-        addNotification('Saves successful', 'success');
+        setNotification('Saves successful', 'success');
         toggleEdit(false);
       })
       .catch(e => {
-        addNotification(e.message, 'danger');
+        setNotification(e.message, 'danger');
         toggleEdit(false);
       });
   }
@@ -70,7 +70,7 @@ function NonprofitUser({ data, addNotification, includeHeader = true }) {
 
       if (Object.keys(changedValues).length === 0) {
         // nothing changed
-        addNotification('no values changed, nothing to update', 'warning');
+        setNotification('no values changed, nothing to update', 'warning');
         return;
       }
 
@@ -101,7 +101,7 @@ function NonprofitUser({ data, addNotification, includeHeader = true }) {
           .then(results => {
             results.forEach((r, i) => {
               if (r === false) {
-                addNotification(
+                setNotification(
                   `A nonprofit user with that ${promiseOrder[i]} already exist`,
                   'danger',
                   10000
@@ -114,7 +114,7 @@ function NonprofitUser({ data, addNotification, includeHeader = true }) {
             }
           })
           .catch(err => {
-            addNotification(err.message, 'danger');
+            setNotification(err.message, 'danger');
           });
         return;
       }
@@ -235,7 +235,7 @@ function NonprofitUser({ data, addNotification, includeHeader = true }) {
 }
 
 NonprofitUser.propTypes = {
-  addNotification: PropTypes.func.isRequired,
+  setNotification: PropTypes.func.isRequired,
 };
 
-export default connect(null, { addNotification })(NonprofitUser);
+export default connect(null, { setNotification })(NonprofitUser);

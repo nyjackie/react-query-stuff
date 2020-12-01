@@ -9,7 +9,7 @@ import { useFormik } from 'formik';
 import { useAdminForgotPassword } from 'hooks/useAdmin';
 
 // redux actions
-import { addNotification } from 'actions/notifications';
+import { setNotification } from 'actions/notifications';
 
 // utils
 import { cn } from 'gdd-components/dist/utils';
@@ -25,7 +25,7 @@ const schema = createSchema({
   email: max255.email('Invalid email format').required('This field is required'),
 });
 
-function AdminUser({ data = { email: '' }, addNotification, includeHeader = true }) {
+function AdminUser({ data = { email: '' }, setNotification, includeHeader = true }) {
   const formik = useFormik({
     initialValues: data,
     validationSchema: schema,
@@ -81,7 +81,7 @@ function AdminUser({ data = { email: '' }, addNotification, includeHeader = true
 }
 
 AdminUser.propTypes = {
-  addNotification: PropTypes.func.isRequired,
+  setNotification: PropTypes.func.isRequired,
 };
 
-export default connect(null, { addNotification })(AdminUser);
+export default connect(null, { setNotification })(AdminUser);

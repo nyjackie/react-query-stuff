@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import { useFormik } from 'formik';
 import InputMask from 'react-input-mask';
 import { cn } from 'gdd-components/dist/utils';
-import { addNotification } from 'actions/notifications';
+import { setNotification } from 'actions/notifications';
 import { createSchema, max255, phone } from 'utils/schema';
 import { useUpdateBrandUser } from 'hooks/useUsers';
 import { useBrandForgotPassword } from 'hooks/useBrands';
@@ -37,7 +37,7 @@ const schema = createSchema({
  * @param {object} props
  * @param {UserProfile} props.data
  */
-function BrandUser({ data, addNotification, includeHeader = true }) {
+function BrandUser({ data, setNotification, includeHeader = true }) {
   const [edit, toggleEdit] = useState(false);
   const [updateUser] = useUpdateBrandUser();
   const [checkUniqueEmail, { data: ueData }] = useUniqueEmail();
@@ -49,11 +49,11 @@ function BrandUser({ data, addNotification, includeHeader = true }) {
   function doUpdateUser(changedValues) {
     updateUser({ id: data.user_id, body: changedValues })
       .then(() => {
-        addNotification('Saves successful', 'success');
+        setNotification('Saves successful', 'success');
         toggleEdit(false);
       })
       .catch(e => {
-        addNotification(e.message, 'danger');
+        setNotification(e.message, 'danger');
         toggleEdit(false);
       });
   }
@@ -68,7 +68,7 @@ function BrandUser({ data, addNotification, includeHeader = true }) {
 
       if (Object.keys(changedValues).length === 0) {
         // nothing changed
-        addNotification('no values changed, nothing to update', 'warning');
+        setNotification('no values changed, nothing to update', 'warning');
         return;
       }
 
@@ -99,7 +99,7 @@ function BrandUser({ data, addNotification, includeHeader = true }) {
           .then(results => {
             results.forEach((r, i) => {
               if (r === false) {
-                addNotification(
+                setNotification(
                   `A brand user with that ${promiseOrder[i]} already exist`,
                   'danger',
                   10000
@@ -112,7 +112,7 @@ function BrandUser({ data, addNotification, includeHeader = true }) {
             }
           })
           .catch(err => {
-            addNotification(err.message, 'danger');
+            setNotification(err.message, 'danger');
           });
         return;
       }
@@ -236,7 +236,7 @@ function BrandUser({ data, addNotification, includeHeader = true }) {
 }
 
 BrandUser.propTypes = {
-  addNotification: PropTypes.func.isRequired,
+  setNotification: PropTypes.func.isRequired,
 };
 
-export default connect(null, { addNotification })(BrandUser);
+export default connect(null, { setNotification })(BrandUser);

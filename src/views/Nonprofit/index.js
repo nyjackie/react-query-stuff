@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Row, Col } from 'react-bootstrap';
 import { useParams, Link } from 'react-router-dom';
 import PageHeader from 'components/PageHeader';
-import { addNotification } from 'actions/notifications';
+import { setNotification } from 'actions/notifications';
 import Profile from 'views/Nonprofit/ProfileEdit';
 import { useNonprofit } from 'hooks/useNonprofits';
 import UserInfoList from 'views/Users/UserInfoList';
@@ -13,7 +13,7 @@ import Spinner from 'components/Spinner';
 /**
  * Nonprofit profile
  */
-const Nonprofit = ({ addNotification }) => {
+const Nonprofit = ({ setNotification }) => {
   const { id } = useParams();
 
   const { isLoading, isError, data: selected, error } = useNonprofit(id);
@@ -63,4 +63,4 @@ const Nonprofit = ({ addNotification }) => {
   );
 };
 
-export default connect(null, { addNotification })(Nonprofit);
+export default connect(null, { setNotification })(Nonprofit);

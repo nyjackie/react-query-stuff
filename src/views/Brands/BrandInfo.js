@@ -23,7 +23,7 @@ import {
 } from 'yup';
 
 // internal
-import { addNotification } from 'actions/notifications';
+import { setNotification } from 'actions/notifications';
 import { useBrand, useCategories, useOffers, useUpdateBrand, useCESubID } from 'hooks/useBrands';
 import Spinner from 'components/Spinner';
 import OfferRow from './BrandOfferRow';
@@ -43,7 +43,7 @@ const schema = yupObject({
   ce_subindustry_id: yupNumber().nullable().typeError('ID has to be numbers'),
 });
 
-function BrandInfo({ addNotification, match }) {
+function BrandInfo({ setNotification, match }) {
   const [edit, toggleEdit] = useState(true);
   const [show, setShow] = useState(false);
   const [offer, setOffer] = useState(null);
@@ -53,7 +53,6 @@ function BrandInfo({ addNotification, match }) {
   const { isLoading: brandLoading, isError: brandError, data: brand = {} } = useBrand(
     match.params.id
   );
-  console.log('brand', brand);
 
   const { isLoading: catLoading, isError: catError, data: categories = [] } = useCategories();
 
@@ -141,11 +140,11 @@ function BrandInfo({ addNotification, match }) {
                   };
                   updateBrand({ id: brand.id, form })
                     .then(() => {
-                      addNotification(`Brand update success`, 'success');
+                      setNotification(`Brand update success`, 'success');
                       toggleEdit(false);
                     })
                     .catch(err => {
-                      addNotification(
+                      setNotification(
                         `Brand update failed. ${err?.response?.data?.message}`,
                         'error'
                       );
@@ -470,7 +469,7 @@ const BrandForm = ({
 };
 
 BrandInfo.propTypes = {
-  addNotification: PropTypes.func.isRequired,
+  setNotification: PropTypes.func.isRequired,
 };
 
-export default connect(null, { addNotification })(BrandInfo);
+export default connect(null, { setNotification })(BrandInfo);

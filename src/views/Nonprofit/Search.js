@@ -13,7 +13,7 @@ import { useNonprofitSearch, useGuideStarSearch } from 'hooks/useNonprofits';
 import Spinner from 'components/Spinner';
 import SearchInput from './NPSearchInput';
 import styles from './NonProfitInfo.module.scss';
-import { Button } from 'react-bootstrap';
+import { AjaxButton } from 'gdd-components';
 
 function makeLocation(address) {
   if (!address) return '--';
@@ -69,14 +69,22 @@ const GuideStarSearch = () => {
   const onSearch = () => {
     refetch();
   };
-  console.log('result', isLoading, results);
+  if (!results) {
+    return (
+      <div>
+        <p>
+          We couldn't find any nonprofits. Please try another search term or use our expand search.
+        </p>
+        <AjaxButton onClick={onSearch} isLoading={isLoading} text="Expand Search" />
+      </div>
+    );
+  }
   return (
-    <div>
-      <p>
-        We couldn't find any nonprofits. Please try another search term or use our expand search.
-      </p>
-      <Button onClick={onSearch}>Expand Search</Button>
-    </div>
+    <ul className={styles.results}>
+      {results?.nonprofits?.map(item => (
+        <SingleResult result={item} key={item.id} />
+      ))}
+    </ul>
   );
 };
 
@@ -170,16 +178,16 @@ const NonprofitSearch = ({ history, location }) => {
           </Col>
         </Row>
       </Container>
-      {/* {results && results.nonprofits.length !== 0 && (
+      {results && results.nonprofits.length !== 0 && (
         <Container className="block shadow-sm">
           <SearchResults results={results.nonprofits} />
         </Container>
-      )} */}
-      {/* {(!results || results.nonprofits.length === 0) && ( */}
-      <Container className="block shadow-sm">
-        <GuideStarSearch search_term={search_term} />
-      </Container>
-      {/* )} */}
+      )}
+      {(!results || results.nonprofits.length === 0) && (
+        <Container className="block shadow-sm">
+          <GuideStarSearch search_term={search_term} />
+        </Container>
+      )}
     </>
   );
 };

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import Moment from 'react-moment';
+import { Luxon } from 'gdd-components';
 
 /**
  * This is a component for each row of the Grooming Queue
@@ -12,7 +12,7 @@ const GroomingQueueRow = ({ brand }) => {
   return (
     <tr>
       <td>
-        <Moment format="YYYY/MM/DD">{created_at}</Moment>
+        <Luxon format="yyyy/MM/dd">{created_at}</Luxon>
       </td>
       <td>{name}</td>
       <td>

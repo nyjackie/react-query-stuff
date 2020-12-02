@@ -2,7 +2,7 @@ import React from 'react';
 import APDetails from './APDetails';
 import { useFormik } from 'formik';
 import { Button, Col, Accordion, Row, Form, Card, Popover, OverlayTrigger } from 'react-bootstrap';
-import Moment from 'react-moment';
+import { Luxon } from 'gdd-components';
 import { useCategories } from 'hooks/useBrands';
 import { object as yupObject, string as yupString, number as yupNumber } from 'yup';
 import { useUpdateBucket, useDeleteBucket } from 'hooks/useBrands';
@@ -181,8 +181,8 @@ const BucketRow = ({ bucket, setNotification, setShow }) => {
                     </label>
                     <br />
                     <p>
-                      <Moment format="MMM, DD">{created_at}</Moment> /{' '}
-                      <Moment format="MMM, DD">{modified_at}</Moment>
+                      <Luxon format="MMM, dd">{created_at}</Luxon> /{' '}
+                      <Luxon format="MMM, dd">{modified_at}</Luxon>
                     </p>
                   </Col>
                 </Form.Row>

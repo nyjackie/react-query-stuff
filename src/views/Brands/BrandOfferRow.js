@@ -2,7 +2,7 @@
 import React from 'react';
 import { Col, Row, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import moment from 'moment';
+import { DateTime } from 'luxon';
 
 // internal
 import { useNonprofit } from 'hooks/useNonprofits';
@@ -29,10 +29,12 @@ function BrandOfferRow({ affiliate_program, onClick }) {
     <Row className={styles.offerRow}>
       <Col sm={12} md={5}>
         <p>
-          <b>Begins:</b> <span>{begins_at ? moment(begins_at).format('MM/DD/YY') : 'N/A'}</span>
+          <b>Begins:</b>{' '}
+          <span>{begins_at ? DateTime.fromISO(begins_at).toFormat('MM/dd/yy') : 'N/A'}</span>
         </p>
         <p>
-          <b>Ends:</b> <span>{ends_at ? moment(ends_at).format('MM/DD/YY') : 'N/A'}</span>
+          <b>Ends:</b>{' '}
+          <span>{ends_at ? DateTime.fromISO(ends_at).toFormat('MM/dd/yy') : 'N/A'}</span>
         </p>
         <p>
           <b>Supported Nonprofit: </b>

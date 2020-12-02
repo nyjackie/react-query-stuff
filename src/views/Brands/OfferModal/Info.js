@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-import moment from 'moment';
+import { DateTime } from 'luxon';
 import styles from './OfferEditModal.module.scss';
 
 function Meta({ label, val, children }) {
@@ -20,7 +20,7 @@ function Meta({ label, val, children }) {
 function Info({ offer }) {
   return (
     <Fragment>
-      <Meta label="Created:" val={moment(offer.created_at).format('MM/DD/YY')} />
+      <Meta label="Created:" val={DateTime.fromISO(offer.created_at).toFormat('MM/dd/yy')} />
       <Meta label="Offer Program ID:" val={offer.program_id} />
       <Meta label="Offer Type:" val={offer.offer_type} />
       <Meta

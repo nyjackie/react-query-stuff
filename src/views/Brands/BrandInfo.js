@@ -12,7 +12,7 @@ import {
 } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import moment from 'moment';
+import { DateTime } from 'luxon';
 import { Formik } from 'formik';
 import { Helmet } from 'react-helmet';
 import {
@@ -172,11 +172,11 @@ function BrandInfo({ setNotification, match }) {
                         </p>
                         <p className="m-0">
                           <b>Created Date: </b>
-                          {moment(brand.created_at).format('MM/DD/YYYY')}
+                          {DateTime.fromISO(brand.created_at).toFormat('MM/dd/yyyy')}
                         </p>
                         <p className="m-0 mb-4">
                           <b>Modified Date: </b>
-                          {moment(brand.modified_at).format('MM/DD/YYYY')}
+                          {DateTime.fromISO(brand.modified_at).toFormat('MM/dd/yyyy')}
                         </p>
                         <Button
                           className="mb-4"

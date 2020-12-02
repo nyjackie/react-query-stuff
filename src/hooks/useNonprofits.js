@@ -213,7 +213,7 @@ export function useNonprofitForgotPassword(email, template = false) {
 export function useUpdateNonprofitUser() {
   return useMutation(putUpdateUserProfile, {
     onSuccess: (offer, variable) => {
-      queryCache.invalidateQueries(['get_user', variable.id]);
+      queryCache.invalidateQueries(['get_user', String(variable.id)]);
     },
   });
 }
@@ -225,8 +225,8 @@ export function useUpdateNPOLogo() {
   return useMutation(updateNPOLogo, {
     throwOnError: true,
     onSuccess: (data, variable) => {
-      queryCache.invalidateQueries(['np_profile', variable.id]);
-      queryCache.refetchQueries(['np_profile', variable.id]);
+      console.log('inside of onsuccess');
+      queryCache.invalidateQueries(['np_profile', String(variable.id)]);
     },
   });
 }
@@ -238,7 +238,7 @@ export function useUpdateNPOHero() {
   return useMutation(updateNPOHero, {
     throwOnError: true,
     onSuccess: (data, variable) => {
-      queryCache.invalidateQueries(['np_profile', variable.id]);
+      queryCache.invalidateQueries(['np_profile', String(variable.id)]);
     },
   });
 }
@@ -247,7 +247,7 @@ export function useNonprofitProfileUpdate() {
   return useMutation(updateNonprofitProfile, {
     throwOnError: true,
     onSuccess: (data, variable) => {
-      queryCache.invalidateQueries(['np_profile', variable.id]);
+      queryCache.invalidateQueries(['np_profile', String(variable.id)]);
     },
   });
 }

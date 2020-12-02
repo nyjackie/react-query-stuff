@@ -222,7 +222,7 @@ export function useUpdateBrand() {
   return useMutation(updateBrand, {
     throwOnError: true,
     onSuccess: (data, variable) => {
-      queryCache.invalidateQueries(['brand', variable.id]);
+      queryCache.invalidateQueries(['brand', String(variable.id)]);
     },
   });
 }
@@ -234,7 +234,7 @@ export function useUpdateOffer() {
   return useMutation(updateOffer, {
     throwOnError: true,
     onSuccess: (offer, variable) => {
-      queryCache.invalidateQueries(['offers', variable.brand_id]);
+      queryCache.invalidateQueries(['offers', String(variable.brand_id)]);
     },
   });
 }
@@ -258,8 +258,8 @@ export function useUpdateBrandLogo() {
     throwOnError: true,
 
     onSuccess: (data, variable) => {
-      queryCache.invalidateQueries(['brand', variable.id]);
-      queryCache.refetchQueries(['brand', variable.id]);
+      queryCache.invalidateQueries(['brand', String(variable.id)]);
+      store.dispatch(setNotification('Logo image uploaded.', 'success'));
     },
   });
 }
@@ -272,7 +272,8 @@ export function useUpdateBrandHero() {
     throwOnError: true,
 
     onSuccess: (data, variable) => {
-      queryCache.invalidateQueries(['brand', variable.id]);
+      queryCache.invalidateQueries(['brand', String(variable.id)]);
+      store.dispatch(setNotification('Hero image uploaded.', 'success'));
     },
   });
 }

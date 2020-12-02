@@ -35,7 +35,9 @@ function BrandImages({ brand, setNotification }) {
             uploadText="Upload new brand logo"
             width={128}
             height={128}
-            src={logo_url}
+            src={logoSrc}
+            profile={brand}
+            type="brand"
             alt="logo"
             name="file_logo"
             sqaure
@@ -56,7 +58,7 @@ function BrandImages({ brand, setNotification }) {
               }
             }}
             onImageSelected={file => {
-              setLogoSrc(file.preview);
+              setLogoSrc(file);
             }}
             onError={() => {
               setLogoSrc(logo_url);
@@ -70,7 +72,9 @@ function BrandImages({ brand, setNotification }) {
             uploadText="Upload new brand cover photo"
             width={375}
             height={240}
-            src={hero_url}
+            profile={brand}
+            type="brand"
+            src={coverSrc}
             alt="cover photo"
             name="file_hero"
             reco={`We recommend at least ${375 * 4}x${240 * 4} px <br />
@@ -89,7 +93,7 @@ function BrandImages({ brand, setNotification }) {
               }
             }}
             onImageSelected={file => {
-              setCoverSrc(file.preview);
+              setCoverSrc(file);
             }}
             onError={() => {
               setCoverSrc(hero_url);

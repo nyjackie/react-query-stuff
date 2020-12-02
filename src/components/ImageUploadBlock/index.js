@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Button } from 'react-bootstrap';
 
-import { ImageUpload } from 'gdd-components';
+import { ImageUpload, CropModal, ProfilePreview, AppPreviews } from 'gdd-components';
 
 import Spinner from 'components/Spinner';
 import styles from './ImageUpload.module.scss';
@@ -13,6 +13,8 @@ function ImageUploadBlock({
   onError,
   isLoading = false,
   disabled,
+  type,
+  profile,
   reco,
   title,
   className,
@@ -20,9 +22,7 @@ function ImageUploadBlock({
   ...props
 }) {
   const [validationError, setValidationError] = useState(null);
-  const [localSrc, setSrc] = useState(src);
-  const [hasSelected, setHasSelected] = useState(false);
-
+  const [imgSelected, setImgSelected] = useState(null);
   const dropRef = useRef(null);
   const openDrop = () => {
     if (dropRef.current) {
@@ -30,18 +30,13 @@ function ImageUploadBlock({
     }
   };
 
-  function saveCover() {
+  function saveCover(bytestring) {
     onSave({
       id: update_id,
-      bytestring: localSrc.replace('data:image/png;base64,', ''),
-    })
-      .then(() => {
-        // setSrc(src);
-        setHasSelected(false);
-      })
-      .catch(err => {
-        setSrc(src);
-      });
+      bytestring: bytestring.replace('data:image/png;base64,', ''),
+    }).then(() => {
+      setImgSelected(false);
+    });
   }
 
   return (
@@ -57,20 +52,70 @@ function ImageUploadBlock({
         <div className="imgBlock-img">
           <ImageUpload
             {...props}
-            src={localSrc}
+            src={src}
             ref={dropRef}
             disabled={isLoading}
             onImageSelected={file => {
               setValidationError(null);
-              setSrc(file.preview);
-              onImageSelected(file);
-              setHasSelected(true);
+              setImgSelected(file);
             }}
             onError={err => {
               setValidationError(err.message);
               onError(err);
             }}
           />
+          {imgSelected && props.name === 'file_logo' && (
+            <CropModal
+              src={imgSelected}
+              aspect={props.width / props.height}
+              onSave={bytestring => {
+                onImageSelected(bytestring);
+                saveCover(bytestring);
+              }}
+              preview={croppedImg => (
+                <div className="d-flex flex-column align-items-center">
+                  <ProfilePreview
+                    data={profile}
+                    hero={profile.hero_url}
+                    logo={croppedImg}
+                    type={type}
+                  />
+                  <AppPreviews.Nonprofit
+                    className="mt-4"
+                    hero={profile.hero_url}
+                    logo={croppedImg}
+                    name={profile.name}
+                  />
+                </div>
+              )}
+            />
+          )}
+          {imgSelected && props.name === 'file_hero' && (
+            <CropModal
+              src={imgSelected}
+              aspect={props.width / props.height}
+              onSave={bytestring => {
+                onImageSelected(bytestring);
+                saveCover(bytestring);
+              }}
+              preview={croppedImg => (
+                <div className="d-flex flex-column align-items-center">
+                  <ProfilePreview
+                    data={profile}
+                    logo={profile.logo_url}
+                    hero={croppedImg}
+                    type={type}
+                  />
+                  <AppPreviews.Nonprofit
+                    className="mt-4"
+                    logo={profile.logo_url}
+                    hero={croppedImg}
+                    name={profile.name}
+                  />
+                </div>
+              )}
+            />
+          )}
         </div>
         <div className="imgBlock-content">
           <p dangerouslySetInnerHTML={{ __html: reco }} />
@@ -79,11 +124,6 @@ function ImageUploadBlock({
               <Button variant="primary" className="mr-4" onClick={openDrop}>
                 Select image
               </Button>
-              {hasSelected && (
-                <Button variant="success" onClick={saveCover}>
-                  save
-                </Button>
-              )}
             </div>
           )}
         </div>

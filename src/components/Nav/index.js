@@ -133,7 +133,7 @@ const SideNav = ({ isAuthenticated, logout, closeDrawer }) => {
               </NavLink>
             </li>
             <li>
-              <NavLink className="js-closeDrawer" to="/brands/brand-categories" exact={true}>
+              <NavLink className="js-closeDrawer" to="/brands/categories" exact={true}>
                 Brand Categories
               </NavLink>
             </li>

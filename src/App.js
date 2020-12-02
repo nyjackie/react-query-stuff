@@ -76,7 +76,7 @@ const App = ({ autoLogin, user, isLoading }) => {
         <PrivateRoute exact path="/nonprofit-categories" component={InternalNonprofitCategories} />
         <PrivateRoute exact path="/brands/search" component={BrandsSearch} />
         <PrivateRoute exact path="/brands/grooming" component={BrandsGrooming} />
-        <PrivateRoute exact path="/brands/brand-categories" component={InternalBrandCategories} />
+        <PrivateRoute exact path="/brands/categories" component={InternalBrandCategories} />
         <PrivateRoute exact path="/brands/buckets" component={Buckets} />
         <PrivateRoute exact path="/brands/:id" component={BrandInfo} />
         <PrivateRoute exact path="/users" component={Users} />

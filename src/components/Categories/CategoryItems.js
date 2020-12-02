@@ -152,8 +152,8 @@ const CategoryItems = ({ selected, categoryItems, categories, onSave, location }
           })}
         {!isFetching &&
           location === 'brands' &&
-          items.brands.map(item => {
-            const { id, name, brand_category_priority } = item;
+          items.offers.map(item => {
+            const { id, name, brand_category_priority } = item.brand;
             return (
               <BrandItems
                 category_id={selected}

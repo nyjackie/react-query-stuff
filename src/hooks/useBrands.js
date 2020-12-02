@@ -187,7 +187,7 @@ export function useInternalBrandsInCategory(id, offset) {
   return usePaginatedQuery(
     ['internal_brands_category', id, offset],
     () => {
-      return api.internalGetBrandsInCategory(id, { offset, limit: 8 }).then(res => res.data);
+      return api.internalGetOffersInCategory(id, { offset, limit: 8 }).then(res => res.data);
     },
     {
       enabled: id,

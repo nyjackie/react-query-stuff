@@ -11,9 +11,9 @@ import CategoryItems from 'components/Categories/CategoryItems';
 import Spinner from 'react-bootstrap/Spinner';
 import Button from 'react-bootstrap/Button';
 import { connect } from 'react-redux';
-import { addNotification } from 'actions/notifications';
+import { setNotification } from 'actions/notifications';
 
-const InternalBrandCategories = ({ addNotification }) => {
+const InternalBrandCategories = ({ setNotification }) => {
   const { isLoading, isError, data: categories } = useBrandCategories();
   const [setInternalBrandCategory] = useUpdateInternalBrandCategories();
   const [setBrandCategoryPriority] = useUpdateInternalBrandCategoryPriority();
@@ -47,17 +47,17 @@ const InternalBrandCategories = ({ addNotification }) => {
           await saveNewOrder(i + 1, catList[i]);
         }
       }
-      addNotification(`Category order updated`, 'success');
+      setNotification(`Category order updated`, 'success');
     } catch (err) {
-      addNotification(`Category order update failed. Please try again later.`, 'error');
+      setNotification(`Category order update failed. Please try again later.`, 'error');
     }
   };
   const onBrandSave = async (category_id, form) => {
     try {
       await setBrandCategoryPriority({ category_id, body: form });
-      addNotification(`Sort order updated`, 'success');
+      setNotification(`Sort order updated`, 'success');
     } catch (err) {
-      addNotification(`Sort order update failed. Please try again later.`, 'error');
+      setNotification(`Sort order update failed. Please try again later.`, 'error');
     }
   };
 
@@ -105,4 +105,4 @@ const InternalBrandCategories = ({ addNotification }) => {
   );
 };
 
-export default connect(null, { addNotification })(InternalBrandCategories);
+export default connect(null, { setNotification })(InternalBrandCategories);

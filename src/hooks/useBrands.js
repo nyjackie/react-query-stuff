@@ -1,7 +1,7 @@
 import { usePaginatedQuery, useQuery, useMutation, queryCache } from 'react-query';
 import api from 'gdd-api-lib';
 import store from 'store';
-import { addNotification } from 'actions/notifications';
+import { setNotification } from 'actions/notifications';
 
 /**
  * API handler to update a single brand's profile info
@@ -114,13 +114,13 @@ export function useDeleteBucket() {
     {
       onSuccess: () => {
         queryCache.invalidateQueries('buckets');
-        store.dispatch(addNotification('Bucket deleted', 'info'));
+        store.dispatch(setNotification('Bucket deleted', 'info'));
       },
       onError: err => {
         if (err.response.status === 404) {
-          store.dispatch(addNotification(`A bucket with that ID does not exist`, 'error'));
+          store.dispatch(setNotification(`A bucket with that ID does not exist`, 'error'));
         } else {
-          store.dispatch(addNotification(`An Error occured: ${err.message} `, 'error'));
+          store.dispatch(setNotification(`An Error occured: ${err.message} `, 'error'));
         }
       },
     }
@@ -222,7 +222,7 @@ export function useUpdateBrand() {
   return useMutation(updateBrand, {
     throwOnError: true,
     onSuccess: (data, variable) => {
-      queryCache.invalidateQueries(['brand', variable.id]);
+      queryCache.invalidateQueries(['brand', String(variable.id)]);
     },
   });
 }
@@ -234,7 +234,7 @@ export function useUpdateOffer() {
   return useMutation(updateOffer, {
     throwOnError: true,
     onSuccess: (offer, variable) => {
-      queryCache.invalidateQueries(['offers', variable.brand_id]);
+      queryCache.invalidateQueries(['offers', String(variable.brand_id)]);
     },
   });
 }
@@ -256,18 +256,10 @@ export function useBrandSearch(query) {
 export function useUpdateBrandLogo() {
   return useMutation(updateBrandLogo, {
     throwOnError: true,
-    onError: err => {
-      store.dispatch(
-        addNotification(
-          `Logo upload failed: ${err.message}: ${err.response?.data?.message}`,
-          'error'
-        )
-      );
-    },
+
     onSuccess: (data, variable) => {
-      queryCache.invalidateQueries(['brand', variable.id]);
-      queryCache.refetchQueries(['brand', variable.id]);
-      store.dispatch(addNotification('Logo image uploaded.', 'success'));
+      queryCache.invalidateQueries(['brand', String(variable.id)]);
+      store.dispatch(setNotification('Logo image uploaded.', 'success'));
     },
   });
 }
@@ -278,17 +270,10 @@ export function useUpdateBrandLogo() {
 export function useUpdateBrandHero() {
   return useMutation(updateBrandHero, {
     throwOnError: true,
-    onError: err => {
-      store.dispatch(
-        addNotification(
-          `Cover upload failed: ${err.message}: ${err.response?.data?.message}`,
-          'error'
-        )
-      );
-    },
+
     onSuccess: (data, variable) => {
-      queryCache.invalidateQueries(['brand', variable.id]);
-      store.dispatch(addNotification('Hero image uploaded.', 'success'));
+      queryCache.invalidateQueries(['brand', String(variable.id)]);
+      store.dispatch(setNotification('Hero image uploaded.', 'success'));
     },
   });
 }

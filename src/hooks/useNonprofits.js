@@ -127,6 +127,23 @@ export function useNonprofitSearch(query) {
   });
 }
 
+export function useGuideStarSearch(search_term) {
+  return useQuery(
+    ['guidestar_search', search_term],
+    () => {
+      const encoded = window.btoa(search_term);
+      return api.searchGuidestar({ search_term: encoded }).then(res => res.data);
+    },
+    {
+      enabled: false,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      cacheTime: 0,
+      staleTime: 0,
+    }
+  );
+}
+
 export function useNonprofit(id) {
   return useQuery(['np_profile', id], fetchNp, {
     enabled: id,
@@ -213,7 +230,7 @@ export function useNonprofitForgotPassword(email, template = false) {
 export function useUpdateNonprofitUser() {
   return useMutation(putUpdateUserProfile, {
     onSuccess: (offer, variable) => {
-      queryCache.invalidateQueries(['get_user', variable.id]);
+      queryCache.invalidateQueries(['get_user', String(variable.id)]);
     },
   });
 }
@@ -225,8 +242,8 @@ export function useUpdateNPOLogo() {
   return useMutation(updateNPOLogo, {
     throwOnError: true,
     onSuccess: (data, variable) => {
-      queryCache.invalidateQueries(['np_profile', variable.id]);
-      queryCache.refetchQueries(['np_profile', variable.id]);
+      console.log('inside of onsuccess');
+      queryCache.invalidateQueries(['np_profile', String(variable.id)]);
     },
   });
 }
@@ -238,7 +255,7 @@ export function useUpdateNPOHero() {
   return useMutation(updateNPOHero, {
     throwOnError: true,
     onSuccess: (data, variable) => {
-      queryCache.invalidateQueries(['np_profile', variable.id]);
+      queryCache.invalidateQueries(['np_profile', String(variable.id)]);
     },
   });
 }
@@ -247,7 +264,7 @@ export function useNonprofitProfileUpdate() {
   return useMutation(updateNonprofitProfile, {
     throwOnError: true,
     onSuccess: (data, variable) => {
-      queryCache.invalidateQueries(['np_profile', variable.id]);
+      queryCache.invalidateQueries(['np_profile', String(variable.id)]);
     },
   });
 }

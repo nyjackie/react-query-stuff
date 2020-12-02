@@ -13,7 +13,7 @@ import Coupons from './Coupons';
 
 import schema from './offerSchema';
 import DateTimeET from 'components/DateTimeET';
-import { addNotification } from 'actions/notifications';
+import { setNotification } from 'actions/notifications';
 import { useUpdateOffer } from 'hooks/useBrands';
 import { useNonprofit } from 'hooks/useNonprofits';
 import { stringToBool } from 'utils';
@@ -56,7 +56,7 @@ const loadOptions = async inputValue => {
   return newRes;
 };
 
-const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
+const APModal = ({ show, handleClose, offer, setNotification, brand_id }) => {
   const [updateOffer] = useUpdateOffer();
   const { data: supportedNP } = useNonprofit(offer?.supported_nonprofit_id);
 
@@ -127,10 +127,10 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
 
             try {
               await updateOffer({ form, brand_id });
-              addNotification(`Offer update success`, 'success');
+              setNotification(`Offer update success`, 'success');
               handleClose();
             } catch (err) {
-              addNotification(`Error saving offer ${err.response?.data?.message}`, 'error');
+              setNotification(`Error saving offer ${err.response?.data?.message}`, 'error');
             }
           }}
         >
@@ -314,7 +314,7 @@ const APModal = ({ show, handleClose, offer, addNotification, brand_id }) => {
 };
 
 APModal.propTypes = {
-  addNotification: PropTypes.func.isRequired,
+  setNotification: PropTypes.func.isRequired,
 };
 
-export default connect(null, { addNotification })(APModal);
+export default connect(null, { setNotification })(APModal);

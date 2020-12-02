@@ -11,9 +11,9 @@ import CategoryItems from 'components/Categories/CategoryItems';
 import Spinner from 'react-bootstrap/Spinner';
 import Button from 'react-bootstrap/Button';
 import { connect } from 'react-redux';
-import { addNotification } from 'actions/notifications';
+import { setNotification } from 'actions/notifications';
 
-const InternalNonprofitCategories = ({ addNotification }) => {
+const InternalNonprofitCategories = ({ setNotification }) => {
   const { isLoading, isError, data: categories } = useInternalNpCategories();
   const [setInternalNonprofitCategory] = useUpdateInternalNpCategories();
   const [setInternalNonprofitCategoryPriority] = useUpdateInternalNonprofitCategoryPriority();
@@ -48,17 +48,17 @@ const InternalNonprofitCategories = ({ addNotification }) => {
           await saveNewOrder(i + 1, catList[i]);
         }
       }
-      addNotification(`Category order updated`, 'success');
+      setNotification(`Category order updated`, 'success');
     } catch (err) {
-      addNotification(`Category order update failed. Please try again later.`, 'error');
+      setNotification(`Category order update failed. Please try again later.`, 'error');
     }
   };
   const onNpSave = async (category_id, form) => {
     try {
       await setInternalNonprofitCategoryPriority({ category_id, body: form });
-      addNotification(`Sort order updated`, 'success');
+      setNotification(`Sort order updated`, 'success');
     } catch (err) {
-      addNotification(`Sort order update failed. Please try again later.`, 'error');
+      setNotification(`Sort order update failed. Please try again later.`, 'error');
     }
   };
 
@@ -109,4 +109,4 @@ const InternalNonprofitCategories = ({ addNotification }) => {
   );
 };
 
-export default connect(null, { addNotification })(InternalNonprofitCategories);
+export default connect(null, { setNotification })(InternalNonprofitCategories);

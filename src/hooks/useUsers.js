@@ -2,7 +2,7 @@ import { useQuery, useMutation, queryCache } from 'react-query';
 import api from 'gdd-api-lib';
 import { USER_TYPES } from 'utils/constants';
 import store from '../store';
-import { addNotification } from 'actions/notifications';
+import { setNotification } from 'actions/notifications';
 
 /****************************************************************
  * Functions that perform api calls
@@ -92,13 +92,13 @@ export function useDeleteUser() {
     {
       onSuccess: (offer, variable) => {
         queryCache.invalidateQueries(['get_user', variable.id]);
-        store.dispatch(addNotification('User successfully set for deletion in 30 days', 'success'));
+        store.dispatch(setNotification('User successfully set for deletion in 30 days', 'success'));
       },
       onError: err => {
         if (err.response.status === 404) {
-          store.dispatch(addNotification(`A user with that ID does not exist`, 'fail'));
+          store.dispatch(setNotification(`A user with that ID does not exist`, 'fail'));
         } else {
-          store.dispatch(addNotification(`An Error occured: ${err.message} `, 'fail'));
+          store.dispatch(setNotification(`An Error occured: ${err.message} `, 'fail'));
         }
       },
     }

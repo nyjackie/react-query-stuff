@@ -72,20 +72,15 @@ const SideNav = ({ isAuthenticated, logout, closeDrawer }) => {
               </NavLink>
             </li>
             <li>
-              <NavLink className="js-closeDrawer" to="/claims" exact={true}>
-                Claims
-              </NavLink>
-            </li>
-            <li>
               <NavLink className="js-closeDrawer" to="/nonprofit-categories" exact={true}>
                 NP Categories
               </NavLink>
             </li>
-            {/* <li>
-              <NavLink className="js-closeDrawer" to="/banlist" exact={true}>
-                Banned
+            <li>
+              <NavLink className="js-closeDrawer" to="/claims?limit=20&offset=0" exact={true}>
+                Claims
               </NavLink>
-            </li> */}
+            </li>
           </ul>
         </li>
         <li className={styles.navSection}>

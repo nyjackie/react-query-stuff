@@ -1,89 +1,60 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import Container from 'react-bootstrap/Container';
-import Table from 'react-bootstrap/Table';
 import Alert from 'react-bootstrap/Alert';
 import ClaimRow from './ClaimRow';
 import { useClaims } from 'hooks/useClaims';
 import Spinner from 'components/Spinner';
+import { getSearchQuery } from 'utils';
+import BasicPaginator from 'components/BasicPaginator';
 
-function UpdatedTable({ claims }) {
-  return (
-    <Table striped bordered hover responsive>
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Nonprofit</th>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Phone</th>
-          <th>Note</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {claims.map(claim => (
-          <ClaimRow key={claim.id} claim={claim} note={claim.note || '[none provided]'} />
-        ))}
-      </tbody>
-    </Table>
-  );
-}
+const empty = { nonprofits: [] };
 
-function ClaimsPage() {
-  const { isLoading, isError, data: claims = [], error } = useClaims();
+function ClaimsPage({ history, location }) {
+  const { limit = 20, offset = 0 } = getSearchQuery();
+  const { isLoading, isError, data: queue = empty, error } = useClaims(limit, offset);
+
+  function updateUrl(o, l) {
+    const query = { offset: o, limit: l };
+    const param = new URLSearchParams(query);
+    history.push(`${location.pathname}?${param.toString()}`);
+  }
 
   if (isLoading) {
     return <Spinner />;
   }
 
-  const appoved = claims.filter(c => c.status === 'approved');
-  const denied = claims.filter(c => c.status === 'denied');
-  const waiting = claims.filter(c => c.status === 'waiting');
-
   return (
-    <Container className="block shadow-sm">
+    <div style={{ paddingBottom: '50px' }}>
       <Helmet>
-        <title>Claim Queue | Admin Portal | Give Good Deeds</title>
+        <title>Good Deeds | Admin | Nonprofit claims queue</title>
       </Helmet>
-      <h2>Nonprofit Claims Queue</h2>
-      {waiting.length === 0 && <p>No Claims in the queue</p>}
-      {isError && <Alert variant={'danger'}>{error.message}</Alert>}
-      {waiting.length > 0 && (
-        <>
-          <h3>Claims waiting for approval</h3>
-          <Table striped bordered hover responsive>
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Nonprofit</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {waiting.map(claim => (
-                <ClaimRow key={claim.id} claim={claim} />
-              ))}
-            </tbody>
-          </Table>
-        </>
-      )}
-      {appoved.length > 0 && (
-        <>
-          <h3>Approved Claims</h3>
-          <UpdatedTable claims={appoved} />
-        </>
-      )}
-      {denied.length > 0 && (
-        <>
-          <h3>Denied Claims</h3>
-          <UpdatedTable claims={denied} />
-        </>
-      )}
-    </Container>
+      <Container className="block shadow-sm">
+        <h2 className="m-0">Nonprofit Claims Queue</h2>
+      </Container>
+      <Container className="bg-none p-0">
+        {isError && <Alert variant={'danger'}>{error.message}</Alert>}
+
+        {!queue?.nonprofits.length ? (
+          <p>No claims in the queue</p>
+        ) : (
+          queue.nonprofits.map(npo => (
+            <ul key={npo.id} className="list-unstyled">
+              <ClaimRow npo={npo} />
+            </ul>
+          ))
+        )}
+
+        <BasicPaginator
+          total={queue?.total_results}
+          limit={Number(limit)}
+          offset={Number(offset)}
+          onSelect={newOffset => {
+            updateUrl(newOffset, limit);
+          }}
+        />
+      </Container>
+    </div>
   );
 }
 

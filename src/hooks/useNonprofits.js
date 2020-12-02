@@ -127,6 +127,23 @@ export function useNonprofitSearch(query) {
   });
 }
 
+export function useGuideStarSearch(search_term) {
+  return useQuery(
+    ['guidestar_search', search_term],
+    () => {
+      const encoded = window.btoa(search_term);
+      return api.searchGuidestar({ search_term: encoded }).then(res => res.data);
+    },
+    {
+      enabled: false,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      cacheTime: 0,
+      staleTime: 0,
+    }
+  );
+}
+
 export function useNonprofit(id) {
   return useQuery(['np_profile', id], fetchNp, {
     enabled: id,

@@ -6,7 +6,7 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Container from 'react-bootstrap/Container';
 import InputGroup from 'react-bootstrap/InputGroup';
-
+import PaceholderLogo from 'assets/no-logo.jpg';
 import { getSearchQuery } from 'utils';
 import { Paginator } from 'gdd-components';
 
@@ -20,7 +20,7 @@ const SingleResult = ({ result }) => {
   return (
     <li className={styles.resultItem}>
       <Link to={`/brands/${result.id}`}>
-        <img src={result.logo_url} alt={result.name} />
+        <img src={result.logo_url || PaceholderLogo} alt={result.name} />
         <p>{result.name}</p>
       </Link>
     </li>

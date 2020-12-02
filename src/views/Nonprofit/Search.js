@@ -6,6 +6,7 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Container from 'react-bootstrap/Container';
 import InputGroup from 'react-bootstrap/InputGroup';
+import PaceholderLogo from 'assets/no-logo.jpg';
 
 import { getSearchQuery } from 'utils';
 import { Paginator } from 'gdd-components';
@@ -28,7 +29,9 @@ function makeLocation(address) {
 const SingleResult = ({ result }) => {
   return (
     <li className={`pointer media row ${styles.result_row}`}>
-      <div className="col-md-2">{result.logo_url && <img src={result.logo_url} alt="" />}</div>
+      <div className="col-md-2">
+        <img src={result.logo_url || PaceholderLogo} alt="" />
+      </div>
       <div className="media-body col-md">
         <Link to={`/nonprofit/${result.id}`}>
           <h3>{result.name}</h3>

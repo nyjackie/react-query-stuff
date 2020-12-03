@@ -242,7 +242,6 @@ export function useUpdateNPOLogo() {
   return useMutation(updateNPOLogo, {
     throwOnError: true,
     onSuccess: (data, variable) => {
-      console.log('inside of onsuccess');
       queryCache.invalidateQueries(['np_profile', String(variable.id)]);
     },
   });

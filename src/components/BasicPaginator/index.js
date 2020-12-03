@@ -16,7 +16,30 @@ function getRange(currentPage, limit, total) {
   return [resultBegin, resultEnd];
 }
 
-function BasicPaginator({ total, limit = 10, offset = 0, onSelect }) {
+// eslint-disable-next-line no-unused-vars
+function LimitSelect({ limit, onChange }) {
+  return (
+    <InputGroup className={styles.limit}>
+      <InputGroup.Prepend>
+        <InputGroup.Text id="claim-queue-page">Results per page</InputGroup.Text>
+      </InputGroup.Prepend>
+      <Form.Control as="select" onChange={onChange} defaultValue={limit}>
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="30">30</option>
+        <option value="40">40</option>
+        <option value="50">50</option>
+        <option value="60">60</option>
+        <option value="70">70</option>
+        <option value="80">80</option>
+        <option value="90">90</option>
+        <option value="100">100</option>
+      </Form.Control>
+    </InputGroup>
+  );
+}
+
+function BasicPaginator({ total, limit = 10, offset = 0, onPageChange, onLimitChange }) {
   // starting page is calculated from initially passed offset
   // Offset starts at zero but page numbers should be user-friendly so they
   // start at 1
@@ -25,19 +48,31 @@ function BasicPaginator({ total, limit = 10, offset = 0, onSelect }) {
   function doPageChange(num) {
     setCurrentPage(num);
     const [rangeStart] = getRange(num, limit, total);
-    onSelect(rangeStart);
+    onPageChange(rangeStart);
   }
 
+  /**
+   * handles the page select event
+   * @param {Event} e
+   */
   function handlePageChange(e) {
     const val = Number(e.currentTarget.value);
     doPageChange(val);
   }
 
-  if (total < limit) {
+  if (total < limit + 1) {
     return (
-      <p>
-        <b>Viewing results</b>: 1 - {total} out of {total}
-      </p>
+      <div>
+        <p>
+          <b>Viewing results</b>: 1 - {total} out of {total}
+        </p>
+        <LimitSelect
+          limit={limit}
+          onChange={e => {
+            onLimitChange(e.target.value);
+          }}
+        />
+      </div>
     );
   }
 
@@ -51,6 +86,13 @@ function BasicPaginator({ total, limit = 10, offset = 0, onSelect }) {
       </p>
 
       <div className={styles.container}>
+        <LimitSelect
+          limit={limit}
+          onChange={e => {
+            onLimitChange(e.target.value);
+          }}
+        />
+
         <button
           className={styles.prev}
           disabled={currentPage === 1}
@@ -60,7 +102,7 @@ function BasicPaginator({ total, limit = 10, offset = 0, onSelect }) {
         >
           &laquo; Prev
         </button>
-        <InputGroup>
+        <InputGroup className={styles.page}>
           <InputGroup.Prepend>
             <InputGroup.Text id="claim-queue-page">Page</InputGroup.Text>
           </InputGroup.Prepend>
@@ -93,7 +135,8 @@ function BasicPaginator({ total, limit = 10, offset = 0, onSelect }) {
 
 BasicPaginator.propTypes = {
   total: PropTypes.number.isRequired,
-  onSelect: PropTypes.func.isRequired,
+  onPageChange: PropTypes.func.isRequired,
+  onLimitChange: PropTypes.func.isRequired,
   offset: PropTypes.number,
 
   /**

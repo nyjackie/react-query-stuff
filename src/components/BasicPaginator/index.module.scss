@@ -6,7 +6,7 @@
 
 .container {
   display: flex;
-  max-width: 320px;
+  flex-wrap: wrap;
 }
 
 .prev,
@@ -27,4 +27,12 @@
 }
 .next {
   margin-left: 15px;
+}
+
+.limit {
+  max-width: 220px;
+}
+
+.page {
+  width: auto;
 }

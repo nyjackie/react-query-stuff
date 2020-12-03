@@ -132,7 +132,7 @@ export function useGuideStarSearch(search_term) {
     ['guidestar_search', search_term],
     () => {
       const encoded = window.btoa(search_term);
-      return api.searchGuidestar({ search_term: encoded }).then(res => res.data);
+      return api.searchGuidestar_v2({ search_term: encoded }).then(res => res.data);
     },
     {
       enabled: false,
@@ -242,7 +242,6 @@ export function useUpdateNPOLogo() {
   return useMutation(updateNPOLogo, {
     throwOnError: true,
     onSuccess: (data, variable) => {
-      console.log('inside of onsuccess');
       queryCache.invalidateQueries(['np_profile', String(variable.id)]);
     },
   });

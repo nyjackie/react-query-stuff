@@ -1,5 +1,6 @@
 import { useQuery, useMutation, queryCache } from 'react-query';
 import api from 'gdd-api-lib';
+import { CLAIM_STATUS } from 'utils/constants';
 
 export function useClaimOptions() {
   return useQuery(
@@ -19,14 +20,24 @@ export function useClaimOptions() {
 
 /**
  * Get all items in the queue
- * @param {number} limit How many nonprofit claims to be returned (max 100). Defaults to 10
- * @param {number} offset Where to start in result set for limit. Defaults to 0
+ * @param {number} [limit] How many nonprofit claims to be returned (max 100). Defaults to 10
+ * @param {number} [offset] Where to start in result set for limit. Defaults to 0
+ * @param {string[]} [status] one of nonprofit claim status [PENDING, APPROVED, DENIED, SUBMITTED]. Defaults to PENDING
  */
-export function useClaims(limit = 10, offset = 0) {
+export function useClaims(
+  limit = 10,
+  offset = 0,
+  status = [CLAIM_STATUS.PENDING, CLAIM_STATUS.SUBMITTED]
+) {
   return useQuery(
-    ['claims', limit, offset],
+    ['claims', limit, offset, status],
     () => {
-      return api.getNonprofitClaimQueue({ limit, offset }).then(res => res.data);
+      const config = {};
+      config.params = new URLSearchParams({ limit, offset });
+      status.forEach(stat => {
+        config.params.append('status', stat);
+      });
+      return api.getNonprofitClaimsByStatus(null, null, config).then(res => res.data);
     },
     {
       refetchOnWindowFocus: false,

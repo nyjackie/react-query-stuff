@@ -79,7 +79,8 @@ const InternalBrandCategories = ({ setNotification }) => {
     !isLoading &&
     !isError &&
     catList && (
-      <Container className="block shadow-sm " fluid>
+      <Container className="block shadow-sm" fluid>
+        <h2>Categories of brands with offers</h2>
         <Button onClick={onCategorySave}>Save Category Order</Button>
         <hr />
         <div className="row no-gutters">

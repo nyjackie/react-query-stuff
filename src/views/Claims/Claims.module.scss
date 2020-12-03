@@ -1,0 +1,47 @@
+.filters {
+  button {
+    margin-right: 1em;
+    padding: 0.1rem 0.2rem;
+    font-size: 0.9rem;
+  }
+}
+
+.pending {
+  border: 1px solid var(--warning);
+  background-color: transparent;
+}
+
+.approved {
+  border: 1px solid var(--success);
+  background-color: transparent;
+}
+
+.denied {
+  border: 1px solid var(--danger);
+  background-color: transparent;
+}
+
+.submitted {
+  border: 1px solid var(--info);
+  background-color: transparent;
+}
+
+//******************
+.pending.active {
+  background-color: var(--warning);
+}
+
+.approved.active {
+  background-color: var(--success);
+  color: #fff;
+}
+
+.denied.active {
+  background-color: var(--danger);
+  color: #fff;
+}
+
+.submitted.active {
+  background-color: var(--info);
+  color: #fff;
+}

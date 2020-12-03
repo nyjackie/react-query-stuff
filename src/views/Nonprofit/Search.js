@@ -22,6 +22,24 @@ function makeLocation(address) {
   return [address.city, address.state].filter(Boolean).join(', ');
 }
 
+function GuideStarResult({ result }) {
+  return (
+    <li className={`media row ${styles.result_row} ${styles.guideStar}`}>
+      <div className="col-md-2">
+        <img src={result.logo_url || PaceholderLogo} alt="" />
+      </div>
+      <div className="media-body col-md">
+        <Link to={`/nonprofit/${result.id}`}>
+          <h3>{result.name}</h3>
+        </Link>
+      </div>
+      <div className={`col-md-3 ${styles.result_row_right}`}>
+        <p>GuideStar result</p>
+      </div>
+    </li>
+  );
+}
+
 /**
  * Component for a single search result
  * @param {object} param0
@@ -29,7 +47,7 @@ function makeLocation(address) {
  */
 const SingleResult = ({ result }) => {
   return (
-    <li className={`pointer media row ${styles.result_row}`}>
+    <li className={`media row ${styles.result_row}`}>
       <div className="col-md-2">
         <img src={result.logo_url || PaceholderLogo} alt="" />
       </div>
@@ -89,7 +107,7 @@ const GuideStarSearch = () => {
   return (
     <ul className={styles.results}>
       {results?.nonprofits?.map(item => (
-        <SingleResult result={item} key={item.id} />
+        <GuideStarResult result={item} key={item.id} />
       ))}
     </ul>
   );

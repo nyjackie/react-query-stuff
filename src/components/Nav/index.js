@@ -77,7 +77,11 @@ const SideNav = ({ isAuthenticated, logout, closeDrawer }) => {
               </NavLink>
             </li>
             <li>
-              <NavLink className="js-closeDrawer" to="/claims?limit=20&offset=0" exact={true}>
+              <NavLink
+                className="js-closeDrawer"
+                to="/claims?limit=20&offset=0&status=PENDING,SUBMITTED"
+                exact={true}
+              >
                 Claims
               </NavLink>
             </li>

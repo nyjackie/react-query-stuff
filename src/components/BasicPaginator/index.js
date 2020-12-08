@@ -39,7 +39,7 @@ function LimitSelect({ limit, onChange }) {
   );
 }
 
-function BasicPaginator({ total, limit = 10, offset = 0, onPageChange, onLimitChange }) {
+function BasicPaginator({ total = 0, limit = 10, offset = 0, onPageChange, onLimitChange }) {
   // starting page is calculated from initially passed offset
   // Offset starts at zero but page numbers should be user-friendly so they
   // start at 1
@@ -134,7 +134,7 @@ function BasicPaginator({ total, limit = 10, offset = 0, onPageChange, onLimitCh
 }
 
 BasicPaginator.propTypes = {
-  total: PropTypes.number.isRequired,
+  total: PropTypes.number,
   onPageChange: PropTypes.func.isRequired,
   onLimitChange: PropTypes.func.isRequired,
   offset: PropTypes.number,

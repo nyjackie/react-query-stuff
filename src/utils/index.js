@@ -117,14 +117,14 @@ export function queryDecode(str) {
   }
 }
 
-export function getSearchQuery(location = {}) {
-  if (!location.search || !window.location.search) {
+export function getSearchQuery() {
+  if (!window.location.search) {
     return {};
   }
 
   const query = {};
 
-  const params = new URLSearchParams(location.search || window.location.search);
+  const params = new URLSearchParams(window.location.search);
   for (const [key, value] of params.entries()) {
     query[key] = value;
   }

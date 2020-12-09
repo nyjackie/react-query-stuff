@@ -63,7 +63,7 @@ function ClaimsPage({ history, location }) {
     limit = 20,
     offset = 0,
     status = `${CLAIM_STATUS.PENDING},${CLAIM_STATUS.SUBMITTED}`,
-  } = getSearchQuery(location);
+  } = getSearchQuery();
 
   const { isLoading, isError, data: results = empty, error } = useClaims(
     limit,

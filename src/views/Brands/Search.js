@@ -43,6 +43,7 @@ const SearchResults = ({ results }) => {
 
 const BrandSearch = ({ history, location }) => {
   const { search_term, limit = 10, offset = 0 } = getSearchQuery();
+  console.log(search_term);
   const { isLoading, isError, data: results, error } = useBrandSearch({
     search_term,
     limit,

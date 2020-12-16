@@ -3,7 +3,7 @@ import AP from './APIcon';
 import { ReactComponent as Arrow } from 'assets/left-arrow.svg';
 import APSelect from './APSelect';
 
-const APDetails = ({ offers, bucket_id, setFieldValue }) => {
+const APDetails = ({ offers, filter, bucket_id, setFieldValue }) => {
   const [offerArray, setOfferArray] = useState(offers);
   const reorder = (list, item, change) => {
     const index = list.indexOf(item);
@@ -23,8 +23,25 @@ const APDetails = ({ offers, bucket_id, setFieldValue }) => {
     setOfferArray(val);
     setFieldValue('affiliate_offers', val);
   };
+
+  const filterChange = e => {
+    if (e.target.value === 'null') {
+      setFieldValue('manual_mode_filter', null);
+    } else {
+      setFieldValue('manual_mode_filter', e.target.value);
+    }
+  };
+
   return (
     <div className="mt-2">
+      <select
+        className="mt-2 mb-2 form-control w-auto"
+        defaultValue={filter}
+        onChange={filterChange}
+      >
+        <option value="null">Select All</option>
+        <option value="COUPON_ONLY">Coupons Only</option>
+      </select>
       <APSelect offers={offerArray} getFromSelect={getFromSelect} />
       <div className="d-flex overflow-auto">
         {offerArray &&

@@ -5,6 +5,31 @@ import api from 'gdd-api-lib';
 import styles from './Buckets.module.scss';
 import errorHandler from 'utils/errorHandler';
 
+const dot = () => ({
+  alignItems: 'center',
+  display: 'flex',
+  ':before': {
+    content: '"c"',
+    margin: 'auto',
+    color: '#FF8C00',
+    height: 26,
+  },
+});
+
+const colourStyles = {
+  multiValue: (styles, { data }) => {
+    const res = {
+      ...styles,
+      backgroundColor: !!data.coupon_list ? '#FFFF66' : '#ccc',
+    };
+    if (!!data.coupon_list) {
+      return { ...res, ...dot() };
+    } else {
+      return res;
+    }
+  },
+};
+
 const loadOptions = async inputValue => {
   try {
     const res = await api.searchOffers({ search_term: window.btoa(inputValue) });
@@ -23,7 +48,11 @@ const getData = async id => {
     return await api
       .getOfferByGuid({ offer_guid: id, offer_type: 'AFFILIATE_PROGRAM' })
       .then(res => {
-        return { value: res.data.offer_guid, label: res.data.offer_details.brand_name };
+        return {
+          value: res.data?.offer_guid || null,
+          label: res.data?.offer_details?.brand_name || null,
+          coupon_list: !!res.data?.offer_details?.coupon_list?.length || false,
+        };
       });
   } catch (err) {
     errorHandler(err);
@@ -72,6 +101,7 @@ const APSelect = ({ offers, getFromSelect }) => {
         isSearchable={true}
         onChange={onChange}
         loadOptions={loadOptions}
+        styles={colourStyles}
       />
     </div>
   );

@@ -141,9 +141,9 @@ const NonprofitSearch = ({ history, location }) => {
       query.search_term = search_term;
     }
     const param = new URLSearchParams(query);
-
     history.push(`${location.pathname}?${param.toString()}`);
   }
+
   return (
     <>
       <Helmet>

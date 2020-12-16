@@ -219,6 +219,7 @@ const BucketRow = ({ bucket, setNotification, setShow }) => {
                   <Accordion.Collapse eventKey={id}>
                     <APDetails
                       offers={formik.values.affiliate_offers}
+                      filter={formik.values.manual_mode_filter}
                       bucket_id={id}
                       setFieldValue={formik.setFieldValue}
                     />

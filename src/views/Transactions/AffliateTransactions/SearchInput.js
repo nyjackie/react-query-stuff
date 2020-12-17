@@ -5,7 +5,7 @@ import { createSchema, max255, stringArray } from 'utils/schema';
 
 const searchSchema = createSchema({
   offer_activation_id: max255,
-  gd_status: stringArray,
+  gd_status: stringArray.required('Please select a status'),
   user_id: max255,
 });
 
@@ -26,6 +26,7 @@ const SearchInput = ({ history, location }) => {
     let param = new URLSearchParams(query);
     history.push(`${location.pathname}?${param.toString()}`);
   }
+
   function appendStatus(e, status) {
     return e.target.checked
       ? [...formik.values.gd_status, status]
@@ -102,8 +103,8 @@ const SearchInput = ({ history, location }) => {
             onChange={e => formik.setFieldValue('gd_status', appendStatus(e, 'PAID'))}
             id="PAID"
           />
+          <div className="text-danger">{formik.errors.gd_status}</div>
         </Form.Group>
-
         <Button type="submit">Search</Button>
       </Form>
     </Fragment>

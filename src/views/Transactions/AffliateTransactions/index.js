@@ -19,7 +19,7 @@ const AffliateTransactions = ({ history, location }) => {
           </Col>
         </Row>
         <Row>
-          <SearchResults location={location} />
+          <SearchResults location={location} history={history} />
         </Row>
       </Container>
     </>

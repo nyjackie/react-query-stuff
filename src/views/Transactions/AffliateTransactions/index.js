@@ -1,11 +1,12 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import SearchInput from './SearchInput';
+import SearchResults from './SearchResults';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 
-const AffliateTransactions = () => {
+const AffliateTransactions = ({ history, location }) => {
   return (
     <>
       <Helmet>
@@ -14,8 +15,11 @@ const AffliateTransactions = () => {
       <Container className="block shadow-sm">
         <Row>
           <Col>
-            <SearchInput />
+            <SearchInput history={history} location={location} />
           </Col>
+        </Row>
+        <Row>
+          <SearchResults location={location} />
         </Row>
       </Container>
     </>

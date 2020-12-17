@@ -128,7 +128,6 @@ export function getSearchQuery(location = {}) {
   for (const [key, value] of params.entries()) {
     query[key] = value;
   }
-
   return query;
 }
 

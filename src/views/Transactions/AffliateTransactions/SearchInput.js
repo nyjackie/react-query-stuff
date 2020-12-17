@@ -2,23 +2,30 @@ import React, { Fragment } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import { createSchema, max255, stringArray } from 'utils/schema';
-import { getSearchQuery } from 'utils';
-import { values } from 'lodash';
 
 const searchSchema = createSchema({
   offer_activation_id: max255,
   gd_status: stringArray,
+  user_id: max255,
 });
 
-const SearchInput = () => {
+const SearchInput = ({ history, location }) => {
   const formik = useFormik({
     validationSchema: searchSchema,
     initialValues: {
       offer_activation_id: '',
+      user_id: '',
       gd_status: [],
     },
-    onSubmit: values => console.log('onsubmit', values),
+    onSubmit: values =>
+      updateUrl(values.offer_activation_id, values.user_id, values.gd_status.join(), 20, 0),
   });
+
+  function updateUrl(offer_activation_id, user_id, gd_status, limit, offset) {
+    const query = { offer_activation_id, user_id, gd_status, limit: limit, offset: offset };
+    let param = new URLSearchParams(query);
+    history.push(`${location.pathname}?${param.toString()}`);
+  }
   function appendStatus(e, status) {
     return e.target.checked
       ? [...formik.values.gd_status, status]
@@ -29,7 +36,7 @@ const SearchInput = () => {
     <Fragment>
       <h3>Search Affliate Transactions</h3>
       <Form noValidate onSubmit={formik.handleSubmit}>
-        <Form.Group controlId="searchNp">
+        <Form.Group controlId="searchID">
           <Form.Label>Activation ID</Form.Label>
           <Form.Control
             type="offer_activation_id"
@@ -38,6 +45,20 @@ const SearchInput = () => {
             onChange={formik.handleChange}
             value={formik.values.offer_activation_id}
             isInvalid={formik.touched.offer_activation_id && formik.errors.offer_activation_id}
+          />
+          <Form.Control.Feedback type="invalid">
+            {formik.errors.offer_activation_id}
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group controlId="searchUser">
+          <Form.Label>User ID</Form.Label>
+          <Form.Control
+            type="user_id"
+            name="user_id"
+            autoFocus
+            onChange={formik.handleChange}
+            value={formik.values.user_id}
+            isInvalid={formik.touched.user_id && formik.errors.user_id}
           />
           <Form.Control.Feedback type="invalid">
             {formik.errors.offer_activation_id}

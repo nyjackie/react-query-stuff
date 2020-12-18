@@ -1,0 +1,21 @@
+.status {
+  text-align: center;
+  border-radius: 3px;
+  padding: 5px;
+}
+
+.pending {
+  background-color: var(--warning);
+}
+
+.available {
+  background-color: var(--info);
+}
+
+.nonrpfoit_paid {
+  background-color: var(--primary);
+}
+
+.paid {
+  background-color: var(--success);
+}

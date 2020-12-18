@@ -1,4 +1,4 @@
-import { string, object, date, number } from 'yup';
+import { string, object, date, number, array } from 'yup';
 
 // simple function so we don't have to import yup in both places
 export function createSchema(obj) {
@@ -16,6 +16,12 @@ export const max255 = string()
   .ensure()
   .trim()
   .max(255, 'Max 255 characters allowed for this field');
+
+/**
+ * Array of Strings
+ */
+
+export const stringArray = array().of(string());
 
 /**
  * Validation for admin portal email which requires that users work for the

@@ -35,6 +35,7 @@ import BrandInfo from 'views/Brands/BrandInfo';
 import Buckets from 'views/Brands/buckets';
 import Spinner from 'components/Spinner';
 import InternalBrandCategories from 'views/Brands/Categories';
+import AffliateTransactions from 'views/Transactions/AffliateTransactions';
 
 const MatchUserInfo = ({ match, ...props }) => <UserInfo {...props} {...match.params} />;
 
@@ -69,16 +70,24 @@ const App = ({ autoLogin, user, isLoading }) => {
         <PublicRoute exact path="/notfound" component={NotFound} />
 
         {/* Private Routes */}
+        {/* NPO */}
         <PrivateRoute exact path="/banlist" component={Banlist} />
         <PrivateRoute exact path="/claims" component={Claims} />
         <PrivateRoute exact path="/nonprofit" component={NonprofitSearch} />
         <PrivateRoute exact path="/nonprofit/:id" component={Nonprofit} />
         <PrivateRoute exact path="/nonprofit-categories" component={InternalNonprofitCategories} />
+
+        {/* Brands */}
         <PrivateRoute exact path="/brands/search" component={BrandsSearch} />
         <PrivateRoute exact path="/brands/grooming" component={BrandsGrooming} />
         <PrivateRoute exact path="/brands/categories" component={InternalBrandCategories} />
         <PrivateRoute exact path="/brands/buckets" component={Buckets} />
         <PrivateRoute exact path="/brands/:id" component={BrandInfo} />
+
+        {/* Transactions */}
+        <PrivateRoute exact path="/transactions/affliate" component={AffliateTransactions} />
+
+        {/* Users */}
         <PrivateRoute exact path="/users" component={Users} />
         <PrivateRoute exact path="/users/:type/:id" component={MatchUserInfo} />
         <PrivateRoute exact path="/users/admin" component={CreateAdminUser} />

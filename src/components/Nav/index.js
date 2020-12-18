@@ -144,6 +144,16 @@ const SideNav = ({ isAuthenticated, logout, closeDrawer }) => {
           </ul>
         </li>
 
+        <li className={styles.navSection}>
+          <h2>Transactions</h2>
+          <ul className={styles.navSubSection}>
+            <li>
+              <NavLink className="js-closeDrawer" to="/transactions/affliate" exact={true}>
+                Affliate Transactions
+              </NavLink>
+            </li>
+          </ul>
+        </li>
         <li className={`${styles.navSection} ${styles.noSub}`}>
           <button onClick={doLogout} className="js-closeDrawer btn btn-primary">
             Logout

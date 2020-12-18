@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/Button';
 import Toast from 'react-bootstrap/Toast';
 import Col from 'react-bootstrap/Col';
 
-function RefreshAndExpire() {
+const RefreshAndExpire = () => {
     const [showA, setShowA] = useState(false);
     const toggleShowA = () => setShowA(!showA);
     const [expireText, setExpireText] = useState('');

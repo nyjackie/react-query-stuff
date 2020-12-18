@@ -8,8 +8,8 @@ import Col from 'react-bootstrap/Col';
 function RefreshAndExpire() {
     const [showA, setShowA] = useState(false);
     const toggleShowA = () => setShowA(!showA);
-    const [expireText, setExpireText] = useState('')
-    const [btnDisabled, setBtnDisabled] = useState(true)
+    const [expireText, setExpireText] = useState('');
+    const [btnDisabled, setBtnDisabled] = useState(true);
 
     useEffect(() => {
         if (expireText === 'I AM SURE') {
@@ -18,9 +18,8 @@ function RefreshAndExpire() {
         return () => setBtnDisabled(true)
     }, [expireText])
 
-    const handleChange = (e) => {
-        setExpireText(e.target.value)
-    }
+    const handleChange = (e) => setExpireText(e.target.value)
+    
     return (
         <Fragment>
             <Form.Row className="mt-3">
@@ -35,7 +34,9 @@ function RefreshAndExpire() {
                         </Toast.Header>
                         <Toast.Body>
                             <p>
-                                Are you sure you want to expire this offer? Type below {' '}
+                                Are you sure you want to expire this offer? 
+                                <br />
+                                Type below {' '}
                                 <span className="text-danger">I AM SURE</span>
                             </p>
                             <Form.Control

@@ -86,7 +86,7 @@ const SingleResult = ({ item, setNotification }) => {
         gd_status: status,
         transaction_guid: transaction_guid,
       });
-      setNotification(`${transaction_guid} has been updated to ${gd_status}`, 'success');
+      setNotification(`${transaction_guid} has been updated to ${status}`, 'success');
     } catch (err) {
       setNotification(`Update failed. Please try again later.`, 'error');
     }

@@ -295,7 +295,7 @@ const APModal = ({ show, handleClose, offer, setNotification, brand_id }) => {
                 <Coupons coupons={values.coupons} />
 
                 {/* Expire section **********/}
-                <ExpireAndRefresh />
+                <ExpireAndRefresh offer={offer} />
 
                 {/* Actions **********/}
                 <Row>

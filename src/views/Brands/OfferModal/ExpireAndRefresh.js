@@ -1,23 +1,23 @@
 import React, { useState, Fragment, useEffect } from 'react';
+import { connect } from 'react-redux';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Toast from 'react-bootstrap/Toast';
 import Col from 'react-bootstrap/Col';
+import { setNotification } from 'actions/notifications';
 import { useRefreshOffer } from 'hooks/useOffers';
 
-function RefreshAndExpire() {
+function ExpireAndRefresh({ offer, setNotification }) {
   const [showA, setShowA] = useState(false);
   const toggleShowA = () => setShowA(!showA);
   const [expireText, setExpireText] = useState('');
   const [btnDisabled, setBtnDisabled] = useState(true);
   const [newOffer, setNewOffer] = useState(null);
-  const [error, setError] = useState([]);
   const [refreshOffer] = useRefreshOffer();
+  const { offer_guid, offer_type } = offer;
 
   useEffect(() => {
-    if (expireText === 'I AM SURE') {
-      setBtnDisabled(false);
-    }
+    if (expireText === 'I AM SURE') return setBtnDisabled(false);
     return () => setBtnDisabled(true);
   }, [expireText]);
 
@@ -25,10 +25,15 @@ function RefreshAndExpire() {
 
   const handleConfirm = async e => {
     try {
-      const response = await refreshOffer();
+      const response = await refreshOffer(offer_guid, offer_type);
+      console.log(response)
       setNewOffer(response.data);
+      setNotification(`Success. New offer: ${newOffer}`, 'success');
     } catch (err) {
-      setError(err);
+      setNotification(
+        `${err.response?.data?.message || err.message}`,
+        'error'
+      );
     }
   };
 
@@ -52,7 +57,8 @@ function RefreshAndExpire() {
                 Are you sure you want to expire this offer?
                 <br />
                 You cannot undo this.
-                <br />
+              </p>
+              <p>
                 Type below <span className="text-danger">I AM SURE</span>
               </p>
               <Form.Control
@@ -65,11 +71,10 @@ function RefreshAndExpire() {
               </Button>
             </Toast.Body>
           </Toast>
-          <p>{newOffer || error.message}</p>
         </Form.Group>
       </Form.Row>
     </Fragment>
   );
 }
 
-export default RefreshAndExpire;
+export default connect(null, { setNotification })(ExpireAndRefresh);

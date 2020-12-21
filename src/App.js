@@ -14,7 +14,6 @@ import NonprofitSearch from 'views/Nonprofit/Search';
 import Nonprofit from 'views/Nonprofit';
 import InternalNonprofitCategories from 'views/Nonprofit/Categories';
 import ForgotPassword from 'views/ForgotPassword';
-import Banlist from 'views/Banlist';
 import Users from 'views/Users';
 import UserInfo from 'views/Users/UserInfo';
 import ErrorPage from 'views/Error';
@@ -71,7 +70,6 @@ const App = ({ autoLogin, user, isLoading }) => {
 
         {/* Private Routes */}
         {/* NPO */}
-        <PrivateRoute exact path="/banlist" component={Banlist} />
         <PrivateRoute exact path="/claims" component={Claims} />
         <PrivateRoute exact path="/nonprofit" component={NonprofitSearch} />
         <PrivateRoute exact path="/nonprofit/:id" component={Nonprofit} />

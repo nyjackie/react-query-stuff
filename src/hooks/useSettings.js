@@ -1,8 +1,8 @@
 import { useMutation } from 'react-query';
-import api from 'gdd-api-lib';
+import { changeInternalUserPassword } from 'gdd-api-lib/dist/api-lib';
 
 function changePassword({ id, body }) {
-  return api.changeInternalUserPassword(id, body).then(res => res.data);
+  return changeInternalUserPassword(id, body).then(res => res.data);
 }
 
 /****************************************************************

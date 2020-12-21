@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import AsyncSelect from 'react-select/async';
 import { Modal, Button, Form, Col, Row } from 'react-bootstrap';
 import { Formik } from 'formik';
-import api from 'gdd-api-lib';
+import { searchNonprofits } from 'gdd-api-lib/dist/api-lib';
 
 // modal sections
 import Info from './Info';
@@ -49,7 +49,7 @@ import styles from './OfferEditModal.module.scss';
  */
 
 const loadOptions = async inputValue => {
-  const res = await api.searchNonprofits({ search_term: window.btoa(inputValue) });
+  const res = await searchNonprofits({ search_term: window.btoa(inputValue) });
   const newRes = res.data.nonprofits.map(data => {
     return { value: data.id, label: data.name };
   });

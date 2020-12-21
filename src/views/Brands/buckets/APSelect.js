@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Spinner } from 'react-bootstrap';
 import AsyncSelect from 'react-select/async';
-import api from 'gdd-api-lib';
 import styles from './Buckets.module.scss';
 import errorHandler from 'utils/errorHandler';
+import { searchOffers, getOfferByGuid } from 'gdd-api-lib/dist/api-lib';
 
 const dot = () => ({
   alignItems: 'center',
@@ -32,7 +32,7 @@ const colourStyles = {
 
 const loadOptions = async inputValue => {
   try {
-    const res = await api.searchOffers({ search_term: window.btoa(inputValue) });
+    const res = await searchOffers({ search_term: window.btoa(inputValue) });
     const newRes = res.data.offers.map(data => {
       return { value: data.offer_guid, label: data.offer_details.brand_name };
     });
@@ -45,15 +45,13 @@ const loadOptions = async inputValue => {
 
 const getData = async id => {
   try {
-    return await api
-      .getOfferByGuid({ offer_guid: id, offer_type: 'AFFILIATE_PROGRAM' })
-      .then(res => {
-        return {
-          value: res.data?.offer_guid || null,
-          label: res.data?.offer_details?.brand_name || null,
-          coupon_list: !!res.data?.offer_details?.coupon_list?.length || false,
-        };
-      });
+    return await getOfferByGuid({ offer_guid: id, offer_type: 'AFFILIATE_PROGRAM' }).then(res => {
+      return {
+        value: res.data?.offer_guid || null,
+        label: res.data?.offer_details?.brand_name || null,
+        coupon_list: !!res.data?.offer_details?.coupon_list?.length || false,
+      };
+    });
   } catch (err) {
     errorHandler(err);
     return {};

@@ -1,5 +1,10 @@
 import { useMutation } from 'react-query';
-import api from 'gdd-api-lib';
+import {
+  createInternalUser,
+  checkUniqueEmail,
+  checkUniquePhone,
+  forgotPasswordInternal,
+} from 'gdd-api-lib/dist/api-lib';
 
 export const USER_TYPES = {
   CONSUMER: 'consumer',
@@ -13,7 +18,7 @@ export const USER_TYPES = {
  */
 
 function postUser(body) {
-  return api.createInternalUser(body).then(res => res.data);
+  return createInternalUser(body).then(res => res.data);
 }
 
 /**
@@ -23,7 +28,7 @@ function postUser(body) {
  * @param {string} body.user_type one of the USER_TYPES constants
  */
 function uniqueEmail(body) {
-  return api.checkUniqueEmail(body).then(res => res.data);
+  return checkUniqueEmail(body).then(res => res.data);
 }
 
 /**
@@ -33,7 +38,7 @@ function uniqueEmail(body) {
  * @param {string} body.user_type one of the USER_TYPES constants
  */
 function uniquePhone(body) {
-  return api.checkUniquePhone(body).then(res => res.data);
+  return checkUniquePhone(body).then(res => res.data);
 }
 
 /****************************************************************
@@ -62,6 +67,6 @@ export function useAdminForgotPassword(email, template = false) {
     if (template) {
       query.template = template;
     }
-    return api.forgotPasswordInternal(query);
+    return forgotPasswordInternal(query);
   });
 }

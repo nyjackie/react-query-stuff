@@ -1,11 +1,11 @@
 import { useQuery } from 'react-query';
-import api from 'gdd-api-lib';
+import { getConsumerProfileOptions } from 'gdd-api-lib/dist/api-lib';
 
 export function usePronounIncomeOptions() {
   return useQuery(
     'pronouns',
     () => {
-      return api.getConsumerProfileOptions().then(res => res.data);
+      return getConsumerProfileOptions().then(res => res.data);
     },
     {
       // these should never go stale because they will barely ever change. We

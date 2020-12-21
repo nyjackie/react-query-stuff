@@ -1,8 +1,15 @@
 import jwt_decode from 'jwt-decode';
-import api from 'gdd-api-lib';
 import errorHandler from 'utils/errorHandler';
 import tokenStore from 'gdd-api-lib/dist/tokenStore';
 import { willExpire } from 'utils';
+import { setAuthHeader } from 'gdd-api-lib/dist/setup';
+import {
+  internalUserLogin,
+  logout as apiLogout,
+  removeAuthHeader,
+  forgotPasswordInternal,
+  handleRefresh,
+} from 'gdd-api-lib';
 
 /**
  * replace the IndexedDB auth object with new data. If for some reason the jwt
@@ -43,9 +50,9 @@ export async function login(email, password) {
     const headers = {
       Authorization: 'Basic ' + window.btoa(email + ':' + password),
     };
-    const res = await api.internalUserLogin(headers);
+    const res = await internalUserLogin(headers);
 
-    api.setAuthHeader(res.data.jwt);
+    setAuthHeader(res.data.jwt);
 
     const authData = await updateLocalStore(res.data.jwt, res.data.refresh_token);
 
@@ -60,14 +67,14 @@ export async function login(email, password) {
  */
 export async function logout() {
   const tokensData = await tokenStore.get();
-  api.logout({ refresh_token: tokensData?.refresh_token });
+  apiLogout({ refresh_token: tokensData?.refresh_token });
   tokenStore.remove();
-  api.removeAuthHeader();
+  removeAuthHeader();
 }
 
 export async function forgotPassword(email) {
   try {
-    const res = await api.forgotPasswordInternal({ email: window.btoa(email) });
+    const res = await forgotPasswordInternal({ email: window.btoa(email) });
     return [null, res.data];
   } catch (err) {
     return [err, null];
@@ -99,18 +106,18 @@ export async function loadUser() {
 
     // check if token has expired
     if (willExpire(user.exp, 30)) {
-      const newTokens = await api.handleRefresh(user.exp, refresh_token, jwt);
+      const newTokens = await handleRefresh(user.exp, refresh_token, jwt);
       if (newTokens) {
         // new token success, store it and continue
         await updateLocalStore(newTokens.jwt, newTokens.refresh_token);
-        api.setAuthHeader(newTokens.jwt);
+        setAuthHeader(newTokens.jwt);
         newTokens.user = jwt_decode(newTokens.jwt);
         return newTokens;
       }
     }
 
     // local jwt is still good
-    api.setAuthHeader(jwt);
+    setAuthHeader(jwt);
     return tokensData;
   } catch (err) {
     errorHandler('Error occured on initial page load user', err);
@@ -118,10 +125,12 @@ export async function loadUser() {
   }
 }
 
-export default {
+const userService = {
   login,
   logout,
   loadUser,
-  forgotPassword: forgotPassword,
+  forgotPassword,
   updateLocalStore,
 };
+
+export default userService;

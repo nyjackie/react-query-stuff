@@ -1,38 +1,47 @@
 import { useQuery, useMutation, queryCache } from 'react-query';
-import api from 'gdd-api-lib';
 import { USER_TYPES } from 'utils/constants';
 import store from '../store';
 import { setNotification } from 'actions/notifications';
+import {
+  getUsers,
+  getSpecifiedConsumerProfile,
+  setSpecifiedConsumerProfileInformation,
+  updateBrandUserProfile,
+  createBrandUser,
+  getBrandUserProfile,
+  getNonprofitUserProfile,
+  deleteUser,
+} from 'gdd-api-lib/dist/api-lib';
 
 /****************************************************************
  * Functions that perform api calls
  */
 function search(key, query) {
-  return api.getUsers(query).then(res => res.data);
+  return getUsers(query).then(res => res.data);
 }
 
 function fetchConsumerProfile(key, id) {
-  return api.getSpecifiedConsumerProfile(id).then(res => res.data);
+  return getSpecifiedConsumerProfile(id).then(res => res.data);
 }
 
 function updateUserProfile({ id, body }) {
-  return api.setSpecifiedConsumerProfileInformation(id, body).then(res => res.data);
+  return setSpecifiedConsumerProfileInformation(id, body).then(res => res.data);
 }
 
 function updateBrandUser({ id, body }) {
-  return api.updateBrandUserProfile(id, body).then(res => res.data);
+  return updateBrandUserProfile(id, body).then(res => res.data);
 }
 
 function postNewBrandUser(body) {
-  return api.createBrandUser(body).then(res => res.data);
+  return createBrandUser(body).then(res => res.data);
 }
 
 function fetchBrandUserProfile(key, id) {
-  return api.getBrandUserProfile(id).then(res => res.data);
+  return getBrandUserProfile(id).then(res => res.data);
 }
 
 function fetchNonprofitUserProfile(key, id) {
-  return api.getNonprofitUserProfile(id).then(res => res.data);
+  return getNonprofitUserProfile(id).then(res => res.data);
 }
 
 function fetchInternalUser(key, id) {
@@ -87,7 +96,7 @@ export function useCreateBrandUser() {
 export function useDeleteUser() {
   return useMutation(
     ({ id }) => {
-      return api.deleteUser(id);
+      return deleteUser(id);
     },
     {
       onSuccess: (offer, variable) => {

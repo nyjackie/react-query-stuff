@@ -1,5 +1,20 @@
 import { useQuery, useMutation, queryCache, usePaginatedQuery } from 'react-query';
-import api from 'gdd-api-lib';
+import {
+  internalSearchNonprofits,
+  getInternalNonprofitProfile,
+  getNonprofitCategories,
+  getInternalNonprofitCategories,
+  createNonprofitUser,
+  updateNonprofitUserProfile,
+  setNonprofitLogo,
+  setNonprofitHero,
+  setInternalNonprofitProfile,
+  searchGuidestar_v2,
+  setInternalNonprofitCategory,
+  getInternalNonprofitsInCategory,
+  setInternalNonprofitCategoryPriority,
+  nonprofitForgotPassword,
+} from 'gdd-api-lib/dist/api-lib';
 
 /****************************************************************
  * Functions that perform api calls
@@ -14,8 +29,7 @@ function search(key, query) {
   if (query.search_term) {
     query.search_term = window.btoa(query.search_term);
   }
-
-  return api.internalSearchNonprofits(query).then(res => res.data);
+  return internalSearchNonprofits(query).then(res => res.data);
 }
 
 /**
@@ -24,21 +38,21 @@ function search(key, query) {
  * @param {number} id nonprofit id
  */
 function fetchNp(key, id) {
-  return api.getInternalNonprofitProfile(id).then(res => res.data);
+  return getInternalNonprofitProfile(id).then(res => res.data);
 }
 
 /**
  * Get nonprofit categories from the db
  */
 function getCategories() {
-  return api.getNonprofitCategories().then(res => res.data);
+  return getNonprofitCategories().then(res => res.data);
 }
 
 /**
  * Get internal nonprofit categories from the db
  */
 function getInternalNpCategories() {
-  return api.getInternalNonprofitCategories().then(res => res.data);
+  return getInternalNonprofitCategories().then(res => res.data);
 }
 
 /**
@@ -51,7 +65,7 @@ function getInternalNpCategories() {
  * @param {string} body.phone_number User's phone number.
  */
 function postNewNonprofitUser(body) {
-  return api.createNonprofitUser(body).then(res => res.data);
+  return createNonprofitUser(body).then(res => res.data);
 }
 
 /**
@@ -64,7 +78,7 @@ function postNewNonprofitUser(body) {
  * @param {string} body.phone_number User's phone number.
  */
 function putUpdateUserProfile({ id, body }) {
-  return api.updateNonprofitUserProfile(id, body).then(res => res.data);
+  return updateNonprofitUserProfile(id, body).then(res => res.data);
 }
 
 /**
@@ -74,7 +88,7 @@ function putUpdateUserProfile({ id, body }) {
  * @param {string} param0.bytestring
  */
 function updateNPOLogo({ id, bytestring }) {
-  return api.setNonprofitLogo(id, { logo_image_bytestring: bytestring }).then(res => res.data);
+  return setNonprofitLogo(id, { logo_image_bytestring: bytestring }).then(res => res.data);
 }
 
 /**
@@ -84,7 +98,7 @@ function updateNPOLogo({ id, bytestring }) {
  * @param {string} param0.bytestring
  */
 function updateNPOHero({ id, bytestring }) {
-  return api.setNonprofitHero(id, { hero_image_bytestring: bytestring }).then(res => res.data);
+  return setNonprofitHero(id, { hero_image_bytestring: bytestring }).then(res => res.data);
 }
 
 /**
@@ -110,7 +124,7 @@ function updateNPOHero({ id, bytestring }) {
  * @returns {Promise}
  */
 function updateNonprofitProfile({ id, body }) {
-  return api.setInternalNonprofitProfile(id, body).then(res => res.data);
+  return setInternalNonprofitProfile(id, body).then(res => res.data);
 }
 
 /****************************************************************
@@ -132,7 +146,7 @@ export function useGuideStarSearch(search_term) {
     ['guidestar_search', search_term],
     () => {
       const encoded = window.btoa(search_term);
-      return api.searchGuidestar_v2({ search_term: encoded }).then(res => res.data);
+      return searchGuidestar_v2({ search_term: encoded }).then(res => res.data);
     },
     {
       enabled: false,
@@ -172,20 +186,20 @@ export function useInternalNpCategories() {
 }
 
 export function useUpdateInternalNpCategories() {
-  return useMutation(setInternalNonprofitCategory, {
+  return useMutation(doSetInternalNonprofitCategory, {
     throwOnError: true,
   });
 }
 
-function setInternalNonprofitCategory({ id, body }) {
-  return api.setInternalNonprofitCategory(id, body).then(res => res.data);
+function doSetInternalNonprofitCategory({ id, body }) {
+  return setInternalNonprofitCategory(id, body).then(res => res.data);
 }
 
 export function useInternalNonprofitsInCategory(id, offset) {
   return usePaginatedQuery(
     ['internal_np_category', id, offset],
     () => {
-      return api.getInternalNonprofitsInCategory(id, { offset, limit: 8 }).then(res => res.data);
+      return getInternalNonprofitsInCategory(id, { offset, limit: 8 }).then(res => res.data);
     },
     {
       enabled: id,
@@ -197,7 +211,7 @@ export function useInternalNonprofitsInCategory(id, offset) {
 }
 
 export function useUpdateInternalNonprofitCategoryPriority() {
-  return useMutation(setInternalNonprofitCategoryPriority, {
+  return useMutation(doSetInternalNonprofitCategoryPriority, {
     throwOnError: true,
     onSuccess: (data, variable) => {
       queryCache.invalidateQueries(['internal_np_category', variable.category_id]);
@@ -205,8 +219,8 @@ export function useUpdateInternalNonprofitCategoryPriority() {
   });
 }
 
-function setInternalNonprofitCategoryPriority({ category_id, body }) {
-  return api.setInternalNonprofitCategoryPriority(category_id, body).then(res => res.data);
+function doSetInternalNonprofitCategoryPriority({ category_id, body }) {
+  return setInternalNonprofitCategoryPriority(category_id, body).then(res => res.data);
 }
 
 export function useCreateNoprofitUser() {
@@ -223,7 +237,7 @@ export function useNonprofitForgotPassword(email, template = false) {
     if (template) {
       query.template = template;
     }
-    return api.nonprofitForgotPassword(query);
+    return nonprofitForgotPassword(query);
   });
 }
 

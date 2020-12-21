@@ -1,12 +1,18 @@
 import { useQuery, useMutation, queryCache } from 'react-query';
-import api from 'gdd-api-lib';
 import { CLAIM_STATUS } from 'utils/constants';
+import {
+  getNonprofitClaimRequestInfoOptions,
+  getNonprofitClaimsByStatus,
+  requestNonprofitClaimInfo,
+  approveNonprofitClaim,
+  denyNonprofitClaim,
+} from 'gdd-api-lib/dist/api-lib';
 
 export function useClaimOptions() {
   return useQuery(
     'claim_opts',
     () => {
-      return api.getNonprofitClaimRequestInfoOptions().then(res => res.data);
+      return getNonprofitClaimRequestInfoOptions().then(res => res.data);
     },
     {
       // these options wont ever change during a session so we can cache them the
@@ -37,7 +43,7 @@ export function useClaims(
       status.forEach(stat => {
         config.params.append('status', stat);
       });
-      return api.getNonprofitClaimsByStatus(null, null, config).then(res => res.data);
+      return getNonprofitClaimsByStatus(null, null, config).then(res => res.data);
     },
     {
       refetchOnWindowFocus: false,
@@ -54,7 +60,7 @@ export function useClaims(
  * maker. This comes from the Request Info Options
  */
 function sendRequest({ claim_id, template_name }) {
-  return api.requestNonprofitClaimInfo(claim_id, { template_name }).then(res => res.data);
+  return requestNonprofitClaimInfo(claim_id, { template_name }).then(res => res.data);
 }
 
 export function useRequestInfo() {
@@ -71,7 +77,7 @@ export function useRequestInfo() {
  * @param {number} claim_id  REQUIRED
  */
 function approveClaim(claim_id) {
-  return api.approveNonprofitClaim(claim_id).then(res => res.data);
+  return approveNonprofitClaim(claim_id).then(res => res.data);
 }
 export function useApproveClaim() {
   return useMutation(approveClaim, {
@@ -87,7 +93,7 @@ export function useApproveClaim() {
  * @param {number} claim_id  REQUIRED
  */
 function denyClaim(claim_id) {
-  return api.denyNonprofitClaim(claim_id).then(res => res.data);
+  return denyNonprofitClaim(claim_id).then(res => res.data);
 }
 export function useDenyClaim() {
   return useMutation(denyClaim, {

@@ -20,7 +20,7 @@ import { USER_TYPES } from 'utils/constants';
 import { useCreateBrandUser } from 'hooks/useUsers';
 import SendForgotPassword, { TEMPLATES } from 'views/Users/SendForgotPassword';
 import Password from 'components/Password';
-import { internalSearchBrands } from 'gdd-api-lib/dist/api-lib';
+import { internalSearchBrands } from 'gdd-api-lib';
 
 const schema = createSchema({
   email: max255.required('This field is required').email('Please enter a valid email'),

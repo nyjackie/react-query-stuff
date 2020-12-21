@@ -4,7 +4,7 @@ import {
   checkUniqueEmail,
   checkUniquePhone,
   forgotPasswordInternal,
-} from 'gdd-api-lib/dist/api-lib';
+} from 'gdd-api-lib';
 
 export const USER_TYPES = {
   CONSUMER: 'consumer',

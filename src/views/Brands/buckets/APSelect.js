@@ -3,7 +3,7 @@ import { Spinner } from 'react-bootstrap';
 import AsyncSelect from 'react-select/async';
 import styles from './Buckets.module.scss';
 import errorHandler from 'utils/errorHandler';
-import { searchOffers, getOfferByGuid } from 'gdd-api-lib/dist/api-lib';
+import { searchOffers, getOfferByGuid } from 'gdd-api-lib';
 
 const dot = () => ({
   alignItems: 'center',

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import AsyncSelect from 'react-select/async';
 import { Modal, Button, Form, Col, Row } from 'react-bootstrap';
 import { Formik } from 'formik';
-import { searchNonprofits } from 'gdd-api-lib/dist/api-lib';
+import { searchNonprofits } from 'gdd-api-lib';
 
 // modal sections
 import Info from './Info';

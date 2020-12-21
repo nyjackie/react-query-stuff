@@ -1,5 +1,5 @@
 import { useQuery } from 'react-query';
-import { getOfferByGuid } from 'gdd-api-lib/dist/api-lib';
+import { getOfferByGuid } from 'gdd-api-lib';
 
 export function useOffer(id) {
   return useQuery(

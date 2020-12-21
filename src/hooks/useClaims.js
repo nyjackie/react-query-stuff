@@ -6,7 +6,7 @@ import {
   requestNonprofitClaimInfo,
   approveNonprofitClaim,
   denyNonprofitClaim,
-} from 'gdd-api-lib/dist/api-lib';
+} from 'gdd-api-lib';
 
 export function useClaimOptions() {
   return useQuery(

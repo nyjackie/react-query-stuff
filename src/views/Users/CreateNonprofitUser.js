@@ -19,7 +19,7 @@ import { useUniqueEmail, useUniquePhone } from 'hooks/useAdmin';
 import { useCreateNoprofitUser, useNonprofitForgotPassword } from 'hooks/useNonprofits';
 import SendForgotPassword, { TEMPLATES } from 'views/Users/SendForgotPassword';
 import Password from 'components/Password';
-import { searchNonprofits } from 'gdd-api-lib/dist/api-lib';
+import { searchNonprofits } from 'gdd-api-lib';
 
 const schema = createSchema({
   email: max255.required('This field is required').email('Please enter a valid email'),

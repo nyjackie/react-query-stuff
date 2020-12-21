@@ -1,4 +1,4 @@
-import { setupResponseInterceptor, setupRequestInterceptor } from 'gdd-api-lib/dist/setup';
+import { setupResponseInterceptor, setupRequestInterceptor } from 'gdd-api-lib';
 import tokenStore from 'gdd-api-lib/dist/tokenStore';
 
 // local modules

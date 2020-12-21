@@ -14,7 +14,7 @@ import {
   getInternalNonprofitsInCategory,
   setInternalNonprofitCategoryPriority,
   nonprofitForgotPassword,
-} from 'gdd-api-lib/dist/api-lib';
+} from 'gdd-api-lib';
 
 /****************************************************************
  * Functions that perform api calls

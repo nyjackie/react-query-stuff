@@ -20,7 +20,7 @@ import {
   brandForgotPassword,
   editInternalBrandInformation,
   editBrandOffer,
-} from 'gdd-api-lib/dist/api-lib';
+} from 'gdd-api-lib';
 
 /**
  * API handler to update a single brand's profile info

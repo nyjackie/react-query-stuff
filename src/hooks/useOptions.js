@@ -1,5 +1,5 @@
 import { useQuery } from 'react-query';
-import { getConsumerProfileOptions } from 'gdd-api-lib/dist/api-lib';
+import { getConsumerProfileOptions } from 'gdd-api-lib';
 
 export function usePronounIncomeOptions() {
   return useQuery(

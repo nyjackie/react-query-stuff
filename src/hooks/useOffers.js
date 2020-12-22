@@ -1,5 +1,5 @@
-import { useQuery } from 'react-query';
-import { getOfferByGuid } from 'gdd-api-lib';
+import { getOfferByGuid, internalOfferRefresh } from 'gdd-api-lib';
+import { useQuery, useMutation } from 'react-query';
 
 export function useOffer(id) {
   return useQuery(
@@ -10,5 +10,16 @@ export function useOffer(id) {
       );
     },
     { staleTime: Infinity, cacheTime: Infinity }
+  );
+}
+
+export function useRefreshOffer(offer_guid, offer_type) {
+  return useMutation(
+    () => {
+      return internalOfferRefresh({ offer_guid, offer_type }).then(res => res.data);
+    },
+    {
+      throwOnError: true,
+    }
   );
 }

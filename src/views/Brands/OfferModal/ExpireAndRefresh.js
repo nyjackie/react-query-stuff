@@ -7,12 +7,12 @@ import Col from 'react-bootstrap/Col';
 import { setNotification } from 'actions/notifications';
 import { useRefreshOffer } from 'hooks/useOffers';
 
-function ExpireAndRefresh({ offer, setNotification }) {
+function ExpireAndRefresh({ offer, setNotification, onSuccess, brand_id }) {
   const [showA, setShowA] = useState(false);
   const toggleShowA = () => setShowA(!showA);
   const [expireText, setExpireText] = useState('');
   const { offer_guid, offer_type } = offer;
-  const [refreshOffer] = useRefreshOffer(offer_guid, offer_type);
+  const [refreshOffer] = useRefreshOffer(offer_guid, offer_type, brand_id);
 
   const handleChange = e => setExpireText(e.target.value);
 
@@ -20,6 +20,7 @@ function ExpireAndRefresh({ offer, setNotification }) {
     try {
       await refreshOffer(offer_guid, offer_type);
       setNotification(`Successfully expired and refreshed offer`, 'success');
+      onSuccess();
     } catch (err) {
       setNotification(`${err.response?.data?.message || err.message}`, 'error');
     }

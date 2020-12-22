@@ -47,7 +47,7 @@
     "yup": "^0.29.2"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "PORT=3003 react-scripts start",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "build": "react-scripts build",
     "build:staging": "env-cmd -f .env.staging react-scripts build",

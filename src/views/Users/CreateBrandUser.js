@@ -20,7 +20,7 @@ import { USER_TYPES } from 'utils/constants';
 import { useCreateBrandUser } from 'hooks/useUsers';
 import SendForgotPassword, { TEMPLATES } from 'views/Users/SendForgotPassword';
 import Password from 'components/Password';
-import api from 'gdd-api-lib';
+import { internalSearchBrands } from 'gdd-api-lib';
 
 const schema = createSchema({
   email: max255.required('This field is required').email('Please enter a valid email'),
@@ -32,7 +32,7 @@ const schema = createSchema({
 });
 
 const loadOptions = async inputValue => {
-  const res = await api.internalSearchBrands({ search_term: window.btoa(inputValue) });
+  const res = await internalSearchBrands({ search_term: window.btoa(inputValue) });
   const newRes = res.data.brands.map(data => {
     return { value: data.id, label: data.name };
   });

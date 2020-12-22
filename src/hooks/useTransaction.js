@@ -1,5 +1,5 @@
 import { useQuery, useMutation, queryCache } from 'react-query';
-import api from 'gdd-api-lib';
+import { getAffiliateTransactions, updateAffiliateTransactionsGDStatus } from 'gdd-api-lib';
 
 export function useTransactions(limit = 10, offset = 0, offer_activation_id, user_id, gd_status) {
   return useQuery(
@@ -11,7 +11,7 @@ export function useTransactions(limit = 10, offset = 0, offer_activation_id, use
         gd_status.forEach(stat => {
           config.params.append('gd_status', stat);
         });
-        return api.getAffiliateTransactions(null, null, config).then(res => res.data);
+        return getAffiliateTransactions(null, null, config).then(res => res.data);
       } catch (err) {
         return {};
       }
@@ -23,7 +23,7 @@ export function useTransactions(limit = 10, offset = 0, offer_activation_id, use
 }
 
 export function useUpdateTransaction() {
-  return useMutation(updateAffiliateTransactionsGDStatus, {
+  return useMutation(doUpdateAffiliateTransactionsGDStatus, {
     throwOnError: true,
     onSuccess: () => {
       queryCache.invalidateQueries('transaction');
@@ -31,8 +31,6 @@ export function useUpdateTransaction() {
   });
 }
 
-function updateAffiliateTransactionsGDStatus({ gd_status, transaction_guid }) {
-  return api
-    .updateAffiliateTransactionsGDStatus({ gd_status, transaction_guid })
-    .then(res => res.data);
+function doUpdateAffiliateTransactionsGDStatus({ gd_status, transaction_guid }) {
+  return updateAffiliateTransactionsGDStatus({ gd_status, transaction_guid }).then(res => res.data);
 }

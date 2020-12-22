@@ -19,7 +19,7 @@ import { useUniqueEmail, useUniquePhone } from 'hooks/useAdmin';
 import { useCreateNoprofitUser, useNonprofitForgotPassword } from 'hooks/useNonprofits';
 import SendForgotPassword, { TEMPLATES } from 'views/Users/SendForgotPassword';
 import Password from 'components/Password';
-import api from 'gdd-api-lib';
+import { searchNonprofits } from 'gdd-api-lib';
 
 const schema = createSchema({
   email: max255.required('This field is required').email('Please enter a valid email'),
@@ -31,7 +31,7 @@ const schema = createSchema({
 });
 
 const loadOptions = async inputValue => {
-  const res = await api.searchNonprofits({ search_term: window.btoa(inputValue) });
+  const res = await searchNonprofits({ search_term: window.btoa(inputValue) });
   const newRes = res.data.nonprofits.map(data => {
     return { value: data.id, label: data.name };
   });

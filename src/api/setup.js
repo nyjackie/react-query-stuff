@@ -1,4 +1,4 @@
-import api from 'gdd-api-lib';
+import { setupResponseInterceptor, setupRequestInterceptor } from 'gdd-api-lib';
 import tokenStore from 'gdd-api-lib/dist/tokenStore';
 
 // local modules
@@ -14,10 +14,7 @@ tokenStore.openDB('gdd-admin-db');
  * Set up the response inteceptor which will automatically handle logging out
  * if any api response returns a 401
  */
-api.setupResponseInterceptor(
-  function isAuthenticated() {
-    return store.getState().auth.isAuthenticated;
-  },
+setupResponseInterceptor(
   function unauthorized(err) {
     errorHandler('Response Interceptor: Unauthorized', err);
     // definitely logout and clear state if unauthorized
@@ -29,7 +26,7 @@ api.setupResponseInterceptor(
   }
 );
 
-api.setupRequestInterceptor(
+setupRequestInterceptor(
   function getTokens() {
     // this function should return a promise resolving with the complete object
     // in indexeddb

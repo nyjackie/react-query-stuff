@@ -1,7 +1,26 @@
 import { usePaginatedQuery, useQuery, useMutation, queryCache } from 'react-query';
-import api from 'gdd-api-lib';
 import store from 'store';
 import { setNotification } from 'actions/notifications';
+import {
+  internalSearchBrands,
+  setBrandLogo,
+  setBrandHero,
+  upsertOfferBucket,
+  getBrandCategories,
+  getInternalOfferBuckets,
+  deleteOfferBucket,
+  getQueuedBrands,
+  subindustryToCategory,
+  getInternalBrandInformation,
+  getInternalBrandCategories,
+  internalGetOffersInCategory,
+  getOffersByBrandId,
+  setBrandCategoryPriority,
+  setInternalBrandCategory,
+  brandForgotPassword,
+  editInternalBrandInformation,
+  editBrandOffer,
+} from 'gdd-api-lib';
 
 /**
  * API handler to update a single brand's profile info
@@ -10,7 +29,7 @@ import { setNotification } from 'actions/notifications';
  * @param {object} param0.form form data
  */
 function updateBrand({ id, form }) {
-  return api.editInternalBrandInformation(id, form).then(res => res.data);
+  return editInternalBrandInformation(id, form).then(res => res.data);
 }
 
 /**
@@ -20,7 +39,7 @@ function updateBrand({ id, form }) {
  * @param {object} param0.form form dat
  */
 function updateOffer({ form }) {
-  return api.editBrandOffer(form).then(res => {
+  return editBrandOffer(form).then(res => {
     return res.data;
   });
 }
@@ -34,7 +53,7 @@ function search(key, query) {
   if (query.search_term) {
     query.search_term = window.btoa(query.search_term);
   }
-  return api.internalSearchBrands(query).then(res => res.data);
+  return internalSearchBrands(query).then(res => res.data);
 }
 
 /**
@@ -44,7 +63,7 @@ function search(key, query) {
  * @param {string} param0.bytestring
  */
 function updateBrandLogo({ id, bytestring }) {
-  return api.setBrandLogo(id, { logo_image_bytestring: bytestring }).then(res => res.data);
+  return setBrandLogo(id, { logo_image_bytestring: bytestring }).then(res => res.data);
 }
 
 /**
@@ -54,7 +73,7 @@ function updateBrandLogo({ id, bytestring }) {
  * @param {string} param0.bytestring
  */
 function updateBrandHero({ id, bytestring }) {
-  return api.setBrandHero(id, { hero_image_bytestring: bytestring }).then(res => res.data);
+  return setBrandHero(id, { hero_image_bytestring: bytestring }).then(res => res.data);
 }
 
 /**
@@ -62,7 +81,7 @@ function updateBrandHero({ id, bytestring }) {
  * @param {object} param.form form data
  */
 function updateBucket({ form }) {
-  return api.upsertOfferBucket(form).then(res => res.data);
+  return upsertOfferBucket(form).then(res => res.data);
 }
 
 /*********************************************
@@ -76,7 +95,7 @@ export function useCategories() {
   return useQuery(
     'categories',
     () => {
-      return api.getBrandCategories().then(res => res.data);
+      return getBrandCategories().then(res => res.data);
     },
     {
       cacheTime: Infinity,
@@ -87,7 +106,7 @@ export function useCategories() {
 
 export function useBuckets() {
   return useQuery('buckets', () => {
-    return api.getInternalOfferBuckets({ include_inactive: true }).then(res => res.data);
+    return getInternalOfferBuckets({ include_inactive: true }).then(res => res.data);
   });
 }
 
@@ -109,7 +128,7 @@ export function useUpdateBucket() {
 export function useDeleteBucket() {
   return useMutation(
     id => {
-      return api.deleteOfferBucket(id);
+      return deleteOfferBucket(id);
     },
     {
       onSuccess: () => {
@@ -133,7 +152,7 @@ export function useDeleteBucket() {
  */
 export function useBrandGroomingQueue(offset = 0) {
   return usePaginatedQuery(['brands', offset], () => {
-    return api.getQueuedBrands({ offset, limit: 10 }).then(res => res.data);
+    return getQueuedBrands({ offset, limit: 10 }).then(res => res.data);
   });
 }
 
@@ -145,7 +164,7 @@ export function useBrandGroomingQueue(offset = 0) {
 export function useCESubID(id) {
   return useQuery(
     ['ce_subindustry_id', id],
-    () => api.subindustryToCategory(id).then(res => res.data),
+    () => subindustryToCategory(id).then(res => res.data),
     {
       enabled: id,
       manual: true,
@@ -161,7 +180,7 @@ export function useBrand(id) {
   return useQuery(
     ['brand', id],
     () => {
-      return api.getInternalBrandInformation(id).then(res => res.data);
+      return getInternalBrandInformation(id).then(res => res.data);
     },
     {
       enabled: id,
@@ -177,7 +196,7 @@ export function useBrandCategories() {
   return useQuery(
     'internal_brands_categories',
     () => {
-      return api.getInternalBrandCategories().then(res => res.data);
+      return getInternalBrandCategories().then(res => res.data);
     },
     { staleTime: Infinity, cacheTime: Infinity, refetchOnWindowFocus: false }
   );
@@ -187,7 +206,7 @@ export function useInternalBrandsInCategory(id, offset) {
   return usePaginatedQuery(
     ['internal_brands_category', id, offset],
     () => {
-      return api.internalGetOffersInCategory(id, { offset, limit: 8 }).then(res => res.data);
+      return internalGetOffersInCategory(id, { offset, limit: 8 }).then(res => res.data);
     },
     {
       enabled: id,
@@ -200,16 +219,16 @@ export function useInternalBrandsInCategory(id, offset) {
 
 /**
  * Get all of the offers for a specific brand
- * @param {number} id brand's unique id from our db
+ * @param {number} brand_id brand's unique id from our db
  */
-export function useOffers(id) {
+export function useOffers(brand_id) {
   return useQuery(
-    ['offers', id],
+    ['offers', brand_id],
     () => {
-      return api.getOffersByBrandId(id).then(res => res.data);
+      return getOffersByBrandId(brand_id).then(res => res.data);
     },
     {
-      enabled: id,
+      enabled: brand_id,
       refetchOnWindowFocus: false,
     }
   );
@@ -282,13 +301,13 @@ export function useUpdateBrandHero() {
  * Mutation: Update the brand category
  */
 export function useUpdateInternalBrandCategories() {
-  return useMutation(setInternalBrandCategory, {
+  return useMutation(doSetInternalBrandCategory, {
     throwOnError: true,
   });
 }
 
 export function useUpdateInternalBrandCategoryPriority() {
-  return useMutation(setBrandCategoryPriority, {
+  return useMutation(doSetBrandCategoryPriority, {
     throwOnError: true,
     onSuccess: (data, variable) => {
       queryCache.invalidateQueries(['internal_brands_category', variable.category_id]);
@@ -296,12 +315,12 @@ export function useUpdateInternalBrandCategoryPriority() {
   });
 }
 
-function setBrandCategoryPriority({ category_id, body }) {
-  return api.setBrandCategoryPriority(body).then(res => res.data);
+function doSetBrandCategoryPriority({ category_id, body }) {
+  return setBrandCategoryPriority(body).then(res => res.data);
 }
 
-function setInternalBrandCategory({ id, body }) {
-  return api.setInternalBrandCategory(id, body).then(res => res.data);
+function doSetInternalBrandCategory({ id, body }) {
+  return setInternalBrandCategory(id, body).then(res => res.data);
 }
 
 /**
@@ -314,6 +333,6 @@ export function useBrandForgotPassword(email, template = false) {
     if (template) {
       query.template = template;
     }
-    return api.brandForgotPassword(query);
+    return brandForgotPassword(query);
   });
 }

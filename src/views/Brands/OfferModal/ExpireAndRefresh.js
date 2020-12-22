@@ -1,4 +1,4 @@
-import React, { useState, Fragment, useEffect } from 'react';
+import React, { useState, Fragment } from 'react';
 import { connect } from 'react-redux';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
@@ -11,15 +11,9 @@ function ExpireAndRefresh({ offer, setNotification }) {
   const [showA, setShowA] = useState(false);
   const toggleShowA = () => setShowA(!showA);
   const [expireText, setExpireText] = useState('');
-  const [btnDisabled, setBtnDisabled] = useState(true);
   const [newOffer, setNewOffer] = useState(null);
-  const [refreshOffer] = useRefreshOffer();
   const { offer_guid, offer_type } = offer;
-
-  useEffect(() => {
-    if (expireText === 'I AM SURE') return setBtnDisabled(false);
-    return () => setBtnDisabled(true);
-  }, [expireText]);
+  const [refreshOffer] = useRefreshOffer(offer_guid, offer_type);
 
   const handleChange = e => setExpireText(e.target.value);
 
@@ -42,15 +36,14 @@ function ExpireAndRefresh({ offer, setNotification }) {
       <Form.Row className="mt-3">
         <Form.Group as={Col}>
           <Button onClick={toggleShowA}>
-            {/* <span style={{ color: 'white' }}>
-                            <i className="fa fa-sync" />
-                        </span> */}
+            <span style={{ color: 'white' }}>
+              <i className="fa fa-refresh p-2" />
+            </span>
             Expire and Refresh Offer
           </Button>
           <Toast className="mt-3" show={showA} onClose={toggleShowA}>
             <Toast.Header>
               <strong className="mr-auto">Are you sure?</strong>
-              <small>11 mins ago</small>
             </Toast.Header>
             <Toast.Body>
               <p>
@@ -66,7 +59,7 @@ function ExpireAndRefresh({ offer, setNotification }) {
                 value={expireText}
                 onChange={handleChange}
               />
-              <Button className="mt-3" disabled={btnDisabled} onClick={handleConfirm}>
+              <Button className="mt-3" disabled={expireText !== 'I AM SURE'} onClick={handleConfirm}>
                 Confirm
               </Button>
             </Toast.Body>

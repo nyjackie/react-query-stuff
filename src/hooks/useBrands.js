@@ -219,16 +219,16 @@ export function useInternalBrandsInCategory(id, offset) {
 
 /**
  * Get all of the offers for a specific brand
- * @param {number} id brand's unique id from our db
+ * @param {number} brand_id brand's unique id from our db
  */
-export function useOffers(id) {
+export function useOffers(brand_id) {
   return useQuery(
-    ['offers', id],
+    ['offers', brand_id],
     () => {
-      return getOffersByBrandId(id).then(res => res.data);
+      return getOffersByBrandId(brand_id).then(res => res.data);
     },
     {
-      enabled: id,
+      enabled: brand_id,
       refetchOnWindowFocus: false,
     }
   );

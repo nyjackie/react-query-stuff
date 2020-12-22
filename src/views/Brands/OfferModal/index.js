@@ -10,6 +10,7 @@ import api from 'gdd-api-lib';
 import Info from './Info';
 import Commission from './Commission';
 import Coupons from './Coupons';
+import ExpireAndRefresh from './ExpireAndRefresh';
 
 import schema from './offerSchema';
 import DateTimeET from 'components/DateTimeET';
@@ -292,6 +293,9 @@ const APModal = ({ show, handleClose, offer, setNotification, brand_id }) => {
 
                 {/* Coupons section **********/}
                 <Coupons coupons={values.coupons} />
+
+                {/* Expire section **********/}
+                <ExpireAndRefresh offer={offer} />
 
                 {/* Actions **********/}
                 <Row>

@@ -1,5 +1,5 @@
 import { getOfferByGuid, internalOfferRefresh } from 'gdd-api-lib';
-import { useQuery, useMutation } from 'react-query';
+import { useQuery, useMutation, queryCache } from 'react-query';
 
 export function useOffer(id) {
   return useQuery(
@@ -13,13 +13,16 @@ export function useOffer(id) {
   );
 }
 
-export function useRefreshOffer(offer_guid, offer_type) {
+export function useRefreshOffer(offer_guid, offer_type, brand_id) {
   return useMutation(
     () => {
       return internalOfferRefresh({ offer_guid, offer_type }).then(res => res.data);
     },
     {
       throwOnError: true,
+      onSuccess: () => {
+        queryCache.invalidateQueries(['offers', brand_id]);
+      },
     }
   );
 }

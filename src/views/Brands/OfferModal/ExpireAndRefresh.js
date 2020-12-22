@@ -11,7 +11,6 @@ function ExpireAndRefresh({ offer, setNotification }) {
   const [showA, setShowA] = useState(false);
   const toggleShowA = () => setShowA(!showA);
   const [expireText, setExpireText] = useState('');
-  const [newOffer, setNewOffer] = useState(null);
   const { offer_guid, offer_type } = offer;
   const [refreshOffer] = useRefreshOffer(offer_guid, offer_type);
 
@@ -19,10 +18,8 @@ function ExpireAndRefresh({ offer, setNotification }) {
 
   const handleConfirm = async e => {
     try {
-      const response = await refreshOffer(offer_guid, offer_type);
-      console.log(response)
-      setNewOffer(response.data);
-      setNotification(`Success. New offer: ${newOffer}`, 'success');
+      await refreshOffer(offer_guid, offer_type);
+      setNotification(`Successfully expired and refreshed offer`, 'success');
     } catch (err) {
       setNotification(
         `${err.response?.data?.message || err.message}`,

@@ -67,9 +67,10 @@ export async function login(email, password) {
  */
 export async function logout() {
   const tokensData = await tokenStore.get();
-  apiLogout({ refresh_token: tokensData?.refresh_token });
+  apiLogout({ refresh_token: tokensData.refresh_token }).then(() => {
+    removeAuthHeader();
+  });
   tokenStore.remove();
-  removeAuthHeader();
 }
 
 export async function forgotPassword(email) {

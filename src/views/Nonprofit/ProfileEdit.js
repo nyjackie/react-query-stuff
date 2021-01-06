@@ -61,6 +61,7 @@ function Profile({ data, setNotification }) {
   const [logoSrc, setLogoSrc] = useState(data.logo_url);
   const [heroSrc, setHeroSrc] = useState(data.hero_url);
   const [showModal, setShowModal] = useState(false);
+  const [warning, setWarning] = useState(false);
 
   const formik = useFormik({
     validationSchema: schema,
@@ -135,8 +136,15 @@ function Profile({ data, setNotification }) {
             <article className={styles.profile}>
               <Row className={styles.header}>
                 <Col>
-                  <h1 className="h2">{data.name}</h1>
+                  <h1 className="h2">{data.name}</h1>{' '}
                 </Col>
+                {data.is_banned && (
+                  <Col className="d-flex align-items-center">
+                    <h3 className="text-danger">
+                      <b>-NPO Banned-</b>
+                    </h3>
+                  </Col>
+                )}
                 <Col className="d-flex justify-content-end">
                   <Button
                     variant="outline-primary"
@@ -389,7 +397,8 @@ function Profile({ data, setNotification }) {
                       </Form.Control.Feedback>
                     </Form.Group>
 
-                    <Form.Row>
+                    {/* For banning NPO */}
+                    {/* <Form.Row>
                       <Form.Group as={Col}>
                         <p id="npoIsBanned" className="d-inline mr-4">
                           <b>Is Banned:</b>
@@ -421,7 +430,7 @@ function Profile({ data, setNotification }) {
                           id="npoIsBanned-FALSE"
                         />
                       </Form.Group>
-                    </Form.Row>
+                    </Form.Row> */}
 
                     <Form.Row>
                       <Form.Group as={Col}>
@@ -437,14 +446,20 @@ function Profile({ data, setNotification }) {
                           checked={
                             formik.values.is_active === 'true' || formik.values.is_active === true
                           }
-                          onChange={formik.handleChange}
+                          onChange={e => {
+                            formik.handleChange(e);
+                            setWarning(true);
+                          }}
                           aria-describedby="npoIsActive"
                           id="npoIsActive-TRUE"
                         />
                         <Form.Check
                           inline
                           label="false"
-                          onChange={formik.handleChange}
+                          onChange={e => {
+                            formik.handleChange(e);
+                            setWarning(true);
+                          }}
                           type="radio"
                           name="is_active"
                           value={false}
@@ -471,14 +486,20 @@ function Profile({ data, setNotification }) {
                           checked={
                             formik.values.is_folded === 'true' || formik.values.is_folded === true
                           }
-                          onChange={formik.handleChange}
+                          onChange={e => {
+                            formik.handleChange(e);
+                            setWarning(true);
+                          }}
                           aria-describedby="npoIsFolded"
                           id="npoIsFolded-TRUE"
                         />
                         <Form.Check
                           inline
                           label="false"
-                          onChange={formik.handleChange}
+                          onChange={e => {
+                            formik.handleChange(e);
+                            setWarning(true);
+                          }}
                           type="radio"
                           name="is_folded"
                           value={false}
@@ -490,7 +511,12 @@ function Profile({ data, setNotification }) {
                         />
                       </Form.Group>
                     </Form.Row>
-
+                    {warning && (
+                      <p className="text-warning">
+                        *Updating Active and Folded status might prevent user from logging into
+                        Nonprofit portal*
+                      </p>
+                    )}
                     <Button type="submit" variant="primary">
                       Update profile
                     </Button>
